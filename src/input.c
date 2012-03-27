@@ -6,6 +6,8 @@ void inputInit(void *handle) {
 
 	m->input.key = 0;
 	m->input.keypending = 0;
+	m->input.upper = 0;
+	m->input.lastkey = 0;
 
 	return;
 }
@@ -34,42 +36,43 @@ void inputPoll(void *handle) {
 					m->input.key |= KEY_RIGHT;
 					break;
 				case SDLK_PAGEUP:
-				case SDLK_i:
 					m->input.key |= KEY_Y;
 					break;
 				case SDLK_PAGEDOWN:
-				case SDLK_m:
+				case SDLK_SPACE:
 					m->input.key |= KEY_X;
 					break;
 				case SDLK_HOME:
 				case SDLK_ESCAPE:
-				case SDLK_j:
 					m->input.key |= KEY_A;
 					break;
 				case SDLK_END:
-				case SDLK_k:
-				case SDLK_SPACE:
+				case SDLK_RETURN:
 					m->input.key |= KEY_B;
 					break;
 				case SDLK_RALT:
 				case SDLK_LALT:
-				case SDLK_y:
 					m->input.key |= KEY_START;
 					break;
 				case SDLK_LCTRL:
-				case SDLK_r:
 					m->input.key |= KEY_SELECT;
 					break;
 				case SDLK_RSHIFT:
-				case SDLK_q:
+					m->input.upper |= (m->input.event.key.keysym.sym == SDLK_RSHIFT) ? 1 : 0;
 					m->input.key |= KEY_L;
 					break;
 				case SDLK_RCTRL:
-				case SDLK_p:
 					m->input.key |= KEY_R;
+					break;
+				case SDLK_LSHIFT:
+					m->input.upper |= 2;
 					break;
 				default:
 					break;
+			}
+
+			if (m->input.event.key.keysym.sym < 0x80) {			// ASCII
+				m->input.lastkey = m->input.event.key.keysym.sym;
 			}
 		} else if (m->input.event.type == SDL_KEYUP) {
 			switch (m->input.event.key.keysym.sym) {
@@ -94,48 +97,46 @@ void inputPoll(void *handle) {
 					m->input.key ^= KEY_RIGHT;
 					break;
 				case SDLK_PAGEUP:
-				case SDLK_i:
 					m->input.key |= KEY_Y;
 					m->input.key ^= KEY_Y;
 					break;
 				case SDLK_PAGEDOWN:
-				case SDLK_m:
 					m->input.key |= KEY_X;
 					m->input.key ^= KEY_X;
 					break;
 				case SDLK_HOME:
-				case SDLK_j:
 				case SDLK_ESCAPE:
 					m->input.key |= KEY_A;
 					m->input.key ^= KEY_A;
 					break;
 				case SDLK_END:
-				case SDLK_k:
 				case SDLK_SPACE:
 					m->input.key |= KEY_B;
 					m->input.key ^= KEY_B;
 					return;
 				case SDLK_RALT:
 				case SDLK_LALT:
-				case SDLK_y:
 					m->input.key |= KEY_START;
 					m->input.key ^= KEY_START;
 					return;
 				case SDLK_LCTRL:
-				case SDLK_r:
 					m->input.key |= KEY_SELECT;
 					m->input.key ^= KEY_SELECT;
 					return;
 				case SDLK_RSHIFT:
-				case SDLK_q:
+					m->input.upper |= (m->input.event.key.keysym.sym == SDLK_RSHIFT) ? 1 : 0;
+					m->input.upper ^= (m->input.event.key.keysym.sym == SDLK_RSHIFT) ? 1 : 0;
 					m->input.key |= KEY_L;
 					m->input.key ^= KEY_L;
 					return;
 				case SDLK_RCTRL:
-				case SDLK_p:
 					m->input.key |= KEY_R;
 					m->input.key ^= KEY_R;
 					return;
+				case SDLK_LSHIFT:
+					m->input.upper |= 2;
+					m->input.upper ^= 2;
+					break;
 				default:
 					break;
 			}
@@ -146,4 +147,18 @@ void inputPoll(void *handle) {
 	m->input.keypending &= m->input.key;
 	
 	return;
+}
+
+
+
+unsigned int inputASCIIPop(void *handle) {
+	unsigned int key;
+	DARNER *m = handle;
+
+	key = m->input.lastkey;
+	if (key >= 'a' && key <= 'z' && m->input.upper)
+		key -= ('a' - 'A');
+	m->input.lastkey = 0;
+
+	return key;
 }
