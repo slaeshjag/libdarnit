@@ -42,6 +42,8 @@ typedef struct {
 	unsigned int			h;
 	unsigned int			camx;
 	unsigned int			camy;
+	int				offset_x;
+	int				offset_y;
 } VIDEO;
 
 

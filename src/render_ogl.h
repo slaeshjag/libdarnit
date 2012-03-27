@@ -26,6 +26,8 @@ typedef struct {
 	unsigned int			camx;
 	unsigned int			camy;
 	unsigned int			time;
+	int				offset_x;
+	int				offset_y;
 } VIDEO;
 
 int videoInit(void *handle, const char *wtitle);

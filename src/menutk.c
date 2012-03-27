@@ -433,8 +433,8 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 	if (menu->hidden == 1)
 		return -1;
 
+	glLoadIdentity();
 	if (menu->orientation != MENUTK_SPINBTN) {
-		glLoadIdentity();
 		glTranslatef(menu->x + menu->hl.x, menu->y + menu->hl.y, 0.0f);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
@@ -454,6 +454,8 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 	if (menu->orientation != MENUTK_ORIENT_V_OL)
 		textRender(menu->text);
 
+	glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0.0f);
+	
 	if (menu->waiting == 1)
 		return -1;
 		
