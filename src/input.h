@@ -24,10 +24,13 @@ typedef struct {
 	SDL_Event			event;
 	unsigned int			key;
 	unsigned int			keypending;
+	unsigned int			upper;
+	unsigned int			lastkey;
 } INPUT;
 
 
 void inputPoll(void *handle);
 void inputInit(void *handle);
+unsigned int inputASCIIPop(void *handle);
 
 #endif

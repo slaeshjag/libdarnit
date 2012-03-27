@@ -27,11 +27,12 @@ void *darnerInit(const char *wtitle) {
 
 void darnerLoop(void *handle) {
 	DARNER *d = handle;
+	char c;
 
 	spriteAnimate(d);
 	videoLoop(d);
 	inputPoll(d);
-	
+
 	return;
 }
 
