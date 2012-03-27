@@ -38,6 +38,7 @@ int videoInit(void *handle, const char *wtitle) {
 
 	m->video.camx = 0;
 	m->video.camy = 0;
+	m->video.offset_x = m->video.offset_y = 0;
 	m->video.time = SDL_GetTicks();
 	
 	SDL_WM_SetCaption(wtitle, NULL);

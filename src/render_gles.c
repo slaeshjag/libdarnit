@@ -81,7 +81,9 @@ int videoInit(void *handle) {
 
 	m->video.camx = 0;
 	m->video.camy = 0;
-	
+
+	m->video.offset_x = m->video.offset_y = 0;
+
 	SDL_WM_SetCaption(PROJECT_NAME, NULL);
 	videoInitGL(800, 480);
 	

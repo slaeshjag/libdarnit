@@ -14,12 +14,14 @@
 #include "menutk.h"
 #include "audio.h"
 #include "imgload.h"
+#include "sprite.h"
 
 
 typedef struct {
 	VIDEO		video;
 	INPUT		input;
 	AUDIO		audio;
+	SPRITE		sprite;
 } DARNER;
 
 

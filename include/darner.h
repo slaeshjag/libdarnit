@@ -64,6 +64,20 @@ void darnerRenderBegin();
 void darnerRenderEnd();
 void darnerRenderBlendingEnable();
 void darnerRenderBlendingDisable();
+void darnerRenderTint(float r, float g, float b, float a);
+void darnerRenderOffset(void *handle, int x, int y);
+
+
+/* SPRITE */
+
+int darnerSpriteLoad(void *handle, const char *fname, int dir);
+void darnerSpriteDelete(void *handle, int sprite);
+void darnerSpriteClear(void *handle);
+void darnerSpriteDirectionChange(void *handle, int sprite, int dir);
+void darnerSpriteMove(void *handle, int sprite, int x, int y, int l);
+void darnerSpriteAnimationEnable(void *handle, int sprite);
+void darnerSpriteAnimationDisable(void *handle, int sprite);
+void darnerSpriteLayerDraw(void *handle, int layer);
 
 
 /* TEXT */

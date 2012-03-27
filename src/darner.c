@@ -19,6 +19,7 @@ void *darnerInit(const char *wtitle) {
 	videoInit(d, wtitle);
 	inputInit(d);
 	audioInit(d);
+	spriteInit(d, SPRITE_PREALLOC_DEF);
 
 	return d;
 }
@@ -27,6 +28,7 @@ void *darnerInit(const char *wtitle) {
 void darnerLoop(void *handle) {
 	DARNER *d = handle;
 
+	spriteAnimate(d);
 	videoLoop(d);
 	inputPoll(d);
 	
@@ -222,6 +224,83 @@ void darnerRenderBlendingEnable() {
 
 void darnerRenderBlendingDisable() {
 	glDisable(GL_BLEND);
+}
+
+
+void darnerRenderTint(float r, float g, float b, float a) {
+	glColor4f(r, g, b, a);
+
+	return;
+}
+
+
+void darnerRenderOffset(void *handle, int x, int y) {
+	DARNER *d = handle;
+	glLoadIdentity();
+	glTranslatef(d->video.swgran * x, d->video.shgran * y, 0.0f);
+	d->video.offset_x = x;
+	d->video.offset_y = y * -1;
+
+	return;
+}
+
+
+/*****************************/
+/****** SPRITE ***************/
+/*****************************/
+
+
+int darnerSpriteLoad(void *handle, const char *fname) {
+	return spriteLoad(handle, fname, 0);
+}
+
+
+void darnerSpriteDelete(void *handle, int sprite) {
+	spriteDelete(handle, sprite);
+
+	return;
+}
+
+
+void darnerSpriteClear(void *handle) {
+	spriteClear(handle);
+
+	return;
+}
+
+
+void darnerSpriteDirectionChange(void *handle, int sprite, int dir) {
+	spriteChangeDirection(handle, sprite, dir);
+
+	return;
+}
+
+
+void darnerSpriteMove(void *handle, int sprite, int x, int y, int l) {
+	spriteTeleport(handle, sprite, x, y, l);
+
+	return;
+}
+
+
+void darnerSpriteAnimationEnable(void *handle, int sprite) {
+	spriteEnableAnimation(handle, sprite);
+
+	return;
+}
+
+
+void darnerSpriteAnimationDisable(void *handle, int sprite) {
+	spriteDisableAnimation(handle, sprite);
+
+	return;
+}
+
+
+void darnerSpriteLayerDraw(void *handle, int layer) {
+	spriteDrawLayer(handle, layer);
+
+	return;
 }
 
 

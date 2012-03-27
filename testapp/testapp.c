@@ -2,7 +2,7 @@
 
 
 int main(int argc, char **argv) {
-	int i, sfx;
+	int i, sfx, sprite;
 	void *font, *surface, *handle;
 	handle = darnerInit("TESTAPP - libDarner");
 	
@@ -13,9 +13,14 @@ int main(int argc, char **argv) {
 	darnerMusicPlayVorbis(handle, "test.ogg");
 //	darnerSFXPlay(handle, sfx, 0, 80);
 
+	sprite = darnerSpriteLoad(handle, "test.spr", 0);
+	darnerSpriteMove(handle, sprite , 50, 50, 0);
+	darnerSpriteAnimationEnable(handle, sprite);
+	darnerRenderOffset(handle, 100, -100);
 
 	for (;;) {
 		darnerRenderBegin();
+		darnerSpriteLayerDraw(handle, 0);
 		if (darnerMenuHandle(handle, surface) != -1)
 			return 0;
 		darnerRenderEnd();
