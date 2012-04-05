@@ -8,6 +8,7 @@ void inputInit(void *handle) {
 	m->input.keypending = 0;
 	m->input.upper = 0;
 	m->input.lastkey = 0;
+	m->input.mouse.x = m->input.mouse.y = m->input.mouse.wheel = 0;
 
 	return;
 }
@@ -139,6 +140,26 @@ void inputPoll(void *handle) {
 					break;
 				default:
 					break;
+			}
+		} else if (m->input.event.type == SDL_MOUSEMOTION) {
+			m->input.mouse.x = m->input.event.motion.x;
+			m->input.mouse.y = m->input.event.motion.y;
+		} else if (m->input.event.type == SDL_MOUSEBUTTONDOWN) {
+			if (m->input.event.button.button == SDL_BUTTON_LEFT)
+				m->input.key |= MB_LEFT;
+			else if (m->input.event.button.button == SDL_BUTTON_RIGHT)
+				m->input.key |= MB_RIGHT;
+			else if (m->input.event.button.button == SDL_BUTTON_WHEELUP)
+				m->input.mouse.wheel--;
+			else if (m->input.event.button.button == SDL_BUTTON_WHEELDOWN)
+				m->input.mouse.wheel++;
+		} else if (m->input.event.type == SDL_MOUSEBUTTONUP) {
+			if (m->input.event.button.button == SDL_BUTTON_LEFT) {
+				m->input.key |= MB_LEFT;
+				m->input.key ^= MB_LEFT;
+			} else if (m->input.event.button.button == SDL_BUTTON_RIGHT) {
+				m->input.key |= MB_RIGHT;
+				m->input.key ^= MB_RIGHT;
 			}
 		} else if (m->input.event.type == SDL_QUIT)
 			exit(0);

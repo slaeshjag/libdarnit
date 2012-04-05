@@ -7,6 +7,14 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 
+
+typedef struct {
+	unsigned int	x	: 16;
+	unsigned int	y	: 16;
+	signed int	wheel	: 32;
+} DARNER_MOUSE;
+
+
 #include "render.h"
 #include "input.h"
 #include "error.h"

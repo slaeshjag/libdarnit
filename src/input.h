@@ -14,6 +14,8 @@
 #define		KEY_SELECT		0x200
 #define		KEY_L			0x400
 #define		KEY_R			0x800
+#define		MB_LEFT			0x1000
+#define		MB_RIGHT		0x2000
 
 
 #define		BUTTON_ACCEPT		KEY_B
@@ -26,6 +28,7 @@ typedef struct {
 	unsigned int			keypending;
 	unsigned int			upper;
 	unsigned int			lastkey;
+	DARNER_MOUSE			mouse;
 } INPUT;
 
 
