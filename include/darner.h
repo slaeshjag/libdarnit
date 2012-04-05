@@ -15,7 +15,17 @@ typedef struct {
 	unsigned int	select	: 1;
 	unsigned int	l	: 1;
 	unsigned int	r	: 1;
+	unsigned int	lmb	: 1;
+	unsigned int	rmb	: 1;
 } DARNER_KEYS;
+
+
+typedef struct {
+	unsigned int	x	: 16;
+	unsigned int	y	: 16;
+	signed int	wheel	: 32;
+} DARNER_MOUSE;
+
 
 #define		BUTTON_ACCEPT		b
 #define		BUTTON_CANCEL		a
@@ -36,6 +46,9 @@ void darnerLoop(void *handle);
 
 DARNER_KEYS darnerButtonGet(void *handle);
 void darnerButtonSet(void *handle, DARNER_KEYS buttons);
+void darnerInputGrab();
+void darnerInputUngrab();
+DARNER_MOUSE darnerMouseGet(void *handle);
 
 
 /* AUDIO */

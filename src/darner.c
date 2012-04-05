@@ -27,7 +27,6 @@ void *darnerInit(const char *wtitle) {
 
 void darnerLoop(void *handle) {
 	DARNER *d = handle;
-	char c;
 
 	spriteAnimate(d);
 	videoLoop(d);
@@ -58,6 +57,26 @@ void darnerButtonSet(void *handle, unsigned int button) {
 	return;
 }
 
+
+void darnerInputGrab() {
+	SDL_WM_GrabInput(SDL_GRAB_ON);
+
+	return;
+}
+
+
+void darnerInputUngrab() {
+	SDL_WM_GrabInput(SDL_GRAB_OFF);
+
+	return;
+}
+
+
+DARNER_MOUSE darnerMouseGet(void *handle) {
+	DARNER *d = handle;
+
+	return d->input.mouse;
+}
 
 
 /***************************/
