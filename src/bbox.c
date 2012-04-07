@@ -35,6 +35,52 @@ void bboxDelete(void *handle, int key) {
 }
 
 
+void bboxMove(void *handle, int key, unsigned int x, unsigned int y) {
+	DARNER *m = handle;
+	int i;
+
+	for (i = 0; i < BBOX_MAX; i++)
+		if (m->bbox.bbox[i].key == key) {
+			m->bbox.bbox[i].x = x, m->bbox.bbox[i].y = y;
+			m->bbox.bbox[i].xb = x + m->bbox.bbox[i].w;
+			m->bbox.bbox[i].yb = y + m->bbox.bbox[i].h;
+			m->bbox.sort = 1;
+			return;
+		}
+	
+	return;
+}
+
+
+void bboxSort(void *handle) {
+	DARNER *m = handle;
+	int i, j;
+
+	for (i = 1; i < m->bbox.bboxes; i++) {
+		if (m->bbox.bbox[i].key == -1)
+			continue;
+		for (j = i; m->bbox.sortmode == SORT_MODE_X && j > 0 
+		  && (m->bbox.bbox[j].x < m->bbox.bbox[j-1].x 
+		  || m->bbox.bbox[j-1].key == -1); j--) {
+			tmp = m->bbox.bbox[j];
+			m->bbox.bbox[j] = m->bbox.bbox[j-1];
+			m->bbox.bbox[j-1] = tmp;
+		}
+
+		for (j = i; m->bbox.sortmode == SORT_MODE_Y && j > 0
+		  && (m->bbox.bbox[j].y < m->bbox.bbox[j-1].y
+		  || m->bbox.bbox[j-1].key == -1); j--) {
+			tmp = m->bbox.bbox[j];
+			m->bbox.bbox[j] = m->bbox.bbox[j-1];
+			m->bbox.bbox[j-1] = tmp;
+		}
+	}
+
+	return;
+}
+		
+
+
 void bboxClear(void *handle) {
 	DARNER *m = handle;
 	int i;
