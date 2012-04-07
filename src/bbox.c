@@ -12,10 +12,26 @@ int bboxAdd(void *handle, unsigned int x, unsigned int y, unsigned int w, unsign
 			m->bbox.bbox[i].key = m->bbox.cnt;
 			m->bbox.cnt++;
 			m->bbox.bbox[i].bboxes++;
+			m->bbox.sort = 1;
 			return m->bbox.bbox[i].key;
 		}
 	
 	return -1;
+}
+
+
+void bboxDelete(void *handle, int key) {
+	DARNER *m = handle;
+	int i;
+
+	for (i = 0; i < BBOX_MAX; i++) 
+		if (m->bbox.bbox[i].key == key) {
+			m->bbox.bbox[i].key = -1;
+			m->bbox.sort = 1;
+			return;
+		}
+	
+	return;
 }
 
 
