@@ -25,7 +25,17 @@ typedef struct {
 	unsigned int			sort;
 	unsigned int			cnt;
 	unsigned int			sortmode;
-} DARNER_BBOX;
+} BBOX;
+
+
+int bboxAdd(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+void bboxDelete(void *handle, int key);
+void bboxMove(void *handle, int key, unsigned int x, unsigned int y);
+void bboxSort(void *handle);
+void bboxClear(void *handle);
+int bboxInit(void *handle);
+int bboxCollBoxTest(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
+
 
 
 #endif

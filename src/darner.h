@@ -23,6 +23,7 @@ typedef struct {
 #include "audio.h"
 #include "imgload.h"
 #include "sprite.h"
+#include "bbox.h"
 
 
 typedef struct {
@@ -30,6 +31,7 @@ typedef struct {
 	INPUT		input;
 	AUDIO		audio;
 	SPRITE		sprite;
+	BBOX		bbox;
 } DARNER;
 
 
