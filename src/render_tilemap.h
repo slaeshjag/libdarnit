@@ -5,8 +5,8 @@
 typedef struct {
 	unsigned int			tilew;
 	unsigned int			tileh;
-	unsigned int			strip_x;
-	unsigned int			strip_y;
+	int				strip_x;
+	int				strip_y;
 	TILESHEET			*ts;
 	TILE_CACHE			*cache;
 	unsigned int			tm_w;
