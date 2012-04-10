@@ -11,8 +11,12 @@ int bboxAdd(void *handle, unsigned int x, unsigned int y, unsigned int w, unsign
 			m->bbox.bbox[i].h = h, m->bbox.bbox[i].xb = x+w, m->bbox.bbox[i].yb = y+h;
 			m->bbox.bbox[i].key = m->bbox.cnt;
 			m->bbox.cnt++;
+<<<<<<< HEAD
 			m->bbox.bboxes++;
 			m->bbox.sort = 1;
+=======
+			m->bbox.bbox[i].bboxes++;
+>>>>>>> master
 			return m->bbox.bbox[i].key;
 		}
 	
@@ -20,6 +24,7 @@ int bboxAdd(void *handle, unsigned int x, unsigned int y, unsigned int w, unsign
 }
 
 
+<<<<<<< HEAD
 void bboxDelete(void *handle, int key) {
 	DARNER *m = handle;
 	int i;
@@ -84,6 +89,8 @@ void bboxSort(void *handle) {
 		
 
 
+=======
+>>>>>>> master
 void bboxClear(void *handle) {
 	DARNER *m = handle;
 	int i;
@@ -102,7 +109,11 @@ void bboxClear(void *handle) {
 int bboxInit(void *handle) {
 	DARNER *m = handle;
 
+<<<<<<< HEAD
 	bboxClear(m);
+=======
+	bboxClear();
+>>>>>>> master
 	m->bbox.sortmode = SORT_MODE_X;
 	
 	return 0;
@@ -112,6 +123,10 @@ int bboxInit(void *handle) {
 
 int bboxCollBoxTest(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
 	DARNER *m = handle;
+<<<<<<< HEAD
+=======
+	DARNER_BBOX_ENTRY tmp;
+>>>>>>> master
 	int i, test, no;
 
 	if (m->bbox.sort)
