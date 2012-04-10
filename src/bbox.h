@@ -25,7 +25,6 @@ typedef struct {
 	unsigned int			sort;
 	unsigned int			cnt;
 	unsigned int			sortmode;
-<<<<<<< HEAD
 } BBOX;
 
 
@@ -36,10 +35,6 @@ void bboxSort(void *handle);
 void bboxClear(void *handle);
 int bboxInit(void *handle);
 int bboxCollBoxTest(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
-
-=======
-} DARNER_BBOX;
->>>>>>> master
 
 
 #endif
