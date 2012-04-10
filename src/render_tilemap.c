@@ -47,6 +47,64 @@ void renderTilemapRecalculate(RENDER_TILEMAP *tm) {
 }
 
 
+void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
+	int i, j, dx, dy, nx, ny, tx, ty, dir, ti;
+
+	tx = cam_x / tm->ts->wsq;
+	ty = cam_y / tm->ts->hsq;
+	nx = tm->cam_x / tm->ts->wsq;
+	ny = tm->cam_y / tm->ts->hsq;
+	dx = tx - nx;
+	dy = ty - ny;
+	if (dx < 0) dx *= -1;
+	if (dy < 0) dy *= -1;
+
+	if (dx > tm->tilew - 1 || dy > tm->tileh - 1) {
+		renderTilemapRecalculate(tm);
+		return;
+	}
+
+	/* Horisontal recalculation */
+	if (dx > 0) {
+		dir = (nx > tx) ? -1 : 1;
+		for (i = 0; i != dx; i++, nx += dir) {
+			ti = tm->strip_y + 1;
+			for (j = 0; j < tm->tileh; j++, ti++) {
+				if (ti == tm->tileh)
+					ti = 0;
+				renderTilemapRecalculateTile(tm, nx, ny, tm->strip_x, ti);
+			}
+			tm->strip_x += dir;
+			if (tm->strip_x == tm->tilew)
+				tm->strip_x = 0;
+			else if (tm->strip_x < 0)
+				tm->strip_x = tm->tilew - 1;
+		}
+	}
+
+	/* Vertical recalculation */
+	if (dy > 0) {
+		dir = (ny > ty) ? -1 : 1;
+		for (i = 0; i != dx; i++, ny += dir) {
+			ti = tm->strip_x + 1;
+			for (j = 0; j < tm->tilew; j++, ti++) {
+				if (ti == tm->tilew)
+					ti = 0;
+				renderTilemapRecalculateTile(tm, nx, ny, ti, tm->strip_y);
+			}
+			tm->strip_y += dir;
+			if (tm->strip_y == tm->tileh)
+				tm->strip_y = 0;
+			else if (tm->strip_y < 0)
+				tm->strip_y = tm->tileh - 1;
+		}
+	}
+
+	return;
+}
+
+
+
 void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts) {
 	RENDER_TILEMAP *tm;
 
