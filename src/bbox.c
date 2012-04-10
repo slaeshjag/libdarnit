@@ -112,7 +112,6 @@ int bboxInit(void *handle) {
 
 int bboxCollBoxTest(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
 	DARNER *m = handle;
-	DARNER_BBOX_ENTRY tmp;
 	int i, test, no;
 
 	if (m->bbox.sort)
