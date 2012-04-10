@@ -24,6 +24,7 @@ typedef struct {
 #include "imgload.h"
 #include "sprite.h"
 #include "bbox.h"
+#include "render_tilemap.h"
 
 
 typedef struct {
