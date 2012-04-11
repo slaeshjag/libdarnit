@@ -126,4 +126,11 @@ void *darnerMenuDestroy(void *menu);
 
 
 
+/* TILEMAPS */
+
+void *darnerRenderTilemapCreate(void *handle, unsigned int mapw, unsigned int maph, unsigned int *map, int cam_x, int cam_y, unsigned int invisibility_divider, void *tilesheet);
+void darnerRenderTilemapCameraMove(void *tilemap, int cam_x, int cam_y);
+void darnerRenderTilemap(void *tilemap);
+
+
 #endif

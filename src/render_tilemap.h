@@ -15,10 +15,13 @@ typedef struct {
 	int				cam_y;
 	unsigned int			dns_div;
 	unsigned int			*map;
+	int				lastdir_x;
+	int				lastdir_y;
 } RENDER_TILEMAP;
 
 
 void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts);
-
+void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y);
+void renderTilemapRender(RENDER_TILEMAP *tm);
 
 #endif
