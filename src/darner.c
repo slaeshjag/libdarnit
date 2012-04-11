@@ -474,3 +474,28 @@ void darnerMenuUnhide(void *menu) {
 void *darnerMenuDestroy(void *menu) {
 	return menutkDestroy(menu);
 }
+
+
+
+/***************************/
+/******* TILEMAPS **********/
+/***************************/
+
+
+void *darnerRenderTilemapCreate(void *handle, unsigned int mapw, unsigned int maph, unsigned int *map, int cam_x, int cam_y, unsigned int invisibility_divider, void *tilesheet) {
+	return renderTilemapCreate(handle, mapw, maph, map, cam_x, cam_y, invisibility_divider, tilesheet);
+}
+
+
+void darnerRenderTilemapCameraMove(RENDER_TILEMAP *tilemap, int cam_x, int cam_y) {
+	renderTilemapCameraMove(tilemap, cam_x, cam_y);
+
+	return;
+}
+
+
+void darnerRenderTilemap(void *tilemap) {
+	renderTilemapRender(tilemap);
+
+	return;
+}

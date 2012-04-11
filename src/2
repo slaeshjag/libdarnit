@@ -14,7 +14,7 @@ void renderTilemapRecalculateTile(RENDER_TILEMAP *tm, int x, int y, int view_x, 
 	int index, ci, i;
 	float *ptr;
 
-	index = y * tm->tm_w + x;
+	index = y * tm->ts->wsq + x;
 	ci = tm->tilew*view_y + view_x;
 
 	if (x >= tm->tm_w || x < 0)
@@ -29,7 +29,7 @@ void renderTilemapRecalculateTile(RENDER_TILEMAP *tm, int x, int y, int view_x, 
 		renderCalcTilePosCache(&tm->cache[ci], tm->ts, x*tm->ts->wsq, y*tm->ts->hsq);
 		return;
 	}
-	
+
 	ptr = (void *) &tm->cache[ci];
 	for (i = 0; i < 24; i++)
 		ptr[i] = 0.0f;
@@ -42,23 +42,21 @@ void renderTilemapRecalculate(RENDER_TILEMAP *tm) {
 	int i, j, x, y;
 
 	x = tm->cam_x / tm->ts->wsq;
-	for (i = 0; i < (tm->tilew); i++, x++) {
+	for (i = 0; i < (tm->tilew - 1); i++, x++) {
 		y = tm->cam_y / tm->ts->hsq;
-		for (j = 0; j < (tm->tileh); j++, y++) 
+		for (j = 0; j < (tm->tileh - 1); j++, y++) 
 			renderTilemapRecalculateTile(tm, x, y, i, j);
 	}
 
-	tm->strip_x = i - 1;
-	tm->strip_y = j - 1;
-	tm->lastdir_x = 0;
-	tm->lastdir_y = 0;
+	tm->strip_x = i;
+	tm->strip_y = j;
 
 	return;
 }
 
 
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
-	int i, j, dx, dy, nx, ny, tx, ty, dir, ti, tc, strip_x;
+	int i, j, dx, dy, nx, ny, tx, ty, dir, ti;
 
 	tx = cam_x / tm->ts->wsq;
 	ty = cam_y / tm->ts->hsq;
@@ -68,7 +66,6 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	dy = ty - ny;
 	if (dx < 0) dx *= -1;
 	if (dy < 0) dy *= -1;
-	strip_x = tm->strip_x;
 
 	if (dx > tm->tilew - 1 || dy > tm->tileh - 1) {
 		renderTilemapRecalculate(tm);
@@ -77,17 +74,13 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 
 	/* Horisontal recalculation */
 	if (dx > 0) {
-		fprintf(stderr, "Horisontal change\n");
 		dir = (nx > tx) ? -1 : 1;
-		tc = (dir == 1) ? nx + tm->tilew : nx-1;
-		if (dir == 1) { nx++; if (tm->lastdir_x < 1) tm->strip_x++; if (tm->strip_x == tm->tilew) tm->strip_x = 0; }
-		else { if (tm->lastdir_x > -1) tm->strip_x--; if (tm->strip_x < 0) tm->strip_x = tm->tilew - 1; }
 		for (i = 0; i != dx; i++, nx += dir) {
-			ti = tm->strip_y + 2;
+			ti = tm->strip_y + 1;
 			for (j = 0; j < tm->tileh; j++, ti++) {
-				if (ti >= tm->tileh)
+				if (ti == tm->tileh)
 					ti = 0;
-				renderTilemapRecalculateTile(tm, tc, ny+j, tm->strip_x, ti);
+				renderTilemapRecalculateTile(tm, nx, ny, tm->strip_x, ti);
 			}
 			tm->strip_x += dir;
 			if (tm->strip_x == tm->tilew)
@@ -95,19 +88,15 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 			else if (tm->strip_x < 0)
 				tm->strip_x = tm->tilew - 1;
 		}
-		tm->lastdir_x = dir;
 	}
 
 	/* Vertical recalculation */
 	if (dy > 0) {
 		dir = (ny > ty) ? -1 : 1;
-		tc = (dir == 1) ? ny + tm->tileh : ny - 1;
-		if (dir == 1) { ny++; if (tm->lastdir_y < 1) tm->strip_y++; if (tm->strip_y == tm->tileh) tm->strip_y = 0; }
-		else { if (tm->lastdir_y > -1) tm->strip_y--; if (tm->strip_y < 0) tm->strip_y = tm->tileh - 1; }
 		for (i = 0; i != dx; i++, ny += dir) {
-			ti = tm->strip_x + 2;
+			ti = tm->strip_x + 1;
 			for (j = 0; j < tm->tilew; j++, ti++) {
-				if (ti >= tm->tilew)
+				if (ti == tm->tilew)
 					ti = 0;
 				renderTilemapRecalculateTile(tm, nx, ny, ti, tm->strip_y);
 			}
@@ -119,16 +108,12 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 		}
 	}
 
-	tm->cam_x = cam_x;
-	tm->cam_y = cam_y;
-
 	return;
 }
 
 
 
 void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts) {
-	DARNER *m = handle;
 	RENDER_TILEMAP *tm;
 
 	if ((tm = malloc(sizeof(RENDER_TILEMAP))) == NULL) {
@@ -136,10 +121,10 @@ void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned
 		return NULL;
 	}
 
-	tm->tilew = m->video.w / ts->wsq;
-	tm->tilew += (m->video.w % ts->wsq) ? 3 : 2;	/* We need it to be 1 tile bigger than the amount of on-screen tiles */
-	tm->tileh = m->video.h / ts->hsq;
-	tm->tileh += (m->video.h % ts->hsq) ? 3 : 2; 	/* -||- */
+	tm->tilew = w / ts->wsq;
+	tm->tilew += (w % ts->wsq) ? 2 : 1;	/* We need it to be 1 tile bigger than the amount of on-screen tiles */
+	tm->tileh = h / ts->hsq;
+	tm->tileh += (h % ts->hsq) ? 2 : 1; 	/* -||- */
 
 	tm->tm_w = w;
 	tm->tm_h = h;
