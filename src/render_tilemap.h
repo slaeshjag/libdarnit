@@ -3,8 +3,8 @@
 
 
 typedef struct {
-	unsigned int			tilew;
-	unsigned int			tileh;
+	int				tilew;
+	int				tileh;
 	int				strip_x;
 	int				strip_y;
 	TILESHEET			*ts;

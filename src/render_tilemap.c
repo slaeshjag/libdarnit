@@ -58,7 +58,7 @@ void renderTilemapRecalculate(RENDER_TILEMAP *tm) {
 
 
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
-	int i, j, dx, dy, nx, ny, tx, ty, dir, ti, tc, strip_x;
+	int i, j, dx, dy, nx, ny, tx, ty, dir, ti, tc;
 
 	tx = cam_x / tm->ts->wsq;
 	ty = cam_y / tm->ts->hsq;
@@ -68,7 +68,6 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	dy = ty - ny;
 	if (dx < 0) dx *= -1;
 	if (dy < 0) dy *= -1;
-	strip_x = tm->strip_x;
 
 	if (dx > tm->tilew - 1 || dy > tm->tileh - 1) {
 		renderTilemapRecalculate(tm);
@@ -77,20 +76,27 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 
 	/* Horisontal recalculation */
 	if (dx > 0) {
-		fprintf(stderr, "Horisontal change\n");
+		if (tm->strip_x == 0) fprintf(stderr, "H: ");
 		dir = (nx > tx) ? -1 : 1;
-		tc = (dir == 1) ? nx + tm->tilew : nx-1;
-		if (dir == 1) { nx++; if (tm->lastdir_x < 1) tm->strip_x++; if (tm->strip_x == tm->tilew) tm->strip_x = 0; }
+		tc = (dir == 1) ? nx + tm->tilew: nx-1;
+		if (dir == 1) { 
+			nx++; 
+			if (tm->lastdir_x < 1) 
+				tm->strip_x++; 
+			if (tm->strip_x >= tm->tilew) 
+				tm->strip_x = 0; 
+		}
 		else { if (tm->lastdir_x > -1) tm->strip_x--; if (tm->strip_x < 0) tm->strip_x = tm->tilew - 1; }
 		for (i = 0; i != dx; i++, nx += dir) {
-			ti = tm->strip_y + 2;
-			for (j = 0; j < tm->tileh; j++, ti++) {
+			ti = tm->strip_y + 1;
+			for (j = 0; j < tm->tileh-1; j++, ti++) {
 				if (ti >= tm->tileh)
 					ti = 0;
+				fprintf(stderr, "H: %i %i %i %i\n", tc, ny+j, tm->strip_x, ti);
 				renderTilemapRecalculateTile(tm, tc, ny+j, tm->strip_x, ti);
 			}
 			tm->strip_x += dir;
-			if (tm->strip_x == tm->tilew)
+			if (tm->strip_x >= tm->tilew)
 				tm->strip_x = 0;
 			else if (tm->strip_x < 0)
 				tm->strip_x = tm->tilew - 1;
@@ -98,28 +104,38 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 		tm->lastdir_x = dir;
 	}
 
+	tm->cam_x = cam_x;
+	
 	/* Vertical recalculation */
 	if (dy > 0) {
+		if (tm->strip_y == 0) fprintf(stderr, "\nV: ");
 		dir = (ny > ty) ? -1 : 1;
 		tc = (dir == 1) ? ny + tm->tileh : ny - 1;
-		if (dir == 1) { ny++; if (tm->lastdir_y < 1) tm->strip_y++; if (tm->strip_y == tm->tileh) tm->strip_y = 0; }
+		if (dir == 1) { 
+			ny++; 
+			if (tm->lastdir_y < 1) 
+				tm->strip_y++; 
+			if (tm->strip_y >= tm->tileh) 
+				tm->strip_y = 0; 
+		}
 		else { if (tm->lastdir_y > -1) tm->strip_y--; if (tm->strip_y < 0) tm->strip_y = tm->tileh - 1; }
-		for (i = 0; i != dx; i++, ny += dir) {
-			ti = tm->strip_x + 2;
-			for (j = 0; j < tm->tilew; j++, ti++) {
+		for (i = 0; i != dy; i++, ny += dir) {
+			ti = tm->strip_x + 1;
+			for (j = 0; j < tm->tilew-1; j++, ti++) {
 				if (ti >= tm->tilew)
 					ti = 0;
-				renderTilemapRecalculateTile(tm, nx, ny, ti, tm->strip_y);
+				fprintf(stderr, "V: %i %i %i %i\n", ny+j, tc, ti, tm->strip_x);
+				renderTilemapRecalculateTile(tm, nx+j, tc, ti, tm->strip_y);
 			}
 			tm->strip_y += dir;
-			if (tm->strip_y == tm->tileh)
+			if (tm->strip_y >= tm->tileh)
 				tm->strip_y = 0;
 			else if (tm->strip_y < 0)
 				tm->strip_y = tm->tileh - 1;
 		}
+		tm->lastdir_y = dir;
 	}
 
-	tm->cam_x = cam_x;
 	tm->cam_y = cam_y;
 
 	return;
