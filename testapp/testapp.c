@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 
 	font = darnerFontLoad(handle, "font.png", 10, 16, 4);
 	surface = darnerMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10);
-	darnerMusicPlayVorbis(handle, "test.ogg");
+//	darnerMusicPlayVorbis(handle, "test.ogg");
 
 	sprite = darnerSpriteLoad(handle, "test.spr", 0);
 	darnerSpriteMove(handle, sprite , 50, 50, 0);
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 		else
 			j = (i % 100) * 8;
 		darnerRenderOffset(handle, -1*j, j);
-		fprintf(stderr, "Rendering at offset %i %i\n", j, j);
+//		fprintf(stderr, "Rendering at offset %i %i\n", j, j);
 		darnerRenderTilemapCameraMove(tmap, j, j);
 		darnerRenderTilemap(tmap);
 		darnerRenderOffset(handle, 0, 0);
