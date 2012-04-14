@@ -5,18 +5,20 @@
 typedef struct {
 	int				tilew;
 	int				tileh;
-	int				strip_x;
-	int				strip_y;
 	TILESHEET			*ts;
 	TILE_CACHE			*cache;
-	unsigned int			tm_w;
-	unsigned int			tm_h;
-	int				cam_x;
-	int				cam_y;
+	int				tm_w;
+	int				tm_h;
 	unsigned int			dns_div;
 	unsigned int			*map;
-	int				lastdir_x;
-	int				lastdir_y;
+	int				*row;
+	int				*col;
+	int				*row_spare;
+	int				*col_spare;
+	int				col_spares;
+	int				row_spares;
+	int				*needbuf_x;
+	int				*needbuf_y;
 } RENDER_TILEMAP;
 
 
