@@ -20,21 +20,23 @@ typedef struct {
 
 
 typedef struct {
-	DARNER_BBOX_ENTRY		bbox[BBOX_MAX];
+	DARNER_BBOX_ENTRY		*bbox;
 	unsigned int			bboxes;
 	unsigned int			sort;
 	unsigned int			cnt;
 	unsigned int			sortmode;
+	unsigned int			max;
 } BBOX;
 
 
-int bboxAdd(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
-void bboxDelete(void *handle, int key);
-void bboxMove(void *handle, int key, unsigned int x, unsigned int y);
-void bboxSort(void *handle);
-void bboxClear(void *handle);
-int bboxInit(void *handle);
-int bboxCollBoxTest(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
+int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+void bboxDelete(BBOX *bbox, int key);
+void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y);
+void bboxSort(BBOX *bbox);
+void bboxClear(BBOX *bbox);
+void *bboxNew(unsigned int size);
+void bboxFree(BBOX *bbox);
+int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
 
 
 #endif

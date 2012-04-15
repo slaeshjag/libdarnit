@@ -25,5 +25,6 @@ typedef struct {
 void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts);
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y);
 void renderTilemapRender(RENDER_TILEMAP *tm);
+void renderTilemapFree(RENDER_TILEMAP *tm);
 
 #endif
