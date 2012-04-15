@@ -3,11 +3,15 @@ SOURCE = src/render.c src/darner.c src/input.c src/text.c src/menutk.c src/audio
 LDFLAGS += -lSDL -lmodplay -lvorbisfile -lpng -L./bin
 
 default:
+	mkdir -p bin
+	cd deps/modplay && make
 	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarner.so $(LDFLAGS) -lGL
 
 pandora:
+	mkdir -p bin
+	cd deps/modplay && make
 	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarner.so $(LDFLAGS) -lGLES_CM -lEGL -lX11
 
 clean:
-	rm -f bin/libdarner.so
+	rm -Rf bin
 	rm -f testapp/testapp
