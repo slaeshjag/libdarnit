@@ -18,7 +18,7 @@ int videoInitGL(int w, int h) {
 }
 
 
-int videoInit(void *handle) {
+int videoInit(void *handle, const char *wtitle) {
 	DARNER *m = handle;
 	EGLint configs_avail = 0;
 	SDL_SysWMinfo sysinfo;
@@ -84,7 +84,7 @@ int videoInit(void *handle) {
 
 	m->video.offset_x = m->video.offset_y = 0;
 
-	SDL_WM_SetCaption(PROJECT_NAME, NULL);
+	SDL_WM_SetCaption(wtitle, NULL);
 	videoInitGL(800, 480);
 	
 	return 0;
@@ -109,7 +109,7 @@ void videoClearScreen() {
 
 
 int videoLoop(void *handle) {
-	MAIN *m = handle;
+	DARNER *m = handle;
 	
 	videoSwapBuffers(handle);
 	videoClearScreen();
