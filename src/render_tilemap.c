@@ -21,8 +21,8 @@ void renderTilemapRecalculateTile(RENDER_TILEMAP *tm, int x, int y, int view_x, 
 		clear = 1;
 	else if (y >= tm->tm_h || y < 0)
 		clear = 1;
-//	else if (tm->map[index] % tm->dns_div)
-//		clear = 1;
+	else if (!tm->map[index] % tm->dns_div)
+		clear = 1;
 	
 	if (!clear) {
 		renderCalcTileCache(&tm->cache[ci], tm->ts, tm->map[index]);
@@ -39,14 +39,12 @@ void renderTilemapRecalculateTile(RENDER_TILEMAP *tm, int x, int y, int view_x, 
 
 
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
-	int i, j, tx, ty, bx, by;
+	int i, j, k, tx, ty, bx, by, index;
 
 	tx = cam_x / tm->ts->wsq;
 	ty = cam_y / tm->ts->hsq;
 	bx = tx + tm->tilew - 1;
 	by = ty + tm->tileh - 1;
-
-	fprintf(stderr, "%i,,;,,%i\n", tx, ty);
 
 	for (i = 0; i < tm->tilew - 1; i++)
 		tm->needbuf_x[i] = tx + i;
@@ -57,7 +55,6 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 		if (tm->col[i] < tx || tm->col[i] > bx) {	// Don't need it, free it!
 			if (tm->col[i] == -1)			// Oh, never mind
 				continue;
-			fprintf(stderr, "Freeing %i\n", i);
 			tm->col_spare[tm->col_spares] = i;
 			tm->col_spares++;
 			tm->col[i] = -1;
@@ -88,26 +85,37 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 		}
 	}
 
-	fprintf(stderr, "Spares: %i, %i\n", tm->col_spares, tm->row_spares);
-
-
 	// Now, fill in the missing rows/cols //
 	for (i = 0; i < tm->tilew - 1; i++)
 		if (tm->needbuf_x[i] != -1) {
-			fprintf(stderr, "Eek, bad time ahead! (X), %i, %i, %i\n", tm->needbuf_x[i], i, tm->col_spare[tm->col_spares]);
 			tm->col_spares--;
 			tm->col[tm->col_spare[tm->col_spares]] = tm->needbuf_x[i];
-			for (j = 0; j < tm->tileh; j++)
-				renderTilemapRecalculateTile(tm, tm->needbuf_x[i], ty+j, tm->col_spare[tm->col_spares], j);
+			for (j = 0; j < tm->tileh-1; j++) {
+				for (k = 0; k < tm->tileh; k++)
+					if (tm->row[k] == ty+j) {
+						index = k;
+						break;
+					}
+				if (k == tm->tileh)
+					continue;
+				renderTilemapRecalculateTile(tm, tm->needbuf_x[i], ty+j, tm->col_spare[tm->col_spares], index);
+			}
 		}
 	
 	for (i = 0; i < tm->tileh - 1; i++)
 		if (tm->needbuf_y[i] != -1) {
-			fprintf(stderr, "Eek, bad time ahead! (Y)\n");
 			tm->row_spares--;
 			tm->row[tm->row_spare[tm->row_spares]] = tm->needbuf_y[i];
-			for (j = 0; j < tm->tilew; j++)
-				renderTilemapRecalculateTile(tm, tx+j, tm->needbuf_y[i], j, tm->row_spare[tm->row_spares]);
+			for (j = 0; j < tm->tilew-1; j++) {
+				for (k = 0; k < tm->tilew; k++)
+					if (tm->col[k] == tx+j) {
+						index = k;
+						break;
+					}
+				if (k == tm->tilew)
+					continue;
+				renderTilemapRecalculateTile(tm, tx+j, tm->needbuf_y[i], index, tm->row_spare[tm->row_spares]);
+			}
 		}
 
 	
@@ -115,91 +123,6 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	return;
 }
 
-/*
-void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
-	int i, j, dx, dy, nx, ny, tx, ty, dir, ti, tc;
-
-	tx = cam_x / tm->ts->wsq;
-	ty = cam_y / tm->ts->hsq;
-	nx = tm->cam_x / tm->ts->wsq;
-	ny = tm->cam_y / tm->ts->hsq;
-	dx = tx - nx;
-	dy = ty - ny;
-	if (dx < 0) dx *= -1;
-	if (dy < 0) dy *= -1;
-
-	if (dx > tm->tilew - 4 || dy > tm->tileh - 4) {
-		renderTilemapRecalculate(tm);
-		return;
-	}
-
-//	 Horisontal recalculation 
-	if (dx > 0) {
-		if (tm->strip_x == 0) fprintf(stderr, "H: ");
-		dir = (nx > tx) ? -1 : 1;
-		tc = (dir == 1) ? nx + tm->tilew: nx-1;
-		if (dir == 1) { 
-			nx++; 
-			if (tm->lastdir_x < 1) 
-				tm->strip_x++; 
-			if (tm->strip_x >= tm->tilew) 
-				tm->strip_x = 0; 
-		}
-		else { if (tm->lastdir_x > -1) tm->strip_x--; if (tm->strip_x < 0) tm->strip_x = tm->tilew - 1; }
-		for (i = 0; i != dx; i++, nx += dir) {
-			ti = tm->strip_y + 1;
-			for (j = 0; j < tm->tileh-1; j++, ti++) {
-				if (ti >= tm->tileh)
-					ti = 0;
-				fprintf(stderr, "H: %i %i %i %i\n", tc, ny+j, tm->strip_x, ti);
-		//		renderTilemapRecalculateTile(tm, tc, ny+j, tm->strip_x, ti);
-			}
-			tm->strip_x += dir;
-			if (tm->strip_x >= tm->tilew)
-				tm->strip_x = 0;
-			else if (tm->strip_x < 0)
-				tm->strip_x = tm->tilew - 1;
-		}
-		tm->lastdir_x = dir;
-	}
-
-	tm->cam_x = cam_x;
-	
-//	 Vertical recalculation 
-	if (dy > 0) {
-		if (tm->strip_y == 0) fprintf(stderr, "\nV: ");
-		dir = (ny > ty) ? -1 : 1;
-		tc = (dir == 1) ? ny + tm->tileh : ny - 1;
-		if (dir == 1) { 
-			ny++; 
-			if (tm->lastdir_y < 1) 
-				tm->strip_y++; 
-			if (tm->strip_y >= tm->tileh) 
-				tm->strip_y = 0; 
-		}
-		else { if (tm->lastdir_y > -1) tm->strip_y--; if (tm->strip_y < 0) tm->strip_y = tm->tileh - 1; }
-		for (i = 0; i != dy; i++, ny += dir) {
-			ti = tm->strip_x + 1;
-			for (j = 0; j < tm->tilew-1; j++, ti++) {
-				if (ti >= tm->tilew)
-					ti = 0;
-				fprintf(stderr, "V: %i %i %i %i;; %i\n", nx+j, tc, ti, tm->strip_y, tm->tilew);
-				renderTilemapRecalculateTile(tm, nx+j, tc, ti, tm->strip_y);
-			}
-			tm->strip_y += dir;
-			if (tm->strip_y >= tm->tileh)
-				tm->strip_y = 0;
-			else if (tm->strip_y < 0)
-				tm->strip_y = tm->tileh - 1;
-		}
-		tm->lastdir_y = dir;
-	}
-
-	tm->cam_y = cam_y;
-
-	return;
-}
-*/
 
 
 void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts) {
@@ -230,6 +153,7 @@ void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned
 	tm->dns_div = invisibility_divider;
 	tm->map = map;
 	
+
 	for (i = 0; i < tm->tilew; i++) {
 		tm->col[i] = -1;
 		tm->col_spare[i] = i;
@@ -248,7 +172,24 @@ void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned
 		return NULL;
 	}
 
-	renderTilemapCameraMove(tm, camera_x, camera_y);
+	for (i = 0; i < tm->tilew * tm->tileh; i++)
+		renderTilemapRecalculateTile(tm, -1, -1, -1, -1);
+	renderTilemapCameraMove(tm, tm->tm_w, tm->tm_h);			// This "fixes" a weird rendering bug
+	renderTilemapCameraMove(tm, 0, 0);
 
 	return tm;
+}
+
+
+void renderTilemapFree(RENDER_TILEMAP *tm) {
+	free(tm->cache);
+	free(tm->row);
+	free(tm->col);
+	free(tm->row_spare);
+	free(tm->col_spare);
+	free(tm->needbuf_x);
+	free(tm->needbuf_y);
+	free(tm);
+
+	return;
 }

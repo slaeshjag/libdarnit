@@ -1,33 +1,31 @@
 #include "darner.h"
 
 
-int bboxAdd(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
-	DARNER *m = handle;
+int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
 	int i;
 
-	for (i = 0; i < BBOX_MAX; i++)
-		if (m->bbox.bbox[i].key == -1) {
-			m->bbox.bbox[i].x = x, m->bbox.bbox[i].y = y, m->bbox.bbox[i].w = w;
-			m->bbox.bbox[i].h = h, m->bbox.bbox[i].xb = x+w, m->bbox.bbox[i].yb = y+h;
-			m->bbox.bbox[i].key = m->bbox.cnt;
-			m->bbox.cnt++;
-			m->bbox.bboxes++;
-			m->bbox.sort = 1;
-			return m->bbox.bbox[i].key;
+	for (i = 0; i < bbox->max; i++)
+		if (bbox->bbox[i].key == -1) {
+			bbox->bbox[i].x = x, bbox->bbox[i].y = y, bbox->bbox[i].w = w;
+			bbox->bbox[i].h = h, bbox->bbox[i].xb = x+w, bbox->bbox[i].yb = y+h;
+			bbox->bbox[i].key = bbox->cnt;
+			bbox->cnt++;
+			bbox->bboxes++;
+			bbox->sort = 1;
+			return bbox->bbox[i].key;
 		}
 	
 	return -1;
 }
 
 
-void bboxDelete(void *handle, int key) {
-	DARNER *m = handle;
+void bboxDelete(BBOX *bbox, int key) {
 	int i;
 
-	for (i = 0; i < BBOX_MAX; i++) 
-		if (m->bbox.bbox[i].key == key) {
-			m->bbox.bbox[i].key = -1;
-			m->bbox.sort = 1;
+	for (i = 0; i < bbox->max; i++) 
+		if (bbox->bbox[i].key == key) {
+			bbox->bbox[i].key = -1;
+			bbox->sort = 1;
 			return;
 		}
 	
@@ -35,16 +33,15 @@ void bboxDelete(void *handle, int key) {
 }
 
 
-void bboxMove(void *handle, int key, unsigned int x, unsigned int y) {
-	DARNER *m = handle;
+void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 	int i;
 
-	for (i = 0; i < BBOX_MAX; i++)
-		if (m->bbox.bbox[i].key == key) {
-			m->bbox.bbox[i].x = x, m->bbox.bbox[i].y = y;
-			m->bbox.bbox[i].xb = x + m->bbox.bbox[i].w;
-			m->bbox.bbox[i].yb = y + m->bbox.bbox[i].h;
-			m->bbox.sort = 1;
+	for (i = 0; i < bbox->max; i++)
+		if (bbox->bbox[i].key == key) {
+			bbox->bbox[i].x = x, bbox->bbox[i].y = y;
+			bbox->bbox[i].xb = x + bbox->bbox[i].w;
+			bbox->bbox[i].yb = y + bbox->bbox[i].h;
+			bbox->sort = 1;
 			return;
 		}
 	
@@ -52,115 +49,130 @@ void bboxMove(void *handle, int key, unsigned int x, unsigned int y) {
 }
 
 
-void bboxSort(void *handle) {
-	DARNER *m = handle;
+void bboxSort(BBOX *bbox) {
 	DARNER_BBOX_ENTRY tmp;
 	int i, j;
 
-	for (i = 1; i < m->bbox.bboxes; i++) {
-		if (m->bbox.bbox[i].key == -1)
+	for (i = 1; i < bbox->max; i++) {
+		if (bbox->bbox[i].key == -1)
 			continue;
-		for (j = i; m->bbox.sortmode == SORT_MODE_X && j > 0 
-		  && (m->bbox.bbox[j].x < m->bbox.bbox[j-1].x 
-		  || m->bbox.bbox[j-1].key == -1); j--) {
-			tmp = m->bbox.bbox[j];
-			m->bbox.bbox[j] = m->bbox.bbox[j-1];
-			m->bbox.bbox[j-1] = tmp;
+		for (j = i; bbox->sortmode == SORT_MODE_X && j > 0 
+		  && (bbox->bbox[j].x < bbox->bbox[j-1].x 
+		  || bbox->bbox[j-1].key == -1); j--) {
+			tmp = bbox->bbox[j];
+			bbox->bbox[j] = bbox->bbox[j-1];
+			bbox->bbox[j-1] = tmp;
 		}
 
-		for (j = i; m->bbox.sortmode == SORT_MODE_Y && j > 0
-		  && (m->bbox.bbox[j].y < m->bbox.bbox[j-1].y
-		  || m->bbox.bbox[j-1].key == -1); j--) {
-			tmp = m->bbox.bbox[j];
-			m->bbox.bbox[j] = m->bbox.bbox[j-1];
-			m->bbox.bbox[j-1] = tmp;
+		for (j = i; bbox->sortmode == SORT_MODE_Y && j > 0
+		  && (bbox->bbox[j].y < bbox->bbox[j-1].y
+		  || bbox->bbox[j-1].key == -1); j--) {
+			tmp = bbox->bbox[j];
+			bbox->bbox[j] = bbox->bbox[j-1];
+			bbox->bbox[j-1] = tmp;
 		}
 	}
 
-	m->bbox.sort = 0;
+	bbox->sort = 0;
 
 	return;
 }
 		
 
 
-void bboxClear(void *handle) {
-	DARNER *m = handle;
+void bboxClear(BBOX *bbox) {
 	int i;
 
-	for (i = 0; i < BBOX_MAX; i++)
-		m->bbox.bbox[i].key = -1;
+	for (i = 0; i < bbox->max; i++)
+		bbox->bbox[i].key = -1;
 	
-	m->bbox.bboxes = 0;
-	m->bbox.cnt = 0;
-	m->bbox.sort = 0;
+	bbox->bboxes = 0;
+	bbox->cnt = 0;
+	bbox->sort = 0;
 
 	return;
 }
 
 
-int bboxInit(void *handle) {
-	DARNER *m = handle;
-
-	bboxClear(m);
-	m->bbox.sortmode = SORT_MODE_X;
-	
-	return 0;
-}
-
-
-
-int bboxCollBoxTest(void *handle, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
-	DARNER *m = handle;
+int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
 	int i, test, no;
 
-	if (m->bbox.sort)
-		bboxSort(m);
+	if (bbox->sort)
+		bboxSort(bbox);
 	
-	test = i = m->bbox.bboxes>>1;
+	test = i = bbox->bboxes>>1;
 	i >>= 1;
 
-	if (m->bbox.sortmode == SORT_MODE_X) {
+	if (bbox->sortmode == SORT_MODE_X) {
 		for (; i > TARGET_FILTER; i>>=1) {
-			if (m->bbox.bbox[test+i].xb < x)
+			if (bbox->bbox[test+i].xb < x)
 				test += i;
-			else if (m->bbox.bbox[test].xb < x);
+			else if (bbox->bbox[test].xb < x);
 			else
 				test -= i;
 		}
 
-		if (m->bbox.bbox[test].xb > x)
+		if (bbox->bbox[test].xb > x)
 			test = 0;
 	} else {
 		for (; i > TARGET_FILTER; i>>=1) {
-			if (m->bbox.bbox[test+i].yb < y)
+			if (bbox->bbox[test+i].yb < y)
 				test += i;
-			else if (m->bbox.bbox[test].yb < y);
+			else if (bbox->bbox[test].yb < y);
 			else
 				test -= i;
 		}
 
-		if (m->bbox.bbox[test].yb > y)
+		if (bbox->bbox[test].yb > y)
 			test = 0;
 	}
 	
 	no = 0;
 
-	for (i = test; i < m->bbox.bboxes; i++) {
-		if (m->bbox.sort == SORT_MODE_X && m->bbox.bbox[i].x > x+w)
+	for (i = test; i < bbox->bboxes; i++) {
+		if (bbox->sort == SORT_MODE_X && bbox->bbox[i].x > x+w)
 			break;
-		if (m->bbox.sort == SORT_MODE_Y && m->bbox.bbox[i].y > y+h)
+		if (bbox->sort == SORT_MODE_Y && bbox->bbox[i].y > y+h)
 			break;
-		if (m->bbox.bbox[i].xb <= x || m->bbox.bbox[i].x >= x+w)
+		if (bbox->bbox[i].xb <= x || bbox->bbox[i].x >= x+w)
 			continue;
-		if (m->bbox.bbox[i].yb <= y || m->bbox.bbox[i].y >= y+h)
+		if (bbox->bbox[i].yb <= y || bbox->bbox[i].y >= y+h)
 			continue;
 		if (no == listlen)
 			break;
-		list[no] = m->bbox.bbox[i].key;
+		list[no] = bbox->bbox[i].key;
 		no++;
 	}
 
 	return no;
 }
 
+
+
+void *bboxNew(unsigned int size) {
+	BBOX *bbox;
+
+	if ((bbox = malloc(sizeof(BBOX))) == NULL)
+		return NULL;
+	
+	if ((bbox->bbox = malloc(sizeof(BBOX)*size)) == NULL) {
+		free(bbox);
+		return NULL;
+	}
+
+	bbox->max = size;
+	bboxSort(bbox);
+	bbox->sortmode = SORT_MODE_X;
+
+	return bbox;
+}
+
+
+
+void bboxFree(BBOX *bbox) {
+
+	free(bbox->bbox);
+	free(bbox);
+
+	return;
+}

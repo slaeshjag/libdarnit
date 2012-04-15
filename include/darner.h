@@ -36,6 +36,15 @@ typedef struct {
 } DARNER_SHADE_COLOR;
 
 
+
+typedef struct {
+	int		w;
+	int		h;
+	unsigned int	*data;
+	void		*render;
+} TILEMAP;
+
+
 /* MAIN */
 
 void *darnerInit(const char *wtitle);
@@ -128,9 +137,23 @@ void *darnerMenuDestroy(void *menu);
 
 /* TILEMAPS */
 
-void *darnerRenderTilemapCreate(void *handle, unsigned int mapw, unsigned int maph, unsigned int *map, int cam_x, int cam_y, unsigned int invisibility_divider, void *tilesheet);
-void darnerRenderTilemapCameraMove(void *tilemap, int cam_x, int cam_y);
-void darnerRenderTilemap(void *tilemap);
+TILEMAP darnerRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet);
+void darnerRenderTilemapCameraMove(TILEMAP tilemap, int cam_x, int cam_y);
+void darnerRenderTilemap(TILEMAP);
+void darnerRenderTilemapDelete(TILEMAP tilemap);
+
+
+
+/* BBOX */
+
+void *darnerBBoxNew(unsigned int size);
+void *DarnerBBoxFree(void *bbox);
+int darnerBBoxCollTest(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
+int darnerBBoxEntryAdd(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+void darnerBBoxEntryDelete(void *bbox, int key);
+void darnerBBoxEntryMove(void *bbox, int key, unsigned int x, unsigned int y);
+void darnerBBoxClear(void *bbox);
+
 
 
 #endif

@@ -482,20 +482,79 @@ void *darnerMenuDestroy(void *menu) {
 /***************************/
 
 
-void *darnerRenderTilemapCreate(void *handle, unsigned int mapw, unsigned int maph, unsigned int *map, int cam_x, int cam_y, unsigned int invisibility_divider, void *tilesheet) {
-	return renderTilemapCreate(handle, mapw, maph, map, cam_x, cam_y, invisibility_divider, tilesheet);
+TILEMAP_ENTRY darnerRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet) {
+	return tilemapLoad(handle, fname, invisibility_divider, tilesheet);
 }
 
 
-void darnerRenderTilemapCameraMove(RENDER_TILEMAP *tilemap, int cam_x, int cam_y) {
-	renderTilemapCameraMove(tilemap, cam_x, cam_y);
+void darnerRenderTilemapCameraMove(TILEMAP_ENTRY tilemap, int cam_x, int cam_y) {
+	renderTilemapCameraMove(tilemap.render, cam_x, cam_y);
 
 	return;
 }
 
 
-void darnerRenderTilemap(void *tilemap) {
-	renderTilemapRender(tilemap);
+void darnerRenderTilemap(TILEMAP_ENTRY tilemap) {
+	renderTilemapRender(tilemap.render);
 
 	return;
 }
+
+
+void darnerRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
+	tilemapFree(tilemap);
+
+	return;
+}
+
+
+
+
+/************************/
+/***** BBOX *************/
+/************************/
+
+
+void *darnerBBoxNew(unsigned int size) {
+	return bboxNew(size);
+}
+
+
+void *DarnerBBoxFree(BBOX *bbox) {
+	bboxFree(bbox);
+
+	return NULL;
+}
+
+
+int darnerBBoxCollTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
+	return bboxCollBoxTest(bbox, x, y, w, h, list, listlen);
+}
+
+
+int darnerBBoxEntryAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+	return bboxAdd(bbox, x, y, w, h);
+}
+
+
+void darnerBBoxEntryDelete(BBOX *bbox, int key) {
+	bboxDelete(bbox, key);
+
+	return;
+}
+
+
+void darnerBBoxEntryMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
+	bboxMove(bbox, key, x, y);
+
+	return;
+}
+
+
+void darnerBBoxClear(BBOX *bbox) {
+	bboxClear(bbox);
+
+	return;
+}
+
+
