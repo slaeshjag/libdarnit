@@ -27,6 +27,22 @@ typedef struct {
 } DARNIT_MOUSE;
 
 
+typedef struct {
+	unsigned int			up;
+	unsigned int			down;
+	unsigned int			left;
+	unsigned int			right;
+	unsigned int			x;
+	unsigned int			y;
+	unsigned int			a;
+	unsigned int			b;
+	unsigned int			start;
+	unsigned int			select;
+	unsigned int			l;
+	unsigned int			r;
+} DARNIT_INPUT_MAP;
+
+
 #define		BUTTON_ACCEPT		b
 #define		BUTTON_CANCEL		a
 
@@ -58,6 +74,10 @@ void darnitButtonSet(void *handle, DARNIT_KEYS buttons);
 void darnitInputGrab();
 void darnitInputUngrab();
 DARNIT_MOUSE darnitMouseGet(void *handle);
+void darnitButtonMappingReset(void *handle);
+void darnitButtonMappingSet(void *handle, DARNIT_INPUT_MAP map);
+DARNIT_INPUT_MAP darnitButtonMappingGet(void *handle);
+
 
 
 /* AUDIO */
