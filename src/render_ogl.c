@@ -18,23 +18,27 @@ int videoInitGL(int w, int h) {
 }
 
 
-int videoInit(void *handle, const char *wtitle) {	
+int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen) {
 	DARNIT *m = handle;
-	
+	unsigned int mode;
+
+	mode = SDL_OPENGL;
+	if (fullscreen) mode |= SDL_FULLSCREEN;
+
 	
 	/* here goes SDL init code */
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	if ((m->video.screen = SDL_SetVideoMode(800, 480, 16, SDL_OPENGL)) == NULL) {
+	if ((m->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to set up a window for SDL\n");
 		return -1;
 	}
 	
-	m->video.swgran = 2.0f/800;
-	m->video.shgran = 2.0f/480;
+	m->video.swgran = 2.0f/screenw;
+	m->video.shgran = 2.0f/screenh;
 
-	m->video.w = 800;
-	m->video.h = 480;
+	m->video.w = screenw;
+	m->video.h = screenh;
 
 	m->video.camx = 0;
 	m->video.camy = 0;
@@ -42,7 +46,7 @@ int videoInit(void *handle, const char *wtitle) {
 	m->video.time = SDL_GetTicks();
 	
 	SDL_WM_SetCaption(wtitle, NULL);
-	videoInitGL(800, 480);
+	videoInitGL(screenw, screenh);
 	
 	return 0;
 }

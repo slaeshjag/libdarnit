@@ -23,7 +23,7 @@ void inputKeymapReset(void *handle) {
 }
 
 
-void inputInit(void *handle) {
+int inputInit(void *handle) {
 	DARNIT *m = handle;
 
 	m->input.key = 0;
@@ -34,7 +34,7 @@ void inputInit(void *handle) {
 
 	inputKeymapReset(m);
 
-	return;
+	return 0;
 }
 
 

@@ -50,7 +50,7 @@ typedef struct {
 
 
 void inputPoll(void *handle);
-void inputInit(void *handle);
+int inputInit(void *handle);
 unsigned int inputASCIIPop(void *handle);
 void inputKeymapReset(void *handle);
 

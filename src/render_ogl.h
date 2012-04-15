@@ -8,10 +8,6 @@
 #define COLOURDEPTH_DEPTH_SIZE		16
 
 
-#define		SCREEN_GRAN_W		2.0f/800 
-#define		SCREEN_GRAN_H		2.0f/480 
-
-
 
 #include	<SDL/SDL.h>
 #include	<SDL/SDL_opengl.h>
@@ -30,7 +26,7 @@ typedef struct {
 	int				offset_y;
 } VIDEO;
 
-int videoInit(void *handle, const char *wtitle);
+int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen);
 int videoLoop(void *handle);
 void videoSwapBuffers(void *handle);
 void videoClearScreen();
