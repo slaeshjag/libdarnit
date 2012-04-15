@@ -1,8 +1,8 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 int spriteInit(void *handle, unsigned int prealloc) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i;
 
 	m->sprite.sprites = prealloc;
@@ -22,7 +22,7 @@ int spriteInit(void *handle, unsigned int prealloc) {
 
 
 int spriteGetOne(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i;
 
 	for (i = 0; i < m->sprite.sprites; i++)
@@ -38,7 +38,7 @@ int spriteGetOne(void *handle) {
 
 int spriteGetIndex(void *handle, int id) {
 	int i;
-	DARNER *m = handle;
+	DARNIT *m = handle;
 
 	for (i = 0; i < m->sprite.sprites; i++)
 		if (m->sprite.sprite[i].id == id && m->sprite.sprite[i].used == 1)
@@ -51,7 +51,7 @@ int spriteGetIndex(void *handle, int id) {
 
 
 int spriteLoad(void *handle, const char *fname, unsigned int dir) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	FILE *fp;
 	int spr, tile;
 	SPRITE_ENTRY *sprite;
@@ -86,7 +86,7 @@ int spriteLoad(void *handle, const char *fname, unsigned int dir) {
 
 
 void spriteTeleport(void *handle, unsigned int sprite, unsigned int x, unsigned int y, unsigned int l) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int tile, dir, index;
 
 	if ((index = spriteGetIndex(m, sprite)) == -1)
@@ -104,7 +104,7 @@ void spriteTeleport(void *handle, unsigned int sprite, unsigned int x, unsigned 
 
 
 void spriteEnableAnimation(void *handle, unsigned int sprite) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int dir, index;
 
 	if ((index = spriteGetIndex(m, sprite)) == -1)
@@ -125,7 +125,7 @@ void spriteEnableAnimation(void *handle, unsigned int sprite) {
 
 
 void spriteDisableAnimation(void *handle, unsigned int sprite) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int index;
 
 	if ((index = spriteGetIndex(m, sprite)) == -1)
@@ -139,7 +139,7 @@ void spriteDisableAnimation(void *handle, unsigned int sprite) {
 
 
 void spriteAnimate(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i;
 	unsigned int time, dir, tile;
 
@@ -171,7 +171,7 @@ void spriteAnimate(void *handle) {
 
 
 void spriteDrawLayer(void *handle, unsigned int layer) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i;
 
 
@@ -184,7 +184,7 @@ void spriteDrawLayer(void *handle, unsigned int layer) {
 
 
 void spriteSort(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	SPRITE_ENTRY tmp;
 	int i, j;
 	
@@ -205,7 +205,7 @@ void spriteSort(void *handle) {
 
 
 void spriteChangeDirection(void *handle, unsigned int sprite, unsigned int dir) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int id, tile;
 
 	if ((id = spriteGetIndex(m, sprite)) == -1)
@@ -221,7 +221,7 @@ void spriteChangeDirection(void *handle, unsigned int sprite, unsigned int dir) 
 
 
 void spriteDelete(void *handle, unsigned int sprite) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int id;
 
 	if ((id = spriteGetIndex(m, sprite)) == -1)
@@ -235,7 +235,7 @@ void spriteDelete(void *handle, unsigned int sprite) {
 
 
 void spriteClear(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i;
 
 	for (i = 0; i < m->sprite.sprites; i++) {

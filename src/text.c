@@ -1,8 +1,8 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	TEXT_FONT *fnt;
 
 	if ((fnt = malloc(sizeof(TEXT_FONT))) == NULL) {

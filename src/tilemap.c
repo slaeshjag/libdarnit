@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 TILEMAP_ENTRY tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet) {

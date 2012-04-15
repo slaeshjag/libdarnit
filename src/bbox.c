@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
@@ -50,7 +50,7 @@ void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 
 
 void bboxSort(BBOX *bbox) {
-	DARNER_BBOX_ENTRY tmp;
+	DARNIT_BBOX_ENTRY tmp;
 	int i, j;
 
 	for (i = 1; i < bbox->max; i++) {

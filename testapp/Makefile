@@ -1,4 +1,4 @@
-LDFLAGS += -L../bin -ldarner
+LDFLAGS += -L../bin -ldarnit
 CFLAGS += -I../include 
 
 default:

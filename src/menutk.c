@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 void menutkHighlightRecalculate(MENUTK_ENTRY *menu, int w, int h) {
@@ -24,26 +24,17 @@ void menutkHighlightMove(MENUTK_ENTRY *menu, int x, int y) {
 
 void menutkSetColor(MENUTK_ENTRY *menu, int color) {
 	if (color == 0) {
-//		menu->hl.color[0].r = menu->hl.color[0].g = menu->hl.color[0].b = 0.2f;
 		menu->hl.color[0].a = 1.0f;
 		menu->hl.color[0].r = 0.8f;
 		menu->hl.color[0].g = 0.65f;
 		menu->hl.color[0].b = 0.2f;
-//		menu->hl.color[1] = menu->hl.color[0];
 		menu->hl.color[3] = menu->hl.color[2] = menu->hl.color[1] = menu->hl.color[0];
-//		menu->hl.color[2].r = menu->hl.color[2].g = menu->hl.color[2].b = 0.4f;
-//		menu->hl.color[2].a = 1.0f;
-//		menu->hl.color[3] = menu->hl.color[2];
 	} else if (color == 1) {
 		menu->hl.color[0].r = 0.4f;
 		menu->hl.color[0].g = 0.0f;
 		menu->hl.color[0].b = 0.0f;
 		menu->hl.color[0].a = 1.0f;
 		menu->hl.color[1] = menu->hl.color[0];
-//		menu->hl.color[2].r = 0.6f;
-//		menu->hl.color[2].g = 0.2f;
-//		menu->hl.color[2].b = 0.2f;
-//		menu->hl.color[2].a = 1.0f;
 		menu->hl.color[3] = menu->hl.color[2] = menu->hl.color[1];
 	}
 
@@ -124,7 +115,7 @@ void menutkVerticalShadeReduceSelectionsByOne(MENUTK_ENTRY *menu) {
 
 
 void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
 	int i, len, cnt;
 
@@ -170,7 +161,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 
 
 void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
 
 	if ((menu = malloc(sizeof(MENUTK_ENTRY))) == NULL) {
@@ -207,7 +198,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 
 
 void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
 	int i, len, cnt;
 
@@ -250,7 +241,7 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 
 
 void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int y, TEXT_FONT *font, int step, int min, int max) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int len;
 	char tst[10];
 	MENUTK_ENTRY *menu;
@@ -286,7 +277,7 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 
 
 void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 
 
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
@@ -321,7 +312,7 @@ void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
 
 
 void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	unsigned int step = SDL_GetTicks();
 	
 	step -= menu->time;
@@ -372,7 +363,7 @@ void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
 
 
 void menutkSpinbuttonInput(void *handle, MENUTK_ENTRY *menu) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 
 	
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
@@ -416,7 +407,7 @@ void menutkSpinbuttonInput(void *handle, MENUTK_ENTRY *menu) {
 
 
 int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
-	DARNER *m = handle; 
+	DARNIT *m = handle; 
 
 	if (menu == NULL)
 		return -2;

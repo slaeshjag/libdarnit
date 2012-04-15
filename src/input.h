@@ -28,7 +28,7 @@ typedef struct {
 	unsigned int			keypending;
 	unsigned int			upper;
 	unsigned int			lastkey;
-	DARNER_MOUSE			mouse;
+	DARNIT_MOUSE			mouse;
 } INPUT;
 
 

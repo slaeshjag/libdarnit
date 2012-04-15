@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 int videoInitGL(int w, int h) {
@@ -19,7 +19,7 @@ int videoInitGL(int w, int h) {
 
 
 int videoInit(void *handle, const char *wtitle) {	
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	
 	
 	/* here goes SDL init code */
@@ -50,7 +50,7 @@ int videoInit(void *handle, const char *wtitle) {
 
 
 int videoLoop(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int delay;
 
 	videoSwapBuffers(m);
