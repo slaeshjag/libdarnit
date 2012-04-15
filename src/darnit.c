@@ -16,12 +16,38 @@ void *darnitInit(const char *wtitle) {
 		return d;
 	}
 
-	videoInit(d, wtitle);
-	inputInit(d);
-	audioInit(d);
-	spriteInit(d, SPRITE_PREALLOC_DEF);
+	#ifdef PANDORA
+	if (videoInit(d, wtitle, 800, 480, 1) < 0);
+	#else
+	if (videoInit(d, wtitle, 800, 480, 0) < 0);
+	#endif
+	else if (inputInit(d) < 0);
+	else if (audioInit(d) < 0); 
+	else if (spriteInit(d, SPRITE_PREALLOC_DEF) < 0);
+	else return d;
 
-	return d;
+	free(d);
+
+	return NULL;
+}
+
+
+void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen) {
+	DARNIT *d;
+
+	if ((d = malloc(sizeof(DARNIT))) == NULL) {
+		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
+		return d;
+	}
+
+	if (videoInit(d, wtitle, win_w, win_h, fullscreen) < 0);
+	else if (inputInit(d) < 0);
+	else if (audioInit(d) < 0);
+	else if (spriteInit(d, SPRITE_PREALLOC_DEF) < 0);
+	else return d;
+
+	free(d);
+	return NULL;
 }
 
 

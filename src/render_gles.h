@@ -47,7 +47,7 @@ typedef struct {
 } VIDEO;
 
 
-int videoInit();
+int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen);
 int videoLoop();
 void videoSwapBuffers(void *handle);
 void videoClearScreen();
