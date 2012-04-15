@@ -42,10 +42,10 @@ void darnerLoop(void *handle) {
 /*************************/
 
 
-unsigned int darnerButtonGet(void *handle, unsigned int button) {
+unsigned int darnerButtonGet(void *handle) {
 	DARNER *d = handle;
 
-	return (d->input.key ^ d->input.keypending) & button;
+	return (d->input.key ^ d->input.keypending);
 }
 
 
