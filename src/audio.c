@@ -1,8 +1,8 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 void audioMusicPlayMod(void *handle, const char *fname) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	void *modfile;
 
 	modfile = malloc(sizeof(MODFILE));
@@ -19,7 +19,7 @@ void audioMusicPlayMod(void *handle, const char *fname) {
 
 
 void audioMusicPlayVorbis(void *handle, const char *fname) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	void *vorbis;
 
 	vorbis = malloc(sizeof(OggVorbis_File));
@@ -31,7 +31,7 @@ void audioMusicPlayVorbis(void *handle, const char *fname) {
 
 
 void audioMusicStop(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	SDL_mutexP(m->audio.lock);
 	
 	if (m->audio.music.modfile != NULL) {
@@ -51,7 +51,7 @@ void audioMusicStop(void *handle) {
 
 
 int audioSFXLoad(void *handle, const char *fname) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i, bytes;
 	FILE *fp;
 
@@ -87,7 +87,7 @@ int audioSFXLoad(void *handle, const char *fname) {
 
 
 void audioSFXFree(void *handle, int index) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 
 	SDL_mutexP(m->audio.lock);
 
@@ -114,7 +114,7 @@ void audioSFXClear(void *handle) {
 
 
 int audioSFXPlaySlotGet(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i;
 
 	for (i = 0; i < AUDIO_SFX_CHANNELS; i++)
@@ -126,7 +126,7 @@ int audioSFXPlaySlotGet(void *handle) {
 
 
 int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int chan;
 
 	if ((chan = audioSFXPlaySlotGet(m)) == -1) {
@@ -163,7 +163,7 @@ void audioFrameMix(short *target, short *source1, short *source2, int frames) {
 
 
 void audioMusicDecode(void *handle, int frames) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i, bytes, bt, b;
 	char *buf = (void *) m->audio.musicbuf;
 
@@ -193,7 +193,7 @@ void audioMusicDecode(void *handle, int frames) {
 
 
 void audioSFXMix(void *handle, int channel, int frames) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i, sample;
 	short buf[8192], *tst;
 
@@ -222,7 +222,7 @@ void audioSFXMix(void *handle, int channel, int frames) {
 
 
 void audioSFXDecode(void *handle, int frames) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int i, samples;
 
 	samples = frames << 1;
@@ -241,7 +241,7 @@ void audioSFXDecode(void *handle, int frames) {
 
 
 void audioMix(void *handle, Uint8 *mixdata, int bytes) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	int frames;
 	short *stream = (void *) mixdata;
 
@@ -257,7 +257,7 @@ void audioMix(void *handle, Uint8 *mixdata, int bytes) {
 
 
 int audioInit(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	SDL_AudioSpec fmt;
 	int i;
 

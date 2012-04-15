@@ -7,7 +7,7 @@
 
 
 TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
 	void *data_t;

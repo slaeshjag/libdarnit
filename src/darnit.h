@@ -1,6 +1,5 @@
-/* libdarner named after the Southern Giant Darner, "fastest insect in the world" */
-#ifndef __DARNER_H__
-#define __DARNER_H__
+#ifndef __DARNIT_H__
+#define __DARNIT_H__
 
 
 #include <stdio.h>
@@ -12,7 +11,7 @@ typedef struct {
 	unsigned int	x	: 16;
 	unsigned int	y	: 16;
 	signed int	wheel	: 32;
-} DARNER_MOUSE;
+} DARNIT_MOUSE;
 
 
 #include "render.h"
@@ -34,7 +33,7 @@ typedef struct {
 	AUDIO		audio;
 	SPRITE		sprite;
 	BBOX		bbox;
-} DARNER;
+} DARNIT;
 
 
 #endif

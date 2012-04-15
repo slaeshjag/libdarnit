@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 int videoInitGL(int w, int h) {
@@ -19,7 +19,7 @@ int videoInitGL(int w, int h) {
 
 
 int videoInit(void *handle, const char *wtitle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	EGLint configs_avail = 0;
 	SDL_SysWMinfo sysinfo;
 	
@@ -93,7 +93,7 @@ int videoInit(void *handle, const char *wtitle) {
 
 
 void videoSwapBuffers(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	
 	eglSwapBuffers(m->video.eglDisplay, m->video.eglSurface);
 
@@ -109,7 +109,7 @@ void videoClearScreen() {
 
 
 int videoLoop(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	
 	videoSwapBuffers(handle);
 	videoClearScreen();

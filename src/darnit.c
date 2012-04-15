@@ -1,6 +1,6 @@
-#include "darner.h"
+#include "darnit.h"
 
-/* libDarner glue */
+/* libDarnit glue */
 
 
 /***************************/
@@ -8,11 +8,11 @@
 /***************************/
 
 
-void *darnerInit(const char *wtitle) {
-	DARNER *d;
+void *darnitInit(const char *wtitle) {
+	DARNIT *d;
 
-	if ((d = malloc(sizeof(DARNER))) == NULL) {
-		fprintf(stderr, "libDarner: Error: Unable to malloc(%i)\n", (int) sizeof(DARNER));
+	if ((d = malloc(sizeof(DARNIT))) == NULL) {
+		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
 		return d;
 	}
 
@@ -25,8 +25,8 @@ void *darnerInit(const char *wtitle) {
 }
 
 
-void darnerLoop(void *handle) {
-	DARNER *d = handle;
+void darnitLoop(void *handle) {
+	DARNIT *d = handle;
 
 	spriteAnimate(d);
 	videoLoop(d);
@@ -42,15 +42,15 @@ void darnerLoop(void *handle) {
 /*************************/
 
 
-unsigned int darnerButtonGet(void *handle) {
-	DARNER *d = handle;
+unsigned int darnitButtonGet(void *handle) {
+	DARNIT *d = handle;
 
 	return (d->input.key ^ d->input.keypending);
 }
 
 
-void darnerButtonSet(void *handle, unsigned int button) {
-	DARNER *d = handle;
+void darnitButtonSet(void *handle, unsigned int button) {
+	DARNIT *d = handle;
 
 	d->input.keypending |= button;
 
@@ -58,22 +58,22 @@ void darnerButtonSet(void *handle, unsigned int button) {
 }
 
 
-void darnerInputGrab() {
+void darnitInputGrab() {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 
 	return;
 }
 
 
-void darnerInputUngrab() {
+void darnitInputUngrab() {
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 
 	return;
 }
 
 
-DARNER_MOUSE darnerMouseGet(void *handle) {
-	DARNER *d = handle;
+DARNIT_MOUSE darnitMouseGet(void *handle) {
+	DARNIT *d = handle;
 
 	return d->input.mouse;
 }
@@ -84,60 +84,60 @@ DARNER_MOUSE darnerMouseGet(void *handle) {
 /***************************/
 
 
-void darnerMusicPlayMod(void *handle, const char *fname) {
+void darnitMusicPlayMod(void *handle, const char *fname) {
 	audioMusicPlayMod(handle, fname);
 
 	return;
 }
 
 
-void darnerMusicPlayVorbis(void *handle, const char *fname) {
+void darnitMusicPlayVorbis(void *handle, const char *fname) {
 	audioMusicPlayVorbis(handle, fname);
 
 	return;
 }
 
 
-int darnerMusicPlayCheck(void *handle) {
-	DARNER *d = handle;
+int darnitMusicPlayCheck(void *handle) {
+	DARNIT *d = handle;
 
 	return (d->audio.music.modfile == NULL && d->audio.music.vorbis == NULL) ? -1 : 0;
 }
 
 
-void darnerMusicStop(void *handle) {
+void darnitMusicStop(void *handle) {
 	audioMusicStop(handle);
 
 	return;
 }
 
 
-int darnerSFXLoad(void *handle, const char *fname) {
+int darnitSFXLoad(void *handle, const char *fname) {
 	return audioSFXLoad(handle, fname);
 }
 
 
-void darnerSFXUnload(void *handle, int sfx) {
+void darnitSFXUnload(void *handle, int sfx) {
 	audioSFXFree(handle, sfx);
 
 	return;
 }
 
 
-void darnerSFXClear(void *handle) {
+void darnitSFXClear(void *handle) {
 	audioSFXClear(handle);
 
 	return;
 }
 
 
-int darnerSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
+int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
 	return audioSFXPlay(handle, sfx, vol_l, vol_r);
 }
 
 
-void darnerSFXVolumeSet(void *handle, int sfx_chan, int vol_l, int vol_r) {
-	DARNER *d = handle;
+void darnitSFXVolumeSet(void *handle, int sfx_chan, int vol_l, int vol_r) {
+	DARNIT *d = handle;
 	
 	if (sfx_chan == -1)
 		return;
@@ -155,19 +155,19 @@ void darnerSFXVolumeSet(void *handle, int sfx_chan, int vol_l, int vol_r) {
 /**************************/
 
 
-void *darnerRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq) {
-	DARNER *d = handle;
+void *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq) {
+	DARNIT *d = handle;
 	
 	return renderTilesheetLoad(d, fname, wsq, hsq);
 }
 
 
-void *darnerRenderTilesheetFree(void *tilesheet) {
+void *darnitRenderTilesheetFree(void *tilesheet) {
 	return renderTilesheetFree(tilesheet);
 }
 
 
-void darnerRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
+void darnitRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
 	TILE_CACHE *cache = tile_p;
 	cache = &cache[tile];
 
@@ -178,7 +178,7 @@ void darnerRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsi
 
 
 /* tile_ts is the tile index in the tilesheet */
-void darnerRenderTileSet(void *tile_p, void *tilesheet, unsigned int tile, unsigned int tile_ts) {
+void darnitRenderTileSet(void *tile_p, void *tilesheet, unsigned int tile, unsigned int tile_ts) {
 	TILE_CACHE *cache = tile_p;
 	cache = &cache[tile];
 	
@@ -188,14 +188,14 @@ void darnerRenderTileSet(void *tile_p, void *tilesheet, unsigned int tile, unsig
 }
 
 
-void darnerRenderTileDraw(void *tile_p, void *tilesheet, unsigned int tiles) {
+void darnitRenderTileDraw(void *tile_p, void *tilesheet, unsigned int tiles) {
 	renderCache(tile_p, tilesheet, tiles);
 
 	return;
 }
 
 
-void *darnerRenderTileAlloc(unsigned int tiles) {
+void *darnitRenderTileAlloc(unsigned int tiles) {
 	TILE_CACHE *cache;
 	int i, j;
 	float *arr;
@@ -213,7 +213,7 @@ void *darnerRenderTileAlloc(unsigned int tiles) {
 }
 
 
-void *darnerRenderTileFree(void *tile_p) {
+void *darnitRenderTileFree(void *tile_p) {
 	free(tile_p);
 
 	return NULL;
@@ -221,7 +221,7 @@ void *darnerRenderTileFree(void *tile_p) {
 
 
 
-void darnerRenderBegin() {
+void darnitRenderBegin() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -229,7 +229,7 @@ void darnerRenderBegin() {
 }
 
 
-void darnerRenderEnd() {
+void darnitRenderEnd() {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -237,25 +237,25 @@ void darnerRenderEnd() {
 }
 
 
-void darnerRenderBlendingEnable() {
+void darnitRenderBlendingEnable() {
 	glEnable(GL_BLEND);
 }
 
 
-void darnerRenderBlendingDisable() {
+void darnitRenderBlendingDisable() {
 	glDisable(GL_BLEND);
 }
 
 
-void darnerRenderTint(float r, float g, float b, float a) {
+void darnitRenderTint(float r, float g, float b, float a) {
 	glColor4f(r, g, b, a);
 
 	return;
 }
 
 
-void darnerRenderOffset(void *handle, int x, int y) {
-	DARNER *d = handle;
+void darnitRenderOffset(void *handle, int x, int y) {
+	DARNIT *d = handle;
 	glLoadIdentity();
 	glTranslatef(d->video.swgran * x, d->video.shgran * y, 0.0f);
 	d->video.offset_x = x;
@@ -270,54 +270,54 @@ void darnerRenderOffset(void *handle, int x, int y) {
 /*****************************/
 
 
-int darnerSpriteLoad(void *handle, const char *fname) {
+int darnitSpriteLoad(void *handle, const char *fname) {
 	return spriteLoad(handle, fname, 0);
 }
 
 
-void darnerSpriteDelete(void *handle, int sprite) {
+void darnitSpriteDelete(void *handle, int sprite) {
 	spriteDelete(handle, sprite);
 
 	return;
 }
 
 
-void darnerSpriteClear(void *handle) {
+void darnitSpriteClear(void *handle) {
 	spriteClear(handle);
 
 	return;
 }
 
 
-void darnerSpriteDirectionChange(void *handle, int sprite, int dir) {
+void darnitSpriteDirectionChange(void *handle, int sprite, int dir) {
 	spriteChangeDirection(handle, sprite, dir);
 
 	return;
 }
 
 
-void darnerSpriteMove(void *handle, int sprite, int x, int y, int l) {
+void darnitSpriteMove(void *handle, int sprite, int x, int y, int l) {
 	spriteTeleport(handle, sprite, x, y, l);
 
 	return;
 }
 
 
-void darnerSpriteAnimationEnable(void *handle, int sprite) {
+void darnitSpriteAnimationEnable(void *handle, int sprite) {
 	spriteEnableAnimation(handle, sprite);
 
 	return;
 }
 
 
-void darnerSpriteAnimationDisable(void *handle, int sprite) {
+void darnitSpriteAnimationDisable(void *handle, int sprite) {
 	spriteDisableAnimation(handle, sprite);
 
 	return;
 }
 
 
-void darnerSpriteLayerDraw(void *handle, int layer) {
+void darnitSpriteLayerDraw(void *handle, int layer) {
 	spriteDrawLayer(handle, layer);
 
 	return;
@@ -330,58 +330,58 @@ void darnerSpriteLayerDraw(void *handle, int layer) {
 /****************************/
 
 
-void *darnerFontLoad(void *handle, const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing) {
+void *darnitFontLoad(void *handle, const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing) {
 	return textLoadFont(handle, fname, glyph_w, glyph_h, line_spacing);
 }
 
 
-unsigned int darnerFontGetGlyphW(void *font) {
+unsigned int darnitFontGetGlyphW(void *font) {
 	return textFontGetW(font);
 }
 
 
-unsigned int darnerFontGetGlyphH(void *font) {
+unsigned int darnitFontGetGlyphH(void *font) {
 	return textFontGetH(font);
 }
 
 
-unsigned int darnerFontGetGlyphHS(void *font) {
+unsigned int darnitFontGetGlyphHS(void *font) {
 	return textFontGetHS(font);
 }
 
 
-void darnerTextSurfaceReset(void *surface) {
+void darnitTextSurfaceReset(void *surface) {
 	textResetSurface(surface);
 
 	return;
 }
 
 
-void *darnerTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y) {
+void *darnitTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y) {
 	return textMakeRenderSurface(glyphs, font, linelen, x, y);
 }
 
 
-void *darnerTextSurfaceFree(void *surface) {
+void *darnitTextSurfaceFree(void *surface) {
 	return textSurfaceDestroy(surface);
 }
 
 
-void darnerTextSurfaceCharAppend(void *surface, char c) {
+void darnitTextSurfaceCharAppend(void *surface, char c) {
 	textSurfaceAppendChar(surface, c);
 
 	return;
 }
 
 
-void darnerTextSurfaceStringAppend(void *surface, const char *string) {
+void darnitTextSurfaceStringAppend(void *surface, const char *string) {
 	textSurfaceAppendString(surface, string);
 
 	return;
 }
 
 
-void darnerTextSurfaceDraw(void *surface) {
+void darnitTextSurfaceDraw(void *surface) {
 	textRender(surface);
 	
 	return;
@@ -395,34 +395,34 @@ void darnerTextSurfaceDraw(void *surface) {
 /**************************/
 
 
-void *darnerMenuHorisontalCreate(void *handle, const char *options, int x, int y, void *font) {
+void *darnitMenuHorisontalCreate(void *handle, const char *options, int x, int y, void *font) {
 	return menutkHorisontalCreate(handle, options, x, y, font, 0);
 }
 
 
-void *darnerMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x) {
+void *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x) {
 	return menutkVerticalCreate(handle, options, x, y, font, menuw, textskip_x, 0);
 }
 
 
-void *darnerMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option) {
+void *darnitMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option) {
 	return menutkVerticalShadeCreate(handle, x, y, shade_h, y_advance, options, shade_w, 0, skip_option);
 }
 
 
-void *darnerMenuSpinbuttonCreate(void *handle, const char *label, int x, int y, void *font, int step, int min, int max) {
+void *darnitMenuSpinbuttonCreate(void *handle, const char *label, int x, int y, void *font, int step, int min, int max) {
 	return menutkSpinbuttonCreate(handle, label, x, y, font, step, min, max);
 }
 
 
-void darnerMenuVerticalShadeSelectionsReduceByOne(void *menu) {
+void darnitMenuVerticalShadeSelectionsReduceByOne(void *menu) {
 	menutkVerticalShadeReduceSelectionsByOne(menu);
 
 	return;
 }
 
 
-void darnerMenuShadeColorSet(void *menu, void *color) {
+void darnitMenuShadeColorSet(void *menu, void *color) {
 	MENUTK_COLOR *col = (void *) color;
 	MENUTK_ENTRY *m = menu;
 
@@ -435,43 +435,43 @@ void darnerMenuShadeColorSet(void *menu, void *color) {
 }
 
 
-int darnerMenuHandle(void *handle, void *menu) {
+int darnitMenuHandle(void *handle, void *menu) {
 	return menutkMenuRoutine(handle, menu);
 }
 
 
-void darnerMenuSelectionWaitForNew(void *menu) {
+void darnitMenuSelectionWaitForNew(void *menu) {
 	menutkWaitForNewSelection(menu);
 
 	return;
 }
 
 
-int darnerMenuPeek(void *menu) {
+int darnitMenuPeek(void *menu) {
 	return menutkPeek(menu);
 }
 
 
-int darnerMenuChangedCheck(void *menu) {
+int darnitMenuChangedCheck(void *menu) {
 	return menutkGetIfChanged(menu);
 }
 
 
-void darnerMenuHide(void *menu) {
+void darnitMenuHide(void *menu) {
 	menutkMenuHide(menu);
 
 	return;
 }
 
 
-void darnerMenuUnhide(void *menu) {
+void darnitMenuUnhide(void *menu) {
 	menutkMenuUnhide(menu);
 
 	return;
 }
 
 
-void *darnerMenuDestroy(void *menu) {
+void *darnitMenuDestroy(void *menu) {
 	return menutkDestroy(menu);
 }
 
@@ -482,26 +482,26 @@ void *darnerMenuDestroy(void *menu) {
 /***************************/
 
 
-TILEMAP_ENTRY darnerRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet) {
+TILEMAP_ENTRY darnitRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet) {
 	return tilemapLoad(handle, fname, invisibility_divider, tilesheet);
 }
 
 
-void darnerRenderTilemapCameraMove(TILEMAP_ENTRY tilemap, int cam_x, int cam_y) {
+void darnitRenderTilemapCameraMove(TILEMAP_ENTRY tilemap, int cam_x, int cam_y) {
 	renderTilemapCameraMove(tilemap.render, cam_x, cam_y);
 
 	return;
 }
 
 
-void darnerRenderTilemap(TILEMAP_ENTRY tilemap) {
+void darnitRenderTilemap(TILEMAP_ENTRY tilemap) {
 	renderTilemapRender(tilemap.render);
 
 	return;
 }
 
 
-void darnerRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
+void darnitRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
 	tilemapFree(tilemap);
 
 	return;
@@ -515,43 +515,43 @@ void darnerRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
 /************************/
 
 
-void *darnerBBoxNew(unsigned int size) {
+void *darnitBBoxNew(unsigned int size) {
 	return bboxNew(size);
 }
 
 
-void *DarnerBBoxFree(BBOX *bbox) {
+void *darnerBBoxFree(BBOX *bbox) {
 	bboxFree(bbox);
 
 	return NULL;
 }
 
 
-int darnerBBoxCollTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
+int darnitBBoxCollTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
 	return bboxCollBoxTest(bbox, x, y, w, h, list, listlen);
 }
 
 
-int darnerBBoxEntryAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+int darnitBBoxEntryAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
 	return bboxAdd(bbox, x, y, w, h);
 }
 
 
-void darnerBBoxEntryDelete(BBOX *bbox, int key) {
+void darnitBBoxEntryDelete(BBOX *bbox, int key) {
 	bboxDelete(bbox, key);
 
 	return;
 }
 
 
-void darnerBBoxEntryMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
+void darnitBBoxEntryMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 	bboxMove(bbox, key, x, y);
 
 	return;
 }
 
 
-void darnerBBoxClear(BBOX *bbox) {
+void darnitBBoxClear(BBOX *bbox) {
 	bboxClear(bbox);
 
 	return;

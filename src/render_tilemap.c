@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 
@@ -127,7 +127,7 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 
 
 void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	RENDER_TILEMAP *tm;
 	int i;
 

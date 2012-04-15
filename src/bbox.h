@@ -16,11 +16,11 @@ typedef struct {
 	unsigned int			xb;
 	unsigned int			yb;
 	int				key;
-} DARNER_BBOX_ENTRY;
+} DARNIT_BBOX_ENTRY;
 
 
 typedef struct {
-	DARNER_BBOX_ENTRY		*bbox;
+	DARNIT_BBOX_ENTRY		*bbox;
 	unsigned int			bboxes;
 	unsigned int			sort;
 	unsigned int			cnt;

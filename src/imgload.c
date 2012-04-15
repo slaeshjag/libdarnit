@@ -1,4 +1,4 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 int imgloadCheckFormat(const char *fname) {

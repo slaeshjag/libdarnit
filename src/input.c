@@ -1,8 +1,8 @@
-#include "darner.h"
+#include "darnit.h"
 
 
 void inputInit(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 
 	m->input.key = 0;
 	m->input.keypending = 0;
@@ -15,7 +15,7 @@ void inputInit(void *handle) {
 
 
 void inputPoll(void *handle) {
-	DARNER *m = handle;
+	DARNIT *m = handle;
 	
 	while (SDL_PollEvent(&m->input.event)) {
 		if (m->input.event.type == SDL_KEYDOWN) {
@@ -174,7 +174,7 @@ void inputPoll(void *handle) {
 
 unsigned int inputASCIIPop(void *handle) {
 	unsigned int key;
-	DARNER *m = handle;
+	DARNIT *m = handle;
 
 	key = m->input.lastkey;
 	if (key >= 'a' && key <= 'z' && m->input.upper)
