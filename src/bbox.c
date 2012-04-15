@@ -155,7 +155,7 @@ void *bboxNew(unsigned int size) {
 	if ((bbox = malloc(sizeof(BBOX))) == NULL)
 		return NULL;
 	
-	if ((bbox->bbox = malloc(sizeof(BBOX)*size)) == NULL) {
+	if ((bbox->bbox = malloc(sizeof(DARNIT_BBOX_ENTRY)*size)) == NULL) {
 		free(bbox);
 		return NULL;
 	}
