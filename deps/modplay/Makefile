@@ -1,4 +1,4 @@
-LDFLAGS -Wl,-soname,libmodplay.so -shared -fPIC
+LDFLAGS =  -Wl,-soname,libmodplay.so -shared -fPIC
 LIBS=-Wl,-soname,libmodplay.so -shared -fPIC
 
 default:
