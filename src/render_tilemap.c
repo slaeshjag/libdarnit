@@ -90,6 +90,7 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 		if (tm->needbuf_x[i] != -1) {
 			tm->col_spares--;
 			tm->col[tm->col_spare[tm->col_spares]] = tm->needbuf_x[i];
+			index = 0;
 			for (j = 0; j < tm->tileh-1; j++) {
 				for (k = 0; k < tm->tileh; k++)
 					if (tm->row[k] == ty+j) {
