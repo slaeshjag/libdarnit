@@ -1,6 +1,5 @@
 LDFLAGS += -Wl,-soname,libmodplay.so -shared -fPIC
-LIBS=
+LIBS=-Wl,-soname,libmodplay.so -shared -fPIC
 
 default:
-	$(CC) *.c -o ../../bin/libmodplay.so $(CFLAGS)
-	strip ../../bin/libmodplay.so
+	$(CC) *.c -o ../../bin/libmodplay.so $(CFLAGS) $(LIBS)
