@@ -1,6 +1,28 @@
 #include "darnit.h"
 
 
+void inputKeymapReset(void *handle) {
+	DARNIT *m = handle;
+
+	m->input.map.up = SDLK_UP;
+	m->input.map.down = SDLK_DOWN;
+	m->input.map.left = SDLK_LEFT;
+	m->input.map.right = SDLK_RIGHT;
+	m->input.map.x = SDLK_PAGEDOWN;
+	m->input.map.y = SDLK_PAGEUP;
+	m->input.map.a = SDLK_HOME;
+	m->input.map.b = SDLK_END;
+	m->input.map.start = SDLK_LALT;
+	m->input.map.select = SDLK_LCTRL;
+	m->input.map.l = SDLK_RSHIFT;
+	m->input.map.r = SDLK_RCTRL;
+
+	m->input.key = 0;
+
+	return;
+}
+
+
 void inputInit(void *handle) {
 	DARNIT *m = handle;
 
@@ -9,6 +31,8 @@ void inputInit(void *handle) {
 	m->input.upper = 0;
 	m->input.lastkey = 0;
 	m->input.mouse.x = m->input.mouse.y = m->input.mouse.wheel = 0;
+
+	inputKeymapReset(m);
 
 	return;
 }
@@ -19,127 +43,82 @@ void inputPoll(void *handle) {
 	
 	while (SDL_PollEvent(&m->input.event)) {
 		if (m->input.event.type == SDL_KEYDOWN) {
-			switch (m->input.event.key.keysym.sym) {
-				case SDLK_UP:
-				case SDLK_w:
-					m->input.key |= KEY_UP;
-					break;
-				case SDLK_DOWN:
-				case SDLK_s:
-					m->input.key |= KEY_DOWN;
-					break;
-				case SDLK_LEFT:
-				case SDLK_a:
-					m->input.key |= KEY_LEFT;
-					break;
-				case SDLK_RIGHT:
-				case SDLK_d:
-					m->input.key |= KEY_RIGHT;
-					break;
-				case SDLK_PAGEUP:
-					m->input.key |= KEY_Y;
-					break;
-				case SDLK_PAGEDOWN:
-				case SDLK_SPACE:
-					m->input.key |= KEY_X;
-					break;
-				case SDLK_HOME:
-				case SDLK_ESCAPE:
-					m->input.key |= KEY_A;
-					break;
-				case SDLK_END:
-				case SDLK_RETURN:
-					m->input.key |= KEY_B;
-					break;
-				case SDLK_RALT:
-				case SDLK_LALT:
-					m->input.key |= KEY_START;
-					break;
-				case SDLK_LCTRL:
-					m->input.key |= KEY_SELECT;
-					break;
-				case SDLK_RSHIFT:
-					m->input.upper |= (m->input.event.key.keysym.sym == SDLK_RSHIFT) ? 1 : 0;
-					m->input.key |= KEY_L;
-					break;
-				case SDLK_RCTRL:
-					m->input.key |= KEY_R;
-					break;
-				case SDLK_LSHIFT:
-					m->input.upper |= 2;
-					break;
-				default:
-					break;
+			if (m->input.event.key.keysym.sym == m->input.map.up)
+				m->input.key |= KEY_UP;
+			else if (m->input.event.key.keysym.sym == m->input.map.down)
+				m->input.key |= KEY_DOWN;
+			else if (m->input.event.key.keysym.sym == m->input.map.left)
+				m->input.key |= KEY_LEFT;
+			else if (m->input.event.key.keysym.sym == m->input.map.right)
+				m->input.key |= KEY_RIGHT;
+			else if (m->input.event.key.keysym.sym == m->input.map.x)
+				m->input.key |= KEY_X;
+			else if (m->input.event.key.keysym.sym == m->input.map.y)
+				m->input.key |= KEY_Y;
+			else if (m->input.event.key.keysym.sym == m->input.map.a)
+				m->input.key |= KEY_A;
+			else if (m->input.event.key.keysym.sym == m->input.map.b)
+				m->input.key |= KEY_B;
+			else if (m->input.event.key.keysym.sym == m->input.map.start)
+				m->input.key |= KEY_START;
+			else if (m->input.event.key.keysym.sym == m->input.map.select)
+				m->input.key |= KEY_SELECT;
+			else if (m->input.event.key.keysym.sym == m->input.map.l)
+				m->input.key |= KEY_L;
+			else if (m->input.event.key.keysym.sym == m->input.map.r)
+				m->input.key |= KEY_R;
+			if (m->input.event.key.keysym.sym == SDLK_LSHIFT)
+				m->input.upper |= 2;
+			else if (m->input.event.key.keysym.sym == SDLK_RSHIFT)
+				m->input.upper |= 1;
+			if (m->input.event.key.keysym.sym < 0x80)	// ASCII
+				m->input.lastkey = m->input.event.key.keysym.sym;
+
+		} else if (m->input.event.type == SDL_KEYUP) {
+			if (m->input.event.key.keysym.sym == m->input.map.up) {
+				m->input.key |= KEY_UP;
+				m->input.key ^= KEY_UP;
+			} else if (m->input.event.key.keysym.sym == m->input.map.down) {
+				m->input.key |= KEY_DOWN;
+				m->input.key ^= KEY_DOWN;
+			} else if (m->input.event.key.keysym.sym == m->input.map.left) {
+				m->input.key |= KEY_LEFT;
+				m->input.key ^= KEY_LEFT;
+			} else if (m->input.event.key.keysym.sym == m->input.map.right) {
+				m->input.key |= KEY_RIGHT;
+				m->input.key ^= KEY_RIGHT;
+			} else if (m->input.event.key.keysym.sym == m->input.map.x) {
+				m->input.key |= KEY_X;
+				m->input.key ^= KEY_X;
+			} else if (m->input.event.key.keysym.sym == m->input.map.y) {
+				m->input.key |= KEY_Y;
+				m->input.key ^= KEY_Y;
+			} else if (m->input.event.key.keysym.sym == m->input.map.a) {
+				m->input.key |= KEY_A;
+				m->input.key ^= KEY_A;
+			} else if (m->input.event.key.keysym.sym == m->input.map.b) {
+				m->input.key |= KEY_B;
+				m->input.key ^= KEY_B;
+			} else if (m->input.event.key.keysym.sym == m->input.map.start) {
+				m->input.key |= KEY_START;
+				m->input.key ^= KEY_START;
+			} else if (m->input.event.key.keysym.sym == m->input.map.select) {
+				m->input.key |= KEY_SELECT;
+				m->input.key ^= KEY_SELECT;
+			} else if (m->input.event.key.keysym.sym == m->input.map.l) {
+				m->input.key |= KEY_L;
+				m->input.key ^= KEY_L;
+			} else if (m->input.event.key.keysym.sym == m->input.map.r) {
+				m->input.key |= KEY_R;
+				m->input.key ^= KEY_R;
 			}
 
-			if (m->input.event.key.keysym.sym < 0x80) {			// ASCII
-				m->input.lastkey = m->input.event.key.keysym.sym;
-			}
-		} else if (m->input.event.type == SDL_KEYUP) {
-			switch (m->input.event.key.keysym.sym) {
-				case SDLK_UP:
-				case SDLK_w:
-					m->input.key |= KEY_UP;
-					m->input.key ^= KEY_UP;
-					break;
-				case SDLK_DOWN:
-				case SDLK_s:
-					m->input.key |= KEY_DOWN;
-					m->input.key ^= KEY_DOWN;
-					break;
-				case SDLK_LEFT:
-				case SDLK_a:
-					m->input.key |= KEY_LEFT;
-					m->input.key ^= KEY_LEFT;
-					break;
-				case SDLK_RIGHT:
-				case SDLK_d:
-					m->input.key |= KEY_RIGHT;
-					m->input.key ^= KEY_RIGHT;
-					break;
-				case SDLK_PAGEUP:
-					m->input.key |= KEY_Y;
-					m->input.key ^= KEY_Y;
-					break;
-				case SDLK_PAGEDOWN:
-					m->input.key |= KEY_X;
-					m->input.key ^= KEY_X;
-					break;
-				case SDLK_HOME:
-				case SDLK_ESCAPE:
-					m->input.key |= KEY_A;
-					m->input.key ^= KEY_A;
-					break;
-				case SDLK_END:
-				case SDLK_SPACE:
-					m->input.key |= KEY_B;
-					m->input.key ^= KEY_B;
-					return;
-				case SDLK_RALT:
-				case SDLK_LALT:
-					m->input.key |= KEY_START;
-					m->input.key ^= KEY_START;
-					return;
-				case SDLK_LCTRL:
-					m->input.key |= KEY_SELECT;
-					m->input.key ^= KEY_SELECT;
-					return;
-				case SDLK_RSHIFT:
-					m->input.upper |= (m->input.event.key.keysym.sym == SDLK_RSHIFT) ? 1 : 0;
-					m->input.upper ^= (m->input.event.key.keysym.sym == SDLK_RSHIFT) ? 1 : 0;
-					m->input.key |= KEY_L;
-					m->input.key ^= KEY_L;
-					return;
-				case SDLK_RCTRL:
-					m->input.key |= KEY_R;
-					m->input.key ^= KEY_R;
-					return;
-				case SDLK_LSHIFT:
-					m->input.upper |= 2;
-					m->input.upper ^= 2;
-					break;
-				default:
-					break;
+			if (m->input.event.key.keysym.sym == SDLK_LSHIFT) {
+				m->input.upper |= 2;
+				m->input.upper ^= 2;
+			} else if (m->input.event.key.keysym.sym == SDLK_RSHIFT) {
+				m->input.upper |= 1;
+				m->input.upper ^= 1;
 			}
 		} else if (m->input.event.type == SDL_MOUSEMOTION) {
 			m->input.mouse.x = m->input.event.motion.x;

@@ -23,17 +23,35 @@
 
 
 typedef struct {
+	unsigned int			up;
+	unsigned int			down;
+	unsigned int			left;
+	unsigned int			right;
+	unsigned int			x;
+	unsigned int			y;
+	unsigned int			a;
+	unsigned int			b;
+	unsigned int			start;
+	unsigned int			select;
+	unsigned int			l;
+	unsigned int			r;
+} INPUT_MAP;
+
+
+typedef struct {
 	SDL_Event			event;
 	unsigned int			key;
 	unsigned int			keypending;
 	unsigned int			upper;
 	unsigned int			lastkey;
 	DARNIT_MOUSE			mouse;
+	INPUT_MAP			map;
 } INPUT;
 
 
 void inputPoll(void *handle);
 void inputInit(void *handle);
 unsigned int inputASCIIPop(void *handle);
+void inputKeymapReset(void *handle);
 
 #endif

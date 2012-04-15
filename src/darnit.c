@@ -58,6 +58,29 @@ void darnitButtonSet(void *handle, unsigned int button) {
 }
 
 
+void darnitButtonMappingReset(void *handle) {
+	inputKeymapReset(handle);
+
+	return;
+}
+
+
+void darnitButtonMappingSet(void *handle, INPUT_MAP map) {
+	DARNIT *d = handle;
+
+	d->input.map = map;
+
+	return;
+}
+
+
+INPUT_MAP darnitButtonMappingGet(void *handle) {
+	DARNIT *d = handle;
+
+	return d->input.map;
+}
+
+
 void darnitInputGrab() {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 
