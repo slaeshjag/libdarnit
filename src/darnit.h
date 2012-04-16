@@ -28,6 +28,12 @@ typedef struct {
 
 
 typedef struct {
+	TILE_CACHE		*tc;
+	unsigned int		tiles;
+} DARNIT_RENDER_BUFFER;
+
+
+typedef struct {
 	VIDEO		video;
 	INPUT		input;
 	AUDIO		audio;

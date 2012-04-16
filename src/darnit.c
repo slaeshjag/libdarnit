@@ -216,10 +216,13 @@ void *darnitRenderTilesheetFree(void *tilesheet) {
 }
 
 
-void darnitRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
-	TILE_CACHE *cache = tile_p;
-	cache = &cache[tile];
+void darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
+	TILE_CACHE *cache;
 
+	if (buf->tiles <= tile)
+		return;
+	
+	cache = &buf->tc[tile];
 	renderCalcTilePosCache(cache, tilesheet, x, y);
 
 	return;
@@ -227,43 +230,49 @@ void darnitRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsi
 
 
 /* tile_ts is the tile index in the tilesheet */
-void darnitRenderTileSet(void *tile_p, void *tilesheet, unsigned int tile, unsigned int tile_ts) {
-	TILE_CACHE *cache = tile_p;
-	cache = &cache[tile];
-	
+void darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tile, unsigned int tile_ts) {
+	TILE_CACHE *cache;
+
+	if (buf->tiles <= tile)
+		return;
+	cache = &buf->tc[tile];
 	renderCalcTileCache(cache, tilesheet, tile_ts);
 
 	return;
 }
 
 
-void darnitRenderTileDraw(void *tile_p, void *tilesheet, unsigned int tiles) {
-	renderCache(tile_p, tilesheet, tiles);
+void darnitRenderTileDraw(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tiles) {
+	if (buf->tiles > tiles)
+		tiles = buf->tiles;
+	renderCache(buf->tc, tilesheet, tiles);
 
 	return;
 }
 
 
 void *darnitRenderTileAlloc(unsigned int tiles) {
-	TILE_CACHE *cache;
+	DARNIT_RENDER_BUFFER *buf;
 	int i, j;
 	float *arr;
 
-	if ((cache = malloc(sizeof(TILE_CACHE)*tiles)) == NULL)
+	buf = malloc(sizeof(DARNIT_RENDER_BUFFER));
+	if ((buf->tc = malloc(sizeof(TILE_CACHE)*tiles)) == NULL)
 		return NULL;
 	
 	for (i = 0; i < tiles; i++) {
-		arr = (void *) &cache[i];
+		arr = (void *) &buf->tc[i];
 		for (j = 0; j < 24; j++)
 			arr[j] = 0.0f;
 	}
 
-	return cache;
+	return buf;
 }
 
 
-void *darnitRenderTileFree(void *tile_p) {
-	free(tile_p);
+void *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
+	free(buf->tc);
+	free(buf);
 
 	return NULL;
 }
