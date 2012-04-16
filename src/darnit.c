@@ -143,7 +143,7 @@ DARNIT_MOUSE darnitMouseGet(void *handle) {
 /***************************/
 
 
-void darnitMusicPlayMod(void *handle, const char *fname) {
+void darnitMusicPlayTracked(void *handle, const char *fname) {
 	audioMusicPlayMod(handle, fname);
 
 	return;

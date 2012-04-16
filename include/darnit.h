@@ -88,7 +88,7 @@ DARNIT_INPUT_MAP darnitButtonMappingGet(void *handle);
 
 /* AUDIO */
 
-void darnitMusicPlayMod(void *handle, const char *fname);
+void darnitMusicPlayTracked(void *handle, const char *fname);
 void darnitMusicPlayVorbis(void *handle, const char *fname);
 int darnitMusicPlayCheck(void *handle);
 void darnitMusicVolSet(void *handle, int vol);
