@@ -1,6 +1,9 @@
 #ifndef __DARNIT_H__
 #define	__DARNIT_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct {
 	unsigned int	left	: 1;
@@ -175,6 +178,8 @@ void darnitBBoxEntryDelete(void *bbox, int key);
 void darnitBBoxEntryMove(void *bbox, int key, unsigned int x, unsigned int y);
 void darnitBBoxClear(void *bbox);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif
