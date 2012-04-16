@@ -444,12 +444,12 @@ void darnitTextSurfaceDraw(void *surface) {
 /**************************/
 
 
-void *darnitMenuHorisontalCreate(void *handle, const char *options, int x, int y, void *font) {
+void *darnitMenuHorisontalCreate(void *handle, const char *options, int x, int y, void *font, int max_w) {
 	return menutkHorisontalCreate(handle, options, x, y, font, 0);
 }
 
 
-void *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x) {
+void *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
 	return menutkVerticalCreate(handle, options, x, y, font, menuw, textskip_x, 0);
 }
 
