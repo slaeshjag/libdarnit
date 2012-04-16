@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 	TILEMAP tilemap;
 	
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
-	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10);
+	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
 //	darnitMusicPlayVorbis(handle, "test.ogg");
 
 	sprite = darnitSpriteLoad(handle, "test.spr", 0);
