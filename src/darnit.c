@@ -315,7 +315,7 @@ void darnitRenderTint(float r, float g, float b, float a) {
 void darnitRenderOffset(void *handle, int x, int y) {
 	DARNIT *d = handle;
 	glLoadIdentity();
-	glTranslatef(d->video.swgran * x, d->video.shgran * y, 0.0f);
+	glTranslatef(d->video.swgran * x * -1, d->video.shgran * y, 0.0f);
 	d->video.offset_x = x;
 	d->video.offset_y = y * -1;
 
