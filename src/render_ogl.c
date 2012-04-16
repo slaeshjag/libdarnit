@@ -60,7 +60,7 @@ int videoLoop(void *handle) {
 	videoSwapBuffers(m);
 	videoClearScreen();
 
-	delay = 20 - (SDL_GetTicks() - m->video.time);
+	delay = 16 - (SDL_GetTicks() - m->video.time);
 
 	if (delay < 0)
 		delay = 0;
