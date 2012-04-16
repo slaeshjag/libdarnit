@@ -76,6 +76,7 @@ unsigned int darnitTimeGet();
 
 DARNIT_KEYS darnitButtonGet(void *handle);
 void darnitButtonSet(void *handle, DARNIT_KEYS buttons);
+DARNIT_KEYS darnitButtonZero();
 void darnitInputGrab();
 void darnitInputUngrab();
 DARNIT_MOUSE darnitMouseGet(void *handle);
