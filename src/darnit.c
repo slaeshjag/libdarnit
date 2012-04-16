@@ -80,6 +80,11 @@ unsigned int darnitButtonGet(void *handle) {
 }
 
 
+unsigned int darnitButtonZero() {
+	return 0;
+}
+
+
 void darnitButtonSet(void *handle, unsigned int button) {
 	DARNIT *d = handle;
 
