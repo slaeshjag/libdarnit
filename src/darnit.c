@@ -62,6 +62,11 @@ void darnitLoop(void *handle) {
 }
 
 
+unsigned int darnitTimeGet() {
+	return SDL_GetTicks();
+}
+
+
 
 /*************************/
 /********* INPUT *********/
