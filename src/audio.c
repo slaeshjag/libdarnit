@@ -166,6 +166,7 @@ void audioMusicDecode(void *handle, int frames) {
 	DARNIT *m = handle;
 	int i, bytes, bt, b;
 	char *buf = (void *) m->audio.musicbuf;
+	short *mbuf;
 
 	bytes = frames << 2;
 
@@ -186,6 +187,15 @@ void audioMusicDecode(void *handle, int frames) {
 			bt += b;
 		}
 	}
+
+	mbuf = m->audio.musicbuf;
+	for (i = 0; i < frames<<1; i++) {
+		b = mbuf[i];
+		b *= m->audio.musicvol;
+		b >>= 7;
+		mbuf[i] = b;
+	}
+
 	/* TODO: Implement rest */
 
 	return;

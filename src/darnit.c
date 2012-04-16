@@ -164,6 +164,15 @@ int darnitMusicPlayCheck(void *handle) {
 }
 
 
+void darnitMusicVolSet(void *handle, int vol) {
+	DARNIT *d = handle;
+
+	d->audio.musicvol = vol;
+
+	return;
+}
+
+
 void darnitMusicStop(void *handle) {
 	audioMusicStop(handle);
 
@@ -248,6 +257,20 @@ void darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *til
 	cache = &buf->tc[tile];
 	renderCalcTileCache(cache, tilesheet, tile_ts);
 
+	return;
+}
+
+
+void darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
+	float *ptr;
+	int i;
+
+	if (tile >= buf->tiles)
+		return;
+	ptr = (float *) &buf->tc[tile];
+	for (i = 0; i < 24; i++)
+		ptr[i] = 0.0f;
+	
 	return;
 }
 

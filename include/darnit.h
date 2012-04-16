@@ -91,6 +91,7 @@ DARNIT_INPUT_MAP darnitButtonMappingGet(void *handle);
 void darnitMusicPlayMod(void *handle, const char *fname);
 void darnitMusicPlayVorbis(void *handle, const char *fname);
 int darnitMusicPlayCheck(void *handle);
+void darnitMusicVolSet(void *handle, int vol);
 void darnitMusicStop(void *handle);
 int darnitSFXLoad(void *handle, const char *fname);
 void darnitSFXUnload(void *handle, int sfx);
@@ -105,6 +106,7 @@ void *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int ws
 void *darnitRenderTilesheetFree(void *tilesheet);
 void darnitRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y);
 void darnitRenderTileSet(void *tile_p, unsigned int tile, void *tilesheet, unsigned int tile_ts);
+void darnitRenderTileClear(void *tile_p, unsigned int tile);
 void darnitRenderTileDraw(void *tile_p, void *tilesheet, unsigned int tiles);
 void *darnitRenderTileAlloc(unsigned int tiles);
 void *darnitRenderTileFree(void *tile_p);
