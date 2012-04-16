@@ -230,7 +230,7 @@ void darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *ti
 
 
 /* tile_ts is the tile index in the tilesheet */
-void darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tile, unsigned int tile_ts) {
+void darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int tile_ts) {
 	TILE_CACHE *cache;
 
 	if (buf->tiles <= tile)

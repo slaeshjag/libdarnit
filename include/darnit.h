@@ -102,7 +102,7 @@ void darnitSFXVolumeSet(void *handle, int sfx_chan, int vol_l, int vol_r);
 void *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq);
 void *darnitRenderTilesheetFree(void *tilesheet);
 void darnitRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y);
-void darnitRenderTileSet(void *tile_p, void *tilesheet, unsigned int tile, unsigned int tile_ts);
+void darnitRenderTileSet(void *tile_p, unsigned int tile, void *tilesheet, unsigned int tile_ts);
 void darnitRenderTileDraw(void *tile_p, void *tilesheet, unsigned int tiles);
 void *darnitRenderTileAlloc(unsigned int tiles);
 void *darnitRenderTileFree(void *tile_p);
