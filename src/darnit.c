@@ -528,6 +528,13 @@ void darnitMenuVerticalShadeSelectionsReduceByOne(void *menu) {
 }
 
 
+void darnitMenuVerticalShadeSelectionsIncreaseByOne(void *menu) {
+	menutkVerticalShadeIncreaseSelectionsByOne(menu);
+	
+	return;
+}
+
+
 void darnitMenuShadeColorSet(void *menu, void *color) {
 	MENUTK_COLOR *col = (void *) color;
 	MENUTK_ENTRY *m = menu;

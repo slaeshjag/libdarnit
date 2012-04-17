@@ -114,6 +114,13 @@ void menutkVerticalShadeReduceSelectionsByOne(MENUTK_ENTRY *menu) {
 }
 
 
+void menutkVerticalShadeIncreaseSelectionsByOne(MENUTK_ENTRY *menu) {
+	menu->options++;
+	
+	return;
+}
+
+
 void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color) {
 	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
