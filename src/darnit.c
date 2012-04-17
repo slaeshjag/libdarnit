@@ -541,14 +541,16 @@ void darnitMenuVerticalShadeSelectionsIncreaseByOne(void *menu) {
 }
 
 
-void darnitMenuShadeColorSet(void *menu, void *color) {
-	MENUTK_COLOR *col = (void *) color;
+void darnitMenuShadeColorSet(void *menu, float r, float g, float b, float a) {
+	MENUTK_COLOR col;
 	MENUTK_ENTRY *m = menu;
 
-	m->hl.color[0] = col[0];
-	m->hl.color[1] = col[1];
-	m->hl.color[2] = col[2];
-	m->hl.color[3] = col[3];
+	col.r = r, col.g = g, col.b = b, col.a = a;
+
+	m->hl.color[0] = col;
+	m->hl.color[1] = col;
+	m->hl.color[2] = col;
+	m->hl.color[3] = col;
 
 	return;
 }
