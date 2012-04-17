@@ -37,8 +37,6 @@ typedef struct {
 	VIDEO		video;
 	INPUT		input;
 	AUDIO		audio;
-	SPRITE		sprite;
-	BBOX		bbox;
 } DARNIT;
 
 
