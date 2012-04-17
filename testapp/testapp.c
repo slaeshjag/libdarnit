@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
 	int i, sfx, sprite, j;
-	void *font, *surface, *handle, *text, *mapsheet;
+	void *font, *surface, *handle, *text, *mapsheet, *spritebox;
 	char test[32];
 	DARNIT_MOUSE mouse;
 	handle = darnitInit("TESTAPP - libDarner");
@@ -14,9 +14,10 @@ int main(int argc, char **argv) {
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
 //	darnitMusicPlayVorbis(handle, "test.ogg");
 
-	sprite = darnitSpriteLoad(handle, "test.spr", 0);
-	darnitSpriteMove(handle, sprite , 50, 50, 0);
-	darnitSpriteAnimationEnable(handle, sprite);
+	spritebox = darnitSpriteBoxNew(6);
+	sprite = darnitSpriteLoad(handle, spritebox, "test.spr", 0);
+	darnitSpriteMove(spritebox, sprite , 50, 50, 0);
+	darnitSpriteAnimationEnable(spritebox, sprite);
 //	darnitRenderOffset(handle, 100, -100);
 	text = darnitTextSurfaceAlloc(font, 32, 32, 0, 464);
 
@@ -31,7 +32,8 @@ int main(int argc, char **argv) {
 
 		darnitRenderBegin();
 		darnitTextSurfaceDraw(text);
-		darnitSpriteLayerDraw(handle, 0);
+		darnitSpriteBoxAnimate(spritebox);
+		darnitSpriteLayerDraw(spritebox, 0);
 
 		if ((i % 100) >= 50)
 			j = (100 - (i % 100)) * 8;

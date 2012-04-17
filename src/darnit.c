@@ -23,7 +23,6 @@ void *darnitInit(const char *wtitle) {
 	#endif
 	else if (inputInit(d) < 0);
 	else if (audioInit(d) < 0); 
-	else if (spriteInit(d, SPRITE_PREALLOC_DEF) < 0);
 	else return d;
 
 	free(d);
@@ -43,7 +42,6 @@ void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen)
 	if (videoInit(d, wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit(d) < 0);
 	else if (audioInit(d) < 0);
-	else if (spriteInit(d, SPRITE_PREALLOC_DEF) < 0);
 	else return d;
 
 	free(d);
@@ -54,7 +52,6 @@ void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen)
 void darnitLoop(void *handle) {
 	DARNIT *d = handle;
 
-	spriteAnimate(d);
 	videoLoop(d);
 	inputPoll(d);
 
@@ -363,59 +360,75 @@ void darnitRenderOffset(void *handle, int x, int y) {
 /*****************************/
 
 
-int darnitSpriteLoad(void *handle, const char *fname) {
-	return spriteLoad(handle, fname, 0);
+int darnitSpriteLoad(void *handle, void *box, const char *fname) {
+	return spriteLoad(handle, box, fname, 0);
 }
 
 
-void darnitSpriteDelete(void *handle, int sprite) {
-	spriteDelete(handle, sprite);
+void darnitSpriteDelete(void *box, int sprite) {
+	spriteDelete(box, sprite);
 
 	return;
 }
 
 
-void darnitSpriteClear(void *handle) {
-	spriteClear(handle);
+void darnitSpriteBoxClear(void *box) {
+	spriteClear(box);
 
 	return;
 }
 
 
-void darnitSpriteDirectionChange(void *handle, int sprite, int dir) {
-	spriteChangeDirection(handle, sprite, dir);
+void darnitSpriteDirectionChange(void *box, int sprite, int dir) {
+	spriteChangeDirection(box, sprite, dir);
 
 	return;
 }
 
 
-void darnitSpriteMove(void *handle, int sprite, int x, int y, int l) {
-	spriteTeleport(handle, sprite, x, y, l);
+void darnitSpriteMove(void *box, int sprite, int x, int y, int l) {
+	spriteTeleport(box, sprite, x, y, l);
 
 	return;
 }
 
 
-void darnitSpriteAnimationEnable(void *handle, int sprite) {
-	spriteEnableAnimation(handle, sprite);
+void darnitSpriteAnimationEnable(void *box, int sprite) {
+	spriteEnableAnimation(box, sprite);
 
 	return;
 }
 
 
-void darnitSpriteAnimationDisable(void *handle, int sprite) {
-	spriteDisableAnimation(handle, sprite);
+void darnitSpriteAnimationDisable(void *box, int sprite) {
+	spriteDisableAnimation(box, sprite);
 
 	return;
 }
 
 
-void darnitSpriteLayerDraw(void *handle, int layer) {
-	spriteDrawLayer(handle, layer);
+void darnitSpriteLayerDraw(void *box, int layer) {
+	spriteDrawLayer(box, layer);
 
 	return;
 }
 
+
+void darnitSpriteBoxAnimate(void *box) {
+	spriteAnimate(box);
+
+	return;
+}
+
+
+void *darnitSpriteBoxNew(unsigned int sprites) {
+	return spriteBoxNew(sprites);
+}
+
+
+void *darnitSpriteBoxFree(void *box) {
+	return spriteBoxFree(box);
+}
 
 
 /****************************/
