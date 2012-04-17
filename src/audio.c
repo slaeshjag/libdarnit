@@ -125,12 +125,12 @@ int audioSFXPlaySlotGet(void *handle) {
 }
 
 
-int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
+unsigned int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
 	DARNIT *m = handle;
-	int chan;
+	unsigned int chan;
 
 	if ((chan = audioSFXPlaySlotGet(m)) == -1) {
-		fprintf(stderr, "libDarner: Unable to play SFX: Out of playback channels\n");
+		fprintf(stderr, "libDarnit: Unable to play SFX: Out of playback channels\n");
 		return -1;
 	}
 
@@ -139,6 +139,8 @@ int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
 	m->audio.sfxchan[chan].rvol = vol_r;
 	m->audio.sfxchan[chan].pos = 0;
 	m->audio.sfxchan[chan].len = m->audio.sfx[sfx].len;
+	m->audio.sfxchan[chan].key = m->audio.cnt;
+	m->audio.cnt++;
 	
 	return chan;
 };
@@ -307,6 +309,7 @@ int audioInit(void *handle) {
 
 	m->audio.sfxvol = 127;
 	m->audio.musicvol = 127;
+	m->audio.cnt = 0;
 
 	SDL_PauseAudio(0);
 

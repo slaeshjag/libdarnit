@@ -16,6 +16,7 @@ typedef struct {
 	int				rvol;
 	int				pos;
 	int				len;
+	unsigned int			key;
 } AUDIO_SFX_CHANNEL;
 
 
@@ -41,6 +42,7 @@ typedef struct {
 	AUDIO_SFX_CHANNEL		sfxchan[AUDIO_SFX_CHANNELS];
 	AUDIO_SFX			sfx[AUDIO_SFX_FILES];
 	AUDIO_MUSIC			music;
+	unsigned int			cnt;
 } AUDIO;
 
 
@@ -52,7 +54,7 @@ int audioSFXLoad(void *handle, const char *fname);
 void audioSFXFree(void *handle, int index);
 void audioSFXClear(void *handle);
 int audioSFXPlaySlotGet(void *handle);
-int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
+unsigned int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
 short audioSampleMix(short s1, short s2);
 void audioFrameMix(short *target, short *source1, short *source2, int frames);
 void audioMusicDecode(void *handle, int frames);
