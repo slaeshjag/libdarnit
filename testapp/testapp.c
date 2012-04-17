@@ -23,6 +23,7 @@ int main(int argc, char **argv) {
 
 	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32);
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
+	darnitRenderTint(handle, 0.0f, 1.0f, 0.0f, 1.0f);
 
 	for (i = 0;; i++) {
 		darnitTextSurfaceReset(text);

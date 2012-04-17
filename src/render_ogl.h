@@ -24,6 +24,10 @@ typedef struct {
 	unsigned int			time;
 	int				offset_x;
 	int				offset_y;
+	float				tint_r;
+	float				tint_g;
+	float				tint_b;
+	float				tint_a;
 } VIDEO;
 
 int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen);

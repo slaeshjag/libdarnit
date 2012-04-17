@@ -44,6 +44,10 @@ typedef struct {
 	unsigned int			camy;
 	int				offset_x;
 	int				offset_y;
+	float				tint_r;
+	float				tint_g;
+	float				tint_b;
+	float				tint_a;
 } VIDEO;
 
 

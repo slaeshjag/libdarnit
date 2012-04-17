@@ -447,7 +447,7 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 		glLoadIdentity();
 	}
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
 
 	if (menu->orientation != MENUTK_ORIENT_V_OL)
 		textRender(menu->text);

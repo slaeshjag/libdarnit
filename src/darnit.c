@@ -337,8 +337,14 @@ void darnitRenderBlendingDisable() {
 }
 
 
-void darnitRenderTint(float r, float g, float b, float a) {
+void darnitRenderTint(void *handle, float r, float g, float b, float a) {
+	DARNIT *d = handle;
 	glColor4f(r, g, b, a);
+	d->video.tint_r = r;
+	d->video.tint_g = g;
+	d->video.tint_b = b;
+	d->video.tint_a = a;
+	
 
 	return;
 }

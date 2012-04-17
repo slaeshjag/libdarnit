@@ -90,6 +90,8 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 
 	SDL_WM_SetCaption(wtitle, NULL);
 	videoInitGL(screenw, screenh);
+
+	m->video.tint_r = m->video.tint_g = m->video.tint_b = m->video.tint_a = 1.0f;
 	
 	return 0;
 }
