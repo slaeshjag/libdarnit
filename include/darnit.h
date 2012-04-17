@@ -96,8 +96,8 @@ void darnitMusicStop(void *handle);
 int darnitSFXLoad(void *handle, const char *fname);
 void darnitSFXUnload(void *handle, int sfx);
 void darnitSFXClear(void *handle);
-int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
-void darnitSFXVolumeSet(void *handle, int sfx_chan, int vol_l, int vol_r);
+unsigned int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
+void darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r);
 
 
 /* VIDEO */

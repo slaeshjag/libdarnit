@@ -199,19 +199,21 @@ void darnitSFXClear(void *handle) {
 }
 
 
-int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
+unsigned int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
 	return audioSFXPlay(handle, sfx, vol_l, vol_r);
 }
 
 
-void darnitSFXVolumeSet(void *handle, int sfx_chan, int vol_l, int vol_r) {
+void darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r) {
 	DARNIT *d = handle;
-	
-	if (sfx_chan == -1)
-		return;
+	int i;
 
-	d->audio.sfxchan[sfx_chan].lvol = vol_l;
-	d->audio.sfxchan[sfx_chan].rvol = vol_r;
+	for (i = 0; i < AUDIO_SFX_CHANNELS; i++)
+		if (d->audio.sfxchan[i].key == sfx) {
+			d->audio.sfxchan[sfx].lvol = vol_l;
+			d->audio.sfxchan[sfx].rvol = vol_r;
+			break;
+		}
 	
 	return;
 }
