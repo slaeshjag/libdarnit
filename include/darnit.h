@@ -155,6 +155,7 @@ void *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, 
 void *darnitMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option);
 void *darnitMenuSpinbuttonCreate(void *handle, const char *label, int x, int y, void *font, int step, int min, int max);
 void darnitMenuVerticalShadeSelectionsReduceByOne(void *menu);
+void darnitMenuVerticalShadeSelectionsIncreaseByOne(void *menu);
 void darnitMenuShadeColorSet(void *menu, DARNIT_SHADE_COLOR *color);
 int darnitMenuHandle(void *handle, void *menu);
 void darnitMenuSelectionWaitForNew(void *menu);

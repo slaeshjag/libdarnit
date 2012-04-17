@@ -57,6 +57,7 @@ typedef struct {
 
 
 void menutkVerticalShadeReduceSelectionsByOne(MENUTK_ENTRY *menu;);
+void menutkVerticalShadeIncreaseSelectionsByOne(MENUTK_ENTRY *menu);
 void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color);
 void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option);
 void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color);
