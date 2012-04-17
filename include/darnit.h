@@ -97,7 +97,7 @@ int darnitSFXLoad(void *handle, const char *fname);
 void darnitSFXUnload(void *handle, int sfx);
 void darnitSFXClear(void *handle);
 unsigned int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
-void darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r);
+void darnitSFXVolumeSet(void *handle, unsigned int sfx_p_index, int vol_l, int vol_r);
 
 
 /* VIDEO */
