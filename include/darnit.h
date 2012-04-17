@@ -114,7 +114,7 @@ void darnitRenderBegin();
 void darnitRenderEnd();
 void darnitRenderBlendingEnable();
 void darnitRenderBlendingDisable();
-void darnitRenderTint(float r, float g, float b, float a);
+void darnitRenderTint(void *handle, float r, float g, float b, float a);
 void darnitRenderOffset(void *handle, int x, int y);
 
 
