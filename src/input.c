@@ -8,6 +8,7 @@ void inputKeymapReset(void *handle) {
 	m->input.map.down = SDLK_DOWN;
 	m->input.map.left = SDLK_LEFT;
 	m->input.map.right = SDLK_RIGHT;
+	#ifdef PANDORA
 	m->input.map.x = SDLK_PAGEDOWN;
 	m->input.map.y = SDLK_PAGEUP;
 	m->input.map.a = SDLK_HOME;
@@ -16,6 +17,16 @@ void inputKeymapReset(void *handle) {
 	m->input.map.select = SDLK_LCTRL;
 	m->input.map.l = SDLK_RSHIFT;
 	m->input.map.r = SDLK_RCTRL;
+	#else
+	m->input.map.x = SDLK_s;
+	m->input.map.y = SDLK_w;
+	m->input.map.a = SDLK_a;
+	m->input.map.b = SDLK_d;
+	m->input.map.l = SDLK_l;
+	m->input.map.r = SDLK_e;
+	m->input.map.start = SDLK_RETURN;
+	m->input.map.select = SDLK_RSHIFT;
+	#endif
 
 	m->input.key = 0;
 
