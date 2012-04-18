@@ -675,6 +675,13 @@ void darnitBBoxEntryMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 }
 
 
+void darnitBBoxEntryResize(BBOX *bbox, int key, unsigned int w, unsigned int h) {
+	bboxResize(bbox, key, w, h);
+
+	return;
+}
+
+
 void darnitBBoxClear(BBOX *bbox) {
 	bboxClear(bbox);
 
