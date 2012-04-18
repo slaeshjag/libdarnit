@@ -2,8 +2,13 @@
 
 
 
-void renderTilemapRender(RENDER_TILEMAP *tm) {
+void renderTilemapRender(void *handle, RENDER_TILEMAP *tm) {
+	DARNIT *m = handle;
+	glLoadIdentity();
+	glTranslatef(tm->cam_x, tm->cam_y, 0);
 	renderCache(tm->cache, tm->ts, tm->tilew * tm->tileh);
+	glLoadIdentity();
+	glTranslatef(m->video.offset_x, m->video.offset_y, 0);
 
 	return;
 }
@@ -45,6 +50,9 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	ty = cam_y / tm->ts->hsq;
 	bx = tx + tm->tilew - 1;
 	by = ty + tm->tileh - 1;
+
+	tm->cam_x = tm->ts->swgran * cam_x * -1;
+	tm->cam_y = tm->ts->shgran * cam_y;
 
 	for (i = 0; i < tm->tilew - 1; i++)
 		tm->needbuf_x[i] = tx + i;
