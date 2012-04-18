@@ -622,10 +622,13 @@ void darnitRenderTilemap(void *handle, TILEMAP_ENTRY tilemap) {
 }
 
 
-void darnitRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
+TILEMAP_ENTRY darnitRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
 	tilemapFree(tilemap);
+	tilemap.w = tilemap.h = 0;
+	tilemap.data = NULL;
+	tilemap.render = NULL;
 
-	return;
+	return tilemap;
 }
 
 
