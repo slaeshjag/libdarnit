@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 int main(int argc, char **argv) {
-	int i, sfx, sprite, j;
-	void *font, *surface, *handle, *text, *mapsheet, *spritebox;
+	int i, sfx, j;
+	void *font, *surface, *handle, *text, *mapsheet, *sprite;
 	char test[32];
 	DARNIT_MOUSE mouse;
 	handle = darnitInit("TESTAPP - libDarner");
@@ -12,18 +12,15 @@ int main(int argc, char **argv) {
 	
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
-//	darnitMusicPlayVorbis(handle, "test.ogg");
 
-	spritebox = darnitSpriteBoxNew(6);
-	sprite = darnitSpriteLoad(handle, spritebox, "test.spr", 0);
-	darnitSpriteMove(spritebox, sprite , 50, 50, 0);
-	darnitSpriteAnimationEnable(spritebox, sprite);
-//	darnitRenderOffset(handle, 100, -100);
+	sprite = darnitSpriteLoad(handle, "test.spr", 0);
+	darnitSpriteMove(sprite , 50, 50);
 	text = darnitTextSurfaceAlloc(font, 32, 32, 0, 464);
 
 	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32);
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
-	darnitRenderTint(handle, 0.0f, 1.0f, 0.0f, 1.0f);
+	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
+	darnitSpriteAnimationEnable(sprite);
 
 	for (i = 0;; i++) {
 		darnitTextSurfaceReset(text);
@@ -33,8 +30,6 @@ int main(int argc, char **argv) {
 
 		darnitRenderBegin();
 		darnitTextSurfaceDraw(text);
-		darnitSpriteBoxAnimate(spritebox);
-		darnitSpriteLayerDraw(spritebox, 0);
 
 		if ((i % 100) >= 50)
 			j = (100 - (i % 100)) * 8;
@@ -45,6 +40,7 @@ int main(int argc, char **argv) {
 		darnitRenderBlendingEnable();
 		if (darnitMenuHandle(handle, surface) != -1)
 			return 0;
+		darnitSpriteDraw(sprite);
 		darnitRenderBlendingDisable();
 		darnitRenderEnd();
 		darnitLoop(handle);

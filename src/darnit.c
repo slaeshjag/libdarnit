@@ -366,74 +366,48 @@ void darnitRenderOffset(void *handle, int x, int y) {
 /*****************************/
 
 
-int darnitSpriteLoad(void *handle, void *box, const char *fname) {
-	return spriteLoad(handle, box, fname, 0);
+void *darnitSpriteLoad(void *handle, const char *fname, int dir) {
+	return spriteLoad(handle, fname, dir);
 }
 
 
-void darnitSpriteDelete(void *box, int sprite) {
-	spriteDelete(box, sprite);
+void *darnitSpriteDelete(void *sprite) {
+	return spriteDelete(sprite);
+}
+
+
+void darnitSpriteDirectionChange(void *sprite, int dir) {
+	spriteChangeDirection(sprite, dir);
 
 	return;
 }
 
 
-void darnitSpriteBoxClear(void *box) {
-	spriteClear(box);
+void darnitSpriteMove(void *sprite, int x, int y) {
+	spriteTeleport(sprite, x, y);
 
 	return;
 }
 
 
-void darnitSpriteDirectionChange(void *box, int sprite, int dir) {
-	spriteChangeDirection(box, sprite, dir);
+void darnitSpriteAnimationEnable(void *sprite) {
+	spriteEnableAnimation(sprite);
 
 	return;
 }
 
 
-void darnitSpriteMove(void *box, int sprite, int x, int y, int l) {
-	spriteTeleport(box, sprite, x, y, l);
+void darnitSpriteAnimationDisable(void *sprite) {
+	spriteDisableAnimation(sprite);
 
 	return;
 }
 
 
-void darnitSpriteAnimationEnable(void *box, int sprite) {
-	spriteEnableAnimation(box, sprite);
+void darnitSpriteDraw(void *sprite) {
+	spriteDraw(sprite);
 
 	return;
-}
-
-
-void darnitSpriteAnimationDisable(void *box, int sprite) {
-	spriteDisableAnimation(box, sprite);
-
-	return;
-}
-
-
-void darnitSpriteLayerDraw(void *box, int layer) {
-	spriteDrawLayer(box, layer);
-
-	return;
-}
-
-
-void darnitSpriteBoxAnimate(void *box) {
-	spriteAnimate(box);
-
-	return;
-}
-
-
-void *darnitSpriteBoxNew(unsigned int sprites) {
-	return spriteBoxNew(sprites);
-}
-
-
-void *darnitSpriteBoxFree(void *box) {
-	return spriteBoxFree(box);
 }
 
 
