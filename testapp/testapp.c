@@ -40,11 +40,8 @@ int main(int argc, char **argv) {
 			j = (100 - (i % 100)) * 8;
 		else
 			j = (i % 100) * 8;
-		darnitRenderOffset(handle, j, j);
-//		fprintf(stderr, "Rendering at offset %i %i\n", j, j);
 		darnitRenderTilemapCameraMove(tilemap, j, j);
-		darnitRenderTilemap(tilemap);
-		darnitRenderOffset(handle, 0, 0);
+		darnitRenderTilemap(handle, tilemap);
 		darnitRenderBlendingEnable();
 		if (darnitMenuHandle(handle, surface) != -1)
 			return 0;

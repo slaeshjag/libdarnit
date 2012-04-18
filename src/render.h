@@ -49,6 +49,8 @@ typedef struct {
 	unsigned int	tiles;
 	float		sw;
 	float		sh;
+	float		swgran;
+	float		shgran;
 	unsigned int	texhandle;
 	unsigned int	wsq;
 	unsigned int	hsq;

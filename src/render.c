@@ -34,6 +34,8 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 
 	ts->sw = m->video.swgran * wsq;
 	ts->sh = m->video.shgran * hsq;
+	ts->swgran = m->video.swgran;
+	ts->shgran = m->video.shgran;
 	ts->wsq = wsq;
 	ts->hsq = hsq;
 
