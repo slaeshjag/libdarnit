@@ -49,6 +49,22 @@ void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 }
 
 
+void bboxResize(BBOX *bbox, int key, unsigned int w, unsigned int h) {
+	int i;
+	
+	for (i = 0; i < bbox->max; i++) 
+		if (bbox->bbox[i].key == key) {
+			bbox->bbox[i].xb = bbox->bbox[i].x + w;
+			bbox->bbox[i].yb = bbox->bbox[i].y + h;
+			bbox->bbox[i].w = w;
+			bbox->bbox[i].h = h;
+			return;
+		}
+	
+	return;
+}
+
+
 void bboxSort(BBOX *bbox) {
 	DARNIT_BBOX_ENTRY tmp;
 	int i, j;

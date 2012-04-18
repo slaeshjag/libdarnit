@@ -184,6 +184,7 @@ int darnitBBoxCollTest(void *bbox, unsigned int x, unsigned int y, unsigned int 
 int darnitBBoxEntryAdd(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void darnitBBoxEntryDelete(void *bbox, int key);
 void darnitBBoxEntryMove(void *bbox, int key, unsigned int x, unsigned int y);
+void darnitBBoxEntryResize(void *bbox, int key, unsigned int w, unsigned int h);
 void darnitBBoxClear(void *bbox);
 
 #ifdef __cplusplus

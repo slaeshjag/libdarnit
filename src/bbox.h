@@ -32,6 +32,7 @@ typedef struct {
 int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void bboxDelete(BBOX *bbox, int key);
 void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y);
+void bboxResize(BBOX *bbox, int key, unsigned int w, unsigned int h);
 void bboxSort(BBOX *bbox);
 void bboxClear(BBOX *bbox);
 void *bboxNew(unsigned int size);
