@@ -47,20 +47,14 @@ typedef struct {
 } SPRITE;
 
 
-void *spriteBoxNew(unsigned int prealloc);
-void *spriteBoxFree(SPRITE *sprite);
-int spriteGetOne(SPRITE *sprite);
-int spriteGetIndex(SPRITE *sprite, int id);
-int spriteLoad(void *handle, SPRITE *sprite, const char *fname, unsigned int dir);
-void spriteTeleport(SPRITE *sprite, unsigned int key, unsigned int x, unsigned int y, unsigned int l);
-void spriteEnableAnimation(SPRITE *sprite, unsigned int key);
-void spriteDisableAnimation(SPRITE *sprite, unsigned int key);
-void spriteAnimate(SPRITE *sprite);
-void spriteDrawLayer(SPRITE *sprite, unsigned int layer);
-void spriteSort(SPRITE *sprite);
-void spriteChangeDirection(SPRITE *sprite, unsigned int key, unsigned int dir);
-void spriteDelete(SPRITE *sprite, unsigned int key);
-void spriteClear(SPRITE *sprite);
+void *spriteLoad(void *handle, const char *fname, unsigned int dir);
+void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y);
+void spriteEnableAnimation(SPRITE_ENTRY *sprite);
+void spriteDisableAnimation(SPRITE_ENTRY *sprite);
+void spriteAnimate(SPRITE_ENTRY *sprite);
+void spriteDraw(SPRITE_ENTRY *sprite);
+void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir);
+void *spriteDelete(SPRITE_ENTRY *sprite);
 
 
 #endif

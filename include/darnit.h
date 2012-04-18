@@ -120,17 +120,13 @@ void darnitRenderOffset(void *handle, int x, int y);
 
 /* SPRITE */
 
-int darnitSpriteLoad(void *handle, void *box, const char *fname, int dir);
-void darnitSpriteDelete(void *box, int sprite);
-void darnitSpriteClear(void *box);
-void darnitSpriteDirectionChange(void *box, int sprite, int dir);
-void darnitSpriteMove(void *box, int sprite, int x, int y, int l);
-void darnitSpriteBoxAnimate(void *box);
-void darnitSpriteAnimationEnable(void *box, int sprite);
-void darnitSpriteAnimationDisable(void *box, int sprite);
-void darnitSpriteLayerDraw(void *box, int layer);
-void *darnitSpriteBoxNew(unsigned int sprites);
-void *darnitSpriteBoxFree(void *box);
+void *darnitSpriteLoad(void *handle, const char *fname, int dir);
+void darnitSpriteDelete(void *sprite);
+void darnitSpriteDirectionChange(void *sprite, int dir);
+void darnitSpriteMove(void *sprite, int x, int y);
+void darnitSpriteAnimationEnable(void *sprite);
+void darnitSpriteAnimationDisable(void *sprite);
+void darnitSpriteDraw(void *sprite);
 
 
 /* TEXT */
