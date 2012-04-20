@@ -61,7 +61,7 @@ typedef struct {
 	int		h;
 	unsigned int	*data;
 	void		*render;
-} TILEMAP;
+} DARNIT_TILEMAP;
 
 
 /* MAIN */
