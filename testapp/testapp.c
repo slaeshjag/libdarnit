@@ -8,7 +8,7 @@ int main(int argc, char **argv) {
 	char test[32];
 	DARNIT_MOUSE mouse;
 	handle = darnitInit("TESTAPP - libDarner");
-	TILEMAP tilemap;
+	DARNIT_TILEMAP tilemap;
 	
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
@@ -21,6 +21,9 @@ int main(int argc, char **argv) {
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
 	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
+
+	for (i = 0; i < 10; i++) 
+		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
 	for (i = 0;; i++) {
 		darnitTextSurfaceReset(text);
