@@ -165,10 +165,10 @@ void *darnitMenuDestroy(void *menu);
 
 /* TILEMAPS */
 
-TILEMAP darnitRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet);
-void darnitRenderTilemapCameraMove(TILEMAP tilemap, int cam_x, int cam_y);
-void darnitRenderTilemap(void *handle, TILEMAP tilemap);
-TILEMAP darnitRenderTilemapDelete(TILEMAP tilemap);
+DARNIT_TILEMAP darnitRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet);
+void darnitRenderTilemapCameraMove(DARNIT_TILEMAP tilemap, int cam_x, int cam_y);
+void darnitRenderTilemap(void *handle, DARNIT_TILEMAP tilemap);
+DARNIT_TILEMAP darnitRenderTilemapDelete(DARNIT_TILEMAP tilemap);
 
 
 
