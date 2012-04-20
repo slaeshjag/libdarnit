@@ -43,6 +43,25 @@ void renderTilemapRecalculateTile(RENDER_TILEMAP *tm, int x, int y, int view_x, 
 }
 
 
+void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile) {
+	int i, j;
+
+	if (x >= tm->tm_w || x < 0 || y >= tm->tm_h || y < 0)
+		return;
+
+	tm->map[tm->tm_w * y + x] = tile;
+
+	for (i = 0; i < tm->tilew; i++)
+		if (tm->col[i] == x)
+			for (j = 0; j < tm->tileh; j++)
+				if (tm->row[j] == y) {
+					renderTilemapRecalculateTile(tm, x, y, i, j);
+					return;
+				}
+	return;
+}
+
+
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	int i, j, k, tx, ty, bx, by, index;
 

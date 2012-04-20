@@ -582,6 +582,13 @@ TILEMAP_ENTRY darnitRenderTilemapCreate(void *handle, const char *fname, unsigne
 }
 
 
+void darnitRenderTilemapTileSet(TILEMAP_ENTRY tilemap, int x, int y, int tile) {
+	renderTilemapTileSet(tilemap.render, x, y, tile);
+
+	return;
+}
+
+
 void darnitRenderTilemapCameraMove(TILEMAP_ENTRY tilemap, int cam_x, int cam_y) {
 	renderTilemapCameraMove(tilemap.render, cam_x, cam_y);
 
