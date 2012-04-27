@@ -15,3 +15,7 @@ pandora:
 clean:
 	rm -Rf bin
 	rm -f testapp/testapp
+
+install:
+	cp bin/*.so /usr/local/lib/
+	cp include/darnit.h /usr/local/include
