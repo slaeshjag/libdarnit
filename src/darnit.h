@@ -6,6 +6,12 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 
+#ifdef _WIN32
+	#include <windows.h>
+#else
+	#include <dlfcn.h>
+#endif
+
 
 typedef struct {
 	unsigned int	x	: 16;
@@ -25,6 +31,7 @@ typedef struct {
 #include "bbox.h"
 #include "render_tilemap.h"
 #include "tilemap.h"
+#include "dynlib.h"
 
 
 typedef struct {
