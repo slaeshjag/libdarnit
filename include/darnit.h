@@ -189,7 +189,7 @@ void darnitBBoxClear(void *bbox);
 /* DYNLIB */
 void *darnitDynlibOpen(const char *fname);
 void *darnitDynlibGet(void *lib, const char *symbol);
-void dynlibClose(void *lib);
+void darnitDynlibClose(void *lib);
 
 
 #ifdef __cplusplus
