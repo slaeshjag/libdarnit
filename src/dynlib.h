@@ -4,7 +4,7 @@
 
 void *dynlibOpen(const char *fname);
 void *dynlibSymbolGet(void *lib, const char *symbol);
-void dynlibClose(void *lib);
+void *dynlibClose(void *lib);
 
 
 #endif

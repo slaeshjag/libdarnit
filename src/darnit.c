@@ -684,8 +684,6 @@ void *darnitDynlibGet(void *lib, const char *symbol) {
 	return dynlibSymbolGet(lib, symbol);
 }
 
-void dynlibClose(void *lib) {
-	dynlibClose(lib);
-
-	return;
+void *dynlibClose(void *lib) {
+	return dynlibClose(lib);
 }

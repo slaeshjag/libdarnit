@@ -42,9 +42,10 @@ void dynlibClose(void *lib) {
 		HINSTANCE *libh = lib;
 
 		freeLibrary(*libh);
-		return;
+		free(lib);
+		return NULL;
 	#else
 		dlclose(lib);
-		return;
+		return NULL;
 	#endif
 }
