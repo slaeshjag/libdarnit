@@ -184,6 +184,14 @@ void darnitBBoxEntryMove(void *bbox, int key, unsigned int x, unsigned int y);
 void darnitBBoxEntryResize(void *bbox, int key, unsigned int w, unsigned int h);
 void darnitBBoxClear(void *bbox);
 
+
+
+/* DYNLIB */
+void *darnitDynlibOpen(const char *fname);
+void *darnitDynlibGet(void *lib, const char *symbol);
+void dynlibClose(void *lib);
+
+
 #ifdef __cplusplus
 }
 #endif

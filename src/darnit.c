@@ -670,3 +670,22 @@ void darnitBBoxClear(BBOX *bbox) {
 }
 
 
+/**************************************/
+/******* DYNAMC LIBRARIES *************/
+/**************************************/
+
+
+void *darnitDynlibOpen(const char *fname) {
+	return dynlibOpen(fname);
+}
+
+
+void *darnitDynlibGet(void *lib, const char *symbol) {
+	return dynlibSymbolGet(lib, symbol);
+}
+
+void dynlibClose(void *lib) {
+	dynlibClose(lib);
+
+	return;
+}
