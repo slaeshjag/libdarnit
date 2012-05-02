@@ -37,7 +37,7 @@ void *dynlibSymbolGet(void *lib, const char *symbol) {
 }
 
 
-void dynlibClose(void *lib) {
+void *dynlibClose(void *lib) {
 	#ifdef _WIN32
 		HINSTANCE *libh = lib;
 

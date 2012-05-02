@@ -1,0 +1,92 @@
+#include "darnit.h"
+
+
+void *socketConnect(const char *host, int port) {
+	struct sockaddr_in sin;
+	SOCKET_STRUCT *sock;
+
+	#ifdef _WIN32
+		WSADATA wsaData;
+		WORD version;
+		struct hostent hp;
+		u_long iMode=1;
+	#else
+		int x;
+		struct hostent *hp;
+	#endif
+
+	sock = malloc(sizeof(SOCKET_STRUCT));
+
+	#ifdef _WIN32
+		version = MAKEWORD(2, 0);
+		if (WSAStartup(version, &wsaData) != 0) {
+			free(sock);
+			return NULL;
+		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaDara.wVersion) != 0) {
+			WSACleanup();
+			free(sock);
+			return NULL;
+		}
+	#endif
+
+	sock->socket = socket(AF_INET, SOCK_STREAM, 0);
+	hp = gethostbyname(host);
+	memset(&sin, 0, sizeof(struct sockaddr_in));
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
+	
+	#ifdef _WIN32
+		sin.sin_addr.s_addr = ((struct in_addr *)(host->h_addr))->s_addr;
+	#else
+		sin.sin_addr.s_addr = *(unsigned long *) hp->h_addr_list[0];
+	#endif
+	
+	if (connect(sock->socket, (void *) &sin, sizeof(struct sockaddr_in)) == -1) {
+		fprintf(stderr, "libDarnit: Unable to connect to host %s\n", host);
+		free(sock);
+		return NULL;
+	}
+	
+	#ifdef _WIN32
+		ioctlsocket(sock->socket, FIONBIO, &iMode);
+	#else
+		x = fcntl(sock->socket, F_GETFL, 0);
+		fcntl(sock->socket, F_SETFL, x | O_NONBLOCK);
+	#endif
+
+	return sock;
+}
+
+
+int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
+	int ret;
+
+	ret = recv(sock->socket, buff, len, 0);
+	if (ret < 1 && ret != EAGAIN && ret != EWOULDBLOCK) {
+		fprintf(stderr, "Socket error; connection died\n");
+		socketClose(sock);
+		return -1;
+	}
+
+	if (ret == EWOULDBLOCK)
+		return 0;
+	return ret;
+}
+
+
+int socketSend(SOCKET_STRUCT *sock, void *buff, int len) {
+	return send(sock->socket, buff, len, 0);
+}
+
+
+void *socketClose(SOCKET_STRUCT *sock) {
+	#ifdef _WIN32
+		closesocket(sock->socket);
+	#else
+		close(sock->socket);
+	#endif
+
+	free(sock);
+
+	return NULL;
+}

@@ -192,6 +192,14 @@ void *darnitDynlibGet(void *lib, const char *symbol);
 void *darnitDynlibClose(void *lib);
 
 
+
+/* SOCKET */
+void *darnitSocketConnect(const char *host, int port);
+int darnitSocketRecv(void *sock, char *buff, int len);
+int darnitSocketSend(void *sock, char *buff, int len);
+void *darnitSocketClose(void *sock);
+
+
 #ifdef __cplusplus
 }
 #endif
