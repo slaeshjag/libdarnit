@@ -684,6 +684,32 @@ void *darnitDynlibGet(void *lib, const char *symbol) {
 	return dynlibSymbolGet(lib, symbol);
 }
 
-void *dynlibClose(void *lib) {
+void *darnitDynlibClose(void *lib) {
 	return dynlibClose(lib);
+}
+
+
+
+/***************************************/
+/*********** SOCKETS *******************/
+/***************************************/
+
+
+void *darnitSocketConnect(const char *host, int port) {
+	return socketConnect(host, port);
+}
+
+
+int darnitSocketRecv(void *sock, char *buff, int len) {
+	return socketRecv(sock, buff, len);
+}
+
+
+int darnitSocketSend(void *sock, char *buff, int len) {
+	return socketSend(sock, buff, len);
+}
+
+
+void *darnitSocketClose(void *sock) {
+	return socketClose(sock);
 }

@@ -5,11 +5,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
+#include <errno.h>
+
 
 #ifdef _WIN32
 	#include <windows.h>
+	#include <winsock2.h>
 #else
 	#include <dlfcn.h>
+	#include <unistd.h>
+	#include <netdb.h>
+	#include <sys/types.h>
+	#include <fcntl.h>
 #endif
 
 
@@ -32,6 +39,7 @@ typedef struct {
 #include "render_tilemap.h"
 #include "tilemap.h"
 #include "dynlib.h"
+#include "socket.h"
 
 
 typedef struct {
