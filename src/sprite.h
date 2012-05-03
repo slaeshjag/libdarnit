@@ -50,6 +50,7 @@ typedef struct {
 void *spriteLoad(void *handle, const char *fname, unsigned int dir);
 void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y);
 void spriteEnableAnimation(SPRITE_ENTRY *sprite);
+void spritePauseAnimation(SPRITE_ENTRY *sprite);
 void spriteDisableAnimation(SPRITE_ENTRY *sprite);
 void spriteAnimate(SPRITE_ENTRY *sprite);
 void spriteDraw(SPRITE_ENTRY *sprite);

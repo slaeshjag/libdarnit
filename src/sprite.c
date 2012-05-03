@@ -62,10 +62,19 @@ void spriteEnableAnimation(SPRITE_ENTRY *sprite) {
 }
 
 
+void spritePauseAnimation(SPRITE_ENTRY *sprite) {
+	sprite->animate = 0;
+
+	return;
+}
+
+
 void spriteDisableAnimation(SPRITE_ENTRY *sprite) {
 
-	sprite->animate = 0;
 	sprite->frame = 0;
+	sprite->time = SDL_GetTicks();
+	spriteAnimate(sprite);
+	sprite->animate = 0;
 
 	return;
 }

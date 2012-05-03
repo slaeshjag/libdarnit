@@ -397,6 +397,13 @@ void darnitSpriteAnimationEnable(void *sprite) {
 }
 
 
+void darnitSpriteAnimationPause(void *sprite) {
+	spritePauseAnimation(sprite);
+
+	return;
+}
+
+
 void darnitSpriteAnimationDisable(void *sprite) {
 	spriteDisableAnimation(sprite);
 

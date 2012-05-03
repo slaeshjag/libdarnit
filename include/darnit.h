@@ -125,6 +125,7 @@ void darnitSpriteDelete(void *sprite);
 void darnitSpriteDirectionChange(void *sprite, int dir);
 void darnitSpriteMove(void *sprite, int x, int y);
 void darnitSpriteAnimationEnable(void *sprite);
+void darnitSpriteAnimationPause(void *sprite);
 void darnitSpriteAnimationDisable(void *sprite);
 void darnitSpriteDraw(void *sprite);
 
