@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 	darnitSpriteMove(sprite , 50, 50);
 	text = darnitTextSurfaceAlloc(font, 32, 32, 0, 464);
 
-	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA4);
+	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);

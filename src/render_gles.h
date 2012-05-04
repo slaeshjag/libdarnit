@@ -13,6 +13,7 @@
 #include	<GLES/egl.h>
 #include	<EGL/egl.h>
 #include	<GLES/gl.h>
+#include	<GLES/glext.h>
 #include	<SDL/SDL.h>
 #include	<SDL/SDL_syswm.h>
 
