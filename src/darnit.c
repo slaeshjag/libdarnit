@@ -8,7 +8,7 @@
 /***************************/
 
 
-void *darnitInit(const char *wtitle) {
+void EXPORT_THIS *darnitInit(const char *wtitle) {
 	DARNIT *d;
 
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
@@ -31,7 +31,7 @@ void *darnitInit(const char *wtitle) {
 }
 
 
-void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen) {
+void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen) {
 	DARNIT *d;
 
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
@@ -49,7 +49,7 @@ void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen)
 }
 
 
-void darnitLoop(void *handle) {
+void EXPORT_THIS darnitLoop(void *handle) {
 	DARNIT *d = handle;
 
 	videoLoop(d);
@@ -59,7 +59,7 @@ void darnitLoop(void *handle) {
 }
 
 
-unsigned int darnitTimeGet() {
+unsigned int EXPORT_THIS darnitTimeGet() {
 	return SDL_GetTicks();
 }
 
@@ -70,19 +70,19 @@ unsigned int darnitTimeGet() {
 /*************************/
 
 
-unsigned int darnitButtonGet(void *handle) {
+unsigned int EXPORT_THIS darnitButtonGet(void *handle) {
 	DARNIT *d = handle;
 
 	return (d->input.key ^ d->input.keypending);
 }
 
 
-unsigned int darnitButtonZero() {
+unsigned int EXPORT_THIS darnitButtonZero() {
 	return 0;
 }
 
 
-void darnitButtonSet(void *handle, unsigned int button) {
+void EXPORT_THIS darnitButtonSet(void *handle, unsigned int button) {
 	DARNIT *d = handle;
 
 	d->input.keypending |= button;
@@ -91,14 +91,14 @@ void darnitButtonSet(void *handle, unsigned int button) {
 }
 
 
-void darnitButtonMappingReset(void *handle) {
+void EXPORT_THIS darnitButtonMappingReset(void *handle) {
 	inputKeymapReset(handle);
 
 	return;
 }
 
 
-void darnitButtonMappingSet(void *handle, INPUT_MAP map) {
+void EXPORT_THIS darnitButtonMappingSet(void *handle, INPUT_MAP map) {
 	DARNIT *d = handle;
 
 	d->input.map = map;
@@ -107,28 +107,28 @@ void darnitButtonMappingSet(void *handle, INPUT_MAP map) {
 }
 
 
-INPUT_MAP darnitButtonMappingGet(void *handle) {
+INPUT_MAP EXPORT_THIS darnitButtonMappingGet(void *handle) {
 	DARNIT *d = handle;
 
 	return d->input.map;
 }
 
 
-void darnitInputGrab() {
+void EXPORT_THIS darnitInputGrab() {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 
 	return;
 }
 
 
-void darnitInputUngrab() {
+void EXPORT_THIS darnitInputUngrab() {
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 
 	return;
 }
 
 
-DARNIT_MOUSE darnitMouseGet(void *handle) {
+DARNIT_MOUSE EXPORT_THIS darnitMouseGet(void *handle) {
 	DARNIT *d = handle;
 
 	return d->input.mouse;
@@ -140,28 +140,28 @@ DARNIT_MOUSE darnitMouseGet(void *handle) {
 /***************************/
 
 
-void darnitMusicPlayTracked(void *handle, const char *fname) {
+void EXPORT_THIS darnitMusicPlayTracked(void *handle, const char *fname) {
 	audioMusicPlayMod(handle, fname);
 
 	return;
 }
 
 
-void darnitMusicPlayVorbis(void *handle, const char *fname) {
+void EXPORT_THIS darnitMusicPlayVorbis(void *handle, const char *fname) {
 	audioMusicPlayVorbis(handle, fname);
 
 	return;
 }
 
 
-int darnitMusicPlayCheck(void *handle) {
+int EXPORT_THIS darnitMusicPlayCheck(void *handle) {
 	DARNIT *d = handle;
 
 	return (d->audio.music.modfile == NULL && d->audio.music.vorbis == NULL) ? -1 : 0;
 }
 
 
-void darnitMusicVolSet(void *handle, int vol) {
+void EXPORT_THIS darnitMusicVolSet(void *handle, int vol) {
 	DARNIT *d = handle;
 
 	d->audio.musicvol = vol;
@@ -170,38 +170,38 @@ void darnitMusicVolSet(void *handle, int vol) {
 }
 
 
-void darnitMusicStop(void *handle) {
+void EXPORT_THIS darnitMusicStop(void *handle) {
 	audioMusicStop(handle);
 
 	return;
 }
 
 
-int darnitSFXLoad(void *handle, const char *fname) {
+int EXPORT_THIS darnitSFXLoad(void *handle, const char *fname) {
 	return audioSFXLoad(handle, fname);
 }
 
 
-void darnitSFXUnload(void *handle, int sfx) {
+void EXPORT_THIS darnitSFXUnload(void *handle, int sfx) {
 	audioSFXFree(handle, sfx);
 
 	return;
 }
 
 
-void darnitSFXClear(void *handle) {
+void EXPORT_THIS darnitSFXClear(void *handle) {
 	audioSFXClear(handle);
 
 	return;
 }
 
 
-unsigned int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
+unsigned int EXPORT_THIS darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
 	return audioSFXPlay(handle, sfx, vol_l, vol_r);
 }
 
 
-void darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r) {
+void EXPORT_THIS darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r) {
 	DARNIT *d = handle;
 	int i;
 
@@ -222,19 +222,19 @@ void darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r) {
 /**************************/
 
 
-void *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq) {
+void EXPORT_THIS *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
 	DARNIT *d = handle;
 	
-	return renderTilesheetLoad(d, fname, wsq, hsq);
+	return renderTilesheetLoad(d, fname, wsq, hsq, target_format);
 }
 
 
-void *darnitRenderTilesheetFree(void *tilesheet) {
+void EXPORT_THIS *darnitRenderTilesheetFree(void *tilesheet) {
 	return renderTilesheetFree(tilesheet);
 }
 
 
-void darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
+void EXPORT_THIS darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
 	TILE_CACHE *cache;
 
 	if (buf->tiles <= tile)
@@ -248,7 +248,7 @@ void darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *ti
 
 
 /* tile_ts is the tile index in the tilesheet */
-void darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int tile_ts) {
+void EXPORT_THIS darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int tile_ts) {
 	TILE_CACHE *cache;
 
 	if (buf->tiles <= tile)
@@ -260,7 +260,7 @@ void darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *til
 }
 
 
-void darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
+void EXPORT_THIS darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
 	float *ptr;
 	int i;
 
@@ -274,7 +274,7 @@ void darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
 }
 
 
-void darnitRenderTileDraw(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tiles) {
+void EXPORT_THIS darnitRenderTileDraw(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tiles) {
 	if (buf->tiles > tiles)
 		tiles = buf->tiles;
 	renderCache(buf->tc, tilesheet, tiles);
@@ -283,7 +283,7 @@ void darnitRenderTileDraw(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned i
 }
 
 
-void *darnitRenderTileAlloc(unsigned int tiles) {
+void EXPORT_THIS *darnitRenderTileAlloc(unsigned int tiles) {
 	DARNIT_RENDER_BUFFER *buf;
 	int i, j;
 	float *arr;
@@ -302,7 +302,7 @@ void *darnitRenderTileAlloc(unsigned int tiles) {
 }
 
 
-void *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
+void EXPORT_THIS *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
 	free(buf->tc);
 	free(buf);
 
@@ -311,7 +311,7 @@ void *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
 
 
 
-void darnitRenderBegin() {
+void EXPORT_THIS darnitRenderBegin() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -319,7 +319,7 @@ void darnitRenderBegin() {
 }
 
 
-void darnitRenderEnd() {
+void EXPORT_THIS darnitRenderEnd() {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -327,17 +327,17 @@ void darnitRenderEnd() {
 }
 
 
-void darnitRenderBlendingEnable() {
+void EXPORT_THIS darnitRenderBlendingEnable() {
 	glEnable(GL_BLEND);
 }
 
 
-void darnitRenderBlendingDisable() {
+void EXPORT_THIS darnitRenderBlendingDisable() {
 	glDisable(GL_BLEND);
 }
 
 
-void darnitRenderTint(void *handle, float r, float g, float b, float a) {
+void EXPORT_THIS darnitRenderTint(void *handle, float r, float g, float b, float a) {
 	DARNIT *d = handle;
 	glColor4f(r, g, b, a);
 	d->video.tint_r = r;
@@ -350,7 +350,7 @@ void darnitRenderTint(void *handle, float r, float g, float b, float a) {
 }
 
 
-void darnitRenderOffset(void *handle, int x, int y) {
+void EXPORT_THIS darnitRenderOffset(void *handle, int x, int y) {
 	DARNIT *d = handle;
 	glLoadIdentity();
 	glTranslatef(d->video.swgran * x * -1, d->video.shgran * y, 0.0f);
@@ -366,52 +366,52 @@ void darnitRenderOffset(void *handle, int x, int y) {
 /*****************************/
 
 
-void *darnitSpriteLoad(void *handle, const char *fname, int dir) {
-	return spriteLoad(handle, fname, dir);
+void EXPORT_THIS *darnitSpriteLoad(void *handle, const char *fname, int dir, unsigned int target_format) {
+	return spriteLoad(handle, fname, dir, target_format);
 }
 
 
-void *darnitSpriteDelete(void *sprite) {
+void EXPORT_THIS *darnitSpriteDelete(void *sprite) {
 	return spriteDelete(sprite);
 }
 
 
-void darnitSpriteDirectionChange(void *sprite, int dir) {
+void EXPORT_THIS darnitSpriteDirectionChange(void *sprite, int dir) {
 	spriteChangeDirection(sprite, dir);
 
 	return;
 }
 
 
-void darnitSpriteMove(void *sprite, int x, int y) {
+void EXPORT_THIS darnitSpriteMove(void *sprite, int x, int y) {
 	spriteTeleport(sprite, x, y);
 
 	return;
 }
 
 
-void darnitSpriteAnimationEnable(void *sprite) {
+void EXPORT_THIS darnitSpriteAnimationEnable(void *sprite) {
 	spriteEnableAnimation(sprite);
 
 	return;
 }
 
 
-void darnitSpriteAnimationPause(void *sprite) {
+void EXPORT_THIS darnitSpriteAnimationPause(void *sprite) {
 	spritePauseAnimation(sprite);
 
 	return;
 }
 
 
-void darnitSpriteAnimationDisable(void *sprite) {
+void EXPORT_THIS darnitSpriteAnimationDisable(void *sprite) {
 	spriteDisableAnimation(sprite);
 
 	return;
 }
 
 
-void darnitSpriteDraw(void *sprite) {
+void EXPORT_THIS darnitSpriteDraw(void *sprite) {
 	spriteDraw(sprite);
 
 	return;
@@ -423,58 +423,58 @@ void darnitSpriteDraw(void *sprite) {
 /****************************/
 
 
-void *darnitFontLoad(void *handle, const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing) {
+void EXPORT_THIS *darnitFontLoad(void *handle, const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing) {
 	return textLoadFont(handle, fname, glyph_w, glyph_h, line_spacing);
 }
 
 
-unsigned int darnitFontGetGlyphW(void *font) {
+unsigned int EXPORT_THIS darnitFontGetGlyphW(void *font) {
 	return textFontGetW(font);
 }
 
 
-unsigned int darnitFontGetGlyphH(void *font) {
+unsigned int EXPORT_THIS darnitFontGetGlyphH(void *font) {
 	return textFontGetH(font);
 }
 
 
-unsigned int darnitFontGetGlyphHS(void *font) {
+unsigned int EXPORT_THIS darnitFontGetGlyphHS(void *font) {
 	return textFontGetHS(font);
 }
 
 
-void darnitTextSurfaceReset(void *surface) {
+void EXPORT_THIS darnitTextSurfaceReset(void *surface) {
 	textResetSurface(surface);
 
 	return;
 }
 
 
-void *darnitTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y) {
+void EXPORT_THIS *darnitTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y) {
 	return textMakeRenderSurface(glyphs, font, linelen, x, y);
 }
 
 
-void *darnitTextSurfaceFree(void *surface) {
+void EXPORT_THIS *darnitTextSurfaceFree(void *surface) {
 	return textSurfaceDestroy(surface);
 }
 
 
-void darnitTextSurfaceCharAppend(void *surface, char c) {
+void EXPORT_THIS darnitTextSurfaceCharAppend(void *surface, char c) {
 	textSurfaceAppendChar(surface, c);
 
 	return;
 }
 
 
-void darnitTextSurfaceStringAppend(void *surface, const char *string) {
+void EXPORT_THIS darnitTextSurfaceStringAppend(void *surface, const char *string) {
 	textSurfaceAppendString(surface, string);
 
 	return;
 }
 
 
-void darnitTextSurfaceDraw(void *surface) {
+void EXPORT_THIS darnitTextSurfaceDraw(void *surface) {
 	textRender(surface);
 	
 	return;
@@ -488,41 +488,41 @@ void darnitTextSurfaceDraw(void *surface) {
 /**************************/
 
 
-void *darnitMenuHorizontalCreate(void *handle, const char *options, int x, int y, void *font, int max_w) {
+void EXPORT_THIS *darnitMenuHorizontalCreate(void *handle, const char *options, int x, int y, void *font, int max_w) {
 	return menutkHorisontalCreate(handle, options, x, y, font, 0);
 }
 
 
-void *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
+void EXPORT_THIS *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
 	return menutkVerticalCreate(handle, options, x, y, font, menuw, textskip_x, 0);
 }
 
 
-void *darnitMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option, int max_h) {
+void EXPORT_THIS *darnitMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option, int max_h) {
 	return menutkVerticalShadeCreate(handle, x, y, shade_h, y_advance, options, shade_w, 0, skip_option);
 }
 
 
-void *darnitMenuSpinbuttonCreate(void *handle, const char *label, int x, int y, void *font, int step, int min, int max) {
+void EXPORT_THIS *darnitMenuSpinbuttonCreate(void *handle, const char *label, int x, int y, void *font, int step, int min, int max) {
 	return menutkSpinbuttonCreate(handle, label, x, y, font, step, min, max);
 }
 
 
-void darnitMenuVerticalShadeSelectionsReduceByOne(void *menu) {
+void EXPORT_THIS darnitMenuVerticalShadeSelectionsReduceByOne(void *menu) {
 	menutkVerticalShadeReduceSelectionsByOne(menu);
 
 	return;
 }
 
 
-void darnitMenuVerticalShadeSelectionsIncreaseByOne(void *menu) {
+void EXPORT_THIS darnitMenuVerticalShadeSelectionsIncreaseByOne(void *menu) {
 	menutkVerticalShadeIncreaseSelectionsByOne(menu);
 	
 	return;
 }
 
 
-void darnitMenuShadeColorSet(void *menu, float r, float g, float b, float a) {
+void EXPORT_THIS darnitMenuShadeColorSet(void *menu, float r, float g, float b, float a) {
 	MENUTK_COLOR col;
 	MENUTK_ENTRY *m = menu;
 
@@ -537,43 +537,43 @@ void darnitMenuShadeColorSet(void *menu, float r, float g, float b, float a) {
 }
 
 
-int darnitMenuHandle(void *handle, void *menu) {
+int EXPORT_THIS darnitMenuHandle(void *handle, void *menu) {
 	return menutkMenuRoutine(handle, menu);
 }
 
 
-void darnitMenuSelectionWaitForNew(void *menu) {
+void EXPORT_THIS darnitMenuSelectionWaitForNew(void *menu) {
 	menutkWaitForNewSelection(menu);
 
 	return;
 }
 
 
-int darnitMenuPeek(void *menu) {
+int EXPORT_THIS darnitMenuPeek(void *menu) {
 	return menutkPeek(menu);
 }
 
 
-int darnitMenuChangedCheck(void *menu) {
+int EXPORT_THIS darnitMenuChangedCheck(void *menu) {
 	return menutkGetIfChanged(menu);
 }
 
 
-void darnitMenuHide(void *menu) {
+void EXPORT_THIS darnitMenuHide(void *menu) {
 	menutkMenuHide(menu);
 
 	return;
 }
 
 
-void darnitMenuUnhide(void *menu) {
+void EXPORT_THIS darnitMenuUnhide(void *menu) {
 	menutkMenuUnhide(menu);
 
 	return;
 }
 
 
-void *darnitMenuDestroy(void *menu) {
+void EXPORT_THIS *darnitMenuDestroy(void *menu) {
 	return menutkDestroy(menu);
 }
 
@@ -584,33 +584,33 @@ void *darnitMenuDestroy(void *menu) {
 /***************************/
 
 
-TILEMAP_ENTRY darnitRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet) {
+TILEMAP_ENTRY EXPORT_THIS darnitRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet) {
 	return tilemapLoad(handle, fname, invisibility_divider, tilesheet);
 }
 
 
-void darnitRenderTilemapTileSet(TILEMAP_ENTRY tilemap, int x, int y, int tile) {
+void EXPORT_THIS darnitRenderTilemapTileSet(TILEMAP_ENTRY tilemap, int x, int y, int tile) {
 	renderTilemapTileSet(tilemap.render, x, y, tile);
 
 	return;
 }
 
 
-void darnitRenderTilemapCameraMove(TILEMAP_ENTRY tilemap, int cam_x, int cam_y) {
+void EXPORT_THIS darnitRenderTilemapCameraMove(TILEMAP_ENTRY tilemap, int cam_x, int cam_y) {
 	renderTilemapCameraMove(tilemap.render, cam_x, cam_y);
 
 	return;
 }
 
 
-void darnitRenderTilemap(void *handle, TILEMAP_ENTRY tilemap) {
+void EXPORT_THIS darnitRenderTilemap(void *handle, TILEMAP_ENTRY tilemap) {
 	renderTilemapRender(handle, tilemap.render);
 
 	return;
 }
 
 
-TILEMAP_ENTRY darnitRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
+TILEMAP_ENTRY EXPORT_THIS darnitRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
 	tilemapFree(tilemap);
 	tilemap.w = tilemap.h = 0;
 	tilemap.data = NULL;
@@ -627,50 +627,50 @@ TILEMAP_ENTRY darnitRenderTilemapDelete(TILEMAP_ENTRY tilemap) {
 /************************/
 
 
-void *darnitBBoxNew(unsigned int size) {
+void EXPORT_THIS *darnitBBoxNew(unsigned int size) {
 	return bboxNew(size);
 }
 
 
-void *darnerBBoxFree(BBOX *bbox) {
+void EXPORT_THIS *darnerBBoxFree(BBOX *bbox) {
 	bboxFree(bbox);
 
 	return NULL;
 }
 
 
-int darnitBBoxCollTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
+int EXPORT_THIS darnitBBoxCollTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
 	return bboxCollBoxTest(bbox, x, y, w, h, list, listlen);
 }
 
 
-int darnitBBoxEntryAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+int EXPORT_THIS darnitBBoxEntryAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
 	return bboxAdd(bbox, x, y, w, h);
 }
 
 
-void darnitBBoxEntryDelete(BBOX *bbox, int key) {
+void EXPORT_THIS darnitBBoxEntryDelete(BBOX *bbox, int key) {
 	bboxDelete(bbox, key);
 
 	return;
 }
 
 
-void darnitBBoxEntryMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
+void EXPORT_THIS darnitBBoxEntryMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 	bboxMove(bbox, key, x, y);
 
 	return;
 }
 
 
-void darnitBBoxEntryResize(BBOX *bbox, int key, unsigned int w, unsigned int h) {
+void EXPORT_THIS darnitBBoxEntryResize(BBOX *bbox, int key, unsigned int w, unsigned int h) {
 	bboxResize(bbox, key, w, h);
 
 	return;
 }
 
 
-void darnitBBoxClear(BBOX *bbox) {
+void EXPORT_THIS darnitBBoxClear(BBOX *bbox) {
 	bboxClear(bbox);
 
 	return;
@@ -682,16 +682,16 @@ void darnitBBoxClear(BBOX *bbox) {
 /**************************************/
 
 
-void *darnitDynlibOpen(const char *fname) {
+void EXPORT_THIS *darnitDynlibOpen(const char *fname) {
 	return dynlibOpen(fname);
 }
 
 
-void *darnitDynlibGet(void *lib, const char *symbol) {
+void EXPORT_THIS *darnitDynlibGet(void *lib, const char *symbol) {
 	return dynlibSymbolGet(lib, symbol);
 }
 
-void *darnitDynlibClose(void *lib) {
+void EXPORT_THIS *darnitDynlibClose(void *lib) {
 	return dynlibClose(lib);
 }
 
@@ -702,21 +702,21 @@ void *darnitDynlibClose(void *lib) {
 /***************************************/
 
 
-void *darnitSocketConnect(const char *host, int port) {
+void EXPORT_THIS *darnitSocketConnect(const char *host, int port) {
 	return socketConnect(host, port);
 }
 
 
-int darnitSocketRecv(void *sock, char *buff, int len) {
+int EXPORT_THIS darnitSocketRecv(void *sock, char *buff, int len) {
 	return socketRecv(sock, buff, len);
 }
 
 
-int darnitSocketSend(void *sock, char *buff, int len) {
+int EXPORT_THIS darnitSocketSend(void *sock, char *buff, int len) {
 	return socketSend(sock, buff, len);
 }
 
 
-void *darnitSocketClose(void *sock) {
+void EXPORT_THIS *darnitSocketClose(void *sock) {
 	return socketClose(sock);
 }

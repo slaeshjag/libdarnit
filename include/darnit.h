@@ -5,6 +5,12 @@
 extern "C" {
 #endif
 
+
+#define		DARNIT_PFORMAT_RGBA8		0
+#define		DARNIT_PFORMAT_RGBA4		1
+#define		DARNIT_PFORMAT_RGB5A1		2
+
+
 typedef struct {
 	unsigned int	left	: 1;
 	unsigned int	right	: 1;
@@ -102,7 +108,7 @@ void darnitSFXVolumeSet(void *handle, unsigned int sfx_p_index, int vol_l, int v
 
 /* VIDEO */
 
-void *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq);
+void *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format);
 void *darnitRenderTilesheetFree(void *tilesheet);
 void darnitRenderTileMove(void *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y);
 void darnitRenderTileSet(void *tile_p, unsigned int tile, void *tilesheet, unsigned int tile_ts);
@@ -120,7 +126,7 @@ void darnitRenderOffset(void *handle, int x, int y);
 
 /* SPRITE */
 
-void *darnitSpriteLoad(void *handle, const char *fname, int dir);
+void *darnitSpriteLoad(void *handle, const char *fname, int dir, unsigned int target_format);
 void darnitSpriteDelete(void *sprite);
 void darnitSpriteDirectionChange(void *sprite, int dir);
 void darnitSpriteMove(void *sprite, int x, int y);

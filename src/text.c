@@ -10,7 +10,7 @@ void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec) 
 		return NULL;
 	}
 
-	if ((fnt->ts = renderTilesheetLoad(m, fname, w, h)) == NULL) {
+	if ((fnt->ts = renderTilesheetLoad(m, fname, w, h, PFORMAT_RGBA4)) == NULL) {
 		fprintf(stderr, "Unable to load the font, we're going down...\n");
 		return NULL;
 	}

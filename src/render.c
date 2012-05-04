@@ -6,7 +6,7 @@
 
 
 
-TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq) {
+TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
 	DARNIT *m = handle;
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
@@ -26,7 +26,21 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 	}
 
 	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
-	ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
+	
+	#ifndef HAVE_GLES
+		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
+	#else
+
+		imgloadDownsample(&data, convert_to);
+		data_t = data->img_data;
+		if (convert_to == PFORMAT_RGBA8)
+			ts->texhande = videoAddTexture(data_t, ts->w, ts->h);
+		else if (convert_to == PFORMAT_RGBA4)
+			ts->texhandle = videoAddTextureRGBA4(data_t, ts->w, ts->h);
+		else if (convert_to == PFORMAT_RGB5A1)
+			ts->texhandle = videoAddTextureRGB5A1(data_t, ts->w, ts->h);
+	#endif
+	
 	free(data_t);
 
 	twgran = 1.0f / ts->w * wsq;

@@ -57,7 +57,7 @@ typedef struct {
 } TILESHEET;
 
 
-TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq);
+TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
 void *renderTilesheetFree(TILESHEET *ts);
 void renderMapCacheSetTile(void *handle, unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);

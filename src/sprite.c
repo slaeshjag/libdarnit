@@ -2,7 +2,7 @@
 
 
 
-void *spriteLoad(void *handle, const char *fname, unsigned int dir) {
+void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int target_format) {
 	DARNIT *m = handle;
 	FILE *fp;
 	int tile;
@@ -22,7 +22,7 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir) {
 	fclose(fp);
 	sprite_e->time = SDL_GetTicks();
 
-	sprite_e->ts = renderTilesheetLoad(m, sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq);
+	sprite_e->ts = renderTilesheetLoad(m, sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format);
 
 	sprite_e->dir = dir;
 	sprite_e->frame = 0;
