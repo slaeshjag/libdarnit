@@ -20,6 +20,14 @@
 #endif
 
 
+
+#ifdef _WIN32
+	#define EXPORT_THIS
+#else
+	#define	EXPORT_THIS __attribute__ ((visibility ("default")))
+#endif
+
+
 typedef struct {
 	unsigned int	x	: 16;
 	unsigned int	y	: 16;

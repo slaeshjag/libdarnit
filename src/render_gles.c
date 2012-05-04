@@ -138,6 +138,31 @@ unsigned int videoAddTexture(void *data, unsigned int w, unsigned int h) {
 }
 
 
+unsigned int videoAddTextureRGBA4(void *data, unsigned int w, unsigned int h) {
+	unsigned int texhandle;
+
+	glGenTextures(1, &texhandle);
+	glBindTexture(GL_TEXTURE_2D,texhandle);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, data);
+
+	return texhandle;
+}
+
+
+unsigned int videoAddTextureRGB5A1(void *data, unsigned int w, unsigned int h) {
+	unsigned int texhandle;
+
+	glGenTextures(1, &texhandle);
+	glBindTexture(GL_TEXTURE_2D,texhandle);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1 data);
+
+	return texhandle;
+}
+
 void videoRemoveTexture(unsigned int texture) {
 	glDeleteTextures(1, &texture);
 	
