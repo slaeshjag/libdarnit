@@ -1,11 +1,64 @@
 #include "darnit.h"
 
 
+void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
+	unsigned int i, j;
+	char c, buf[512];
+
+	rewind(fp);
+	fscanf(fp, "%s %i %i\n", se->tilesheet, &se->wsq, &se->hsq);
+
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
+			se->spr[i].tile[j].time = 50;
+			se->spr[i].tile[j].tile = 0;
+		}
+		se->spr[i].tiles = 0;
+	}
+
+	se->dir = 0;
+	se->frame = 0;
+	se->time = 0;
+	se->tleft = 0;
+	se->animate = 0;
+	se->used = 1;
+
+	j = i = 0;
+
+	while (!feof(fp)) {
+		c = fgetc(fp);
+		switch (c) {
+			case 'D':
+				fgets(buf, 512, fp);
+				j = 0;
+				break;
+			case 'T':
+				fscanf(fp, "%i %i\n", &se->spr[i].tile[j].time, &se->spr[i].tile[j].tile);
+				j++;
+				break;
+			case 'E':
+				se->spr[i].tiles = j;
+				j = 0;
+				i++;
+				break;
+			case '\n':
+				break;
+			default:
+				fgets(buf, 512, fp);
+				break;
+		}
+	}
+
+	return;
+}
+
+
 
 void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int target_format) {
 	DARNIT *m = handle;
 	FILE *fp;
 	int tile;
+	unsigned int header;
 	SPRITE_ENTRY *sprite_e;
 
 	if ((fp = fopen(fname, "r")) == NULL) {
@@ -13,15 +66,20 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 		return NULL;
 	}
 
+	fread(&header, 4, 1, fp);
+
 	if ((sprite_e = malloc(sizeof(SPRITE_ENTRY))) == NULL) {
 		fclose(fp);
 		return NULL;
 	}
+	
+	if (header != 0x00FF10EF)
+		spriteLoadText(m, fp, sprite_e);
+	else 
+		fread(sprite_e, 1, sizeof(SPRITE_ENTRY), fp);
 
-	fread(sprite_e, 1, sizeof(SPRITE_ENTRY), fp);
 	fclose(fp);
 	sprite_e->time = SDL_GetTicks();
-
 	sprite_e->ts = renderTilesheetLoad(m, sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format);
 
 	sprite_e->dir = dir;

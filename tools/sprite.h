@@ -15,6 +15,7 @@ typedef struct {
 
 
 typedef struct {
+	unsigned int		header;
 	unsigned int		dir;
 	unsigned int		frame;
 	unsigned int		tleft;
