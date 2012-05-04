@@ -7,8 +7,10 @@ int main(int argc, char **argv) {
 	void *font, *surface, *handle, *text, *mapsheet, *sprite;
 	char test[32];
 	DARNIT_MOUSE mouse;
-	handle = darnitInit("TESTAPP - libDarner");
 	DARNIT_TILEMAP tilemap;
+	DARNIT_KEYS keys;
+
+	handle = darnitInit("TESTAPP - libDarner");
 	
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
@@ -25,7 +27,8 @@ int main(int argc, char **argv) {
 	for (i = 0; i < 10; i++) 
 		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
-	for (i = 0;; i++) {
+	for (i = 0;;) {
+		keys = darnitButtonGet(handle);
 		darnitTextSurfaceReset(text);
 		mouse = darnitMouseGet(handle);
 		sprintf(test, "X: %i, Y: %i, W: %i", mouse.x, mouse.y, mouse.wheel);
@@ -34,15 +37,22 @@ int main(int argc, char **argv) {
 		darnitRenderBegin();
 		darnitTextSurfaceDraw(text);
 
-		if ((i % 100) >= 50)
-			j = (100 - (i % 100)) * 8;
-		else
-			j = (i % 100) * 8;
-		darnitRenderTilemapCameraMove(tilemap, j, j);
+		if (keys.left == 1)
+			i--;
+		if (keys.right == 1)
+			i++;
+		if (keys.up == 1)
+			j--;
+		if (keys.down == 1)
+			j++;
+
+		if (keys.r == 0)
+			darnitRenderTilemapCameraMove(tilemap, i*4, j*4);
 		darnitRenderTilemap(handle, tilemap);
 		darnitRenderBlendingEnable(handle);
-		if (darnitMenuHandle(handle, surface) != -1)
-			return 0;
+		if (keys.l == 1)
+			if (darnitMenuHandle(handle, surface) != -1)
+				return 0;
 		darnitSpriteDraw(sprite);
 		darnitRenderBlendingDisable(handle);
 		darnitRenderEnd();
