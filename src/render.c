@@ -27,10 +27,9 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 
 	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
 	
-	#ifndef HAVE_GLES
+//	#ifndef HAVE_GLES
 		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
-	#else
-
+/*	#else
 		imgloadDownsample(&data, convert_to);
 		data_t = data.img_data;
 		if (convert_to == PFORMAT_RGBA8)
@@ -39,7 +38,7 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 			ts->texhandle = videoAddTextureRGBA4(data_t, ts->w, ts->h);
 		else if (convert_to == PFORMAT_RGB5A1)
 			ts->texhandle = videoAddTextureRGB5A1(data_t, ts->w, ts->h);
-	#endif
+	#endif*/
 	
 	free(data_t);
 
