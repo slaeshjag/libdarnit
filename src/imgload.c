@@ -141,7 +141,7 @@ void imgloadDownsample(IMGLOAD_DATA *img, unsigned int target_format) {
 		for (i = 0; i < img->w * img->h; i++) {
 			pixel = (img->img_data[i] & 0xF0) >> 4;
 			pixel |= (img->img_data[i] & 0xF000) >> 8;
-			pixel |= (img->img_data[i] & 0xF00000) >> 16;
+			pixel |= (img->img_data[i] & 0xF00000) >> 12;
 			pixel |= (img->img_data[i] & 0xF0000000) >> 16;
 			data[i] = pixel;
 		}
