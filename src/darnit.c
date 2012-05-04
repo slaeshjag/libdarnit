@@ -327,12 +327,18 @@ void EXPORT_THIS darnitRenderEnd() {
 }
 
 
-void EXPORT_THIS darnitRenderBlendingEnable() {
+void EXPORT_THIS darnitRenderBlendingEnable(void *handle) {
+	DARNIT *d = handle;
+	
+	d->video.blend = 1;
 	glEnable(GL_BLEND);
 }
 
 
-void EXPORT_THIS darnitRenderBlendingDisable() {
+void EXPORT_THIS darnitRenderBlendingDisable(void *handle) {
+	DARNIT *d = handle;
+
+	d->video.blend = 0;
 	glDisable(GL_BLEND);
 }
 

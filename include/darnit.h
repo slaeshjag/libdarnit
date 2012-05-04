@@ -118,8 +118,8 @@ void *darnitRenderTileAlloc(unsigned int tiles);
 void *darnitRenderTileFree(void *tile_p);
 void darnitRenderBegin();
 void darnitRenderEnd();
-void darnitRenderBlendingEnable();
-void darnitRenderBlendingDisable();
+void darnitRenderBlendingEnable(void *handle);
+void darnitRenderBlendingDisable(void *handle);
 void darnitRenderTint(void *handle, float r, float g, float b, float a);
 void darnitRenderOffset(void *handle, int x, int y);
 

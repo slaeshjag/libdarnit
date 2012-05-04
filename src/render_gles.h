@@ -48,6 +48,7 @@ typedef struct {
 	float				tint_g;
 	float				tint_b;
 	float				tint_a;
+	int				blend;
 } VIDEO;
 
 
