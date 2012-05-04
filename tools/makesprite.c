@@ -12,8 +12,8 @@ int main(int argc, char **argv) {
 	unsigned int i, j;
 	char c, buf[512];
 
-	if (argc <6) {
-		fprintf(stderr, "Usage: %s <input> <tilesheet> <wsq> <hsq> <output>\n", argv[0]);
+	if (argc < 3) {
+		fprintf(stderr, "Usage: %s <input> <output>\n", argv[0]);
 		return -1;
 	}
 	
@@ -22,13 +22,10 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	if ((out = fopen(argv[5], "w+")) == NULL) {
+	if ((out = fopen(argv[2], "w+")) == NULL) {
 		fprintf(stderr, "Unable to open %s\n", argv[5]);
 		return -1;
 	}
-
-	se.wsq = atoi(argv[3]);
-	se.hsq = atoi(argv[4]);
 
 	for (i = 0; i < 8; i++) {
 		for (j = 0; j < 8; j++) {
@@ -38,8 +35,9 @@ int main(int argc, char **argv) {
 		se.spr[i].tiles = 0;
 	}
 
-	strcpy(se.tilesheet, argv[2]);
+	fscanf(in, "%s %i %i\n", se.tilesheet, &se.wsq, &se.hsq);
 	
+	se.header = 0x00FF10EF;
 	se.dir = 0;
 	se.frame = 0;
 	se.time = 0;
@@ -53,7 +51,7 @@ int main(int argc, char **argv) {
 		c = fgetc(in);
 		switch (c) {
 			case 'D':
-				fscanf(in, "%i\n", &se.spr[i].tiles);
+				fgets(buf, 512, in);
 				j = 0;
 				break;
 			case 'T':
@@ -61,6 +59,7 @@ int main(int argc, char **argv) {
 				j++;
 				break;
 			case 'E':
+				se.spr[i].tiles = j;
 				fgets(buf, 512, in);
 				j = 0;
 				i++;
