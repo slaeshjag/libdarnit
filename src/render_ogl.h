@@ -28,6 +28,7 @@ typedef struct {
 	float				tint_g;
 	float				tint_b;
 	float				tint_a;
+	int				blend;
 } VIDEO;
 
 int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen);
