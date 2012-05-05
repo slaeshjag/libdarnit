@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <errno.h>
-#include <time.h>
-#include <sys/time.h>
 
 
 #ifdef _WIN32

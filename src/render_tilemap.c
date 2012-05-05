@@ -92,13 +92,7 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	int x, y, w, h, map_w, map_h;
-	long ns;
-	struct timespec ts;
 
-	clock_gettime(CLOCK_REALTIME, &ts);
-	ns = ts.tv_nsec;
-
-	
 	tm->cam_x = tm->ts->swgran * cam_x * -1;
 	tm->cam_y = tm->ts->shgran * cam_y;
 
@@ -115,11 +109,6 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 
 	renderTilemapCalcPosMap(tm->cache, tm->ts, x, y, w, h);
 	renderTilemapCalcMap(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div);
-
-	clock_gettime(CLOCK_REALTIME, &ts);
-	ns -= ts.tv_nsec;
-	ns *= -1;
-	fprintf(stderr, "tilemap move recalculation took %li ns\n", ns);
 
 	tm->cam_xi = x;
 	tm->cam_yi = y;

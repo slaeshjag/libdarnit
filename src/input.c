@@ -82,7 +82,7 @@ void inputPoll(void *handle) {
 				m->input.upper |= 2;
 			else if (m->input.event.key.keysym.sym == SDLK_RSHIFT)
 				m->input.upper |= 1;
-			if (m->input.event.key.keysym.sym < 0x80)	// ASCII
+			if (m->input.event.key.keysym.sym < 0x80)	/* ASCII */
 				m->input.lastkey = m->input.event.key.keysym.sym;
 
 		} else if (m->input.event.type == SDL_KEYUP) {

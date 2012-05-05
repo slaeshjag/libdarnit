@@ -96,7 +96,7 @@ void textSurfaceAppendChar(TEXT_SURFACE *surface, char c) {
 
 	x = surface->pos * surface->font->w + surface->x;
 	y = surface->line * (surface->font->h + surface->font->linespec) + surface->y;
-	if (c != ' ') {											// "Temporary" work-around that makes OpenGL|ES happier... //
+	if (c != ' ') {											/* "Temporary" work-around that makes OpenGL|ES happier... */
 		renderCalcTilePosCache(&surface->cache[surface->index], surface->font->ts, x, y);
 		renderCalcTileCache(&surface->cache[surface->index], surface->font->ts, c);
 		surface->index++;

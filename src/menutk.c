@@ -264,7 +264,7 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 
 	len = strlen(comment_text);
 	sprintf(tst, "%i", max);
-	menu->skip_option = strlen(tst);		// Ugly reusage of this member. I don't feel like adding more members.
+	menu->skip_option = strlen(tst);		/* Ugly reusage of this member. I don't feel like adding more members. */
 	len += menu->skip_option;
 
 	menu->waiting = 1;
