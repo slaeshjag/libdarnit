@@ -74,6 +74,22 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 }
 
 
+int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
+	int ret;
+	void *buff_tmp;
+
+	buff_tmp = malloc(len);
+	if ((ret = recv(sock->socket, buff_tmp, len, MSG_PEEK)) == len)
+		recv(sock->socket, buff, len, 0);
+	free(buff_tmp);
+
+	if (ret == len)
+		return 0;
+	
+	return -1;
+}
+
+
 int socketSend(SOCKET_STRUCT *sock, void *buff, int len) {
 	return send(sock->socket, buff, len, 0);
 }

@@ -48,6 +48,7 @@ typedef struct {
 #include "tilemap.h"
 #include "dynlib.h"
 #include "socket.h"
+#include "mt_sprite.h"
 
 
 typedef struct {

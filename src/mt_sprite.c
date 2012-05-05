@@ -1,0 +1,137 @@
+#include "darnit.h"
+
+
+void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w, int h, int rx, int ry) {
+	float x1, x2, y1, y2, u1, u2, v1, v2, twg, thg;
+
+	twg = 1.0f / ts->w;
+	thg = 1.0f / ts->h;
+
+	x1 = ts->swgran * rx - 1.0f;
+	x2 = x1 + ts->swgran * w;
+	y1 = 1.0f - ts->shgran * ry;
+	y2 = y1 - ts->shgran * h;
+
+	u1 = twg * x;
+	u2 = u1 + twg * w;
+	v1 = thg * y;
+	v2 = v1 + thg * h;
+
+	cache->x = x1;
+	cache->x2 = x2;
+	cache->x3 = x2;
+	cache->x4 = x2;
+	cache->x5 = x1;
+	cache->x6 = x1;
+	cache->y = y1;
+	cache->y2 = y1;
+	cache->y3 = y2;
+	cache->y4 = y2;
+	cache->y5 = y2;
+	cache->y6 = y1;
+
+	cache->u = u1;
+	cache->u2 = u2;
+	cache->u3 = u2;
+	cache->u4 = u2;
+	cache->u5 = u1;
+	cache->u6 = u1;
+	cache->v = v1;
+	cache->v2 = v1;
+	cache->v3 = v2;
+	cache->v4 = v2;
+	cache->v5 = v2;
+	cache->v6 = v2;
+
+	return;
+}
+
+
+void *mtSpriteLoad(void *handle, const char *fname) {
+	MTSPRITE_ENTRY *spr;
+	FILE *fp;
+	int frames, loctiles, tiles, x, y, w, h, t, rx, ry;
+	char c, buff[512];
+
+	if ((fp = fopen(fname, "r")) == NULL) {
+		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname);
+		return NULL;
+	}
+
+	frames = tiles = 0;
+	while (!feof(fp)) {
+		c = fgetc(fp);
+		switch (c) {
+			case 'F':
+				fgets(buff, 512, fp);
+				frames++;
+				break;
+			case 'T':
+				fgets(buff, 512, fp);
+				tiles++;
+				break;
+			default:
+				fgets(buff, 512, fp);
+				break;
+		}
+	}
+
+	if ((spr = malloc(sizeof(MTSPRITE_ENTRY))) == NULL) {
+		fclose(fp);
+		return NULL;
+	}
+
+	if ((spr->cache = malloc(sizeof(TILE_CACHE)*tiles)) == NULL) {
+		fclose(fp);
+		free(spr);
+		return NULL;
+	}
+
+	if ((spr->frame = malloc(sizeof(MTSPRITE_FRAME)*frames)) == NULL) {
+		fclose(fp);
+		free(spr->cache);
+		free(spr);
+		return NULL;
+	}
+
+	rewind(fp);
+
+	/* I know, two-pass parsing is kinda paper-tape era-ish. But I don't know what else to do D: */
+	frames = loctiles = tiles = 0;
+	while (!feof(fp)) {
+		c = getc(fp);
+		switch (c) {
+			case 'F':
+				fscanf(fp, "%i\n", &t);
+				if (frames != 0)
+					spr->frame[frames-1].tiles = loctiles;
+				loctiles = 0;
+				spr->frame[frames].cache = &spr->cache[tiles];
+				spr->frame[frames].time = t;
+				frames++;
+				break;
+			case 'T':
+				fscanf(fp, "%i %i %i %i %i %i\n", &x, &y, &w, &h, &rx, &ry);
+				mtSpriteCalcCacheTile(spr->ts, &spr->cache[tiles], x, y, w, h, rx, ry);
+				tiles++;
+				break;
+			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
+				fscanf(fp, "%s\n", spr->tilesheet);
+				spr->ts = renderTilesheetLoad(handle, spr->tilesheet, 32, 32, PFORMAT_RGBA8);
+				break; 
+			default:
+				fgets(buff, 512, fp);
+				break;
+		}
+	}
+
+	spr->frames = frames;
+	spr->cur_frame = 0;
+	spr->time_left = 0;
+	spr->time_last = 0;
+	spr->animate = 0;
+
+	fclose(fp);
+
+	return spr;
+}
