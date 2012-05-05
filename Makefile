@@ -1,4 +1,4 @@
-CFLAGS += -Wall -fPIC -Wl,-soname,libdarnit.so -shared -I./include -O0 -g -fvisibility=hidden -std=c89
+CFLAGS += -Wall -fPIC -Wl,-soname,libdarnit.so -shared -I./include -O0 -g -fvisibility=hidden -std=c89 
 SOURCE = src/render.c src/darnit.c src/input.c src/text.c src/menutk.c src/audio.c src/imgload.c src/sprite.c src/bbox.c src/render_tilemap.c src/tilemap.c src/dynlib.c src/socket.c
 LDFLAGS += -lSDL -lmodplay -lvorbisfile -lpng -L./bin -ldl
 
