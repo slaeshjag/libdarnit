@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
 
-	for (i = 0; i < 10; i++) 
-		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
+//	for (i = 0; i < 10; i++) 
+//		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
 	for (i = 0;;) {
 		keys = darnitButtonGet(handle);
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 		if (keys.down == 1)
 			j++;
 
-		if (keys.r == 0)
+		if (keys.r == 1)
 			darnitRenderTilemapCameraMove(tilemap, i*4, j*4);
 		darnitRenderTilemap(handle, tilemap);
 		darnitRenderBlendingEnable(handle);
