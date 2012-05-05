@@ -27,7 +27,7 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 
 	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
 	
-//	#ifndef HAVE_GLES
+/*	#ifndef HAVE_GLES */
 		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
 /*	#else
 		imgloadDownsample(&data, convert_to);

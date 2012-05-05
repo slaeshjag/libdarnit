@@ -36,10 +36,6 @@ typedef struct {
 } SPRITE_ENTRY;
 
 
-//typedef struct {
-	
-
-
 typedef struct {
 	SPRITE_ENTRY		*sprite;
 	unsigned int		sprites;
