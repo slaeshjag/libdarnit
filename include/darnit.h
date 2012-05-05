@@ -202,8 +202,9 @@ void *darnitDynlibClose(void *lib);
 
 /* SOCKET */
 void *darnitSocketConnect(const char *host, int port);
-int darnitSocketRecv(void *sock, char *buff, int len);
-int darnitSocketSend(void *sock, char *buff, int len);
+int darnitSocketRecv(void *sock, void *buff, int len);
+int darnitSocketRecvTry(void *sock, void *buff, int len);
+int darnitSocketSend(void *sock, void *buff, int len);
 void *darnitSocketClose(void *sock);
 
 

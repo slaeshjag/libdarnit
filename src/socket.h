@@ -9,9 +9,14 @@ typedef struct {
 	#endif
 } SOCKET_STRUCT;
 
+#ifdef _WIN32
+	#define		EWOULDBLOCK 	WSAEWOULDBLOCK
+#endif
+
 
 void *socketConnect(const char *host, int port);
 int socketRecv(SOCKET_STRUCT *sock, char *buff, int len);
+int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len);
 int socketSend(SOCKET_STRUCT *sock, void *buff, int len);
 void *socketClose(SOCKET_STRUCT *sock);
 
