@@ -526,7 +526,7 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 		return -1;
 
 	if (menu->orientation == MENUTK_TEXTINPUT && menu->cursor_display == 1)
-		renderCacheOne(&menu->text_cursor, menu->text->font->ts);
+		renderCache(&menu->text_cursor, menu->text->font->ts, 1);
 
 	/* glLoadIdentity(); */
 	if (menu->orientation != MENUTK_SPINBTN && menu->orientation != MENUTK_TEXTINPUT) {
