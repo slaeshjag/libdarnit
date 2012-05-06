@@ -295,7 +295,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	
 	menu->textinput_buf = buf;
 	menu->text = textMakeRenderSurface(field_len, font, field_len, x, y);
-	menu->waiting = 0;
+	menu->waiting = 1;
 	menu->top_sel = 0;
 	menu->selection = 0;
 	menu->hidden = 0;
@@ -450,21 +450,33 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		menu->waiting = 0;
 		menu->change = 1;
 	} else if (key == 0);
-	else if (menu->textinput_buf_use == menu->options);
+	else if (key == '\b') {
+		if (menu->selection > 0) {
+			menu->selection--;
+			for (i = menu->selection; i < menu->textinput_buf_use - 1; i++) 
+				menu->textinput_buf[i] = menu->textinput_buf[i+1];
+			menu->textinput_buf[i] = 0;
+			if (menu->selection < menu->top_sel) menu->top_sel = menu->selection - menu->text->len + 2;
+			if (menu->top_sel < 0) menu->top_sel = 0;
+			menu->textinput_buf_use--;
+		}
+	} else if (menu->textinput_buf_use == menu->options);
 	else {
 		if (menu->textinput_buf_use > menu->selection) {
-			menu->textinput_buf_use++;
-			for (i = menu->textinput_buf_use; i > menu->selection; i++)
+			for (i = menu->textinput_buf_use; i > menu->selection; i--)
 				menu->textinput_buf[i] = menu->textinput_buf[i-1];
 		} else
 			menu->textinput_buf[menu->selection + 1] = 0;
 
 		menu->textinput_buf[menu->selection] = key;
+		menu->textinput_buf_use++;
 		menu->selection++;
+		if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - menu->text->len;
 		menu->change = 1;
 	}
 	
 	if (menu->top_sel < 0) menu->top_sel = 0;
+	if (menu->top_sel + menu->text->len - 1 < menu->selection) menu->top_sel++;
 
 	textResetSurface(menu->text);
 
@@ -476,6 +488,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 
 	time = SDL_GetTicks();
 	menu->cursor_display = ((time % 1000) >= 500) ? 1 : 0;
+	renderCalcTilePosCache(&menu->text_cursor, menu->text->font->ts, menu->xi - menu->top_sel*menu->text->font->ts->wsq + menu->selection*menu->text->font->ts->wsq, menu->yi);
 
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
@@ -488,18 +501,17 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		if (menu->selection > 0)
 			menu->selection--;
 		m->input.keypending |= KEY_LEFT;
-		if (menu->selection > menu->top_sel) menu->top_sel = menu->selection;
+		if (menu->selection < menu->top_sel) menu->top_sel = menu->selection;
 	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
 		if (menu->selection < menu->textinput_buf_use)
 			menu->selection++;
 		m->input.keypending |= KEY_RIGHT;
-		if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - menu->text->len;
+		if (menu->selection >= (menu->top_sel + menu->text->len) && menu->selection < menu->textinput_buf_use - 1) menu->top_sel = menu->selection - menu->text->len + 2;
 	} else
 		return;
 
 		
 	
-	renderCalcTilePosCache(&menu->text_cursor, menu->text->font->ts, menu->xi - menu->top_sel + menu->selection*menu->text->font->ts->wsq, menu->yi);
 	menu->change = 1;
 
 	return;

@@ -4,25 +4,28 @@
 
 int main(int argc, char **argv) {
 	int i, sfx, j;
-	void *font, *surface, *handle, *text, *mapsheet, *sprite;
-	char test[64];
+	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput;
+	char test[256];
+	char *test_text;
 	DARNIT_MOUSE mouse;
 	DARNIT_TILEMAP *tilemap;
 	DARNIT_KEYS keys;
 
 	handle = darnitInit("TESTAPP - libDarner");
 	
+	test_text = malloc(64);
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
 
 	sprite = darnitSpriteLoad(handle, "test.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	darnitSpriteMove(sprite , 50, 50);
-	text = darnitTextSurfaceAlloc(font, 32, 32, 0, 464);
+	text = darnitTextSurfaceAlloc(font, 80, 80, 0, 464);
 
 	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
+	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 16);
 
 //	for (i = 0; i < 10; i++) 
 //		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
@@ -31,11 +34,10 @@ int main(int argc, char **argv) {
 		keys = darnitButtonGet(handle);
 		darnitTextSurfaceReset(text);
 		mouse = darnitMouseGet(handle);
-		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i", mouse.x, mouse.y, mouse.wheel, i*4, j*4);
+		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; %s", mouse.x, mouse.y, mouse.wheel, i*4, j*4, test_text);
 		darnitTextSurfaceStringAppend(text, test);
 
 		darnitRenderBegin();
-		darnitTextSurfaceDraw(text);
 
 		if (keys.left == 1)
 			i--;
@@ -53,7 +55,9 @@ int main(int argc, char **argv) {
 		if (keys.l == 1)
 			if (darnitMenuHandle(handle, surface) != -1)
 				return 0;
+		darnitMenuHandle(handle, textinput);
 		darnitSpriteDraw(sprite);
+		darnitTextSurfaceDraw(text);
 		darnitRenderBlendingDisable(handle);
 		darnitRenderEnd();
 		darnitLoop(handle);
