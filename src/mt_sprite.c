@@ -114,6 +114,7 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 				fscanf(fp, "%i %i %i %i %i %i\n", &x, &y, &w, &h, &rx, &ry);
 				mtSpriteCalcCacheTile(spr->ts, &spr->cache[tiles], x, y, w, h, rx, ry);
 				tiles++;
+				loctiles++;
 				break;
 			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
 				fscanf(fp, "%s\n", spr->tilesheet);
@@ -125,6 +126,8 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 		}
 	}
 
+	spr->frame[frames-1].tiles = loctiles;
+
 	spr->frames = frames;
 	spr->cur_frame = 0;
 	spr->time_left = 0;
@@ -134,4 +137,82 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 	fclose(fp);
 
 	return spr;
+}
+
+
+void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
+	if (spr == NULL) return;
+
+	int time;
+
+	if (spr->animate == 0)
+		return;
+
+	time = SDL_GetTicks();
+	time -= spr->time_last;
+
+	spr->time_left -= time;
+
+	while (spr->time_left <= 0) {
+		spr->cur_frame++;
+		if (spr->cur_frame >= spr->frames)
+			spr->cur_frame = 0;
+		spr->time_left += spr->frame[spr->cur_frame].time;
+	}
+
+	spr->time_last += SDL_GetTicks();
+	
+	return;
+}
+
+
+void mtSpriteDraw(MTSPRITE_ENTRY *spr) {
+	if (spr == NULL) return;
+
+	mtSpriteAnimate(spr);
+	renderCache(spr->frame[spr->cur_frame].cache, spr->ts, spr->frame[spr->cur_frame].tiles);
+
+	return;
+}
+
+
+void mtSpriteEnableAnimation(MTSPRITE_ENTRY *spr) {
+	if (spr == NULL) return;
+
+	spr->time_last = SDL_GetTicks();
+	spr->animate = 1;
+
+	return;
+}
+
+
+void mtSpritePauseAnimation(MTSPRITE_ENTRY *spr) {
+	if (spr == NULL) return;
+
+	spr->animate = 0;
+
+	return;
+}
+
+
+void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr) {
+	if (spr == NULL) return;
+
+	spr->animate = 0;
+	spr->cur_frame = 0;
+	spr->time_left = spr->frame[spr->cur_frame].time;
+	
+	return;
+}
+
+
+void *mtSpriteDelete(MTSPRITE_ENTRY *spr) {
+	if (spr == NULL) return NULL;
+	
+	spr->ts = renderTilesheetFree(spr->ts);
+	free(spr->cache);
+	free(spr->frame);
+	free(spr);
+
+	return NULL;
 }
