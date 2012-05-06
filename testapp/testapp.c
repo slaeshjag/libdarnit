@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
 	void *font, *surface, *handle, *text, *mapsheet, *sprite;
 	char test[32];
 	DARNIT_MOUSE mouse;
-	DARNIT_TILEMAP tilemap;
+	DARNIT_TILEMAP *tilemap;
 	DARNIT_KEYS keys;
 
 	handle = darnitInit("TESTAPP - libDarner");
