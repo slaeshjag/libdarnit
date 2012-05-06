@@ -60,6 +60,7 @@ void *socketConnect(const char *host, int port) {
 
 int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 	int ret;
+	if (sock == NULL) return -1;
 
 	ret = recv(sock->socket, buff, len, 0);
 	if (ret < 1 && ret != EAGAIN && ret != EWOULDBLOCK) {
@@ -75,6 +76,7 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 
 
 int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
+	if (sock == NULL) return -1;
 	int ret;
 	void *buff_tmp;
 
@@ -91,11 +93,13 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 
 
 int socketSend(SOCKET_STRUCT *sock, void *buff, int len) {
+	if (sock == NULL) return -1;
 	return send(sock->socket, buff, len, 0);
 }
 
 
 void *socketClose(SOCKET_STRUCT *sock) {
+	if (sock == NULL) return NULL;
 	#ifdef _WIN32
 		closesocket(sock->socket);
 	#else

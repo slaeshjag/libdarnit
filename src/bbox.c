@@ -2,6 +2,7 @@
 
 
 int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+	if (bbox == NULL) return -1;
 	int i;
 
 	for (i = 0; i < bbox->max; i++)
@@ -20,6 +21,7 @@ int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned
 
 
 void bboxDelete(BBOX *bbox, int key) {
+	if (bbox == NULL) return;
 	int i;
 
 	for (i = 0; i < bbox->max; i++) 
@@ -34,6 +36,7 @@ void bboxDelete(BBOX *bbox, int key) {
 
 
 void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
+	if (bbox == NULL) return; 
 	int i;
 
 	for (i = 0; i < bbox->max; i++)
@@ -50,6 +53,7 @@ void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
 
 
 void bboxResize(BBOX *bbox, int key, unsigned int w, unsigned int h) {
+	if (bbox == NULL) return;
 	int i;
 	
 	for (i = 0; i < bbox->max; i++) 
@@ -66,6 +70,7 @@ void bboxResize(BBOX *bbox, int key, unsigned int w, unsigned int h) {
 
 
 void bboxSort(BBOX *bbox) {
+	if (bbox == NULL) return;
 	DARNIT_BBOX_ENTRY tmp;
 	int i, j;
 
@@ -97,6 +102,7 @@ void bboxSort(BBOX *bbox) {
 
 
 void bboxClear(BBOX *bbox) {
+	if (bbox == NULL) return;
 	int i;
 
 	for (i = 0; i < bbox->max; i++)
@@ -111,6 +117,7 @@ void bboxClear(BBOX *bbox) {
 
 
 int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
+	if (bbox == NULL) return 0;
 	int i, test, no;
 
 	if (bbox->sort)
@@ -185,10 +192,11 @@ void *bboxNew(unsigned int size) {
 
 
 
-void bboxFree(BBOX *bbox) {
+void *bboxFree(BBOX *bbox) {
+	if (bbox == NULL) return NULL;
 
 	free(bbox->bbox);
 	free(bbox);
 
-	return;
+	return NULL;
 }

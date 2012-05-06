@@ -108,6 +108,7 @@ IMGLOAD_DATA imgloadPNG(const char *fname) {
 
 
 IMGLOAD_DATA imgloadLoad(const char *fname) {
+	if (fname == NULL) return imgloadBAD(fname);
 	int res;
 
 	res = imgloadCheckFormat(fname);

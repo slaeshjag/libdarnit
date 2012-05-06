@@ -2,6 +2,7 @@
 
 
 void *dynlibOpen(const char *fname) {
+	if (fname == NULL) return NULL;
 	#ifdef _WIN32
 		HINSTANCE *lib;
 
@@ -22,6 +23,7 @@ void *dynlibOpen(const char *fname) {
 
 
 void *dynlibSymbolGet(void *lib, const char *symbol) {
+	if (lib == NULL || symbol == NULL) return NULL;
 	#ifdef _WIN32
 		HINSTANCE *libh = lib;
 		void *sym;
@@ -38,6 +40,7 @@ void *dynlibSymbolGet(void *lib, const char *symbol) {
 
 
 void *dynlibClose(void *lib) {
+	if (lib == NULL) return NULL;
 	#ifdef _WIN32
 		HINSTANCE *libh = lib;
 

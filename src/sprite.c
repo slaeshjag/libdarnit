@@ -93,6 +93,7 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 
 
 void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y) {
+	if (sprite == NULL) return;
 	int tile, dir;
 
 	dir = sprite->dir;
@@ -105,6 +106,7 @@ void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y) {
 
 
 void spriteEnableAnimation(SPRITE_ENTRY *sprite) {
+	if (sprite == NULL) return;
 	int dir;
 
 	if (sprite->animate == 1)
@@ -121,6 +123,7 @@ void spriteEnableAnimation(SPRITE_ENTRY *sprite) {
 
 
 void spritePauseAnimation(SPRITE_ENTRY *sprite) {
+	if (sprite == NULL) return;
 	sprite->animate = 0;
 
 	return;
@@ -128,6 +131,7 @@ void spritePauseAnimation(SPRITE_ENTRY *sprite) {
 
 
 void spriteDisableAnimation(SPRITE_ENTRY *sprite) {
+	if (sprite == NULL) return;
 
 	sprite->frame = 0;
 	sprite->time = SDL_GetTicks();
@@ -139,6 +143,7 @@ void spriteDisableAnimation(SPRITE_ENTRY *sprite) {
 
 
 void spriteAnimate(SPRITE_ENTRY *sprite) {
+	if (sprite == NULL) return;
 	unsigned int time, dir, tile;
 
 	time = SDL_GetTicks();
@@ -165,6 +170,7 @@ void spriteAnimate(SPRITE_ENTRY *sprite) {
 
 
 void spriteDraw(SPRITE_ENTRY *sprite) {
+	if (sprite == NULL) return;
 
 	spriteAnimate(sprite);
 	renderCache(&sprite->cache, sprite->ts, 1);
@@ -174,6 +180,7 @@ void spriteDraw(SPRITE_ENTRY *sprite) {
 
 
 void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
+	if (sprite == NULL) return;
 	int tile;
 
 	sprite->dir = dir;
@@ -186,6 +193,7 @@ void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
 
 
 void *spriteDelete(SPRITE_ENTRY *sprite) {
+	if (sprite == NULL) return NULL;
 
 	sprite->ts = renderTilesheetFree(sprite->ts);
 	free(sprite);
