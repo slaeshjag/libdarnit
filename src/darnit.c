@@ -559,6 +559,11 @@ void EXPORT_THIS *darnitMenuSpinbuttonCreate(void *handle, const char *label, in
 }
 
 
+void EXPORT_THIS *darnitMenuTextinputCreate(int x, int y, void *font, char *buff, int buff_len, int field_len) {
+	return menutkTextinputCreate(x, y, font, buff, buff_len, field_len);
+}
+
+
 void EXPORT_THIS darnitMenuVerticalShadeSelectionsReduceByOne(void *menu) {
 	menutkVerticalShadeReduceSelectionsByOne(menu);
 

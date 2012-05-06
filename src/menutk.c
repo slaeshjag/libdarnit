@@ -285,6 +285,32 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 }
 
 
+void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_len, int field_len) {
+	MENUTK_ENTRY *menu;
+
+	if ((menu = malloc(sizeof(MENUTK_ENTRY))) == NULL) {
+		MALLOC_ERROR
+		return NULL;
+	}
+	
+	menu->textinput_buf = buf;
+	menu->text = textMakeRenderSurface(field_len, font, field_len, x, y);
+	menu->waiting = 0;
+	menu->top_sel = 0;
+	menu->selection = 0;
+	menu->hidden = 0;
+	menu->change = 1;
+	menu->options = buf_len - 1;
+	menu->textinput_buf_use = 0;
+	*menu->textinput_buf = 0;
+	menu->xi = x; menu->yi = y;
+	menu->orientation = MENUTK_TEXTINPUT;
+
+	renderCalcTileCache(&menu->text_cursor, font->ts, 4);		/* 4 is the assumed value for showing a white box the size of a glyph */
+
+	return menu;
+}
+
 
 void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
 	DARNIT *m = handle;
@@ -414,7 +440,70 @@ void menutkSpinbuttonInput(void *handle, MENUTK_ENTRY *menu) {
 }
 
 
+void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
+	DARNIT *m = handle;
+	unsigned int key, i, time;
 
+	key = inputASCIIPop(handle);
+
+	if (key == SDLK_RETURN) {
+		menu->waiting = 0;
+		menu->change = 1;
+	} else if (key == 0);
+	else if (menu->textinput_buf_use == menu->options);
+	else {
+		if (menu->textinput_buf_use > menu->selection) {
+			menu->textinput_buf_use++;
+			for (i = menu->textinput_buf_use; i > menu->selection; i++)
+				menu->textinput_buf[i] = menu->textinput_buf[i-1];
+		} else
+			menu->textinput_buf[menu->selection + 1] = 0;
+
+		menu->textinput_buf[menu->selection] = key;
+		menu->selection++;
+		menu->change = 1;
+	}
+	
+	if (menu->top_sel < 0) menu->top_sel = 0;
+
+	textResetSurface(menu->text);
+
+	for (i = 0; i < menu->text->len; i++) {
+		if (menu->textinput_buf[i + menu->top_sel] == 0)
+			break;
+		textSurfaceAppendChar(menu->text, menu->textinput_buf[i + menu->top_sel]);
+	}
+
+	time = SDL_GetTicks();
+	menu->cursor_display = ((time % 1000) >= 500) ? 1 : 0;
+
+	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
+		menu->waiting = 0;
+		m->input.keypending |= BUTTON_ACCEPT;
+	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
+		menu->waiting = 0;
+		menu->selection = -2;
+		m->input.keypending |= BUTTON_CANCEL;
+	} else if ((m->input.key ^ m->input.keypending) & KEY_LEFT) {
+		if (menu->selection > 0)
+			menu->selection--;
+		m->input.keypending |= KEY_LEFT;
+		if (menu->selection > menu->top_sel) menu->top_sel = menu->selection;
+	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
+		if (menu->selection < menu->textinput_buf_use)
+			menu->selection++;
+		m->input.keypending |= KEY_RIGHT;
+		if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - menu->text->len;
+	} else
+		return;
+
+		
+	
+	renderCalcTilePosCache(&menu->text_cursor, menu->text->font->ts, menu->xi - menu->top_sel + menu->selection*menu->text->font->ts->wsq, menu->yi);
+	menu->change = 1;
+
+	return;
+}
 
 int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 	DARNIT *m = handle; 
@@ -429,13 +518,18 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 			menutkInputV(m, menu);
 		else if (menu->orientation == MENUTK_SPINBTN)
 			menutkSpinbuttonInput(m, menu);
+		else if (menu->orientation == MENUTK_TEXTINPUT)
+			menutkTextinputInput(m, menu);
 	}
 
 	if (menu->hidden == 1)
 		return -1;
 
-	glLoadIdentity();
-	if (menu->orientation != MENUTK_SPINBTN) {
+	if (menu->orientation == MENUTK_TEXTINPUT && menu->cursor_display == 1)
+		renderCacheOne(&menu->text_cursor, menu->text->font->ts);
+
+	/* glLoadIdentity(); */
+	if (menu->orientation != MENUTK_SPINBTN && menu->orientation != MENUTK_TEXTINPUT) {
 		glTranslatef(menu->x + menu->hl.x, menu->y + menu->hl.y, 0.0f);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
@@ -448,15 +542,14 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		glLoadIdentity();
+		glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0.0f);
+		glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
 	}
 
-	glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
 
 	if (menu->orientation != MENUTK_ORIENT_V_OL)
 		textRender(menu->text);
 
-	glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0.0f);
-	
 	if (menu->waiting == 1)
 		return -1;
 		
