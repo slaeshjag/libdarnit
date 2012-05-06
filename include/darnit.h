@@ -136,6 +136,16 @@ void darnitSpriteAnimationDisable(void *sprite);
 void darnitSpriteDraw(void *sprite);
 
 
+/* MT-SPRITE */
+
+void *darnitMTSpriteLoad(void *handle, const char *fname);
+void darnitMTSpriteAnimationEnable(void *mtsprite);
+void darnitMTSpriteAnimationPause(void *mtsprite);
+void darnitMTSpriteAnimationDisable(void *mtsprite);
+void darnitMTSpriteDraw(void *mtsprite);
+void *darnitMTSpriteDelete(void *mtsprite)
+
+
 /* TEXT */
 
 void *darnitFontLoad(void *handle, const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing);
