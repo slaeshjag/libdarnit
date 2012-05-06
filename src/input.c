@@ -22,7 +22,7 @@ void inputKeymapReset(void *handle) {
 	m->input.map.y = SDLK_w;
 	m->input.map.a = SDLK_a;
 	m->input.map.b = SDLK_d;
-	m->input.map.q = SDLK_l;
+	m->input.map.l = SDLK_q;
 	m->input.map.r = SDLK_e;
 	m->input.map.start = SDLK_RETURN;
 	m->input.map.select = SDLK_RSHIFT;
