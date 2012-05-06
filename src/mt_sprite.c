@@ -130,7 +130,7 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 
 	spr->frames = frames;
 	spr->cur_frame = 0;
-	spr->time_left = 0;
+	spr->time_left = spr->frame->time;
 	spr->time_last = 0;
 	spr->animate = 0;
 
