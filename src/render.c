@@ -72,6 +72,7 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 
 
 void *renderTilesheetFree(TILESHEET *ts) {
+	if (ts == NULL) return NULL;
 	videoRemoveTexture(ts->texhandle);
 	free(ts->tile);
 	free(ts);
@@ -122,6 +123,7 @@ void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 
 
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
+	if (cache == NULL) return;
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
 
 	glVertexPointer(2, GL_FLOAT, 16, cache);

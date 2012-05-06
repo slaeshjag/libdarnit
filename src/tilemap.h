@@ -9,8 +9,8 @@ typedef struct {
 } TILEMAP_ENTRY;
 
 
-TILEMAP_ENTRY tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet);
-void tilemapFree(TILEMAP_ENTRY tm);
+TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet);
+void *tilemapFree(TILEMAP_ENTRY *tm);
 
 
 #endif

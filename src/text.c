@@ -24,18 +24,22 @@ void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec) 
 
 
 int textFontGetW(TEXT_FONT *font) {
+	if (font == NULL) return -1;
 	return font->w;
 }
 
 int textFontGetH(TEXT_FONT *font) {
+	if (font == NULL) return -1;
 	return font->h;
 }
 
 int textFontGetHS(TEXT_FONT *font) {
+	if (font == NULL) return -1;
 	return font->h + font->linespec;
 }
 
 void textResetSurface(TEXT_SURFACE *srf) {
+	if (srf == NULL) return;
 	int i;
 	float *arr;
 
@@ -86,6 +90,7 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, int linelen, int x, int 
 
 
 void textSurfaceAppendChar(TEXT_SURFACE *surface, char c) {
+	if (surface == NULL) return;
 	int x, y;
 
 	if (c == '\n') {
@@ -122,6 +127,7 @@ void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str) {
 }
 
 void textRender(TEXT_SURFACE *surface) {
+	if (surface == NULL) return;
 	if (surface->index == 0)
 		return;
 	renderCache(surface->cache, surface->font->ts, surface->index);

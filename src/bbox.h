@@ -36,7 +36,7 @@ void bboxResize(BBOX *bbox, int key, unsigned int w, unsigned int h);
 void bboxSort(BBOX *bbox);
 void bboxClear(BBOX *bbox);
 void *bboxNew(unsigned int size);
-void bboxFree(BBOX *bbox);
+void *bboxFree(BBOX *bbox);
 int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
 
 

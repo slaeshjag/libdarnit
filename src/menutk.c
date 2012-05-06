@@ -23,6 +23,7 @@ void menutkHighlightMove(MENUTK_ENTRY *menu, int x, int y) {
 
 
 void menutkSetColor(MENUTK_ENTRY *menu, int color) {
+	if (menu == NULL) return;
 	if (color == 0) {
 		menu->hl.color[0].a = 1.0f;
 		menu->hl.color[0].r = 0.8f;
@@ -104,6 +105,7 @@ void menutkSpinbuttonTextUpdate(MENUTK_ENTRY *menu) {
 
 
 void menutkVerticalShadeReduceSelectionsByOne(MENUTK_ENTRY *menu) {
+	if (menu == NULL) return;
 	if (menu->selection == menu->options - 1)
 		menu->selection--;
 	menu->options--;
@@ -115,6 +117,7 @@ void menutkVerticalShadeReduceSelectionsByOne(MENUTK_ENTRY *menu) {
 
 
 void menutkVerticalShadeIncreaseSelectionsByOne(MENUTK_ENTRY *menu) {
+	if (menu == NULL) return;
 	menu->options++;
 	
 	return;
