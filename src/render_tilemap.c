@@ -52,7 +52,7 @@ void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int
 void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, int h, int map_w, int map_h, unsigned int *tilemap, int inv_div) {
 	int i, j, k, l;
 	int x_cur, y_cur, blank;
-	unsigned t;
+	int t;
 	float *nullbuf;
 
 	x_cur = x;

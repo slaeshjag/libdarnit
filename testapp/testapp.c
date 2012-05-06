@@ -5,7 +5,7 @@
 int main(int argc, char **argv) {
 	int i, sfx, j;
 	void *font, *surface, *handle, *text, *mapsheet, *sprite;
-	char test[32];
+	char test[64];
 	DARNIT_MOUSE mouse;
 	DARNIT_TILEMAP *tilemap;
 	DARNIT_KEYS keys;
@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 		keys = darnitButtonGet(handle);
 		darnitTextSurfaceReset(text);
 		mouse = darnitMouseGet(handle);
-		sprintf(test, "X: %i, Y: %i, W: %i", mouse.x, mouse.y, mouse.wheel);
+		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i", mouse.x, mouse.y, mouse.wheel, i*4, j*4);
 		darnitTextSurfaceStringAppend(text, test);
 
 		darnitRenderBegin();
