@@ -456,7 +456,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 			for (i = menu->selection; i < menu->textinput_buf_use - 1; i++) 
 				menu->textinput_buf[i] = menu->textinput_buf[i+1];
 			menu->textinput_buf[i] = 0;
-			if (menu->selection < menu->top_sel) menu->top_sel = menu->selection - menu->text->len + 2;
+			if (menu->selection <= menu->top_sel) menu->top_sel = menu->selection - menu->text->len + 2;
 			if (menu->top_sel < 0) menu->top_sel = 0;
 			menu->textinput_buf_use--;
 		}
@@ -501,12 +501,13 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		if (menu->selection > 0)
 			menu->selection--;
 		m->input.keypending |= KEY_LEFT;
-		if (menu->selection < menu->top_sel) menu->top_sel = menu->selection;
+		if (menu->selection <= menu->top_sel) menu->top_sel = menu->selection - menu->text->len/2;
+		if (menu->top_sel < 0) menu->top_sel = 0;
 	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
 		if (menu->selection < menu->textinput_buf_use)
 			menu->selection++;
 		m->input.keypending |= KEY_RIGHT;
-		if (menu->selection >= (menu->top_sel + menu->text->len) && menu->selection < menu->textinput_buf_use - 1) menu->top_sel = menu->selection - menu->text->len + 2;
+		if (menu->selection >= (menu->top_sel + menu->text->len) && menu->selection < menu->textinput_buf_use - 1) menu->top_sel = menu->selection - menu->text->len/2;
 	} else
 		return;
 
