@@ -51,6 +51,15 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 
 void EXPORT_THIS darnitLoop(void *handle) {
 	DARNIT *d = handle;
+	int time = SDL_GetTicks();
+	
+	if (time / 1000 != d->fps.time) {
+		d->fps.frames_last = d->fps.frames_counting;
+		d->fps.frames_counting = 0;
+		d->fps.time = time / 1000;
+	}
+
+	d->fps.frames_counting++;
 
 	videoLoop(d);
 	inputPoll(d);
@@ -63,6 +72,12 @@ unsigned int EXPORT_THIS darnitTimeGet() {
 	return SDL_GetTicks();
 }
 
+
+int EXPORT_THIS darnitFPSGet(void *handle) {
+	DARNIT *d = handle;
+
+	return d->fps.frames_last;
+}
 
 
 /*************************/
@@ -540,7 +555,7 @@ void EXPORT_THIS darnitTextSurfaceDraw(void *surface) {
 
 
 void EXPORT_THIS *darnitMenuHorizontalCreate(void *handle, const char *options, int x, int y, void *font, int max_w) {
-	return menutkHorisontalCreate(handle, options, x, y, font, 0);
+	return menutkHorisontalCreate(handle, options, x, y, font, 0, max_w);
 }
 
 

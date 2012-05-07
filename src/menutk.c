@@ -124,7 +124,7 @@ void menutkVerticalShadeIncreaseSelectionsByOne(MENUTK_ENTRY *menu) {
 }
 
 
-void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color) {
+void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color, int max) {
 	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
 	int i, len, cnt;
@@ -161,6 +161,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 	menu->swgran = m->video.swgran, menu->shgran = m->video.shgran;
 	menu->change = 1;
 	menu->hidden = 0;
+	menu->top_sel = 0;
 
 	menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, 0) + 8, textFontGetH(menu->font));
 	menutkHighlightMove(menu, 0, 0);

@@ -58,9 +58,17 @@ typedef struct {
 
 
 typedef struct {
+	int			frames_counting;
+	int			frames_last;
+	int			time;
+} DARNIT_FPS;
+
+
+typedef struct {
 	VIDEO		video;
 	INPUT		input;
 	AUDIO		audio;
+	DARNIT_FPS	fps;
 } DARNIT;
 
 
