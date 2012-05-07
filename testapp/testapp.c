@@ -25,7 +25,9 @@ int main(int argc, char **argv) {
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
+	sprintf(test_text, "Hello, world. Modify me!");
 	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 16);
+
 	mtsprite = darnitMTSpriteLoad(handle, "testspr.mts");
 	darnitMTSpriteAnimationEnable(mtsprite);
 

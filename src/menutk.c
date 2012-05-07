@@ -287,6 +287,7 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 
 void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_len, int field_len) {
 	MENUTK_ENTRY *menu;
+	int i;
 
 	if ((menu = malloc(sizeof(MENUTK_ENTRY))) == NULL) {
 		MALLOC_ERROR
@@ -301,11 +302,15 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menu->hidden = 0;
 	menu->change = 1;
 	menu->options = buf_len - 1;
-	menu->textinput_buf_use = 0;
-	*menu->textinput_buf = 0;
 	menu->xi = x; menu->yi = y;
 	menu->orientation = MENUTK_TEXTINPUT;
+	menu->textinput_buf[menu->options] = 0; 
 
+	for (i = 0; i < menu->options; i++)
+		if (menu->textinput_buf[i] == 0)
+			break;
+
+	menu->textinput_buf_use = i;
 	renderCalcTileCache(&menu->text_cursor, font->ts, 4);		/* 4 is the assumed value for showing a white box the size of a glyph */
 
 	return menu;
