@@ -455,6 +455,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	if (key == SDLK_RETURN) {
 		menu->waiting = 0;
 		menu->change = 1;
+		menu->cursor_display = 0;
 	} else if (key == 0);
 	else if (key == '\b') {
 		if (menu->selection > 0) {
@@ -499,9 +500,11 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
 		m->input.keypending |= BUTTON_ACCEPT;
+		menu->cursor_display = 0;
 	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
 		menu->waiting = 0;
 		menu->selection = -2;
+		menu->cursor_display = 0;
 		m->input.keypending |= BUTTON_CANCEL;
 	} else if ((m->input.key ^ m->input.keypending) & KEY_LEFT) {
 		if (menu->selection > 0)
