@@ -41,7 +41,7 @@ void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w
 	cache->v3 = v2;
 	cache->v4 = v2;
 	cache->v5 = v2;
-	cache->v6 = v2;
+	cache->v6 = v1;
 
 	return;
 }
@@ -120,6 +120,8 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 				fscanf(fp, "%s\n", spr->tilesheet);
 				spr->ts = renderTilesheetLoad(handle, spr->tilesheet, 32, 32, PFORMAT_RGBA8);
 				break; 
+			case '\n':
+				break;
 			default:
 				fgets(buff, 512, fp);
 				break;
@@ -160,7 +162,7 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 		spr->time_left += spr->frame[spr->cur_frame].time;
 	}
 
-	spr->time_last += SDL_GetTicks();
+	spr->time_last = SDL_GetTicks();
 	
 	return;
 }
