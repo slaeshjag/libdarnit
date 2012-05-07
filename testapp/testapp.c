@@ -4,8 +4,8 @@
 
 int main(int argc, char **argv) {
 	int i, sfx, j;
-	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite;
-	char test[256];
+	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text;
+	char test[256], fps[16];
 	char *test_text;
 	DARNIT_MOUSE mouse;
 	DARNIT_TILEMAP *tilemap;
@@ -31,15 +31,19 @@ int main(int argc, char **argv) {
 	mtsprite = darnitMTSpriteLoad(handle, "testspr.mts");
 	darnitMTSpriteAnimationEnable(mtsprite);
 
+	fps_text = darnitTextSurfaceAlloc(font, 16, 16, 730, 0);
+
 //	for (i = 0; i < 10; i++) 
 //		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
 	for (i = 0;;) {
 		keys = darnitButtonGet(handle);
-		darnitTextSurfaceReset(text);
+		darnitTextSurfaceReset(text); darnitTextSurfaceReset(fps_text);
 		mouse = darnitMouseGet(handle);
 		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; %s", mouse.x, mouse.y, mouse.wheel, i*4, j*4, test_text);
+		sprintf(fps, "FPS: %i", darnitFPSGet(handle));
 		darnitTextSurfaceStringAppend(text, test);
+		darnitTextSurfaceStringAppend(fps_text, fps);
 
 		darnitRenderBegin();
 
@@ -62,6 +66,7 @@ int main(int argc, char **argv) {
 		darnitMenuHandle(handle, textinput);
 		darnitSpriteDraw(sprite);
 		darnitTextSurfaceDraw(text);
+		darnitTextSurfaceDraw(fps_text);
 
 		darnitRenderOffset(handle, -200, -200);
 		darnitMTSpriteDraw(mtsprite);
