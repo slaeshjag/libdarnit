@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
 	int i, sfx, j;
-	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput;
+	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite;
 	char test[256];
 	char *test_text;
 	DARNIT_MOUSE mouse;
@@ -26,6 +26,8 @@ int main(int argc, char **argv) {
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
 	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 16);
+	mtsprite = darnitMTSpriteLoad(handle, "testspr.mts");
+	darnitMTSpriteAnimationEnable(mtsprite);
 
 //	for (i = 0; i < 10; i++) 
 //		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
@@ -58,6 +60,11 @@ int main(int argc, char **argv) {
 		darnitMenuHandle(handle, textinput);
 		darnitSpriteDraw(sprite);
 		darnitTextSurfaceDraw(text);
+
+		darnitRenderOffset(handle, -200, -200);
+		darnitMTSpriteDraw(mtsprite);
+		darnitRenderOffset(handle, 0, 0);
+
 		darnitRenderBlendingDisable(handle);
 		darnitRenderEnd();
 		darnitLoop(handle);
