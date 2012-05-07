@@ -61,6 +61,8 @@ typedef struct {
 	int			frames_counting;
 	int			frames_last;
 	int			time;
+	int			time_at_flip;
+	int			time_at_last_frame;
 } DARNIT_FPS;
 
 
