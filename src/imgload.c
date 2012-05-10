@@ -72,11 +72,11 @@ IMGLOAD_DATA imgloadPNG(const char *fname) {
 		return imgloadBAD(fname);
 	}
 
-	if (setjmp(png_ptr->jmpbuf)) {
+	/*if (setjmp(png_ptr->jmpbuf)) {
 		fclose(fp);
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
 		return imgloadBAD(fname);
-	}
+	}*/
 
 	png_init_io(png_ptr, fp);
 	png_read_info(png_ptr, info_ptr);
