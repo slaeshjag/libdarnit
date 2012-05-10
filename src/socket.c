@@ -8,7 +8,7 @@ void *socketConnect(const char *host, int port) {
 	#ifdef _WIN32
 		WSADATA wsaData;
 		WORD version;
-		struct hostent hp;
+		struct hostent *hp;
 		u_long iMode=1;
 	#else
 		int x;
@@ -22,7 +22,7 @@ void *socketConnect(const char *host, int port) {
 		if (WSAStartup(version, &wsaData) != 0) {
 			free(sock);
 			return NULL;
-		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaDara.wVersion) != 0) {
+		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
 			WSACleanup();
 			free(sock);
 			return NULL;
@@ -36,7 +36,7 @@ void *socketConnect(const char *host, int port) {
 	sin.sin_port = htons(port);
 	
 	#ifdef _WIN32
-		sin.sin_addr.s_addr = ((struct in_addr *)(host->h_addr))->s_addr;
+		sin.sin_addr.s_addr = ((struct in_addr *)(hp->h_addr))->s_addr;
 	#else
 		sin.sin_addr.s_addr = *(unsigned long *) hp->h_addr_list[0];
 	#endif
