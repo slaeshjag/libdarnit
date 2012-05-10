@@ -174,6 +174,7 @@ int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, 
 
 void *bboxNew(unsigned int size) {
 	BBOX *bbox;
+	int i;
 
 	if ((bbox = malloc(sizeof(BBOX))) == NULL)
 		return NULL;
@@ -184,6 +185,10 @@ void *bboxNew(unsigned int size) {
 	}
 
 	bbox->max = size;
+
+	for (i = 0; i < bbox->max; i++)
+		bbox->bbox[i].key = -1;
+
 	bboxSort(bbox);
 	bbox->sortmode = SORT_MODE_X;
 
