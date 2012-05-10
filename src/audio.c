@@ -64,7 +64,7 @@ int audioSFXLoad(void *handle, const char *fname) {
 		return -1;
 	
 	if ((fp = fopen(fname, "r")) == NULL) {
-		fprintf(stderr, "libDarner: Unable to open SFX file %s\n", fname);
+		fprintf(stderr, "libDarnit: Unable to open SFX file %s\n", fname);
 		return -1;
 	}
 
@@ -72,7 +72,7 @@ int audioSFXLoad(void *handle, const char *fname) {
 	m->audio.sfx[i].len = ftell(fp) >> 1;
 	bytes = ftell(fp);
 	if ((m->audio.sfx[i].buf = malloc(bytes)) == NULL) {
-		fprintf(stderr, "libDarner: Unable to malloc(%i)\n", bytes);
+		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", bytes);
 		fclose(fp);
 		m->audio.sfx[i].len = -1;
 		return -1;
@@ -283,12 +283,12 @@ int audioInit(void *handle) {
 	m->audio.lock = SDL_CreateMutex();
 
 	if ((m->audio.sfxbuf = malloc(1024*4*4)) == NULL) {
-		fprintf(stderr, "libDarner: Unable to malloc(%i)\n", 4096);
+		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
 		return -1;
 	}
 
 	if ((m->audio.musicbuf = malloc(1024*4*4)) == NULL) {
-		fprintf(stderr, "libDarner: Unable to malloc(%i)\n", 4096);
+		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
 		return -1;
 	}
 
@@ -303,7 +303,7 @@ int audioInit(void *handle) {
 	m->audio.music.vorbis = NULL;
 
 	if (SDL_OpenAudio(&fmt, NULL) < 0) {
-		fprintf(stderr, "libDarner: Unable to open audio: %s\n", SDL_GetError());
+		fprintf(stderr, "libDarnit: Unable to open audio: %s\n", SDL_GetError());
 		return -1;
 	}
 
