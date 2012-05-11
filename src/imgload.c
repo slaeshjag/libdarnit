@@ -6,7 +6,7 @@ int imgloadCheckFormat(const char *fname) {
 	char buff[8];
 	int i;
 
-	if ((fp = fopen(fname, "r")) == NULL)
+	if ((fp = fopen(fname, "rb")) == NULL)
 		return IMG_IS_BAD;
 	for (i = 0; i < 8; i++)
 		buff[i] = 0;
