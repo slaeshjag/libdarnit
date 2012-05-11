@@ -1,5 +1,4 @@
 #include "darnit.h"
-#include <sys/time.h>
 
 void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, int h) {
 	float x_start, y_start;

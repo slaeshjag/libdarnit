@@ -44,7 +44,7 @@ void *dynlibClose(void *lib) {
 	#ifdef _WIN32
 		HINSTANCE *libh = lib;
 
-		freeLibrary(*libh);
+		FreeLibrary(*libh);
 		free(lib);
 		return NULL;
 	#else
