@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 //	for (i = 0; i < 10; i++) 
 //		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
-	for (i = 0;;) {
+	for (i = j = 0;;) {
 		keys = darnitButtonGet(handle);
 		darnitTextSurfaceReset(text); darnitTextSurfaceReset(fps_text);
 		mouse = darnitMouseGet(handle);
