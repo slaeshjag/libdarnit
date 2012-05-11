@@ -46,7 +46,7 @@ typedef struct {
 	unsigned int			lastkey;
 	DARNIT_MOUSE			mouse;
 	INPUT_MAP			map;
-} INPUT;
+} INPUT_STRUCT;
 
 
 void inputPoll(void *handle);
