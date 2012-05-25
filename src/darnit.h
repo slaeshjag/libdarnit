@@ -49,6 +49,7 @@ typedef struct {
 #include "dynlib.h"
 #include "socket.h"
 #include "mt_sprite.h"
+#include "audio_load.h"
 
 
 typedef struct {
