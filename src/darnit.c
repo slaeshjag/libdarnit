@@ -9,7 +9,9 @@
 
 
 static void cleanup(void) {
+	#ifdef _WIN32
 	SDL_Quit();
+	#endif
 }
 
 
@@ -23,7 +25,7 @@ void darnit_init_common() {
 	#endif
 
 	SDL_Init(SDL_INIT_NOPARACHUTE);
-	
+
 	atexit(cleanup);
 
 	#ifdef _WIN32
