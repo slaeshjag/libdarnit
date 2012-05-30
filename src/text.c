@@ -89,7 +89,7 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, int linelen, int x, int 
 }
 
 
-void textSurfaceAppendChar(TEXT_SURFACE *surface, char c) {
+void textSurfaceAppendChar(TEXT_SURFACE *surface, unsigned char c) {
 	if (surface == NULL) return;
 	int x, y;
 
@@ -120,7 +120,9 @@ void textSurfaceAppendChar(TEXT_SURFACE *surface, char c) {
 void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str) {
 	int i;
 
-	for (i = 0; str[i] != 0; i++)
+	for (i = 0; str[i] != 0; i++) {
+		if (surface->pos >= surface->len)
+			break;
 		textSurfaceAppendChar(surface, str[i]);
 	
 	return;

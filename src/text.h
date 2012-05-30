@@ -57,7 +57,7 @@ int textFontGetHS(TEXT_FONT *font);
 int textInit(void *handle);
 void *textMakeRenderSurface(int chars, TEXT_FONT *font, int linelen, int x, int y);
 void textResetSurface(TEXT_SURFACE *srf);
-void textSurfaceAppendChar(TEXT_SURFACE *surface, char c);
+void textSurfaceAppendChar(TEXT_SURFACE *surface, unsigned char c);
 void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str);
 void *textSurfaceDestroy(TEXT_SURFACE *surface);
 void textRender(TEXT_SURFACE *surface);
