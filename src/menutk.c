@@ -296,7 +296,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	}
 	
 	menu->textinput_buf = buf;
-	menu->text = textMakeRenderSurface(field_len, font, field_len, x, y);
+	menu->text = textMakeRenderSurface(field_len, font, field_len+1, x, y);
 	menu->waiting = 1;
 	menu->top_sel = 0;
 	menu->selection = 0;
@@ -501,6 +501,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	else
 		menu->cursor_display = 0;
 
+	menu->textinput_buf[menu->textinput_buf_use] = 0;
 	renderCalcTilePosCache(&menu->text_cursor, menu->text->font->ts, menu->xi - menu->top_sel*menu->text->font->ts->wsq + menu->selection*menu->text->font->ts->wsq, menu->yi);
 
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {

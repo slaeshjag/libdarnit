@@ -41,8 +41,9 @@ int main(int argc, char **argv) {
 		darnitTextSurfaceReset(text); darnitTextSurfaceReset(fps_text);
 		mouse = darnitMouseGet(handle);
 		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; %s", mouse.x, mouse.y, mouse.wheel, i*4, j*4, test_text);
+		fprintf(stderr, "%i, %s\n", strlen(test), test);
 		sprintf(fps, "%i", darnitTimeLastFrameTook(handle));
-		darnitTextSurfaceStringAppend(text, test);
+//		darnitTextSurfaceStringAppend(text, test);
 		darnitTextSurfaceStringAppend(fps_text, fps);
 
 		darnitRenderBegin();
