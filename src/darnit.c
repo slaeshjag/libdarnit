@@ -290,8 +290,8 @@ void EXPORT_THIS *darnitRenderTilesheetLoad(void *handle, const char *fname, uns
 }
 
 
-void EXPORT_THIS *darnitRenderTilesheetFree(void *tilesheet) {
-	return renderTilesheetFree(tilesheet);
+void EXPORT_THIS *darnitRenderTilesheetFree(void *handle, void *tilesheet) {
+	return renderTilesheetFree(handle, tilesheet);
 }
 
 
@@ -457,8 +457,8 @@ void EXPORT_THIS *darnitSpriteLoad(void *handle, const char *fname, int dir, uns
 }
 
 
-void EXPORT_THIS *darnitSpriteDelete(void *sprite) {
-	return spriteDelete(sprite);
+void EXPORT_THIS *darnitSpriteDelete(void *handle, void *sprite) {
+	return spriteDelete(handle, sprite);
 }
 
 
@@ -543,8 +543,8 @@ void EXPORT_THIS darnitMTSpriteDraw(void *mtsprite) {
 }
 
 
-void EXPORT_THIS *darnitMTSpriteDelete(void *mtsprite) {
-	return mtSpriteDelete(mtsprite);
+void EXPORT_THIS *darnitMTSpriteDelete(void *handle, void *mtsprite) {
+	return mtSpriteDelete(handle, mtsprite);
 }
 
 

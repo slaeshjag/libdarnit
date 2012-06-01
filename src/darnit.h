@@ -68,10 +68,11 @@ typedef struct {
 
 
 typedef struct {
-	VIDEO		video;
-	INPUT_STRUCT	input;
-	AUDIO		audio;
-	DARNIT_FPS	fps;
+	VIDEO			video;
+	INPUT_STRUCT		input;
+	AUDIO			audio;
+	DARNIT_FPS		fps;
+	TILESHEET_REF_CONT	tsr;
 } DARNIT;
 
 

@@ -5,6 +5,75 @@
 #endif
 
 
+int renderAddTSRef(void *handle, const char *fname, TILESHEET *ts) {
+	DARNIT *m = handle;
+	void *tmp;
+	int i, len, fast_cmp;
+
+	if (fname == NULL) return -1;
+	len = strlen(fname);
+
+	for (i = fast_cmp = 0; i < len; i++)
+		fast_cmp += fname[i];
+	
+	for (i = 0; i < m->tsr.cnt; i++)
+		if (m->tsr.tsr[i].fast_cmp == 0)
+			break;
+	
+	if (i == m->tsr.cnt) {
+		m->tsr.cnt++;
+		if ((tmp = realloc(m->tsr.tsr, sizeof(TILESHEET_REF) * m->tsr.cnt)) == NULL) {
+			m->tsr.cnt--;
+			return -1;
+		}
+	}
+
+	if ((m->tsr.tsr[i].fname = malloc(strlen(fname)+1)) == NULL) {
+		m->tsr.tsr[i].fast_cmp = 0;
+		return -1;
+	}
+
+	strcpy(m->tsr.tsr[i].fname, fname);
+	m->tsr.tsr[i].fast_cmp = fast_cmp;
+	m->tsr.tsr[i].ref = ts;
+
+	return i;
+}
+	
+
+void renderDelTSRef(void *handle, int ref) {
+	DARNIT *m = handle;
+
+	if (ref < 0 || ref >= m->tsr.cnt)
+		return;
+	
+	m->tsr.tsr[ref].fast_cmp = 0;
+
+	return;
+}
+
+
+TILESHEET *renderGetTilesheetFromRef(void *handle, const char *fname) {
+	DARNIT *m = handle;
+	int i, len, fast_cmp;
+
+	if (fname == NULL) return NULL;
+	len = strlen(fname);
+
+	for (i = fast_cmp = 0; i < len; i++)
+		fast_cmp += fname[i];
+	
+	for (i = 0; i < m->tsr.cnt; i++) {
+		if (m->tsr.tsr[i].fast_cmp == fast_cmp)
+			if (strcmp(m->tsr.tsr[i].fname, fname) == 0) {
+				m->tsr.tsr[i].ref->ref_count++;
+				return m->tsr.tsr[i].ref;
+			}
+	}
+
+	return NULL;
+}
+
 
 TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
 	DARNIT *m = handle;
@@ -13,7 +82,10 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 	void *data_t;
 	float twgran, thgran;
 	int i;
-	
+
+	if ((ts = renderGetTilesheetFromRef(handle, fname)) != NULL)
+		return ts;
+
 	if ((ts = malloc(sizeof(TILESHEET))) == NULL) {
 		MALLOC_ERROR
 		return NULL;
@@ -67,13 +139,21 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 		ts->tile[i].v = ts->tile[i].s + thgran;
 	}
 
+	renderAddTSRef(handle, fname, ts);
+	ts->ref_count = 0;
+
 	return ts;
 }
 
 
-void *renderTilesheetFree(TILESHEET *ts) {
+void *renderTilesheetFree(void *handle, TILESHEET *ts) {
+	DARNIT *m = handle;
 	if (ts == NULL) return NULL;
+
+	ts->ref_count--;
+	if (ts->ref_count > 0) return ts;
 	videoRemoveTexture(ts->texhandle);
+	renderDelTSRef(m, ts->ref);
 	free(ts->tile);
 	free(ts);
 

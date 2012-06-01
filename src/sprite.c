@@ -195,10 +195,10 @@ void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
 }
 
 
-void *spriteDelete(SPRITE_ENTRY *sprite) {
+void *spriteDelete(void *handle, SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return NULL;
 
-	sprite->ts = renderTilesheetFree(sprite->ts);
+	sprite->ts = renderTilesheetFree(handle, sprite->ts);
 	free(sprite);
 
 	return NULL;

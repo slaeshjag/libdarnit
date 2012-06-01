@@ -51,7 +51,7 @@ void spriteDisableAnimation(SPRITE_ENTRY *sprite);
 void spriteAnimate(SPRITE_ENTRY *sprite);
 void spriteDraw(SPRITE_ENTRY *sprite);
 void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir);
-void *spriteDelete(SPRITE_ENTRY *sprite);
+void *spriteDelete(void *handle, SPRITE_ENTRY *sprite);
 
 
 #endif
