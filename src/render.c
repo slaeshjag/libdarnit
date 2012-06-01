@@ -26,6 +26,7 @@ int renderAddTSRef(void *handle, const char *fname, TILESHEET *ts) {
 			m->tsr.cnt--;
 			return -1;
 		}
+		m->tsr.tsr = tmp;
 	}
 
 	if ((m->tsr.tsr[i].fname = malloc(strlen(fname)+1)) == NULL) {
