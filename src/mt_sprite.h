@@ -27,7 +27,7 @@ void mtSpriteDraw(MTSPRITE_ENTRY *spr);
 void mtSpriteEnableAnimation(MTSPRITE_ENTRY *spr);
 void mtSpritePauseAnimation(MTSPRITE_ENTRY *spr);
 void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr);
-void *mtSpriteDelete(MTSPRITE_ENTRY *spr);
+void *mtSpriteDelete(void *handle, MTSPRITE_ENTRY *spr);
 
 
 #endif

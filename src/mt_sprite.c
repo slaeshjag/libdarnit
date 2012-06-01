@@ -208,10 +208,10 @@ void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr) {
 }
 
 
-void *mtSpriteDelete(MTSPRITE_ENTRY *spr) {
+void *mtSpriteDelete(void *handle, MTSPRITE_ENTRY *spr) {
 	if (spr == NULL) return NULL;
 	
-	spr->ts = renderTilesheetFree(spr->ts);
+	spr->ts = renderTilesheetFree(handle, spr->ts);
 	free(spr->cache);
 	free(spr->frame);
 	free(spr);
