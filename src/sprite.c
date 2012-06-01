@@ -94,10 +94,13 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 
 void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y) {
 	if (sprite == NULL) return;
-	int tile, dir;
+	/*int tile, dir;*/
+	
+	/* I can't remember why I did this
 
 	dir = sprite->dir;
 	tile = sprite->spr[dir].tile[sprite->frame].tile;
+	*/		
 
 	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);
 

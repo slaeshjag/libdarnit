@@ -61,6 +61,7 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 void *renderTilesheetFree(TILESHEET *ts);
 void renderMapCacheSetTile(void *handle, unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);
+void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);

@@ -124,7 +124,8 @@ void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str) {
 		if (surface->pos >= surface->len)
 			break;
 		textSurfaceAppendChar(surface, str[i]);
-	
+	}
+
 	return;
 }
 

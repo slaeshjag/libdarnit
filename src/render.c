@@ -121,6 +121,34 @@ void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 }
 
 
+void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+	float xf, yf, wf, hf, tw, th;
+	
+	tw = 1.0f / ts->w;
+	th = 1.0f / ts->h;
+	xf = tw * x;
+	yf = th * y;
+	wf = tw * w;
+	hf = th * h;
+	wf += xf;
+	hf += yf;
+
+	cache->u = xf;
+	cache->v = yf;
+	cache->u2 = wf;
+	cache->v2 = yf;
+	cache->u3 = wf;
+	cache->v3 = hf;
+	cache->u4 = wf;
+	cache->v4 = hf;
+	cache->u5 = xf;
+	cache->v5 = hf;
+	cache->u6 = xf;
+	cache->v6 = yf;
+	
+	return;
+}
+
 
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 	if (cache == NULL) return;

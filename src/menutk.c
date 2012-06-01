@@ -451,8 +451,6 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	unsigned int key, i, time;
 
 	key = inputASCIIPop(handle);
-	if (key != 0) 
-		fprintf(stderr, "Got key: %i\n", key);
 
 	if (key == SDLK_RETURN) {
 		menu->waiting = 0;

@@ -26,7 +26,9 @@ void darnit_init_common() {
 
 	SDL_Init(SDL_INIT_NOPARACHUTE);
 
+	#ifdef _WIN32
 	atexit(cleanup);
+	#endif
 
 	#ifdef _WIN32
 	SDL_SetModuleHandle(GetModuleHandle(NULL));
@@ -319,10 +321,25 @@ void EXPORT_THIS darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int til
 }
 
 
+void EXPORT_THIS darnitRenderTileSetTilesheetCoord(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, 
+							unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+	TILE_CACHE *cache;
+
+	if (buf == NULL) return;
+	if (buf->tiles <= tile)
+		return;
+	cache = &buf->tc[tile];
+	renderSetTileCoord(cache, tilesheet, x, y, w, h);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
 	float *ptr;
 	int i;
 
+	if (buf == NULL) return;
 	if (tile >= buf->tiles)
 		return;
 	ptr = (float *) &buf->tc[tile];
@@ -334,7 +351,8 @@ void EXPORT_THIS darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int t
 
 
 void EXPORT_THIS darnitRenderTileDraw(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tiles) {
-	if (buf->tiles > tiles)
+	if (buf == NULL) return;
+	if (buf->tiles <= tiles)
 		tiles = buf->tiles;
 	renderCache(buf->tc, tilesheet, tiles);
 
@@ -357,11 +375,14 @@ void EXPORT_THIS *darnitRenderTileAlloc(unsigned int tiles) {
 			arr[j] = 0.0f;
 	}
 
+	buf->tiles = tiles;
+
 	return buf;
 }
 
 
 void EXPORT_THIS *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
+	if (buf == NULL) return NULL;
 	free(buf->tc);
 	free(buf);
 
