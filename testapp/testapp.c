@@ -12,7 +12,10 @@ int main(int argc, char **argv) {
 	DARNIT_KEYS keys;
 
 	handle = darnitInit("TESTAPP - libDarner");
-	
+
+	darnitMusicPlayTracked(handle, "latyl-greasy_duck_v1.mod");
+	darnitMusicPlayTracked(handle, "HYPERUN.XM");
+
 	test_text = malloc(64);
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
