@@ -3,16 +3,38 @@
 
 void audioMusicPlayMod(void *handle, const char *fname) {
 	DARNIT *m = handle;
+	ModPlug_Settings mps;
 	void *modfile;
+	FILE *fp;
 
-	modfile = malloc(sizeof(MODFILE));
-	MODFILE_Init(modfile);
-	MODFILE_Load(fname, modfile);
-	MODFILE_Start(modfile);
-	MODFILE_SetFormat(modfile, 44100, 2, 16, 1);
+	audioMusicStop(handle);
+	ModPlug_GetSettings(&mps);
+	mps.mFlags = MODPLUG_ENABLE_OVERSAMPLING;
+	mps.mResamplingMode = MODPLUG_RESAMPLE_LINEAR;
+	mps.mLoopCount = -1;
+	mps.mFrequency = 44100;
+	mps.mChannels = 2;
+	mps.mBits = 16;
+	ModPlug_SetSettings(&mps);
+
+	if ((fp = fopen(fname, "rb")) == NULL)
+		return;
+	
+	fseek(fp, 0, SEEK_END);
+	m->audio.music.modplugdata_len = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	if ((m->audio.music.modplugdata = malloc(m->audio.music.modplugdata_len)) == NULL) {
+		fclose(fp);
+		return;
+	}
+
+	fread(m->audio.music.modplugdata, m->audio.music.modplugdata_len, 1, fp);
+	fclose(fp);
+	
+	modfile = ModPlug_Load(m->audio.music.modplugdata, m->audio.music.modplugdata_len);
+	ModPlug_SetMasterVolume(modfile, 512);
+	
 	m->audio.music.modfile = modfile; 
-	m->audio.music.modfile->musicvolume = 64;
-	m->audio.music.modfile->sfxvolume = 64;
 
 	return;
 }
@@ -33,11 +55,13 @@ void audioMusicPlayVorbis(void *handle, const char *fname) {
 void audioMusicStop(void *handle) {
 	DARNIT *m = handle;
 	SDL_mutexP(m->audio.lock);
-	
+
+	fprintf(stderr, "Stopping music playback!\n");
+
 	if (m->audio.music.modfile != NULL) {
-		MODFILE_Stop(m->audio.music.modfile);
-		MODFILE_Free(m->audio.music.modfile);
-		free(m->audio.music.modfile);
+		fprintf(stderr, "%s\n", ModPlug_GetMessage(m->audio.music.modfile));
+		ModPlug_Unload(m->audio.music.modfile);
+		free(m->audio.music.modplugdata);
 		m->audio.music.modfile = NULL;
 	} else if (m->audio.music.vorbis != NULL) {
 		ov_clear(m->audio.music.vorbis);
@@ -176,9 +200,8 @@ void audioMusicDecode(void *handle, int frames) {
 		m->audio.musicbuf[i] = 0;
 
 	if (m->audio.music.modfile != NULL) {
-		m->audio.music.modfile->mixingbuf = (void *) m->audio.musicbuf;
-		m->audio.music.modfile->mixingbuflen = frames<<2;
-		MODFILE_Player(m->audio.music.modfile);
+		if (ModPlug_Read(m->audio.music.modfile, m->audio.musicbuf, frames << 2) == 0)
+			audioMusicStop(handle); 
 	} else if (m->audio.music.vorbis != NULL) {
 		for (bt = b = 0; bt < bytes; ) {
 			i = 0;
