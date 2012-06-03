@@ -1,174 +1,75 @@
 #include "darnit.h"
 
 
-void audioMusicPlayMod(void *handle, const char *fname) {
+void audioSoundStop(void *handle, int key) {
 	DARNIT *m = handle;
-	ModPlug_Settings mps;
-	void *modfile;
-	FILE *fp;
-
-	audioMusicStop(handle);
-	ModPlug_GetSettings(&mps);
-	mps.mFlags = MODPLUG_ENABLE_OVERSAMPLING;
-	mps.mResamplingMode = MODPLUG_RESAMPLE_LINEAR;
-	mps.mLoopCount = -1;
-	mps.mFrequency = 44100;
-	mps.mChannels = 2;
-	mps.mBits = 16;
-	ModPlug_SetSettings(&mps);
-
-	if ((fp = fopen(fname, "rb")) == NULL)
+	int i;
+	
+	if (key == -1)
 		return;
-	
-	fseek(fp, 0, SEEK_END);
-	m->audio.music.modplugdata_len = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	if ((m->audio.music.modplugdata = malloc(m->audio.music.modplugdata_len)) == NULL) {
-		fclose(fp);
-		return;
-	}
 
-	fread(m->audio.music.modplugdata, m->audio.music.modplugdata_len, 1, fp);
-	fclose(fp);
-	
-	modfile = ModPlug_Load(m->audio.music.modplugdata, m->audio.music.modplugdata_len);
-	ModPlug_SetMasterVolume(modfile, 512);
-	
-	m->audio.music.modfile = modfile; 
-
-	return;
-}
-
-
-void audioMusicPlayVorbis(void *handle, const char *fname) {
-	DARNIT *m = handle;
-	void *vorbis;
-
-	vorbis = malloc(sizeof(OggVorbis_File));
-	ov_fopen((char *) fname, vorbis);
-	m->audio.music.vorbis = vorbis;
-
-	return;
-}
-
-
-void audioMusicStop(void *handle) {
-	DARNIT *m = handle;
 	SDL_mutexP(m->audio.lock);
 
-	fprintf(stderr, "Stopping music playback!\n");
-
-	if (m->audio.music.modfile != NULL) {
-		fprintf(stderr, "%s\n", ModPlug_GetMessage(m->audio.music.modfile));
-		ModPlug_Unload(m->audio.music.modfile);
-		free(m->audio.music.modplugdata);
-		m->audio.music.modfile = NULL;
-	} else if (m->audio.music.vorbis != NULL) {
-		ov_clear(m->audio.music.vorbis);
-		free(m->audio.music.vorbis);
-		m->audio.music.vorbis = NULL;
-	}
-	SDL_mutexV(m->audio.lock);
-
-	return;
-}
-
-
-int audioSFXLoad(void *handle, const char *fname) {
-	DARNIT *m = handle;
-	int i, bytes;
-	FILE *fp;
-
-	for (i = 0; i < AUDIO_SFX_FILES; i++) {
-		if (m->audio.sfx[i].len == -1)
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
+		if (m->audio.playback_chan[i].key == key)
 			break;
+	if (i == AUDIO_PLAYBACK_CHANNELS) {
+		SDL_mutexV(m->audio.lock);
+		return;
 	}
 
-	if (i == AUDIO_SFX_FILES)
-		return -1;
 	
-	if ((fp = fopen(fname, "r")) == NULL) {
-		fprintf(stderr, "libDarnit: Unable to open SFX file %s\n", fname);
-		return -1;
-	}
-
-	fseek(fp, 0, SEEK_END);
-	m->audio.sfx[i].len = ftell(fp) >> 1;
-	bytes = ftell(fp);
-	if ((m->audio.sfx[i].buf = malloc(bytes)) == NULL) {
-		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", bytes);
-		fclose(fp);
-		m->audio.sfx[i].len = -1;
-		return -1;
-	}
-
-	fseek(fp, 0, SEEK_SET);
-	fread(m->audio.sfx[i].buf, bytes, 1, fp);
-	fclose(fp);
-
-	return i;
-}
-
-
-void audioSFXFree(void *handle, int index) {
-	DARNIT *m = handle;
-
-	SDL_mutexP(m->audio.lock);
-
-	free(m->audio.sfx[index].buf);
-	m->audio.sfx[index].buf = NULL;
-	m->audio.sfx[index].len = -1;
-
+	audioUnload(m->audio.playback_chan[i].res);
+	m->audio.playback_chan[i].key = -1;
+	
 	SDL_mutexV(m->audio.lock);
-
-	return;
-}
-
-
-void audioSFXClear(void *handle) {
-	int i;
-
-
-	for (i = 0; i < AUDIO_SFX_FILES; i++)
-		audioSFXFree(handle, i);
-
 	
 	return;
 }
 
 
-int audioSFXPlaySlotGet(void *handle) {
+void audioSoundClear(void *handle) {
 	DARNIT *m = handle;
 	int i;
 
-	for (i = 0; i < AUDIO_SFX_CHANNELS; i++)
-		if (m->audio.sfxchan[i].pos == -1)
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
+		audioSoundStop(handle, m->audio.playback_chan[i].key);
+
+	return;
+}
+
+
+int audioPlaySlotGet(void *handle) {
+	DARNIT *m = handle;
+	int i;
+
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
+		if (m->audio.playback_chan[i].key == -1)
 			return i;
 	
 	return -1;
 }
 
 
-unsigned int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
+int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int vol_l, int vol_r, int jmpto) {
 	DARNIT *m = handle;
-	unsigned int chan;
+	int i;
 
-	if ((chan = audioSFXPlaySlotGet(m)) == -1) {
-		fprintf(stderr, "libDarnit: Unable to play SFX: Out of playback channels\n");
+	if ((i = audioPlaySlotGet(handle)) == -1)
 		return -1;
-	}
 
-	m->audio.sfxchan[chan].sfx = sfx;
-	m->audio.sfxchan[chan].lvol = vol_l;
-	m->audio.sfxchan[chan].rvol = vol_r;
-	m->audio.sfxchan[chan].pos = 0;
-	m->audio.sfxchan[chan].len = m->audio.sfx[sfx].len;
-	m->audio.sfxchan[chan].key = m->audio.cnt;
-	m->audio.cnt++;
+	m->audio.playback_chan[i].pos = 0;
+	m->audio.playback_chan[i].lvol = vol_l;
+	m->audio.playback_chan[i].rvol = vol_r;
+	m->audio.playback_chan[i].len = 0;
+	if ((m->audio.playback_chan[i].res = audioPlay(ah, channels, loop)) == NULL)
+		return -1;
 	
-	return chan;
-};
+	m->audio.playback_chan[i].key = m->audio.cnt;
+	m->audio.cnt++;
 
+	return m->audio.playback_chan[i].key;
+}
 
 
 short audioSampleMix(short s1, short s2) {
@@ -188,103 +89,79 @@ void audioFrameMix(short *target, short *source1, short *source2, int frames) {
 }
 
 
-void audioMusicDecode(void *handle, int frames) {
+void audioMixDecoded(void *handle, int channel, int frames, void *mixdata) {
 	DARNIT *m = handle;
-	int i, bytes, bt, b;
-	char *buf = (void *) m->audio.musicbuf;
-	short *mbuf;
+	int i, sample, decoded, loop;
 
-	bytes = frames << 2;
 
-	for (i = 0; i < frames<<1; i++)
-		m->audio.musicbuf[i] = 0;
+	if (m->audio.playback_chan[channel].res->channels == 1) {
+		decoded = audioDecode(m->audio.playback_chan[channel].res, m->audio.scratchbuf, frames<<1, m->audio.playback_chan[channel].pos);
+		loop = decoded >> 1;
 
-	if (m->audio.music.modfile != NULL) {
-		if (ModPlug_Read(m->audio.music.modfile, m->audio.musicbuf, frames << 2) == 0)
-			audioMusicStop(handle); 
-	} else if (m->audio.music.vorbis != NULL) {
-		for (bt = b = 0; bt < bytes; ) {
-			i = 0;
-			if ((b = ov_read(m->audio.music.vorbis, &buf[bt], bytes-bt, 0, 2, 1, &i)) <= 0) {
-				audioMusicStop(handle);
-				break;
-			}
-			bt += b;
+		for (i = 0; i < decoded >> 1; i++) {
+			m->audio.samplebuf[i<<1] = m->audio.scratchbuf[m->audio.playback_chan[channel].pos];
+			m->audio.samplebuf[(i<<1)+1] = m->audio.scratchbuf[m->audio.playback_chan[channel].pos];
 		}
+	} else {
+		decoded = audioDecode(m->audio.playback_chan[channel].res, m->audio.samplebuf, frames<<2, m->audio.playback_chan[channel].pos);
+		loop = decoded >> 2;
+	}
+	
+	i = loop << 1;
+
+	for (; i < frames<<1; i++)
+		m->audio.samplebuf[i] = 0;
+	for (i = 0; i < loop; i++) {
+		sample = m->audio.samplebuf[i<<1];
+		sample *= m->audio.playback_chan[channel].lvol;
+		sample >>= 7;
+		m->audio.samplebuf[i<<1] = sample;
+		
+		sample = m->audio.samplebuf[(i<<1)+1];
+		sample *= m->audio.playback_chan[channel].rvol;
+		sample >>= 7;
+		m->audio.samplebuf[(i<<1)+1] = sample;
 	}
 
-	mbuf = m->audio.musicbuf;
-	for (i = 0; i < frames<<1; i++) {
-		b = mbuf[i];
-		b *= m->audio.musicvol;
-		b >>= 7;
-		mbuf[i] = b;
-	}
+	m->audio.playback_chan[channel].pos += decoded;
+	
+	if (decoded == 0)
+		m->audio.playback_chan[channel].key = -1;
 
-	/* TODO: Implement rest */
+	audioFrameMix(mixdata, m->audio.samplebuf, mixdata, frames);
 
 	return;
 }
 
 
-void audioSFXMix(void *handle, int channel, int frames) {
-	DARNIT *m = handle;
-	int i, sample;
-	short buf[8192], *tst;
-
-	for (i = 0; i < 8192; i++)
-		buf[i] = 0;
-
-	for (i = 0; i < frames; i++) {
-		if (m->audio.sfxchan[channel].pos >= m->audio.sfxchan[channel].len) {
-			m->audio.sfxchan[channel].pos = -1;
-			break;
-		}
-		sample = m->audio.sfx[m->audio.sfxchan[channel].sfx].buf[m->audio.sfxchan[channel].pos] * m->audio.sfxchan[channel].lvol;
-		sample >>= 7;
-		buf[i<<1] = sample;
-		sample = m->audio.sfx[m->audio.sfxchan[channel].sfx].buf[m->audio.sfxchan[channel].pos] * m->audio.sfxchan[channel].rvol;
-		sample >>= 7;
-		buf[(i<<1)+1] = sample;
-		m->audio.sfxchan[channel].pos++;
-	}
-
-	tst = m->audio.sfxbuf;
-	audioFrameMix(tst, m->audio.sfxbuf, buf, frames);
-
-	return;
-}
-
-
-void audioSFXDecode(void *handle, int frames) {
+void audioDecodeAndMix(void *handle, int frames, void *mixdata) {
 	DARNIT *m = handle;
 	int i, samples;
+	short *mixbuf = mixdata;
 
 	samples = frames << 1;
 	for (i = 0; i < samples; i++)
-		m->audio.sfxbuf[i] = 0;
+		mixbuf[i] = 0;
 	
-	for (i = 0; i < AUDIO_SFX_CHANNELS; i++) {
-		if (m->audio.sfxchan[i].pos == -1)
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++) {
+		if (m->audio.playback_chan[i].key == -1)
 			continue;
-		audioSFXMix(m, i, frames);
+		audioMixDecoded(m, i, frames, mixdata);
 	}
 
 	return;
 }
-
 
 
 void audioMix(void *handle, Uint8 *mixdata, int bytes) {
 	DARNIT *m = handle;
 	int frames;
-	short *stream = (void *) mixdata;
 
 	frames = bytes >>2;
 	SDL_mutexP(m->audio.lock);
-	audioMusicDecode(m, frames);
-	audioSFXDecode(m, frames);
-	audioFrameMix(stream, m->audio.sfxbuf, m->audio.musicbuf, frames*2);
+	
+	audioDecodeAndMix(m, frames, mixdata);
+	
 	SDL_mutexV(m->audio.lock);
 
 	return;
@@ -296,7 +173,7 @@ int audioInit(void *handle) {
 	SDL_AudioSpec fmt;
 	int i;
 
-	fmt.freq = 44100;
+	fmt.freq = AUDIO_SAMPLE_RATE;
 	fmt.format = AUDIO_S16;
 	fmt.channels = 2;
 	fmt.samples = 1024;
@@ -305,33 +182,24 @@ int audioInit(void *handle) {
 
 	m->audio.lock = SDL_CreateMutex();
 
-	if ((m->audio.sfxbuf = malloc(1024*4*4)) == NULL) {
+	if ((m->audio.samplebuf = malloc(1024*4*4)) == NULL) {
+		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
+		return -1;
+	}
+	if ((m->audio.scratchbuf = malloc(1024*4*4)) == NULL) {
+		free(m->audio.samplebuf);
 		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
 		return -1;
 	}
 
-	if ((m->audio.musicbuf = malloc(1024*4*4)) == NULL) {
-		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
-		return -1;
-	}
-
-	for (i = 0; i < AUDIO_SFX_CHANNELS; i++)
-		m->audio.sfxchan[i].pos = -1;
-	for (i = 0; i < AUDIO_SFX_FILES; i++) {
-		m->audio.sfx[i].len = -1;
-		m->audio.sfx[i].buf = NULL;
-	}
-
-	m->audio.music.modfile = NULL;
-	m->audio.music.vorbis = NULL;
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
+		m->audio.playback_chan[i].key = -1;
 
 	if (SDL_OpenAudio(&fmt, NULL) < 0) {
 		fprintf(stderr, "libDarnit: Unable to open audio: %s\n", SDL_GetError());
 		return -1;
 	}
 
-	m->audio.sfxvol = 127;
-	m->audio.musicvol = 127;
 	m->audio.cnt = 0;
 
 	SDL_PauseAudio(0);

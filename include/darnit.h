@@ -95,16 +95,15 @@ DARNIT_INPUT_MAP darnitButtonMappingGet(void *handle);
 
 /* AUDIO */
 
-void darnitMusicPlayTracked(void *handle, const char *fname);
-void darnitMusicPlayVorbis(void *handle, const char *fname);
-int darnitMusicPlayCheck(void *handle);
-void darnitMusicVolSet(void *handle, int vol);
-void darnitMusicStop(void *handle);
-int darnitSFXLoad(void *handle, const char *fname);
-void darnitSFXUnload(void *handle, int sfx);
-void darnitSFXClear(void *handle);
-unsigned int darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
-void darnitSFXVolumeSet(void *handle, unsigned int sfx_p_index, int vol_l, int vol_r);
+void *darnitSoundLoadTracked(const char *fname, int preload, int makemono);
+void *darnitSoundLoadStreamed(const char *fname, int preload, int makemono);
+void *darnitSoundUnload(void *sound_resource);
+void darnitSoundPlaybackStopAll(void *handle);
+void darnitSoundPlaybackStop(void *handle, int playback_key);
+int darnitSoundPlaybackStart(void *handle, void *sound_resource, int channels, int loop, int vol_l, int vol_r, int jmpto);
+int darnitSoundPlaybackCheck(void *handle, int playback_key);
+void darnitSoundPlaybackVolumeSet(void *handle, unsigned int playback_key, int vol_l, int vol_r);
+
 
 
 /* VIDEO */

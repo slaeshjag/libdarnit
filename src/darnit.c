@@ -201,75 +201,59 @@ DARNIT_MOUSE EXPORT_THIS darnitMouseGet(void *handle) {
 /***************************/
 
 
-void EXPORT_THIS darnitMusicPlayTracked(void *handle, const char *fname) {
-	audioMusicPlayMod(handle, fname);
+void EXPORT_THIS *darnitSoundLoadTracked(const char *fname, int preload, int makemono) {
+	return audioOpenTracked(fname, preload, makemono);
+}
+
+
+void EXPORT_THIS *darnitSoundLoadStreamed(const char *fname, int preload, int makemono) {
+	return audioOpenStreamed(fname, preload, makemono);
+}
+
+
+void EXPORT_THIS *darnitSoundUnload(void *sound_resource) {
+	return audioUnload(sound_resource);
+}
+
+
+void EXPORT_THIS darnitSoundPlaybackStopAll(void *handle) {
+	audioSoundClear(handle);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMusicPlayVorbis(void *handle, const char *fname) {
-	audioMusicPlayVorbis(handle, fname);
+void EXPORT_THIS darnitSoundPlaybackStop(void *handle, int playback_key) {
+	audioSoundStop(handle, playback_key);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitMusicPlayCheck(void *handle) {
-	DARNIT *d = handle;
-
-	return (d->audio.music.modfile == NULL && d->audio.music.vorbis == NULL) ? -1 : 0;
+int EXPORT_THIS darnitSoundPlaybackStart(void *handle, void *sound_resource, int channels, int loop, int vol_l, int vol_r, int jmpto) {
+	return audioSoundStart(handle, sound_resource, channels, loop, vol_l, vol_r, jmpto);
 }
 
 
-void EXPORT_THIS darnitMusicVolSet(void *handle, int vol) {
-	DARNIT *d = handle;
-
-	d->audio.musicvol = vol;
-
-	return;
-}
-
-
-void EXPORT_THIS darnitMusicStop(void *handle) {
-	audioMusicStop(handle);
-
-	return;
-}
-
-
-int EXPORT_THIS darnitSFXLoad(void *handle, const char *fname) {
-	return audioSFXLoad(handle, fname);
-}
-
-
-void EXPORT_THIS darnitSFXUnload(void *handle, int sfx) {
-	audioSFXFree(handle, sfx);
-
-	return;
-}
-
-
-void EXPORT_THIS darnitSFXClear(void *handle) {
-	audioSFXClear(handle);
-
-	return;
-}
-
-
-unsigned int EXPORT_THIS darnitSFXPlay(void *handle, int sfx, int vol_l, int vol_r) {
-	return audioSFXPlay(handle, sfx, vol_l, vol_r);
-}
-
-
-void EXPORT_THIS darnitSFXVolumeSet(void *handle, unsigned int sfx, int vol_l, int vol_r) {
+int EXPORT_THIS darnitSoundPlaybackCheck(void *handle, int playback_key) {
 	DARNIT *d = handle;
 	int i;
 
-	for (i = 0; i < AUDIO_SFX_CHANNELS; i++)
-		if (d->audio.sfxchan[i].key == sfx) {
-			d->audio.sfxchan[sfx].lvol = vol_l;
-			d->audio.sfxchan[sfx].rvol = vol_r;
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
+		if (d->audio.playback_chan[i].key == playback_key)
+			return 0;
+	return -1;
+}
+
+
+void EXPORT_THIS darnitSoundPlaybackVolumeSet(void *handle, unsigned int playback_key, int vol_l, int vol_r) {
+	DARNIT *d = handle;
+	int i;
+
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
+		if (d->audio.playback_chan[i].key == playback_key) {
+			d->audio.playback_chan[i].lvol = vol_l;
+			d->audio.playback_chan[i].rvol = vol_r;
 			break;
 		}
 	
