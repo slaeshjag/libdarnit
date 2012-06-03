@@ -6,18 +6,41 @@
 #include <libmodplug/modplug.h>
 #include <vorbis/vorbisfile.h>
 
-#define		AUDIO_SFX_CHANNELS		16
+#define		AUDIO_PLAYBACK_CHANNELS		16
 #define		AUDIO_SFX_FILES			64
 
 
+#define		AUDIO_TYPE_WAV			0
+#define		AUDIO_TYPE_OGG			1
+#define		AUDIO_TYPE_TRACKED		2
+
+#define		AUDIO_SAMPLE_RATE		44100
+
+
 typedef struct {
-	int				sfx;
+	char				*fname;
+	unsigned int			type;
+	unsigned int			pos;
+	void				*codec_handle;
+	FILE				*fp;
+	char				*data;
+	unsigned int			size;
+	char				*stream_data;
+	unsigned int			stream_data_size;
+	unsigned int			usage;
+	unsigned int			channels;
+	int				close_when_done;
+} AUDIO_HANDLE;
+
+
+typedef struct {
 	int				lvol;
 	int				rvol;
 	int				pos;
 	int				len;
 	unsigned int			key;
-} AUDIO_SFX_CHANNEL;
+	AUDIO_HANDLE			*res;
+} AUDIO_PLAYBACK_CHANNEL;
 
 
 typedef struct {
@@ -36,33 +59,19 @@ typedef struct {
 
 
 typedef struct {
-	short				*sfxbuf;
-	short				*musicbuf;
-	int				musicvol;
-	int				sfxvol;
+	short				*samplebuf;
+	short				*scratchbuf;
 	SDL_mutex			*lock;
-	AUDIO_SFX_CHANNEL		sfxchan[AUDIO_SFX_CHANNELS];
-	AUDIO_SFX			sfx[AUDIO_SFX_FILES];
-	AUDIO_MUSIC			music;
+	AUDIO_PLAYBACK_CHANNEL		playback_chan[AUDIO_PLAYBACK_CHANNELS];
 	unsigned int			cnt;
 } AUDIO;
 
 
-void audioMusicPlayMod(void *handle, const char *fname);
-void audioMusicPlayVorbis(void *handle, const char *fname);
-void audioMusicStop(void *handle);
-
-int audioSFXLoad(void *handle, const char *fname);
-void audioSFXFree(void *handle, int index);
-void audioSFXClear(void *handle);
-int audioSFXPlaySlotGet(void *handle);
-unsigned int audioSFXPlay(void *handle, int sfx, int vol_l, int vol_r);
+int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int vol_l, int vol_h, int jmpto);
+void audioSoundStop(void *handle, int key);
+void audioSoundClear(void *handle);
 short audioSampleMix(short s1, short s2);
 void audioFrameMix(short *target, short *source1, short *source2, int frames);
-void audioMusicDecode(void *handle, int frames);
-void audioSFXMix(void *handle, int channel, int frames);
-void audioSFXDecode(void *handle, int frames);
-void audioMix(void *handle, Uint8 *mixdata, int bytes);
 int audioInit(void *handle);
 
 
