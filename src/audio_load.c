@@ -66,6 +66,7 @@ void *audioStopStreamed(AUDIO_HANDLE *pb) {
 	} if (pb->data != NULL)
 		free(pb->data);
 	
+	free(pb->fname);
 	free(pb);
 
 	return NULL;
@@ -74,6 +75,7 @@ void *audioStopStreamed(AUDIO_HANDLE *pb) {
 
 AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 	AUDIO_HANDLE *pb;
+	int error;
 
 	if (ah->data != NULL) {
 		ah->usage++;
@@ -89,11 +91,16 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 	}
 
 	pb->data = NULL;
+	pb->fname = NULL;
 	pb->close_when_done = 0;
 	pb->usage = 1;
 	pb->type = AUDIO_TYPE_OGG;
 
-	ov_fopen(ah->fname, pb->codec_handle);
+	if ((error = ov_fopen(ah->fname, pb->codec_handle)) != 0) {
+		free(pb->codec_handle);
+		free(pb);
+		return NULL;
+	}
 
 	return pb;
 }
@@ -102,17 +109,19 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 	int i, b, j;
 
+
 	if (pb->data != NULL)
 		return audioDecodePreloaded(pb, buff, buff_len, pos);
 	i = b = j = 0;
 	do {
 		i = ov_read(pb->codec_handle, buff + b, buff_len - b, 0, 2, 1, &j);
 		b += i;
+		if (b == buff_len) break;
 	} while (i > 0);
-
+	
 	return b;
 }
-		
+
 
 
 AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
@@ -128,6 +137,8 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 		free(ah);
 		return NULL;
 	}
+
+	strcpy(ah->fname, fname);
 
 	ah->data = NULL;
 	ah->size = 0;
@@ -283,6 +294,8 @@ AUDIO_HANDLE *audioOpenTracked(const char *fname, int mode, int channels) {
 	ah->usage = 0;
 	ah->close_when_done = 0;
 	ah->pos = 0;
+	ah->size = sz;
+	ah->data = (void *) abuff;
 
 	return ah;
 }
@@ -309,7 +322,8 @@ void *audioUnload(AUDIO_HANDLE *pb) {
 	if (pb->usage > 0)
 		return pb;
 	if (pb->type == AUDIO_TYPE_WAV);
-	else if (pb->type == AUDIO_TYPE_OGG);
+	else if (pb->type == AUDIO_TYPE_OGG)
+		return audioStopTracked(pb);
 	else if (pb->type == AUDIO_TYPE_TRACKED)
 		return audioStopTracked(pb);
 	
@@ -318,8 +332,11 @@ void *audioUnload(AUDIO_HANDLE *pb) {
 
 
 AUDIO_HANDLE *audioPlay(AUDIO_HANDLE *ah, int channels, int loop) {
+	if (ah == NULL) return NULL;
+
 	if (ah->type == AUDIO_TYPE_WAV);
-	else if (ah->type == AUDIO_TYPE_OGG);
+	else if (ah->type == AUDIO_TYPE_OGG)
+		return audioPlayStreamed(ah, loop, channels);
 	else if (ah->type == AUDIO_TYPE_TRACKED)
 		return audioPlayTracked(ah, loop, channels);
 	
@@ -329,7 +346,8 @@ AUDIO_HANDLE *audioPlay(AUDIO_HANDLE *ah, int channels, int loop) {
 
 int audioDecode(AUDIO_HANDLE *ah, void *buff, int buff_len, int pos) {
 	if (ah->type == AUDIO_TYPE_WAV);
-	else if (ah->type == AUDIO_TYPE_OGG);
+	else if (ah->type == AUDIO_TYPE_OGG)
+		return audioDecodeStreamed(ah, buff, buff_len, pos);
 	else if (ah->type == AUDIO_TYPE_TRACKED)
 		return audioDecodeTracked(ah, buff, buff_len, pos);
 	

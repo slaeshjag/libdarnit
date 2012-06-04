@@ -5,6 +5,7 @@
 int main(int argc, char **argv) {
 	int i, sfx, j;
 	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf;
+	void *music;
 	char test[256], fps[16];
 	char *test_text;
 	DARNIT_MOUSE mouse;
@@ -13,8 +14,8 @@ int main(int argc, char **argv) {
 
 	handle = darnitInit("TESTAPP - libDarner");
 
-	darnitMusicPlayTracked(handle, "latyl-greasy_duck_v1.mod");
-	darnitMusicPlayTracked(handle, "HYPERUN.XM");
+	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", 0, 2);
+	darnitSoundPlaybackStart(handle, music, 2, 0, 127, 127, 0);
 
 	test_text = malloc(64);
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);

@@ -57,7 +57,7 @@ int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int 
 
 	if ((i = audioPlaySlotGet(handle)) == -1)
 		return -1;
-
+	
 	m->audio.playback_chan[i].pos = 0;
 	m->audio.playback_chan[i].lvol = vol_l;
 	m->audio.playback_chan[i].rvol = vol_r;
