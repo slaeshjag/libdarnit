@@ -1,11 +1,24 @@
 #include "darnit.h"
 
 
-AUDIO_HANDLE *audioOpenWAV(const char *fname) {
+
+
+int audioDecodePreloaded(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
+	if (pb->size - pos < buff_len)
+		buff_len = pb->size - pos;
+	memcpy(buff, pb->data + pos, buff_len);
+
+	return buff_len;
+}
+
+
+AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 	WAVE_HEADER header;
 	WAVE_ST_FORMAT format;
-	AUDIO_HANDLE *ah;
+	WAVE_ST_DATA data;
+	AUDIO_HANDLE *ah, *pb;
 	unsigned int seek;
+	void *datap;
 
 	if ((ah = malloc(sizeof(AUDIO_HANDLE))) == NULL)
 		return NULL;
@@ -35,23 +48,43 @@ AUDIO_HANDLE *audioOpenWAV(const char *fname) {
 	seek = format.size + 20;
 	fseek(ah->fp, seek, SEEK_SET);
 	
+	stream_data_size = seek;
 	ah->channels = format.channels;
 	ah->size = 0;
 	ah->pos = 0;
 	ah->type = AUDIO_TYPE_WAV;
 	ah->data = NULL;
-	ah->usage = 1;
+	ah->usage = 0;
+	fseek(ah->fp, 8, SEEK_CUR);
+
+	if (mode == ALOAD_MODE_STR)
+		return ah;
+	
+	fseek(ah->fp, -8, SEEK_CUR);
+	fread(&data, sizeof(WAVE_ST_DATA), 1, ah->fp);
+
+	if (data.id != WAVE_DATA) {
+		fclose(ah->fp);
+		free(ah);
+		return NULL;
+	}
+
+	if ((datap = malloc(data.size)) == NULL) {
+		fclose(ah->fp);
+		free(ah);
+		return NULL;
+	}
+
+	audioDecodeWAV(ah, datap, ah->size, 0);
+
+	ah->data = datap;
+	fclose(ah->fp);
+	ah->fp = NULL;
 
 	return ah;
 }
 
-
-int audioDecodePreloaded(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
-	if (pb->size - pos < buff_len)
-		buff_len = pb->size - pos;
-	memcpy(buff, pb->data + pos, buff_len);
-
-	return buff_len;
+	return ah;
 }
 
 
@@ -144,6 +177,7 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	ah->size = 0;
 	ah->codec_handle = NULL;
 	ah->type = AUDIO_TYPE_OGG;
+	ah->usage = 0;
 
 	if (mode == ALOAD_MODE_STR)
 		return ah;
