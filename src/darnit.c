@@ -19,12 +19,12 @@ void darnit_init_common() {
 	#ifdef _WIN32
 	void *libtmp;
 
+	SDL_Init(SDL_INIT_NOPARACHUTE);
 	libtmp = LoadLibrary(TEXT("DDRAW.DLL"));
 	if (libtmp != NULL)
 		FreeLibrary(libtmp);
 	#endif
 
-	SDL_Init(SDL_INIT_NOPARACHUTE);
 
 	#ifdef _WIN32
 	atexit(cleanup);
@@ -33,6 +33,7 @@ void darnit_init_common() {
 	#ifdef _WIN32
 	SDL_SetModuleHandle(GetModuleHandle(NULL));
 	#endif
+
 
 	return;
 }
@@ -47,6 +48,7 @@ void EXPORT_THIS *darnitInit(const char *wtitle) {
 	}
 
 	darnit_init_common();
+	renderInit(d);
 	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 	
 	#ifdef PANDORA
@@ -73,6 +75,7 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	}
 
 	darnit_init_common();
+	renderInit(d);
 	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 	
 	if (videoInit(d, wtitle, win_w, win_h, fullscreen) < 0);

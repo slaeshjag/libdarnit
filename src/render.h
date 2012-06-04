@@ -74,6 +74,7 @@ typedef struct {
 
 
 
+int renderInit(void *handle);
 
 TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
 void *renderTilesheetFree(void *handle, TILESHEET *ts);

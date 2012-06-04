@@ -5,6 +5,15 @@
 #endif
 
 
+int renderInit(void *handle) {
+	DARNIT *m = handle;
+
+	m->tsr.cnt = 0;
+
+	return 0;
+}
+
+
 int renderAddTSRef(void *handle, const char *fname, TILESHEET *ts) {
 	DARNIT *m = handle;
 	void *tmp;
