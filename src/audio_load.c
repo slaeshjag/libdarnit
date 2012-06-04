@@ -84,9 +84,6 @@ AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 	return ah;
 }
 
-	return ah;
-}
-
 
 void *audioStopStreamed(AUDIO_HANDLE *pb) {
 	pb->usage--;
