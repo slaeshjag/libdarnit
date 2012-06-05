@@ -13,6 +13,8 @@ int audioDecodePreloaded(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 
 
 AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
+/* TODO: Fix */
+#if 0
 	WAVE_HEADER header;
 	WAVE_ST_FORMAT format;
 	WAVE_ST_DATA data;
@@ -48,7 +50,7 @@ AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 	seek = format.size + 20;
 	fseek(ah->fp, seek, SEEK_SET);
 	
-	stream_data_size = seek;
+	ah->stream_data_size = seek;
 	ah->channels = format.channels;
 	ah->size = 0;
 	ah->pos = 0;
@@ -75,13 +77,14 @@ AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 		return NULL;
 	}
 
-	audioDecodeWAV(ah, datap, ah->size, 0);
+	audioDecodeWAV(pb, datap, ah->size, 0);
 
 	ah->data = datap;
 	fclose(ah->fp);
 	ah->fp = NULL;
 
 	return ah;
+#endif
 }
 
 

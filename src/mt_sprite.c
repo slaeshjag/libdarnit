@@ -70,6 +70,8 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 				fgets(buff, 512, fp);
 				tiles++;
 				break;
+			case '\n':
+				break;
 			default:
 				fgets(buff, 512, fp);
 				break;
