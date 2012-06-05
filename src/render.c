@@ -9,6 +9,7 @@ int renderInit(void *handle) {
 	DARNIT *m = handle;
 
 	m->tsr.cnt = 0;
+	m->tsr.tsr = NULL;
 
 	return 0;
 }

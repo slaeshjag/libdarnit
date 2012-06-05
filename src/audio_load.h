@@ -37,7 +37,7 @@ typedef struct {
 } WAVE_ST_DATA;
 
 
-AUDIO_HANDLE *audioOpenWAV(const char *fname);
+AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels);
 AUDIO_HANDLE *audioPlayTracked(AUDIO_HANDLE *ah, int loop, int channels);
 int audioDecodeTracked(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos);
 AUDIO_HANDLE *audioOpenTracked(const char *fname, int mode, int channels);
