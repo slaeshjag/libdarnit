@@ -178,6 +178,7 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	ah->codec_handle = NULL;
 	ah->type = AUDIO_TYPE_OGG;
 	ah->usage = 0;
+	ah->channels = channels;
 
 	if (mode == ALOAD_MODE_STR)
 		return ah;
