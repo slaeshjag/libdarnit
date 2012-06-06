@@ -1,4 +1,4 @@
-#include "darnit.h"
+#include <darnit/darnit.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,8 +14,8 @@ int main(int argc, char **argv) {
 
 	handle = darnitInit("TESTAPP - libDarner");
 
-//	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", 0, 2);
-//	darnitSoundPlaybackStart(handle, music, 2, 0, 127, 127, 0);
+	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", 0, 2);
+	darnitSoundPlaybackStart(handle, music, 2, 0, 127, 127, 0);
 
 	test_text = malloc(64);
 	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
