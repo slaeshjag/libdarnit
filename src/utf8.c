@@ -22,7 +22,7 @@ int utf8Validate(const unsigned char *str) {
 
 	j = utf8GetCharLength(str);
 	
-	for (i = 1; i < j; j++)
+	for (i = 1; i < j; i++)
 		if (((str[i] & 0xC0) ^ 0x80))
 			return -1;
 	if (str[0] == 0xC0 || str[i] == 0xC1)
