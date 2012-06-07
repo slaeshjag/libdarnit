@@ -50,6 +50,7 @@ typedef struct {
 #include "socket.h"
 #include "mt_sprite.h"
 #include "audio_load.h"
+#include "utf8.h"
 
 
 typedef struct {
