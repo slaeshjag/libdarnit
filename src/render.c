@@ -87,12 +87,9 @@ TILESHEET *renderGetTilesheetFromRef(void *handle, const char *fname) {
 
 
 TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
-	DARNIT *m = handle;
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
 	void *data_t;
-	float twgran, thgran;
-	int i;
 
 	if ((ts = renderGetTilesheetFromRef(handle, fname)) != NULL)
 		return ts;
@@ -125,17 +122,10 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 	
 	free(data_t);
 
-	twgran = 1.0f / ts->w * wsq;
-	thgran = 1.0f / ts->h * hsq;
-
-	ts->sw = m->video.swgran * wsq;
-	ts->sh = m->video.shgran * hsq;
-	ts->swgran = m->video.swgran;
-	ts->shgran = m->video.shgran;
 	ts->wsq = wsq;
 	ts->hsq = hsq;
-
 	ts->tiles = (ts->w / wsq) * (ts->h / hsq);
+	
 	if ((ts->tile = malloc(ts->tiles * sizeof(TILE))) == NULL) {
 		MALLOC_ERROR
 		videoRemoveTexture(ts->texhandle);
@@ -143,17 +133,36 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 		return NULL;
 	}
 
-	for (i = 0; i < ts->tiles; i++) {
-		ts->tile[i].r = twgran * (i % (ts->w / wsq));
-		ts->tile[i].s = thgran * (i / (ts->w / wsq));
-		ts->tile[i].u = ts->tile[i].r + twgran;
-		ts->tile[i].v = ts->tile[i].s + thgran;
-	}
-
+	renderPopulateTilesheet(handle, ts, ts->w / wsq, ts->h / hsq);
 	renderAddTSRef(handle, fname, ts);
-	ts->ref_count = 0;
 
 	return ts;
+}
+
+
+void renderPopulateTilesheet(void *handle, TILESHEET *ts, int tiles_w, int tiles_h) {
+	DARNIT *m = handle;
+	float twgran, thgran;
+	int i, j, p;
+
+	twgran = 1.0f / ts->w * ts->wsq;
+	thgran = 1.0f / ts->h * ts->hsq;
+
+	ts->sw = m->video.swgran * ts->wsq;
+	ts->sh = m->video.shgran * ts->hsq;
+	ts->swgran = m->video.swgran;
+	ts->shgran = m->video.shgran;
+	ts->ref_count = 0;
+	
+	for (i = 0; i < tiles_h; i++)
+		for (j = 0; j < tiles_w; j++) {
+			p = i * tiles_h + j;
+			ts->tile[p].r = twgran * j;
+			ts->tile[p].s = thgran * i;
+			ts->tile[p].u = ts->tile[p].r + twgran;
+			ts->tile[p].v = ts->tile[p].s + thgran;
+		}
+	return;
 }
 
 
@@ -241,6 +250,37 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 }
 
 
+void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2) {
+	cache->u = u;
+	cache->v = v;
+	cache->u2 = u2;
+	cache->v2 = v;
+	cache->u3 = u2;
+	cache->v3 = v2;
+	cache->u4 = u2;
+	cache->v4 = v2;
+	cache->u5 = u;
+	cache->v5 = v2;
+	cache->u6 = u;
+	cache->v6 = v;
+
+	cache->x = x;
+	cache->y = y2;
+	cache->x2 = x2;
+	cache->y2 = y2;
+	cache->x3 = x2;
+	cache->y3 = y;
+	cache->x4 = x2;
+	cache->y4 = y;
+	cache->x5 = x;
+	cache->y5 = y;
+	cache->x6 = x;
+	cache->y6 = y2;
+
+	return;
+}
+
+
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 	if (cache == NULL) return;
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
@@ -249,6 +289,66 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 	glTexCoordPointer(2, GL_FLOAT, 16, &cache->u);
 
 	glDrawArrays(GL_TRIANGLES, 0, tiles*6);
+
+	return;
+}
+
+
+TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
+	unsigned int tilesheet_w, tilesheet_h, size, texture;
+	void *data;
+	TILESHEET *ts;
+	
+	tilesheet_w = bitwiseRoundUpToPow2(tiles_w * tile_w);
+	tilesheet_h = bitwiseRoundUpToPow2(tiles_h * tile_h);
+
+	size = tilesheet_w * tilesheet_h;
+	if (format) size *= 4;
+
+	format = (format == RENDER_DATA_TYPE_RGBA) ? GL_RGBA : GL_ALPHA;
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, tilesheet_w, tilesheet_h, 0, format, GL_UNSIGNED_BYTE, 0);
+
+
+	if ((ts = malloc(sizeof(TILESHEET))) == NULL) {
+		glDeleteTextures(1, &texture);
+		return NULL;
+	}
+
+	ts->texhandle = texture;
+	
+	if ((ts->tile = malloc(sizeof(TILE) * tiles_w * tiles_h)) == NULL) {
+		glDeleteTextures(1, &texture);
+		free(ts);
+		return NULL;
+	}
+
+	ts->tiles = tiles_w * tiles_h;
+	ts->wsq = tile_w;
+	ts->hsq = tile_h;
+	ts->w = tilesheet_w;
+	ts->h = tilesheet_h;
+	ts->ref = -1;
+
+	renderPopulateTilesheet(handle, ts, tiles_w, tiles_h);
+
+	return ts;
+}
+
+
+void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h, int type) {
+	unsigned int format;
+	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
+
+	format = (type == RENDER_DATA_TYPE_RGBA) ? GL_RGBA : GL_ALPHA;
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, pos_x, pos_y, w, h, format, GL_UNSIGNED_BYTE, data);
 
 	return;
 }

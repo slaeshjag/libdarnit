@@ -46,12 +46,27 @@ unsigned int utf8GetChar(const char *str_s) {
 
 	shift = 1;
 	if (len > 1) shift += len;
-	chr = (*str & (0xFF >> shift));
+		chr = (*str & (0xFF >> shift));
+	chr <<= (len-1) * 6;
 
-	for (i = 1; i < len; i++)
-		chr += ((unsigned int) str[i] & 0x3F) << ((i*6) - (7 - len));
+	for (i = 1; i < len; i++) {
+		chr += ((unsigned int) str[i] & 0x3F) << (len - i - 1) * 6;
+	}
+
+	
 	
 	if (chr > UTF8_CHAR_LIMIT)
 		return UTF8_REPLACEMENT_CHAR;
 	return chr;
+}
+
+
+int utf8GetValidatedCharLength(const char *str_s) {
+	int len;
+
+	len = utf8GetCharLength((const unsigned char *) str_s);
+	if (utf8Validate((const unsigned char *) str_s) == -1)
+		return 1;
+	
+	return (len > 0) ? len : 1;
 }

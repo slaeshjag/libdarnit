@@ -6,8 +6,11 @@ void EXPORT_THIS *darnitFontLoad(void *handle, const char *fname, unsigned int g
 }
 
 
-unsigned int EXPORT_THIS darnitFontGetGlyphW(void *font) {
-	return textFontGetW(font);
+unsigned int EXPORT_THIS darnitFontGetGlyphW(void *font, const char *s) {
+	unsigned int c;
+	
+	c = utf8GetChar(s);
+	return textGetGlyphWidth(font, c);
 }
 
 
@@ -38,10 +41,8 @@ void EXPORT_THIS *darnitTextSurfaceFree(void *surface) {
 }
 
 
-void EXPORT_THIS darnitTextSurfaceCharAppend(void *surface, char c) {
-	textSurfaceAppendChar(surface, c);
-
-	return;
+int EXPORT_THIS darnitTextSurfaceCharAppend(void *surface, char *c) {
+	return textSurfaceAppendChar(surface, c);
 }
 
 

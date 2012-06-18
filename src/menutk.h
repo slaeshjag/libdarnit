@@ -61,6 +61,8 @@ typedef struct {
 	int			xi;
 	int			yi;
 	int			cursor_display;
+
+	int			option_space;
 } MENUTK_ENTRY;
 
 

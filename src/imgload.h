@@ -2,7 +2,7 @@
 #define	__IMGLOAD_H__
 
 
-#include <png.h>
+/*#include <png.h>*/
 
 #define	IMG_IS_RAW		1
 #define	IMG_IS_PNG		0

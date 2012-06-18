@@ -6,6 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+#define			RENDER_DATA_TYPE_ALPHA		0
+#define			RENDER_DATA_TYPE_RGBA		1
+
+
 typedef struct {
 	float		x;
 	float		y;
@@ -77,6 +82,7 @@ typedef struct {
 int renderInit(void *handle);
 
 TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
+void renderPopulateTilesheet(void *handle, TILESHEET *ts, int tiles_w, int tiles_h);
 void *renderTilesheetFree(void *handle, TILESHEET *ts);
 void renderMapCacheSetTile(void *handle, unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);
@@ -84,6 +90,11 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
+TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
+void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h, int type);
+void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
+
+
 
 #ifndef HAVE_GLES
 #include "render_ogl.h"
