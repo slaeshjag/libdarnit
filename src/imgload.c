@@ -1,4 +1,6 @@
+#define	_SKIP_FREETYPE_
 #include "darnit.h"
+#include <png.h>
 
 
 int imgloadCheckFormat(const char *fname) {

@@ -18,24 +18,24 @@ int main(int argc, char **argv) {
 	darnitSoundPlaybackStart(handle, music, 2, 0, 127, 127, 0);
 
 	test_text = malloc(64);
-	font = darnitFontLoad(handle, "font.png", 10, 16, 4);
+	font = darnitFontLoad(handle, "dejavu_sans.ttf", 20, 512, 512);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
 
 	sprite = darnitSpriteLoad(handle, "test.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	darnitSpriteMove(sprite , 50, 50);
-	text = darnitTextSurfaceAlloc(font, 80, 80, 0, 464);
+	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 464);
 
 	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
 	sprintf(test_text, "Hello, world. Modify me!");
-	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 16);
+//	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 16);
 
 	mtsprite = darnitMTSpriteLoad(handle, "testspr.mts");
 	darnitMTSpriteAnimationEnable(mtsprite);
 
-	fps_text = darnitTextSurfaceAlloc(font, 16, 16, 730, 0);
+	fps_text = darnitTextSurfaceAlloc(font, 16, 200, 0, 40);
 
 	tilebuf = darnitRenderTileAlloc(1);
 	darnitRenderTileMove(tilebuf, 0, mapsheet, 64, 64);
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; %s", mouse.x, mouse.y, mouse.wheel, i*4, j*4, test_text);
 		sprintf(fps, "%i", darnitTimeLastFrameTook(handle));
 		darnitTextSurfaceStringAppend(text, test);
-		darnitTextSurfaceStringAppend(fps_text, fps);
+		darnitTextSurfaceStringAppend(fps_text, "Hëllô ẇõŗłd¡ чайка");
 
 		darnitRenderBegin();
 
@@ -66,12 +66,13 @@ int main(int argc, char **argv) {
 
 		if (keys.r == 1)
 			darnitRenderTilemapCameraMove(tilemap, i*4, j*4);
+//		darnitRenderTint(handle, 1.0f, 1.0f, 1.0f, 1.0f);
 		darnitRenderTilemap(handle, tilemap);
 		darnitRenderBlendingEnable(handle);
 		if (keys.l == 1)
 			if (darnitMenuHandle(handle, surface) != -1)
 				return 0;
-		darnitMenuHandle(handle, textinput);
+/*		darnitMenuHandle(handle, textinput); */
 		darnitSpriteDraw(sprite);
 		darnitTextSurfaceDraw(text);
 		darnitTextSurfaceDraw(fps_text);

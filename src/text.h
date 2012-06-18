@@ -2,62 +2,119 @@
 #define	__TEXT_H__
 
 
+struct TEXT_FONT_GLYPH {
+	float			u1;
+	float			v1;
+	float			u2;
+	float			v2;
+
+	float			wf;
+	float			hf;
+	float			rise;
+	int			risei;
+
+	int			ch;
+
+	int			cw;
+	int			adv;
+	int			skip;
+
+	float			advf;
+	float			skipf;
+	unsigned int		glyph;
+
+	struct TEXT_FONT_CACHE	*tex_cache;
+	struct TEXT_FONT_GLYPH	*next;
+};
+
+
+struct TEXT_FONT_CACHE {
+	struct TEXT_FONT_CACHE	*next;
+	TILESHEET		*ts;
+
+	int			line_height;
+	int			line_pos_x;
+	int			line_pos_y;
+
+	int			sheet_w;
+	int			sheet_h;
+
+	float			sheet_pwf;
+	float			sheet_phf;
+
+	struct TEXT_FONT_GLYPH	*glyph;
+};
+
+
 typedef struct {
+	stbtt_fontinfo		face;
+	void			*font_data;
+	int			font_data_len;
+
+	struct TEXT_FONT_CACHE	*cache;
+	int			font_height;
+	int			line_gap;
+	int			ascent;
+	int			descent;
+	float			scale;
+
+	int			tex_w;
+	int			tex_h;
+
+	float			line_pos_x;
+	float			line_pos_y;
+	float			screen_pw;
+	float			screen_ph;
+
+	void			*handle;
+	#if 0
 	TILESHEET		*ts;
 	int			w;
 	int			h;
 	int			linespec;
+	#endif
 } TEXT_FONT;
 
 
+struct TEXT_GLYPH_CACHE {
+	struct TEXT_GLYPH_CACHE	*next;
+	struct TEXT_FONT_CACHE	*f_cache;
+	TILE_CACHE		*t_cache;
+	int			glyphs;
+};
+
+
 typedef struct {
+	struct TEXT_GLYPH_CACHE	*g_cache;
+	struct TEXT_GLYPH_CACHE	*l_cache;
 	TILE_CACHE		*cache;
 	TEXT_FONT		*font;
 	int			pos;
 	int			line;
 	int			index;
-	int			x;
-	int			y;
+	float			x;
+	float			y;
 	int			len;
-	int			linelen;
+	unsigned int		linelen;
+
+
+	float			cur_xf;
+	float			cur_yf;
+	float			orig_xf;
+	float			orig_yf;
 } TEXT_SURFACE;
 
 
-typedef struct {
-	int			act;
-	const char		*str;
-	const char		*ans_str;
-	int			strlen;
-	int			pos;
-	int			speed;
-	int			scroll;
-	int			npcCallback;
-	int			lastTick;
-	TEXT_SURFACE		*surface;
-	TILE_CACHE		*bgcache;
-	TILE_CACHE		facec;
-	int			bgcachelen;
-	TILESHEET		*bgts;
-	TILESHEET		*facets;
-	void			*menu;
-	int			selection;
-} TEXT_BOX;
-
-
-typedef struct {
-	TEXT_FONT		*def;
-	TEXT_BOX		box;
-} TEXT;
-
-
+int textInit(void *handle);
 void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec);
-int textFontGetW(TEXT_FONT *font);
+//int textFontGetW(TEXT_FONT *font);
+int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph);
 int textFontGetH(TEXT_FONT *font);
 int textFontGetHS(TEXT_FONT *font);
 int textInit(void *handle);
-void *textMakeRenderSurface(int chars, TEXT_FONT *font, int linelen, int x, int y);
+void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y);
 void textResetSurface(TEXT_SURFACE *srf);
-void textSurfaceAppendChar(TEXT_SURFACE *surface, unsigned char c);
+int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch);
 void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str);
 void *textSurfaceDestroy(TEXT_SURFACE *surface);
 void textRender(TEXT_SURFACE *surface);

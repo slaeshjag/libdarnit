@@ -45,47 +45,46 @@ void menutkSetColor(MENUTK_ENTRY *menu, int color) {
 
 
 int menutkSelectionWidth(MENUTK_ENTRY *menu, int selection) {
-	int i, len, tw, w, cnt;
+	int i, len, w, cnt;
 
 	len = strlen(menu->str);
-	tw = textFontGetW(menu->font);
 
-	for (i = w = cnt = 0; i < len; i++) {
+	for (i = w = cnt = 0; i < len; i += utf8GetValidatedCharLength(&menu->str[i])) {
 		if (menu->str[i] == '\n') {
 			if (cnt == selection)
-				return w*tw;
+				return w;
 			cnt++;
 		} else if (cnt == selection)
-			w++;
+			w += textGetGlyphWidth(menu->text->font, utf8GetChar(&menu->str[i]));
 	}
 
-	return w*tw;
+	return w;
 }			
 
 
 int menutkSelectionPos(MENUTK_ENTRY *menu, int selection) {
-	int i, len, tw, w, cnt;
+	int i, len, w, cnt;
 
 	len = strlen(menu->str);
-	tw = textFontGetW(menu->font);
 
 	for (i = w = cnt = 0; i < len; i++) {
 		if (menu->str[i] == '\n') {
 			cnt++;
-			w += 4;
+			w += (menu->option_space << 2);
 		} else if (cnt == selection)
-			return w*tw;
+			return w;
 		else
-			w++;
+			w += textGetGlyphWidth(menu->text->font, utf8GetChar(&menu->str[i]));;
 	}
 
-	return w*tw;
+	return w;
 }
 
 
 void menutkSpinbuttonTextUpdate(MENUTK_ENTRY *menu) {
 	int i, numl;
 	char num[10];
+	char *space = " ";
 
 	sprintf(num, "%i", menu->selection);
 	numl = strlen(num);
@@ -96,7 +95,7 @@ void menutkSpinbuttonTextUpdate(MENUTK_ENTRY *menu) {
 	textSurfaceAppendString(menu->text, " \x02 ");
 
 	for (i = 0; i < numl; i++)
-		textSurfaceAppendChar(menu->text, ' ');
+		textSurfaceAppendChar(menu->text, space);
 	textSurfaceAppendString(menu->text, num);
 	textSurfaceAppendString(menu->text, " \x03");
 
@@ -145,14 +144,16 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 		if (options[i] == '\n')
 			cnt++;
 	
-	menu->text = textMakeRenderSurface(len + cnt*3 + 10, menu->font, len + cnt*3, x+4, y);
+	menu->text = textMakeRenderSurface(len + cnt*3 + 10, menu->font, ~0, x+4, y);
 
 	for (i = 0; i < len; i++) {
 		if (options[i] != '\n')
-			textSurfaceAppendChar(menu->text, options[i]);
+			i += textSurfaceAppendChar(menu->text, &options[i]);
 		else
 			textSurfaceAppendString(menu->text, "    ");
 	}
+
+	#warning "Make option space configurable"
 
 	menu->waiting = 1;
 	menu->selection = 0;
@@ -229,7 +230,7 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 		if (options[i] == '\n')
 			cnt++;
 	
-	menu->text = textMakeRenderSurface(len, menu->font, len, x + textskip_x, y);
+	menu->text = textMakeRenderSurface(len, menu->font, ~0, x + textskip_x, y);
 	textSurfaceAppendString(menu->text, options);
 
 	menu->waiting = 1;
@@ -279,7 +280,7 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 	menu->change = 1;
 	menu->hidden = 0;
 
-	menu->text = textMakeRenderSurface(len + menu->skip_option + 5, font, len + menu->skip_option + 5, x, y);
+	menu->text = textMakeRenderSurface(len + menu->skip_option + 5, font, ~0, x, y);
 	menutkSpinbuttonTextUpdate(menu);
 
 	return menu;
@@ -296,7 +297,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	}
 	
 	menu->textinput_buf = buf;
-	menu->text = textMakeRenderSurface(field_len, font, field_len+1, x, y);
+	menu->text = textMakeRenderSurface(field_len, font, ~0, x, y);
 	menu->waiting = 1;
 	menu->top_sel = 0;
 	menu->selection = 0;
@@ -312,7 +313,10 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 			break;
 
 	menu->textinput_buf_use = i;
+#warning "FIXME: Cursor for input field"
+#if 0
 	renderCalcTileCache(&menu->text_cursor, font->ts, 4);		/* 4 is the assumed value for showing a white box the size of a glyph */
+#endif
 
 	return menu;
 }
@@ -345,8 +349,8 @@ void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
 
 	menu->change = 1;
 	if (menu->selection > -1) {
-		menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, menu->selection) + 8, textFontGetH(menu->font));
-		menutkHighlightMove(menu, menutkSelectionPos(menu, menu->selection), 0);
+		menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, menu->selection) + 8, menu->font->ascent - menu->font->descent + 4);
+		menutkHighlightMove(menu, menutkSelectionPos(menu, menu->selection)-menu->font->ascent+menu->font->font_height-2, 0);
 	}
 	
 	return;
@@ -487,10 +491,11 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 
 	textResetSurface(menu->text);
 
-	for (i = 0; i < menu->text->len; i++) {
+	for (i = 0; i < menu->text->len;) {
 		if (menu->textinput_buf[i + menu->top_sel] == 0)
 			break;
-		textSurfaceAppendChar(menu->text, menu->textinput_buf[i + menu->top_sel]);
+		i += textSurfaceAppendChar(menu->text, &menu->textinput_buf[i + menu->top_sel]);
+
 	}
 
 	time = SDL_GetTicks();
@@ -500,7 +505,10 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		menu->cursor_display = 0;
 
 	menu->textinput_buf[menu->textinput_buf_use] = 0;
+	#warning "FIXME: Enable cursor drawing for input field"
+	#if 0
 	renderCalcTilePosCache(&menu->text_cursor, menu->text->font->ts, menu->xi - menu->top_sel*menu->text->font->ts->wsq + menu->selection*menu->text->font->ts->wsq, menu->yi);
+	#endif
 
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
@@ -552,8 +560,11 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 	if (menu->hidden == 1)
 		return -1;
 
+	#warning "FIXME: Enable drawing of text input cursor"
+	#if 0
 	if (menu->orientation == MENUTK_TEXTINPUT && menu->cursor_display == 1)
 		renderCache(&menu->text_cursor, menu->text->font->ts, 1);
+	#endif
 
 	/* glLoadIdentity(); */
 	if (menu->orientation != MENUTK_SPINBTN && menu->orientation != MENUTK_TEXTINPUT) {

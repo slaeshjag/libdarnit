@@ -35,6 +35,8 @@ typedef struct {
 } DARNIT_MOUSE;
 
 
+#include "../deps/stb_truetype.h"
+#include "bitwise.h"
 #include "render.h"
 #include "input.h"
 #include "error.h"
