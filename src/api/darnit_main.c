@@ -19,9 +19,7 @@ void darnit_init_common() {
 	#endif
 
 
-	#ifdef _WIN32
 	atexit(cleanup);
-	#endif
 
 	#ifdef _WIN32
 	SDL_SetModuleHandle(GetModuleHandle(NULL));

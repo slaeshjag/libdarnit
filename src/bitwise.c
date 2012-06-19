@@ -15,7 +15,7 @@ unsigned int bitwiseGetPower(unsigned int val) {
 	unsigned int i, pow;
 
 	pow = bitwiseRoundUpToPow2(val);
-	for (i = 0; (1 << i) < val; i++);
+	for (i = 0; (1 << i) < pow; i++);
 
 	return i;
 }

@@ -150,7 +150,7 @@ void textPushGlyph(const char *data, int w, int h, int x, int y, TILESHEET *ts) 
 
 
 struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned int glyph, int glyph_index, TEXT_FONT *font) {
-	int pos_x, pos_y, w, h, x1, x2, y1, y2, ad, sb, i, j;
+	int pos_x, pos_y, w, h, x1, x2, y1, y2, ad, sb;
 	unsigned char *data;
 	struct TEXT_FONT_GLYPH *next, *alloc;
 

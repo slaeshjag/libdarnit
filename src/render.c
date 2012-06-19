@@ -296,7 +296,6 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 
 TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
 	unsigned int tilesheet_w, tilesheet_h, size, texture;
-	void *data;
 	TILESHEET *ts;
 	
 	tilesheet_w = bitwiseRoundUpToPow2(tiles_w * tile_w);
