@@ -85,6 +85,7 @@ AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 
 	return ah;
 #endif
+	return NULL;
 }
 
 
