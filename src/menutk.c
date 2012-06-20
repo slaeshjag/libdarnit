@@ -144,16 +144,14 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 		if (options[i] == '\n')
 			cnt++;
 	
-	menu->text = textMakeRenderSurface(len + cnt*3 + 10, menu->font, ~0, x+4, y);
+	menu->text = textMakeRenderSurface(len + 10, menu->font, ~0, x+4, y);
 
 	for (i = 0; i < len; i++) {
 		if (options[i] != '\n')
 			i += textSurfaceAppendChar(menu->text, &options[i]);
 		else
-			textSurfaceAppendString(menu->text, "    ");
+			textSurfaceSkip(menu->text, menu->text->font->font_height * 2); 
 	}
-
-	#warning "Make option space configurable"
 
 	menu->waiting = 1;
 	menu->selection = 0;
@@ -244,7 +242,7 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 	menu->time = SDL_GetTicks();
 	menu->autorep = 0;
 
-	menutkHighlightRecalculate(menu, menuw, textFontGetH(menu->font));
+	menutkHighlightRecalculate(menu, menuw, textFontGetHS(menu->font) + 4);
 	menutkHighlightMove(menu, 0, 0);
 	menutkSetColor(menu, color);
 

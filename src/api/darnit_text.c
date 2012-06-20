@@ -58,3 +58,10 @@ void EXPORT_THIS darnitTextSurfaceDraw(void *surface) {
 	
 	return;
 }
+
+
+void EXPORT_THIS darnitTextSurfaceSkip(void *surface, int pixels) {
+	textSurfaceSkip(surface, pixels);
+
+	return;
+}
