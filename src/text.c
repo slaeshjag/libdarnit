@@ -477,3 +477,12 @@ void *textSurfaceDestroy(TEXT_SURFACE *surface) {
 
 	return NULL;
 }
+
+
+void textSurfaceSkip(TEXT_SURFACE *surface, int pixels) {
+	if (surface == NULL)
+		return;
+	surface->cur_xf += surface->font->screen_pw * pixels;
+
+	return;
+}

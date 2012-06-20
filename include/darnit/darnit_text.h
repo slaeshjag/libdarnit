@@ -11,5 +11,6 @@ void *darnitTextSurfaceFree(void *surface);
 int darnitTextSurfaceCharAppend(void *surface, char *c);
 void darnitTextSurfaceStringAppend(void *surface, const char *string);
 void darnitTextSurfaceDraw(void *surface);
+void darnitTextSurfaceSkip(void *surface, int pixels);
 
 #endif
