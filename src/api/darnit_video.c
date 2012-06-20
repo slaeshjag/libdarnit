@@ -1,10 +1,20 @@
 #include "darnit.h"
 
 
+void EXPORT_THIS *darnitRenderTilesheetNew(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
+	return renderNewTilesheet(handle, tiles_w, tiles_h, tile_w, tile_h, format);
+}
+
+
 void EXPORT_THIS *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
-	DARNIT *d = handle;
-	
-	return renderTilesheetLoad(d, fname, wsq, hsq, target_format);
+	return renderTilesheetLoad(handle, fname, wsq, hsq, target_format);
+}
+
+
+void EXPORT_THIS darnitRenderTilesheetUpdate(void *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data) {
+	renderUpdateTilesheet(tilesheet, sheet_x, sheet_y, data, change_w, change_h);
+
+	return;
 }
 
 

@@ -62,6 +62,7 @@ typedef struct {
 
 	unsigned int	ref_count;
 	unsigned int	ref;
+	unsigned int	format;
 } TILESHEET;
 
 
@@ -91,7 +92,7 @@ void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
 TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
-void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h, int type);
+void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
 
 

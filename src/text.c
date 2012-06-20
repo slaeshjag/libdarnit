@@ -130,25 +130,6 @@ void textCacheGetCoordinates(struct TEXT_FONT_CACHE *index, int w, int h, int *x
 }
 
 
-void textPushGlyph(const char *data, int w, int h, int x, int y, TILESHEET *ts) {
-	int w_w, h_w, i;
-	char *tmp;
-
-	w_w = bitwiseRoundUpToPow2(w);
-	h_w = bitwiseRoundUpToPow2(h);
-
-	tmp = malloc(w_w * h_w);
-	
-	for (i = 0; i < h; i++)
-		memcpy(tmp, &data[i*w], w);
-	
-	renderUpdateTilesheet(ts, x, y, tmp, w_w, h_w, RENDER_DATA_TYPE_ALPHA);
-
-	free(tmp);
-	return;
-}
-
-
 struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned int glyph, int glyph_index, TEXT_FONT *font) {
 	int pos_x, pos_y, w, h, x1, x2, y1, y2, ad, sb;
 	unsigned char *data;
@@ -193,7 +174,7 @@ struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned 
 	alloc->glyph = glyph;
 	alloc->tex_cache = index;
 
-	renderUpdateTilesheet(index->ts, pos_x, pos_y, data, w, h, RENDER_DATA_TYPE_ALPHA);
+	renderUpdateTilesheet(index->ts, pos_x, pos_y, data, w, h);
 	stbtt_FreeBitmap(data, NULL);
 
 	return alloc;
