@@ -55,6 +55,8 @@ typedef struct {
 	MENUTK_HIGHLIGHT	hl;
 	float			swgran, shgran;
 	TILE_CACHE		text_cursor;
+	unsigned int		*codepoint;
+	int			codepoint_use;
 	char			*textinput_buf;
 	int			textinput_buf_use;
 	int			top_sel;
