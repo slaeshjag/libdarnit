@@ -2,9 +2,11 @@
 
 
 void menutkHighlightRecalculate(MENUTK_ENTRY *menu, int w, int h) {
+	menu->hl.box.x1 = menu->hl.box.x3 = 0.0f;
 	menu->hl.box.x2 = menu->swgran * w;
 	menu->hl.box.x4 = menu->hl.box.x2;
 
+	menu->hl.box.y1 = menu->hl.box.y3 = 0.0f;
 	menu->hl.box.y3 = menu->shgran * h * -1.0f;
 	menu->hl.box.y4 = menu->hl.box.y3;
 
@@ -92,12 +94,12 @@ void menutkSpinbuttonTextUpdate(MENUTK_ENTRY *menu) {
 
 	textResetSurface(menu->text);
 	textSurfaceAppendString(menu->text, menu->str);
-	textSurfaceAppendString(menu->text, " \x02 ");
+	textSurfaceAppendString(menu->text, " ∨ ");
 
 	for (i = 0; i < numl; i++)
 		textSurfaceAppendChar(menu->text, space);
 	textSurfaceAppendString(menu->text, num);
-	textSurfaceAppendString(menu->text, " \x03");
+	textSurfaceAppendString(menu->text, " ∧");
 
 	return;
 }
@@ -167,6 +169,20 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 	menutkSetColor(menu, color);
 
 	return menu;
+}
+
+
+void menutkAdjustTextinputCursor(void *handle, MENUTK_ENTRY *menu) {
+	DARNIT *m = handle;
+	if (menu == NULL) return;
+
+	menu->hl.color[0].a = m->video.tint_a;
+	menu->hl.color[0].r = m->video.tint_r;
+	menu->hl.color[0].g = m->video.tint_g;
+	menu->hl.color[0].b = m->video.tint_b;
+	menu->hl.color[1] = menu->hl.color[2] = menu->hl.color[3] = menu->hl.color[0];
+
+	return;
 }
 
 
@@ -286,6 +302,7 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 
 
 void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_len, int field_len) {
+	DARNIT *m = font->handle;
 	MENUTK_ENTRY *menu;
 	int i;
 
@@ -295,26 +312,32 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	}
 	
 	menu->textinput_buf = buf;
-	menu->text = textMakeRenderSurface(field_len, font, ~0, x, y);
+	menu->font = font;
+	menu->text = textMakeRenderSurface(field_len>>1, font, ~0, x, y);
 	menu->waiting = 1;
 	menu->top_sel = 0;
 	menu->selection = 0;
 	menu->hidden = 0;
 	menu->change = 1;
 	menu->options = buf_len - 1;
+
+	menu->codepoint = malloc(sizeof(unsigned int) * buf_len);
+
 	menu->xi = x; menu->yi = y;
 	menu->orientation = MENUTK_TEXTINPUT;
 	menu->textinput_buf[menu->options] = 0; 
+	menu->textinput_buf_use = 0;
 
-	for (i = 0; i < menu->options; i++)
+	for (i = 0; i < menu->options; i++) {
 		if (menu->textinput_buf[i] == 0)
 			break;
+		menu->codepoint[i] = utf8GetChar(&buf[menu->textinput_buf_use]);
+		menu->textinput_buf_use += utf8GetValidatedCharLength(&buf[menu->textinput_buf_use]);
+	}
 
-	menu->textinput_buf_use = i;
-#warning "FIXME: Cursor for input field"
-#if 0
-	renderCalcTileCache(&menu->text_cursor, font->ts, 4);		/* 4 is the assumed value for showing a white box the size of a glyph */
-#endif
+	menu->codepoint_use = i;
+	menutkAdjustTextinputCursor(m, menu);
+	menutkHighlightMove(menu, 0, 0);
 
 	return menu;
 }
@@ -450,7 +473,7 @@ void menutkSpinbuttonInput(void *handle, MENUTK_ENTRY *menu) {
 
 void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	DARNIT *m = handle;
-	unsigned int key, i, time;
+	unsigned int key, i, time, tmp;
 
 	key = inputASCIIPop(handle);
 
@@ -461,26 +484,29 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	} else if (key == 0);
 	else if (key == '\b') {
 		if (menu->selection > 0) {
+			menu->textinput_buf_use -= utf8EncodedLength(menu->codepoint[menu->selection]);
 			menu->selection--;
-			for (i = menu->selection; i < menu->textinput_buf_use - 1; i++) 
-				menu->textinput_buf[i] = menu->textinput_buf[i+1];
-			menu->textinput_buf[i] = 0;
-			if (menu->selection <= menu->top_sel) menu->top_sel = menu->selection - menu->text->len + 2;
+			for (i = menu->selection; i < menu->codepoint_use; i++) 
+				menu->codepoint[i] = menu->codepoint[i+1];
+			menu->codepoint[i-1] = 0;
+			if (menu->selection <= menu->top_sel)
+				menu->top_sel = menu->selection - menu->text->len + 2;
 			if (menu->top_sel < 0) menu->top_sel = 0;
-			menu->textinput_buf_use--;
+			menu->codepoint_use -= 1;
 		}
 	} else if (menu->textinput_buf_use == menu->options);
 	else {
-		if (menu->textinput_buf_use > menu->selection) {
-			for (i = menu->textinput_buf_use; i > menu->selection; i--)
-				menu->textinput_buf[i] = menu->textinput_buf[i-1];
+		if (menu->codepoint_use > menu->selection) {
+			for (i = menu->codepoint_use; i > menu->selection; i--)
+				menu->codepoint[i] = menu->codepoint[i-1];
 		} else
-			menu->textinput_buf[menu->selection + 1] = 0;
+			menu->codepoint[menu->selection + 1] = 0;
 
-		menu->textinput_buf[menu->selection] = key;
-		menu->textinput_buf_use++;
+		menu->codepoint[menu->selection] = key;
+		menu->codepoint_use++;
+		menu->textinput_buf_use += utf8EncodedLength(key);
 		menu->selection++;
-		if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - menu->text->len;
+		if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - 2;
 		menu->change = 1;
 	}
 	
@@ -489,10 +515,16 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 
 	textResetSurface(menu->text);
 
-	for (i = 0; i < menu->text->len;) {
-		if (menu->textinput_buf[i + menu->top_sel] == 0)
+	tmp = 0;
+	for (i = 0; i < menu->text->len; i++) {
+		if (i + menu->top_sel >= menu->codepoint_use)
 			break;
-		i += textSurfaceAppendChar(menu->text, &menu->textinput_buf[i + menu->top_sel]);
+		if (menu->codepoint[menu->top_sel + i] == 0)
+			break;
+		tmp += textGetGlyphWidth(menu->font, menu->codepoint[menu->top_sel + i]);
+		if (tmp >= menu->text->len << 1)
+			break;
+		textSurfaceAppendCodepoint(menu->text, menu->codepoint[i + menu->top_sel]);
 
 	}
 
@@ -503,10 +535,6 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		menu->cursor_display = 0;
 
 	menu->textinput_buf[menu->textinput_buf_use] = 0;
-	#warning "FIXME: Enable cursor drawing for input field"
-	#if 0
-	renderCalcTilePosCache(&menu->text_cursor, menu->text->font->ts, menu->xi - menu->top_sel*menu->text->font->ts->wsq + menu->selection*menu->text->font->ts->wsq, menu->yi);
-	#endif
 
 	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
@@ -521,17 +549,29 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		if (menu->selection > 0)
 			menu->selection--;
 		m->input.keypending |= KEY_LEFT;
-		if (menu->selection <= menu->top_sel) menu->top_sel = menu->selection - menu->text->len/2;
-		if (menu->top_sel < 0) menu->top_sel = 0;
+		if (menu->selection <= menu->top_sel) {
+			for (i = menu->top_sel, tmp = 0; i > 0; i--) {
+				tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
+				if (tmp >= menu->text->len)
+					break;
+			}
+			menu->top_sel = i;
+		}
 	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
 		if (menu->selection < menu->textinput_buf_use)
 			menu->selection++;
 		m->input.keypending |= KEY_RIGHT;
-		if (menu->selection >= (menu->top_sel + menu->text->len) && menu->selection < menu->textinput_buf_use - 1) menu->top_sel = menu->selection - menu->text->len/2;
+		for (i = menu->top_sel, tmp = 0; i < menu->codepoint_use; i++) {
+			tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
+			if (tmp >= (menu->text->len << 1))
+				break;
+		}
+		if (menu->selection >= i && menu->selection < menu->codepoint_use - 1) menu->top_sel = menu->top_sel + ((i - menu->top_sel) >> 1);
 	} else
 		return;
 
 		
+	menutkHighlightRecalculate(menu, textGetGlyphWidth(menu->font, menu->codepoint[menu->selection]), textFontGetH(menu->font));
 	
 	menu->change = 1;
 
@@ -558,14 +598,8 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 	if (menu->hidden == 1)
 		return -1;
 
-	#warning "FIXME: Enable drawing of text input cursor"
-	#if 0
-	if (menu->orientation == MENUTK_TEXTINPUT && menu->cursor_display == 1)
-		renderCache(&menu->text_cursor, menu->text->font->ts, 1);
-	#endif
-
 	/* glLoadIdentity(); */
-	if (menu->orientation != MENUTK_SPINBTN && menu->orientation != MENUTK_TEXTINPUT) {
+	if ((menu->orientation != MENUTK_SPINBTN && menu->orientation != MENUTK_TEXTINPUT) || (menu->orientation == MENUTK_TEXTINPUT && menu->cursor_display)) {
 		glTranslatef(menu->x + menu->hl.x, menu->y + menu->hl.y, 0.0f);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);

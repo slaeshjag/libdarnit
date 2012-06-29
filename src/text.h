@@ -119,6 +119,7 @@ void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str);
 void *textSurfaceDestroy(TEXT_SURFACE *surface);
 void textRender(TEXT_SURFACE *surface);
 void textSurfaceSkip(TEXT_SURFACE *surface, int pixels);
+int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp);
 
 
 #endif

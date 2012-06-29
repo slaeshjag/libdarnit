@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
-	sprintf(test_text, "Hello, world. Modify me!");
-//	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 16);
+	sprintf(test_text, "Héllo, world. Modify m€!");
+	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 200);
 
 	mtsprite = darnitMTSpriteLoad(handle, "testspr.mts");
 	darnitMTSpriteAnimationEnable(mtsprite);
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 		if (keys.l == 1)
 			if (darnitMenuHandle(handle, surface) != -1)
 				return 0;
-/*		darnitMenuHandle(handle, textinput); */
+		darnitMenuHandle(handle, textinput); 
 		darnitSpriteDraw(sprite);
 		darnitTextSurfaceDraw(text);
 		darnitTextSurfaceDraw(fps_text);

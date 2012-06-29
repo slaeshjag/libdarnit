@@ -1,6 +1,21 @@
 #include "darnit.h"
 
 
+int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned int width) {
+	int i, j, k;
+	unsigned int glyph;
+
+	for (i = j = k = 0; str[i] != 0; k++) {
+		glyph = utf8GetChar(&str[i]);
+		j += textGetGlyphWidth(surface->font, glyph);
+		if (j > width)
+			return k;
+		i += utf8GetValidatedCharLength(&str[i]);
+	}
+
+	return k;
+}
+
 void *textLoadFont(void *handle, const char *fname, int size, int tex_w, int tex_h) {
 	DARNIT *m = handle;
 	TEXT_FONT *font;
@@ -357,16 +372,26 @@ void *textSurfaceGlyphCacheFree(struct TEXT_GLYPH_CACHE *cache) {
 
 
 int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch) {
+	unsigned int glyph;
 	if (surface == NULL) return 1;
 
-	unsigned int glyph;
+	glyph = utf8GetChar(ch);
+	textSurfaceAppendCodepoint(surface, glyph);
+	return utf8GetValidatedCharLength(ch);
+}
+
+
+
+int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
+	if (surface == NULL) return 1;
+
 	struct TEXT_FONT_GLYPH *glyph_e;
+	unsigned int glyph = cp;
 	float x, y, x2, y2;
 	int w;
 
 	if (surface->len == surface->index) return 1;
 
-	glyph = utf8GetChar(ch);
 	if ((glyph_e = textGetGlyphEntry(surface->font, glyph)) == NULL)
 		return 1;
 
@@ -381,7 +406,7 @@ int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch) {
 	surface->cur_xf += glyph_e->advf;
 	surface->pos += w;
 
-	if (*ch == '\n') {
+	if (cp == '\n') {
 		surface->cur_xf = surface->orig_xf;
 		surface->cur_yf += surface->orig_yf * 2 + surface->font->line_gap * surface->font->screen_ph;
 		surface->pos = 0;
@@ -395,7 +420,7 @@ int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch) {
 	y = y2 - surface->font->screen_ph * glyph_e->ch;
 
 
-	if (*ch != ' ') {							/* "Temporary" work-around that makes OpenGL|ES happier... */
+	if (cp != ' ') {							/* "Temporary" work-around that makes OpenGL|ES happier... */
 		renderSetTileCoordinates(&surface->cache[surface->index], x, y, x2, y2, glyph_e->u1, glyph_e->v1, glyph_e->u2, glyph_e->v2);
 
 		if (surface->l_cache == NULL || glyph_e->tex_cache != surface->l_cache->f_cache) {
@@ -412,7 +437,7 @@ int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch) {
 		surface->index++;
 	} 
 	
-	return utf8GetValidatedCharLength(ch);
+	return 1;
 }
 
 
