@@ -176,13 +176,13 @@ struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned 
 	alloc->v2 = index->sheet_phf * pos_y + index->sheet_phf * (h) - 0.001f;
 	alloc->wf = index->sheet_pwf * w;
 	alloc->hf = index->sheet_phf * h;
-	alloc->rise = index->ts->shgran * ((y2) * font->scale);
 	alloc->risei = y2 * font->scale;
+	alloc->rise = index->ts->shgran * alloc->risei;
 
 	alloc->cw = w;
 	alloc->ch = h;
 	alloc->adv = font->scale * ad;
-	alloc->advf = index->ts->swgran * font->scale *ad;
+	alloc->advf = index->ts->swgran * alloc->adv;
 	alloc->skip = font->scale * x1;
 	alloc->skipf = index->ts->swgran * font->scale * x1;
 
