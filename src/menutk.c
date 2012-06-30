@@ -310,7 +310,8 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 		MALLOC_ERROR
 		return NULL;
 	}
-	
+
+	menu->x = x*m->video.swgran-1.0f, menu->y = (y*m->video.shgran*-1.0f) + 1.0f;
 	menu->textinput_buf = buf;
 	menu->font = font;
 	menu->text = textMakeRenderSurface(field_len>>1, font, ~0, x, y);
@@ -320,6 +321,8 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menu->hidden = 0;
 	menu->change = 1;
 	menu->options = buf_len - 1;
+	menu->swgran = m->video.swgran;
+	menu->shgran = m->video.shgran;
 
 	menu->codepoint = malloc(sizeof(unsigned int) * buf_len);
 
@@ -329,7 +332,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menu->textinput_buf_use = 0;
 
 	for (i = 0; i < menu->options; i++) {
-		if (menu->textinput_buf[i] == 0)
+		if (menu->textinput_buf[menu->textinput_buf_use] == 0)
 			break;
 		menu->codepoint[i] = utf8GetChar(&buf[menu->textinput_buf_use]);
 		menu->textinput_buf_use += utf8GetValidatedCharLength(&buf[menu->textinput_buf_use]);
@@ -506,7 +509,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		menu->codepoint_use++;
 		menu->textinput_buf_use += utf8EncodedLength(key);
 		menu->selection++;
-		if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - 2;
+		//if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - 2;
 		menu->change = 1;
 	}
 	
@@ -558,20 +561,26 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 			menu->top_sel = i;
 		}
 	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
-		if (menu->selection < menu->textinput_buf_use)
+		if (menu->selection < menu->codepoint_use)
 			menu->selection++;
 		m->input.keypending |= KEY_RIGHT;
-		for (i = menu->top_sel, tmp = 0; i < menu->codepoint_use; i++) {
-			tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
-			if (tmp >= (menu->text->len << 1))
-				break;
-		}
-		if (menu->selection >= i && menu->selection < menu->codepoint_use - 1) menu->top_sel = menu->top_sel + ((i - menu->top_sel) >> 1);
-	} else
-		return;
+	} //else
+	//	return;
 
+	for (i = menu->top_sel, tmp = 0; i < menu->codepoint_use; i++) {
+		tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
+		if (tmp >= (menu->text->len << 1))
+			break;
+	}
+	if (menu->selection >= i && menu->selection < menu->codepoint_use - 1) menu->top_sel = menu->top_sel + ((i - menu->top_sel) >> 1);
 		
 	menutkHighlightRecalculate(menu, textGetGlyphWidth(menu->font, menu->codepoint[menu->selection]), textFontGetH(menu->font));
+	for (i = tmp = 0; i < (menu->selection - menu->top_sel); i++)
+		tmp += textGetGlyphWidth(menu->font, menu->codepoint[menu->top_sel + i]);
+	tmp++;
+	
+	menutkHighlightMove(menu, tmp, 0);
+//	fprintf(stderr, "%f, %f, %f, %f\n", menu->hl.box.x1, menu->hl.box.y1, menu->hl.box.x2, menu->hl.box.y3);
 	
 	menu->change = 1;
 
