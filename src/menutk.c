@@ -320,6 +320,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menu->selection = 0;
 	menu->hidden = 0;
 	menu->change = 1;
+	menu->cursor_display = 0;
 	menu->options = buf_len - 1;
 	menu->swgran = m->video.swgran;
 	menu->shgran = m->video.shgran;
@@ -606,6 +607,12 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		textSurfaceAppendCodepoint(menu->text, menu->codepoint[i + menu->top_sel]);
 
 	}
+
+	if (key != 0)			/* Text buffer actually changed! */
+		for (i = tmp = 0; i < menu->codepoint_use; i++)
+			tmp += utf8Encode(menu->codepoint[i], &menu->textinput_buf[tmp], menu->options - tmp);
+
+	menu->textinput_buf[tmp] = 0;
 
 	menu->change = 1;
 
