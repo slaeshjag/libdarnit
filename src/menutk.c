@@ -339,8 +339,10 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	}
 
 	menu->codepoint_use = i;
+	menu->codepoint[i] = 0;
 	menutkAdjustTextinputCursor(m, menu);
 	menutkHighlightMove(menu, 0, 0);
+	menu->selection = -1;
 
 	return menu;
 }
@@ -474,27 +476,47 @@ void menutkSpinbuttonInput(void *handle, MENUTK_ENTRY *menu) {
 }
 
 
+void menutkUpdateCursorBlink(MENUTK_ENTRY *menu) {
+	unsigned int time;
+
+	time = SDL_GetTicks();
+	if (menu->waiting == 1)
+		menu->cursor_display = ((time % 1000) >= 500) ? 1 : 0;
+	else
+		menu->cursor_display = 0;
+
+	return;
+}
+
+
 void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	DARNIT *m = handle;
-	unsigned int key, i, time, tmp;
+	unsigned int key, i, time, tmp, change;
 
 	key = inputASCIIPop(handle);
+	change = 1;
 
-	if (key == SDLK_RETURN) {
+	if (key == 127 && menu->selection >= 0) {
+		if (menu->selection < menu->codepoint_use) {
+			key = '\b';
+			menu->selection++;
+		} else
+			key = 0;
+	}
+
+	if (menu->selection == -1);
+	else if (key == SDLK_RETURN) {
 		menu->waiting = 0;
-		menu->change = 1;
 		menu->cursor_display = 0;
-	} else if (key == 0);
-	else if (key == '\b') {
+	} else if (key == 0) {
+		menutkUpdateCursorBlink(menu);
+	} else if (key == '\b') {
 		if (menu->selection > 0) {
 			menu->textinput_buf_use -= utf8EncodedLength(menu->codepoint[menu->selection]);
 			menu->selection--;
 			for (i = menu->selection; i < menu->codepoint_use; i++) 
 				menu->codepoint[i] = menu->codepoint[i+1];
 			menu->codepoint[i-1] = 0;
-			if (menu->selection <= menu->top_sel)
-				menu->top_sel = menu->selection - menu->text->len + 2;
-			if (menu->top_sel < 0) menu->top_sel = 0;
 			menu->codepoint_use -= 1;
 		}
 	} else if (menu->textinput_buf_use == menu->options);
@@ -507,17 +529,71 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 
 		menu->codepoint[menu->selection] = key;
 		menu->codepoint_use++;
+		menu->codepoint[menu->codepoint_use] = 0;
 		menu->textinput_buf_use += utf8EncodedLength(key);
 		menu->selection++;
-		//if (menu->selection >= (menu->top_sel + menu->text->len)) menu->top_sel = menu->selection - 2;
-		menu->change = 1;
+	}
+
+
+	if (menu->selection == -1);
+	else if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
+		menu->waiting = 0;
+		m->input.keypending |= BUTTON_ACCEPT;
+		menu->cursor_display = 0;
+	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
+		menu->waiting = 0;
+		menu->selection = -2;
+		menu->cursor_display = 0;
+		m->input.keypending |= BUTTON_CANCEL;
+	} else if ((m->input.key ^ m->input.keypending) & KEY_LEFT) {
+		if (menu->selection > 0)
+			menu->selection--;
+		m->input.keypending |= KEY_LEFT;
+	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
+		if (menu->selection < menu->codepoint_use)
+			menu->selection++;
+		m->input.keypending |= KEY_RIGHT;
+	} else
+		change = 0;
+
+	if (menu->selection <= menu->top_sel && menu->selection != 0) {
+		if (menu->selection == -1)
+			menu->selection = 0;
+		for (i = menu->top_sel, tmp = 0; i > 0; i--) {
+			tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
+			if (tmp >= menu->text->len)
+				break;
+		}
+		menu->top_sel = i;
+		change = 1;
 	}
 	
-	if (menu->top_sel < 0) menu->top_sel = 0;
-	if (menu->top_sel + menu->text->len - 1 < menu->selection) menu->top_sel++;
+	
+	for (i = menu->top_sel, tmp = 0; i < menu->codepoint_use; i++) {
+		if (tmp + textGetGlyphWidth(menu->font, menu->codepoint[i]) >= (menu->text->len << 1))
+			break;
+		tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
+	}
+	if (i == menu->codepoint_use)
+		if (tmp + textGetGlyphWidth(menu->font, 0) < (menu->text->len << 1))
+			i++;
+
+	if (menu->selection >= i && menu->selection < menu->codepoint_use+1 && i != menu->codepoint_use + 1)
+		menu->top_sel = menu->top_sel + ((i - menu->top_sel) >> 1);
+	
+
+	menutkHighlightRecalculate(menu, textGetGlyphWidth(menu->font, menu->codepoint[menu->selection]), textFontGetH(menu->font));
+	for (i = tmp = 0; i < (menu->selection - menu->top_sel); i++)
+		tmp += textGetGlyphWidth(menu->font, menu->codepoint[menu->top_sel + i]);
+	tmp++;
+	
+	menutkHighlightMove(menu, tmp, 0);
+	
+	if (change == 0 && key == 0)
+		return;
 
 	textResetSurface(menu->text);
-
+	
 	tmp = 0;
 	for (i = 0; i < menu->text->len; i++) {
 		if (i + menu->top_sel >= menu->codepoint_use)
@@ -531,57 +607,6 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 
 	}
 
-	time = SDL_GetTicks();
-	if (menu->waiting == 1)
-		menu->cursor_display = ((time % 1000) >= 500) ? 1 : 0;
-	else
-		menu->cursor_display = 0;
-
-	menu->textinput_buf[menu->textinput_buf_use] = 0;
-
-	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
-		menu->waiting = 0;
-		m->input.keypending |= BUTTON_ACCEPT;
-		menu->cursor_display = 0;
-	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
-		menu->waiting = 0;
-		menu->selection = -2;
-		menu->cursor_display = 0;
-		m->input.keypending |= BUTTON_CANCEL;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_LEFT) {
-		if (menu->selection > 0)
-			menu->selection--;
-		m->input.keypending |= KEY_LEFT;
-		if (menu->selection <= menu->top_sel) {
-			for (i = menu->top_sel, tmp = 0; i > 0; i--) {
-				tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
-				if (tmp >= menu->text->len)
-					break;
-			}
-			menu->top_sel = i;
-		}
-	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
-		if (menu->selection < menu->codepoint_use)
-			menu->selection++;
-		m->input.keypending |= KEY_RIGHT;
-	} //else
-	//	return;
-
-	for (i = menu->top_sel, tmp = 0; i < menu->codepoint_use; i++) {
-		tmp += textGetGlyphWidth(menu->font, menu->codepoint[i]);
-		if (tmp >= (menu->text->len << 1))
-			break;
-	}
-	if (menu->selection >= i && menu->selection < menu->codepoint_use - 1) menu->top_sel = menu->top_sel + ((i - menu->top_sel) >> 1);
-		
-	menutkHighlightRecalculate(menu, textGetGlyphWidth(menu->font, menu->codepoint[menu->selection]), textFontGetH(menu->font));
-	for (i = tmp = 0; i < (menu->selection - menu->top_sel); i++)
-		tmp += textGetGlyphWidth(menu->font, menu->codepoint[menu->top_sel + i]);
-	tmp++;
-	
-	menutkHighlightMove(menu, tmp, 0);
-//	fprintf(stderr, "%f, %f, %f, %f\n", menu->hl.box.x1, menu->hl.box.y1, menu->hl.box.x2, menu->hl.box.y3);
-	
 	menu->change = 1;
 
 	return;
