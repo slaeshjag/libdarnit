@@ -587,7 +587,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 		tmp += textGetGlyphWidth(menu->font, menu->codepoint[menu->top_sel + i]);
 	tmp++;
 	
-	menutkHighlightMove(menu, tmp, 0);
+	menutkHighlightMove(menu, tmp+1, 0);
 	
 	if (change == 0 && key == 0)
 		return;
