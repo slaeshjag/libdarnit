@@ -456,6 +456,8 @@ void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str) {
 void textRender(TEXT_SURFACE *surface) {
 	struct TEXT_GLYPH_CACHE *next;
 
+	if (surface->g_cache == NULL)
+		return;
 	glTranslatef(surface->x, surface->y, 0.0f);
 	
 	if (surface == NULL) return;
