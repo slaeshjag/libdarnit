@@ -131,8 +131,9 @@ int utf8Encode(unsigned int ch, char *str_s, int buf_len) {
 	for (; j > 1; j--)
 		str[j-1] = 0x80 | (0x3F & (ch >> ((i - j) * 6)));
 
-	*str = (~0) << (7 - i);
+	*str = (~0) << (8 - i);
 	*str |= (ch >> (i * 6 - 6));
+
 
 	return i;
 }
