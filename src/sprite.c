@@ -1,13 +1,13 @@
 #include "darnit.h"
 
 
-void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
+SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 	unsigned int i, j;
-	char c, buf[512];
+	SPRITE_ENTRY *se;
 
-	rewind(fp);
-	fscanf(fp, "%s %i %i\n", se->tilesheet, &se->wsq, &se->hsq);
-
+	if ((se = malloc(sizeof(SPRITE_ENTRY))) == NULL)
+		return NULL;
+	
 	for (i = 0; i < 8; i++) {
 		for (j = 0; j < 8; j++) {
 			se->spr[i].tile[j].time = 50;
@@ -22,6 +22,21 @@ void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
 	se->tleft = 0;
 	se->animate = 0;
 	se->used = 1;
+	se->y = 0;
+	se->wsq = se->hsq = 0;
+	*se->tilesheet = 0;
+
+	return se;
+}
+
+
+
+void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
+	unsigned int i, j;
+	char c, buf[512];
+
+	rewind(fp);
+	fscanf(fp, "%s %i %i\n", se->tilesheet, &se->wsq, &se->hsq);
 
 	j = i = 0;
 
@@ -53,22 +68,57 @@ void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
 }
 
 
+void spriteSetFrame(SPRITE_ENTRY *sprite, int frame) {
+	if (sprite == NULL)
+		return;
+	sprite->frame = frame;
+	spriteActivate(sprite, sprite->dir);
+
+	return;
+}
+
+
+void spriteSetFrameEntry(SPRITE_ENTRY *sprite, int dir, int frame, int tile, int time) {
+	if (sprite == NULL)
+		return;
+
+	if (tile >= 8 || time <= 0 || tile < 0 || dir < 0 || dir >= 8)
+		return;
+	if (tile >= sprite->spr[dir].tiles)
+		sprite->spr[dir].tiles = tile + 1;
+	sprite->spr[dir].tile[tile].tile = tile;
+	sprite->spr[dir].tile[tile].time = time;
+
+	return;
+}
+
+
+void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
+	if (sprite == NULL)
+		return;
+
+	sprite->time = SDL_GetTicks();
+	sprite->dir = dir;
+	renderCalcTileCache(&sprite->cache, sprite->ts, sprite->spr[dir].tile[sprite->frame].tile);
+
+	return;
+}
+
 
 void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int target_format) {
 	DARNIT *m = handle;
 	FILE *fp;
-	int tile;
 	unsigned int header;
 	SPRITE_ENTRY *sprite_e;
 
-	if ((fp = fopen(fname, "r")) == NULL) {
+	if ((fp = fopen(fname, "rb")) == NULL) {
 		FILE_OPEN_ERROR
 		return NULL;
 	}
 
 	fread(&header, 4, 1, fp);
 
-	if ((sprite_e = malloc(sizeof(SPRITE_ENTRY))) == NULL) {
+	if ((sprite_e = spriteNew(NULL)) == NULL) {
 		fclose(fp);
 		return NULL;
 	}
@@ -79,13 +129,12 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 		fread(sprite_e, 1, sizeof(SPRITE_ENTRY), fp);
 
 	fclose(fp);
-	sprite_e->time = SDL_GetTicks();
-	sprite_e->ts = renderTilesheetLoad(m, sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format);
+	if ((sprite_e->ts = renderTilesheetLoad(m, sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format)) == NULL) {
+		free(sprite_e);
+		return NULL;
+	}
 
-	sprite_e->dir = dir;
-	sprite_e->frame = 0;
-	tile = sprite_e->spr[dir].tile[sprite_e->frame].tile;
-	renderCalcTileCache(&sprite_e->cache, sprite_e->ts, tile);
+	spriteActivate(sprite_e, dir);
 
 	return sprite_e;
 }
@@ -94,13 +143,6 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 
 void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y) {
 	if (sprite == NULL) return;
-	/*int tile, dir;*/
-	
-	/* I can't remember why I did this
-
-	dir = sprite->dir;
-	tile = sprite->spr[dir].tile[sprite->frame].tile;
-	*/		
 
 	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);
 
@@ -198,7 +240,8 @@ void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
 void *spriteDelete(void *handle, SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return NULL;
 
-	sprite->ts = renderTilesheetFree(handle, sprite->ts);
+	if (*sprite->tilesheet != 0)
+		sprite->ts = renderTilesheetFree(handle, sprite->ts);
 	free(sprite);
 
 	return NULL;

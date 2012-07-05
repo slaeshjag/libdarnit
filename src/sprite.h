@@ -30,9 +30,7 @@ typedef struct {
 	unsigned int		hsq;
 	TILESHEET		*ts;
 	TILE_CACHE		cache;
-	unsigned int		layer;
 	unsigned int		y;
-	unsigned int		id;
 } SPRITE_ENTRY;
 
 
@@ -43,15 +41,19 @@ typedef struct {
 } SPRITE;
 
 
+SPRITE_ENTRY *spriteNew(TILESHEET *ts);
 void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int target_format);
 void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y);
 void spriteEnableAnimation(SPRITE_ENTRY *sprite);
 void spritePauseAnimation(SPRITE_ENTRY *sprite);
 void spriteDisableAnimation(SPRITE_ENTRY *sprite);
 void spriteAnimate(SPRITE_ENTRY *sprite);
+void spriteSetFrame(SPRITE_ENTRY *sprite, int frame);
+void spriteActivate(SPRITE_ENTRY *sprite, int dir);
 void spriteDraw(SPRITE_ENTRY *sprite);
 void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir);
 void *spriteDelete(void *handle, SPRITE_ENTRY *sprite);
+void spriteSetFrameEntry(SPRITE_ENTRY *sprite, int dir, int frame, int tile, int time);
 
 
 #endif
