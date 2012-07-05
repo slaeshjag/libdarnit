@@ -145,8 +145,6 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 		}
 	}
 
-	fprintf(stderr, "Tiles: %i, frames: %i\n", tiles, frames);
-
 	if ((spr = mtSpriteNew(tiles, frames, ts)) == NULL) {
 		fclose(fp);
 		free(spr->cache);

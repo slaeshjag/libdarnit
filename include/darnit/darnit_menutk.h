@@ -11,7 +11,7 @@ void darnitMenuVerticalShadeSelectionsIncreaseByOne(void *menu);
 void darnitMenuShadeColorSet(void *menu, float r, float g, float b, float a);
 int darnitMenuHandle(void *handle, void *menu);
 void darnitMenuSelectionWaitForNew(void *menu);
-int darnitMenuPeek(void *menu);
+int darnitMenuPeek(void *menu, int *top_sel);
 int darnitMenuChangedCheck(void *menu);
 void darnitMenuHide(void *menu);
 void darnitMenuUnhide(void *menu);
