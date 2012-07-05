@@ -38,7 +38,7 @@ typedef struct {
 typedef struct {
 	int			orientation;
 	TEXT_FONT		*font;
-	const char		*str;
+	char			*str;
 	float			x;
 	float			y;
 	int			options;
@@ -65,6 +65,7 @@ typedef struct {
 	int			cursor_display;
 
 	int			option_space;
+	int			scroll_threshold;
 } MENUTK_ENTRY;
 
 
@@ -72,13 +73,13 @@ void menutkVerticalShadeReduceSelectionsByOne(MENUTK_ENTRY *menu;);
 void menutkVerticalShadeIncreaseSelectionsByOne(MENUTK_ENTRY *menu);
 void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color, int max);
 void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option);
-void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color);
+void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color, int max_h);
 void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int y, TEXT_FONT *font, int step, int min, int max);
 void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_len, int field_len);
 int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu);
 void *menutkDestroy(MENUTK_ENTRY *menu);
 void menutkWaitForNewSelection(MENUTK_ENTRY *menu);
-int menutkPeek(MENUTK_ENTRY *menu);
+int menutkPeek(MENUTK_ENTRY *menu, int *top_sel);
 int menutkGetIfChanged(MENUTK_ENTRY *menu);
 void menutkMenuHide(MENUTK_ENTRY *menu);
 void menutkMenuUnhide(MENUTK_ENTRY *menu);

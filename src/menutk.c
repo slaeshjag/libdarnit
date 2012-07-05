@@ -24,6 +24,32 @@ void menutkHighlightMove(MENUTK_ENTRY *menu, int x, int y) {
 }
 
 
+void menutkTopSelRecalc(MENUTK_ENTRY *menu) {
+	int i;
+	char *start, *end;
+
+	if (menu->str != NULL && menu->scroll_threshold > 0) {
+		if (menu->selection - menu->top_sel >= menu->scroll_threshold)
+			menu->top_sel = menu->selection - menu->scroll_threshold + 1;
+		if (menu->selection < menu->top_sel)
+			menu->top_sel = menu->selection;
+		for (i = 0, start = menu->str; i < menu->top_sel; i++)
+			start = strstr(start, "\n") + 1;
+		for (i = 0, end = start; i < menu->scroll_threshold && end != NULL; i++, end++)
+			end = strstr(end, "\n");
+		end--;
+		if (end != NULL)
+			*end = 0;
+		textResetSurface(menu->text);
+		textSurfaceAppendString(menu->text, start);
+		if (end != NULL)
+			*end = '\n';
+	}
+
+	return;
+}
+
+
 void menutkSetColor(MENUTK_ENTRY *menu, int color) {
 	if (menu == NULL) return;
 	if (color == 0) {
@@ -138,7 +164,8 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 	menu->orientation = MENUTK_ORIENT_H;
 	menu->font = font;
 	menu->x = x*m->video.swgran-1.0f, menu->y = y*m->video.shgran*-1.0f + 1.0f;
-	menu->str = options;
+	menu->str = malloc(strlen(options) + 1);
+	strcpy(menu->str, options);
 	
 	len = strlen(options);
 
@@ -163,6 +190,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 	menu->change = 1;
 	menu->hidden = 0;
 	menu->top_sel = 0;
+	menu->scroll_threshold = max;
 
 	menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, 0) + 8, textFontGetH(menu->font));
 	menutkHighlightMove(menu, 0, 0);
@@ -199,6 +227,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 	menu->x = x*m->video.swgran-1.0f, menu->y = y*m->video.shgran*-1.0f + 1.0f;
 	menu->waiting = 1;
 	menu->selection = 0;
+
 	menu->options = options;
 	menu->advance = option_advance;
 	menu->skip_option = skip_option;
@@ -208,6 +237,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 	menu->text = NULL;
 	menu->time = SDL_GetTicks();
 	menu->autorep = 0;
+	menu->str = NULL;
 
 
 	menutkHighlightRecalculate(menu, menuw, shadeh);
@@ -223,7 +253,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 }
 
 
-void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color) {
+void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color, int max_h) {
 	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
 	int i, len, cnt;
@@ -236,7 +266,9 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 	menu->orientation = MENUTK_ORIENT_V;
 	menu->font = font;
 	menu->x = x*m->video.swgran-1.0f, menu->y = (y*m->video.shgran*-1.0f) + 1.0f;
-	menu->str = options;
+
+	menu->str = malloc(strlen(options) + 1);
+	strcpy(menu->str, options);
 
 	len = strlen(options);
 
@@ -245,7 +277,6 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 			cnt++;
 	
 	menu->text = textMakeRenderSurface(len, menu->font, ~0, x + textskip_x, y);
-	textSurfaceAppendString(menu->text, options);
 
 	menu->waiting = 1;
 	menu->selection = 0;
@@ -257,6 +288,10 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 	menu->hidden = 0;
 	menu->time = SDL_GetTicks();
 	menu->autorep = 0;
+	menu->top_sel = 0;
+	menu->scroll_threshold = max_h;
+
+	menutkTopSelRecalc(menu);
 
 	menutkHighlightRecalculate(menu, menuw, textFontGetHS(menu->font) + 4);
 	menutkHighlightMove(menu, 0, 0);
@@ -279,7 +314,8 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 
 	menu->orientation = MENUTK_SPINBTN;
 	menu->x = x*m->video.swgran-1.0f, menu->y = (y*m->video.shgran*-1.0f) + 1.0f;
-	menu->str = comment_text;
+	menu->str = malloc(strlen(comment_text) + 1);
+	strcpy(menu->str, comment_text);
 
 	len = strlen(comment_text);
 	sprintf(tst, "%i", max);
@@ -344,6 +380,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menutkAdjustTextinputCursor(m, menu);
 	menutkHighlightMove(menu, 0, 0);
 	menu->selection = -1;
+	menu->str = NULL;
 
 	return menu;
 }
@@ -425,11 +462,13 @@ void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
 		return;
 	}
 
+	menutkTopSelRecalc(menu);
+
 	if (menu->autorep == 1)
 		menu->time = SDL_GetTicks();
 	menu->change = 1;
 	if (menu->selection > -1)
-		menutkHighlightMove(menu, 0, menu->advance*menu->selection);
+		menutkHighlightMove(menu, 0, menu->advance*(menu->selection - menu->top_sel));
 
 	return;
 }
@@ -673,6 +712,7 @@ void *menutkDestroy(MENUTK_ENTRY *menu) {
 		return NULL;
 
 	textSurfaceDestroy(menu->text);
+	free(menu->str);
 	free(menu);
 	
 	return NULL;
@@ -688,9 +728,12 @@ void menutkWaitForNewSelection(MENUTK_ENTRY *menu) {
 	return;
 }
 
-int menutkPeek(MENUTK_ENTRY *menu) {
+int menutkPeek(MENUTK_ENTRY *menu, int *top_sel) {
 	if (menu == NULL)
 		return -2;
+
+	if (top_sel != NULL)
+		*top_sel = menu->top_sel;
 
 	return menu->selection;
 }

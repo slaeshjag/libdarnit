@@ -67,12 +67,6 @@ typedef struct {
 	float			screen_ph;
 
 	void			*handle;
-	#if 0
-	TILESHEET		*ts;
-	int			w;
-	int			h;
-	int			linespec;
-	#endif
 } TEXT_FONT;
 
 
@@ -107,7 +101,6 @@ typedef struct {
 
 int textInit(void *handle);
 void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec);
-//int textFontGetW(TEXT_FONT *font);
 int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph);
 int textFontGetH(TEXT_FONT *font);
 int textFontGetHS(TEXT_FONT *font);

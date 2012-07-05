@@ -7,7 +7,7 @@ void EXPORT_THIS *darnitMenuHorizontalCreate(void *handle, const char *options, 
 
 
 void EXPORT_THIS *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
-	return menutkVerticalCreate(handle, options, x, y, font, menuw, textskip_x, 0);
+	return menutkVerticalCreate(handle, options, x, y, font, menuw, textskip_x, 0, max_h);
 }
 
 
@@ -67,8 +67,8 @@ void EXPORT_THIS darnitMenuSelectionWaitForNew(void *menu) {
 }
 
 
-int EXPORT_THIS darnitMenuPeek(void *menu) {
-	return menutkPeek(menu);
+int EXPORT_THIS darnitMenuPeek(void *menu, int *top_sel) {
+	return menutkPeek(menu, top_sel);
 }
 
 
