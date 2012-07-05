@@ -492,7 +492,7 @@ void menutkUpdateCursorBlink(MENUTK_ENTRY *menu) {
 
 void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	DARNIT *m = handle;
-	unsigned int key, i, time, tmp, change;
+	unsigned int key, i, tmp, change;
 
 	key = inputASCIIPop(handle);
 	change = 1;
