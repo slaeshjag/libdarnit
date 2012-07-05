@@ -458,6 +458,9 @@ void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
 		else if (menu->autorep != 1 && step >= MENUTK_AUTOREP_DELAY && (m->input.key & (KEY_UP | KEY_DOWN))) {
 			menu->time = SDL_GetTicks();
 			menu->autorep = 1;
+		} else if (!(m->input.key & (KEY_UP | KEY_DOWN))) {
+			menu->autorep = 0;
+			menu->time = SDL_GetTicks();
 		}
 		return;
 	}
