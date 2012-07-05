@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 
 	sprite = darnitSpriteLoad(handle, "test.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	darnitSpriteMove(sprite , 50, 50);
-	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 464);
+	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 460);
 
 	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
