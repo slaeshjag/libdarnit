@@ -231,6 +231,7 @@ void mtSpriteDraw(MTSPRITE_ENTRY *spr) {
 void mtSpriteEnableAnimation(MTSPRITE_ENTRY *spr) {
 	if (spr == NULL) return;
 
+	spr->time_left = spr->frame[spr->cur_frame].time;
 	spr->time_last = SDL_GetTicks();
 	spr->animate = 1;
 
