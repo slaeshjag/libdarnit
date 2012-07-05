@@ -158,7 +158,6 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 	frames = loctiles = tiles = 0;
 	while (!feof(fp)) {
 		c = getc(fp);
-		fprintf(stderr, "Tiles: %i, Frames: %i\n", tiles, frames);
 		switch (c) {
 			case 'F':
 				fscanf(fp, "%i\n", &t);
