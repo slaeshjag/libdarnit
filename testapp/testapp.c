@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 
 	test_text = malloc(64);
 	font = darnitFontLoad(handle, "dejavu_sans.ttf", 20, 512, 512);
-	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 0);
+	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 3);
 
 	sprite = darnitSpriteLoad(handle, "test.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	darnitSpriteMove(sprite , 50, 50);
