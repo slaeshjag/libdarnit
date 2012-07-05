@@ -20,3 +20,7 @@ clean:
 install:
 	cp bin/*.so /usr/local/lib/
 	cp -Rv include/darnit /usr/local/include
+
+install-yactfeau:
+	cp bin/*.so /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/lib
+	cp -Rv include/darnit /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/include
