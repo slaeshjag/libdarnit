@@ -39,6 +39,18 @@ typedef struct {
 
 
 typedef struct {
+	int				nub0_x;
+	int				nub0_y;
+	int				nub1_x;
+	int				nub1_y;
+	SDL_Joystick			*nub0;
+	SDL_Joystick			*nub1;
+	int				nub0i;
+	int				nub1i;
+} INPUT_JOYSTICK;
+
+
+typedef struct {
 	SDL_Event			event;
 	unsigned int			key;
 	unsigned int			keypending;
@@ -46,6 +58,7 @@ typedef struct {
 	unsigned int			lastkey;
 	DARNIT_MOUSE			mouse;
 	INPUT_MAP			map;
+	INPUT_JOYSTICK			js;
 } INPUT_STRUCT;
 
 
