@@ -56,5 +56,6 @@ DARNIT_MOUSE darnitMouseGet(void *handle);
 void darnitButtonMappingReset(void *handle);
 void darnitButtonMappingSet(void *handle, DARNIT_INPUT_MAP map);
 DARNIT_INPUT_MAP darnitButtonMappingGet(void *handle);
+void darnitJoystickGet(void *handle, int *js0_x, int *js0_y, int *js1_x, int *js1_y);
 
 #endif

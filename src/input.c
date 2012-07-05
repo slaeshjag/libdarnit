@@ -34,6 +34,32 @@ void inputKeymapReset(void *handle) {
 }
 
 
+int inputInitJoystick(void *handle) {
+	DARNIT *m = handle;
+	int i;
+
+	m->input.js.nub0 = m->input.js.nub1 = NULL;
+	m->input.js.nub0i = m->input.js.nub1i = -1;
+	m->input.js.nub0_x = m->input.js.nub0_y = m->input.js.nub1_x = m->input.js.nub1_y = 0;
+
+	for (i = 0; i < SDL_NumJoysticks(); i++) {
+		if (strcmp("nub0", SDL_JoystickName(i)) == 0) {
+			m->input.js.nub0 = SDL_JoystickOpen(i);
+			m->input.js.nub0i = i;
+		} else if (strcmp("nub1", SDL_JoystickName(i)) == 0) {
+			m->input.js.nub1 = SDL_JoystickOpen(i);
+			m->input.js.nub1i = i;
+		}
+	}
+
+	if (m->input.js.nub0 != NULL || m->input.js.nub1 != NULL)
+		SDL_JoystickEventState(SDL_ENABLE);
+	
+	return 0;
+}
+		
+
+
 int inputInit(void *handle) {
 	DARNIT *m = handle;
 
@@ -44,6 +70,7 @@ int inputInit(void *handle) {
 	m->input.mouse.x = m->input.mouse.y = m->input.mouse.wheel = 0;
 
 	inputKeymapReset(m);
+	inputInitJoystick(m);
 
 	return 0;
 }
@@ -151,7 +178,19 @@ void inputPoll(void *handle) {
 				m->input.key |= MB_RIGHT;
 				m->input.key ^= MB_RIGHT;
 			}
-		} else if (m->input.event.type == SDL_QUIT)
+		} else if (m->input.event.type == SDL_JOYAXISMOTION) {
+			if (m->input.event.jaxis.which == m->input.js.nub0i) {
+				if (m->input.event.jaxis.axis == 0)
+					m->input.js.nub0_x = m->input.event.jaxis.value;
+				else
+					m->input.js.nub0_y = m->input.event.jaxis.value;
+			} else {
+				if (m->input.event.jaxis.axis == 0)
+					m->input.js.nub1_x = m->input.event.jaxis.value;
+				else
+					m->input.js.nub1_y = m->input.event.jaxis.value;
+			}
+		}  else if (m->input.event.type == SDL_QUIT)
 			exit(0);
 	}
 

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 int main(int argc, char **argv) {
-	int i, sfx, j;
+	int i, sfx, j, js0_x, js0_y, js1_x, js1_y;
 	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf;
 	void *music;
 	char test[256], fps[16];
@@ -48,7 +48,8 @@ int main(int argc, char **argv) {
 		keys = darnitButtonGet(handle);
 		darnitTextSurfaceReset(text); darnitTextSurfaceReset(fps_text);
 		mouse = darnitMouseGet(handle);
-		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; %s", mouse.x, mouse.y, mouse.wheel, i*4, j*4, test_text);
+		darnitJoystickGet(handle, &js0_x, &js0_y, &js1_x, &js1_y);
+		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; nub0 (%i,%i) ;; nub1(%i,%i)", mouse.x, mouse.y, mouse.wheel, i*4, j*4, js0_x, js0_y, js1_x, js1_y);
 		sprintf(fps, "%i", darnitTimeLastFrameTook(handle));
 		darnitTextSurfaceStringAppend(text, test);
 		darnitTextSurfaceStringAppend(fps_text, "Hëllô ẇõŗłd¡ чайка");

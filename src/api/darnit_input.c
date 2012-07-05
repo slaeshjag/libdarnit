@@ -64,3 +64,19 @@ DARNIT_MOUSE EXPORT_THIS darnitMouseGet(void *handle) {
 
 	return d->input.mouse;
 }
+
+
+void EXPORT_THIS darnitJoystickGet(void *handle, int *js0_x, int *js0_y, int *js1_x, int *js1_y) {
+	DARNIT *d = handle;
+
+	if (js0_x != NULL)
+		*js0_x = d->input.js.nub0_x;
+	if (js0_y != NULL)
+		*js0_y = d->input.js.nub0_y;
+	if (js1_x != NULL)
+		*js1_x = d->input.js.nub1_x;
+	if (js1_y != NULL)
+		*js1_y = d->input.js.nub1_y;
+	
+	return;
+}
