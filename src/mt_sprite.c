@@ -47,11 +47,74 @@ void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w
 }
 
 
+void mtSpriteSetAsFrame(MTSPRITE_ENTRY *spr, int time) {
+	MTSPRITE_FRAME *tmp;
+	if (spr == NULL)
+		return;
+	
+	if ((tmp = realloc(spr->frame, sizeof(MTSPRITE_FRAME) * spr->frames + 1)) == NULL)
+		return;
+	spr->frame = tmp;
+	spr->frame[spr->frames].cache = &spr->cache[spr->tiles - 1];
+	spr->frame[spr->frames].tiles = 1;
+	spr->frame[spr->frames].time = time;
+	
+	spr->frames++;
+
+	return;
+}
+
+
+void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, int ry) {
+	TILE_CACHE *tmp;
+	if (spr == NULL)
+		return;
+	
+	if ((tmp = realloc(spr->cache, sizeof(TILE_CACHE) * spr->tiles + 1)) == NULL)
+		return;
+	spr->cache = tmp;
+	mtSpriteCalcCacheTile(spr->ts, &spr->cache[spr->tiles], x, y, w, h, rx, ry);
+
+	spr->tiles++;
+	
+	return;
+}
+
+
+void *mtSpriteNew(int tiles, int frames, void *ts) {
+	MTSPRITE_ENTRY *spr;
+
+	if ((spr = malloc(sizeof(MTSPRITE_ENTRY))) == NULL)
+		return NULL;
+	if ((spr->cache = malloc(sizeof(TILE_CACHE) * tiles)) == NULL) {
+		free(spr);
+		return NULL;
+	}
+	
+	if ((spr->frame = malloc(sizeof(MTSPRITE_FRAME) * frames)) == NULL) {
+		free(spr->cache);
+		free(spr);
+		return NULL;
+	}
+
+	spr->frames = frames;
+	spr->tiles = tiles;
+	spr->cur_frame = 0;
+	spr->time_left = 0;
+	spr->time_last = 0;
+	spr->animate = 0;
+	spr->ts = ts;
+
+	return spr;
+}
+
+
 void *mtSpriteLoad(void *handle, const char *fname) {
 	MTSPRITE_ENTRY *spr;
 	FILE *fp;
 	int frames, loctiles, tiles, x, y, w, h, t, rx, ry;
-	char c, buff[512];
+	char c, buff[512], tilesheet[64];
+	void *ts;
 
 	if ((fp = fopen(fname, "r")) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname);
@@ -70,6 +133,10 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 				fgets(buff, 512, fp);
 				tiles++;
 				break;
+			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
+				fscanf(fp, "%s\n", tilesheet);
+				ts = renderTilesheetLoad(handle, tilesheet, 32, 32, PFORMAT_RGBA8);
+				break; 
 			case '\n':
 				break;
 			default:
@@ -78,18 +145,9 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 		}
 	}
 
-	if ((spr = malloc(sizeof(MTSPRITE_ENTRY))) == NULL) {
-		fclose(fp);
-		return NULL;
-	}
+	fprintf(stderr, "Tiles: %i, frames: %i\n", tiles, frames);
 
-	if ((spr->cache = malloc(sizeof(TILE_CACHE)*tiles)) == NULL) {
-		fclose(fp);
-		free(spr);
-		return NULL;
-	}
-
-	if ((spr->frame = malloc(sizeof(MTSPRITE_FRAME)*frames)) == NULL) {
+	if ((spr = mtSpriteNew(tiles, frames, ts)) == NULL) {
 		fclose(fp);
 		free(spr->cache);
 		free(spr);
@@ -102,6 +160,7 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 	frames = loctiles = tiles = 0;
 	while (!feof(fp)) {
 		c = getc(fp);
+		fprintf(stderr, "Tiles: %i, Frames: %i\n", tiles, frames);
 		switch (c) {
 			case 'F':
 				fscanf(fp, "%i\n", &t);
@@ -118,10 +177,6 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 				tiles++;
 				loctiles++;
 				break;
-			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
-				fscanf(fp, "%s\n", spr->tilesheet);
-				spr->ts = renderTilesheetLoad(handle, spr->tilesheet, 32, 32, PFORMAT_RGBA8);
-				break; 
 			case '\n':
 				break;
 			default:
@@ -131,12 +186,7 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 	}
 
 	spr->frame[frames-1].tiles = loctiles;
-
-	spr->frames = frames;
-	spr->cur_frame = 0;
 	spr->time_left = spr->frame->time;
-	spr->time_last = 0;
-	spr->animate = 0;
 
 	fclose(fp);
 
