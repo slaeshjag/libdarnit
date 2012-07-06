@@ -173,3 +173,24 @@ void EXPORT_THIS darnitRenderOffset(void *handle, int x, int y) {
 
 	return;
 }
+
+
+void EXPORT_THIS darnitRenderFadeIn(void *handle, unsigned int time, float r, float g, float b) {
+	renderFadeFade(handle, time, r, g, b);
+
+	return;
+}
+
+
+void EXPORT_THIS darnitRenderFadeOut(void *handle, unsigned int time) {
+	renderFadeUnfade(handle, time);
+
+	return;
+}
+
+
+int EXPORT_THIS darnitRenderFadeChanging(void *handle) {
+	DARNIT *d = handle;
+
+	return d->video.fade.fading;
+}

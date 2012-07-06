@@ -11,6 +11,10 @@ int renderInit(void *handle) {
 	m->tsr.cnt = 0;
 	m->tsr.tsr = NULL;
 
+	m->video.fade.fading = 0;
+	m->video.fade.fadedir = 0.0f;
+	m->video.fade.a = -1.0f;
+
 	return 0;
 }
 
@@ -347,6 +351,88 @@ void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int 
 	format = (ts->format == RENDER_DATA_TYPE_RGBA) ? GL_RGBA : GL_ALPHA;
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, pos_x, pos_y, w, h, format, GL_UNSIGNED_BYTE, data);
+
+	return;
+}
+
+
+void renderFadeLoop(void *handle) {
+	DARNIT *m = handle;
+	int timediff;
+	float coords[] = { -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f };
+
+	if (m->video.fade.a == 0.0f && m->video.fade.fading == 0)
+		return;
+
+	timediff = SDL_GetTicks() - m->video.fade.fadestart;
+
+	if (timediff < 0)
+		timediff = 1;
+	
+	if (m->video.fade.fadedir != 0.0f) {
+		m->video.fade.a = m->video.fade.fadefactor * m->video.fade.fadedir * timediff;
+		m->video.fade.fadeprog = timediff;
+	}
+
+	if (m->video.fade.fadedir < 0)
+		m->video.fade.a += 1.0f;
+	
+	if (m->video.fade.a < 0.0f && m->video.fade.fadedir < 0.0f) {
+		m->video.fade.fadedir = 0.0f;
+		m->video.fade.a = 0.0f;
+		m->video.fade.fading = 0;
+	} else if (m->video.fade.a >= 1.0f && m->video.fade.fadedir > 0.0f) {
+		m->video.fade.fadedir = 0.0f;
+		m->video.fade.a = 1.0f;
+		m->video.fade.fading = 0;
+	}
+
+	if (m->video.blend == 0)
+		glEnable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+	glColor4f(m->video.fade.r, m->video.fade.g, m->video.fade.b, m->video.fade.a);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, coords);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glEnable(GL_TEXTURE_2D);
+	glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
+	if (m->video.blend == 0)
+		glDisable(GL_BLEND);
+
+	return;
+}
+
+
+void renderFadeFade(void *handle, unsigned int time, float r, float g, float b) {
+	DARNIT *m = handle;
+
+	if (m->video.fade.fadedir == 1.0f)
+		return;
+
+	m->video.fade.r = r;
+	m->video.fade.g = g;
+	m->video.fade.b = b;
+	m->video.fade.fadefactor = 1.0f / time;
+	m->video.fade.fadedir = 1.0f;
+	m->video.fade.fadestart = SDL_GetTicks();
+	m->video.fade.fading = 1;
+
+	return;
+}
+
+
+void renderFadeUnfade(void *handle, unsigned int time) {
+	DARNIT *m = handle;
+
+	if (m->video.fade.fadedir == -1.0f)
+		return;
+
+	m->video.fade.fadedir = -1.0f;
+	m->video.fade.fadestart = SDL_GetTicks();
+	m->video.fade.fadestart -= (time - m->video.fade.fadeprog);
+	m->video.fade.fadefactor = 1.0f / time;
+	m->video.fade.fading = 1;
 
 	return;
 }

@@ -15,6 +15,7 @@
 
 typedef struct {
 	SDL_Surface			*screen;
+	FADE_STRUCT			fade;
 	float				swgran;
 	float				shgran;
 	unsigned int			w;
