@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 460);
 
 	mapsheet = darnitRenderTilesheetLoad(handle, "mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
-	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet);
+	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
 	sprintf(test_text, "Héllo, world. Modify m€!");

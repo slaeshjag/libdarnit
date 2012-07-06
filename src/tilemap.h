@@ -9,7 +9,7 @@ typedef struct {
 } TILEMAP_ENTRY;
 
 
-TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet);
+TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet, unsigned int mask);
 void *tilemapFree(TILEMAP_ENTRY *tm);
 
 

@@ -1,7 +1,7 @@
 #include "darnit.h"
 
 
-TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet) {
+TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet, unsigned int mask) {
 	IMGLOAD_DATA data;
 	TILEMAP_ENTRY *tilemap;
 	int i;
@@ -24,10 +24,11 @@ TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *
 		tmp = (tilemap->data[i] & 0xF0) >> 4;
 		tmp |= (tilemap->data[i] & 0xF000) >> 8;
 		tmp |= (tilemap->data[i] & 0xF00000) >> 12;
+		tmp |= (tilemap->data[i] & 0xF0000000) >> 16;
 		tilemap->data[i] = tmp;
 	}
 
-	tilemap->render = renderTilemapCreate(handle, tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet);
+	tilemap->render = renderTilemapCreate(handle, tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask);
 
 	return tilemap;
 }
