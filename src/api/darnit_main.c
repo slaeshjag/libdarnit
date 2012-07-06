@@ -94,7 +94,8 @@ void EXPORT_THIS darnitLoop(void *handle) {
 	}
 
 	d->fps.frames_counting++;
-
+	
+	renderFadeLoop(d);
 	videoLoop(d);
 	inputPoll(d);
 

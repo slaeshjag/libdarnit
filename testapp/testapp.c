@@ -54,6 +54,11 @@ int main(int argc, char **argv) {
 		darnitTextSurfaceStringAppend(text, test);
 		darnitTextSurfaceStringAppend(fps_text, "Hëllô ẇõŗłd¡ чайка");
 
+		if (keys.lmb)
+			darnitRenderFadeIn(handle, 1000, 1.0f, 0.0f, 0.0f);
+		if (keys.rmb)
+			darnitRenderFadeOut(handle, 1000);
+
 		darnitRenderBegin();
 
 		if (keys.left == 1)

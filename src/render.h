@@ -79,6 +79,18 @@ typedef struct {
 } TILESHEET_REF_CONT;
 
 
+typedef struct {
+	float		r;
+	float		g;
+	float		b;
+	float		a;
+	float		fadefactor;
+	unsigned int	fadestart;
+	int		fadeprog;
+	float		fadedir;
+	int		fading;
+} FADE_STRUCT;
+
 
 int renderInit(void *handle);
 
@@ -94,6 +106,9 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
 TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
+void renderFadeLoop(void *handle);
+void renderFadeFade(void *handle, unsigned int time, float r, float g, float b);
+void renderFadeUnfade(void *handle, unsigned int time);
 
 
 
