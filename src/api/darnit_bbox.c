@@ -6,7 +6,7 @@ void EXPORT_THIS *darnitBBoxNew(unsigned int size) {
 }
 
 
-void EXPORT_THIS *darnerBBoxFree(BBOX *bbox) {
+void EXPORT_THIS *darnitBBoxFree(BBOX *bbox) {
 	bboxFree(bbox);
 
 	return NULL;
