@@ -95,8 +95,7 @@ void *audioStopStreamed(AUDIO_HANDLE *pb) {
 	if (pb->usage > 0)
 		return pb;
 	if (pb->codec_handle != NULL) {
-		ov_clear(pb->codec_handle);
-		free(pb->codec_handle);
+		stb_vorbis_close(pb->codec_handle);
 	} if (pb->data != NULL)
 		free(pb->data);
 	
@@ -119,22 +118,13 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 	if ((pb = malloc(sizeof(AUDIO_HANDLE))) == NULL)
 		return NULL;
 
-	if ((pb->codec_handle = malloc(sizeof(OggVorbis_File))) == NULL) {
-		free(pb);
-		return NULL;
-	}
+	pb->codec_handle = stb_vorbis_open_filename(ah->fname, &error, NULL);
 
 	pb->data = NULL;
 	pb->fname = NULL;
 	pb->close_when_done = 0;
 	pb->usage = 1;
 	pb->type = AUDIO_TYPE_OGG;
-
-	if ((error = ov_fopen(ah->fname, pb->codec_handle)) != 0) {
-		free(pb->codec_handle);
-		free(pb);
-		return NULL;
-	}
 
 	return pb;
 }
@@ -148,7 +138,8 @@ int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 		return audioDecodePreloaded(pb, buff, buff_len, pos);
 	i = b = j = 0;
 	do {
-		i = ov_read(pb->codec_handle, buff + b, buff_len - b, 0, 2, 1, &j);
+		i = stb_vorbis_get_samples_short_interleaved(pb->codec_handle, 2, buff + b, (buff_len - b) >> 1);
+		i <<= 2;
 		b += i;
 		if (b == buff_len) break;
 	} while (i > 0);
@@ -160,7 +151,7 @@ int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 
 AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	AUDIO_HANDLE *ah, *pb;
-	vorbis_info *vi;
+
 
 	if (fname == NULL) return NULL;
 
@@ -179,7 +170,7 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	ah->codec_handle = NULL;
 	ah->type = AUDIO_TYPE_OGG;
 	ah->usage = 0;
-	ah->channels = channels;
+	ah->channels = 2;
 
 	if (mode == ALOAD_MODE_STR)
 		return ah;
@@ -193,11 +184,8 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	free(ah->fname);
 	ah->fname = NULL;
 
-	vi = ov_info(pb->codec_handle, -1);
-	channels = vi->channels;
-
-	ah->size = ov_pcm_total(pb->codec_handle, -1);
-	ah->size <<= channels;
+	ah->size = stb_vorbis_stream_length_in_samples(pb->codec_handle);
+	ah->size <<= 2;
 	if ((ah->data = malloc(ah->size)) == NULL) {
 		audioStopStreamed(pb);
 		free(ah);

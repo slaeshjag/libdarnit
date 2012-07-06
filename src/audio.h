@@ -4,7 +4,7 @@
 #include <SDL/SDL_audio.h>
 #include <SDL/SDL_mutex.h>
 #include <libmodplug/modplug.h>
-#include <vorbis/vorbisfile.h>
+#include <stb_vorbis.h>
 
 #define		AUDIO_PLAYBACK_CHANNELS		16
 #define		AUDIO_SFX_FILES			64
@@ -54,7 +54,7 @@ typedef struct {
 	ModPlugFile			*modfile;
 	void				*modplugdata;
 	int				modplugdata_len;
-	OggVorbis_File			*vorbis;
+	stb_vorbis			*vorbis;
 } AUDIO_MUSIC;
 
 
