@@ -2,7 +2,7 @@
 #define	__DARNIT_BBOX_H__
 
 void *darnitBBoxNew(unsigned int size);
-void *DarnerBBoxFree(void *bbox);
+void *darnitBBoxFree(void *bbox);
 int darnitBBoxCollTest(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
 int darnitBBoxEntryAdd(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void darnitBBoxEntryDelete(void *bbox, int key);
