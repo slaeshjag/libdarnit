@@ -121,6 +121,7 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 		return NULL;
 	}
 
+	ts = NULL;
 	frames = tiles = 0;
 	while (!feof(fp)) {
 		c = fgetc(fp);
