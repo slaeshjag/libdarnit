@@ -48,7 +48,7 @@ void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int
 }
 
 
-void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, int h, int map_w, int map_h, unsigned int *tilemap, int inv_div) {
+void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, int h, int map_w, int map_h, unsigned int *tilemap, int inv_div, unsigned int mask) {
 	int i, j, k, l;
 	int x_cur, y_cur, blank;
 	int t;
@@ -63,7 +63,7 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 			blank = 0;
 		for (j = 0; j < h; j++, k++, y_cur++) {
 			if (y_cur >= 0 && y_cur < map_h && blank == 0)
-				t = tilemap[y_cur*map_w + x_cur];
+				t = tilemap[y_cur*map_w + x_cur] & mask;
 			else
 				t = -1;
 			if (t > -1 && (t % inv_div)) {
@@ -110,7 +110,7 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	map_h = tm->map_h;
 
 	renderTilemapCalcPosMap(tm->cache, tm->ts, x, y, w, h);
-	renderTilemapCalcMap(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div);
+	renderTilemapCalcMap(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div, tm->mask);
 
 	tm->cam_xi = x;
 	tm->cam_yi = y;
@@ -119,7 +119,7 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 }
 
 
-void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int inv_div, TILESHEET *ts) {
+void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int inv_div, TILESHEET *ts, unsigned int mask) {
 	DARNIT *m = handle;
 	RENDER_TILEMAP *tm;
 	
@@ -136,6 +136,7 @@ void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned
 	tm->ts = ts;
 	tm->w = m->video.w / ts->wsq + 2;
 	tm->h = m->video.h / ts->hsq + 2;
+	tm->mask = mask;
 
 	tm->cache = malloc(sizeof(TILE_CACHE) * tm->w * tm->h);
 	renderTilemapCameraMove(tm, camera_x, camera_y);
@@ -180,7 +181,7 @@ void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile) {
 	
 	ci = x * tm->h + y;	/* For some reason, I made the cache indexing in cols instead of rows */
 
-	renderCalcTileCache(&tm->cache[ci], tm->ts, tm->map[tm->map_w * y + x]);
+	renderCalcTileCache(&tm->cache[ci], tm->ts, tm->map[tm->map_w * y + x] & tm->mask);
 
 	return;
 }
