@@ -3,7 +3,7 @@
 
 static void cleanup(void) {
 	#ifdef _WIN32
-	SDL_Quit();
+//	SDL_Quit();
 	#endif
 }
 
