@@ -563,6 +563,7 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 			menu->codepoint_use -= 1;
 		}
 	} else if (menu->textinput_buf_use == menu->options);
+	else if (key < 0x20);
 	else {
 		if (menu->codepoint_use > menu->selection) {
 			for (i = menu->codepoint_use; i > menu->selection; i--)
