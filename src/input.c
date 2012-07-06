@@ -165,7 +165,7 @@ void inputPoll(void *handle) {
 			if (m->input.event.button.button == SDL_BUTTON_LEFT)
 				m->input.key |= MB_LEFT;
 			else if (m->input.event.button.button == SDL_BUTTON_RIGHT)
-				m->input.key |= MB_RIGHT;
+				m->input.key |= MB_RIGHT_D;
 			else if (m->input.event.button.button == SDL_BUTTON_WHEELUP)
 				m->input.mouse.wheel--;
 			else if (m->input.event.button.button == SDL_BUTTON_WHEELDOWN)
@@ -175,8 +175,8 @@ void inputPoll(void *handle) {
 				m->input.key |= MB_LEFT;
 				m->input.key ^= MB_LEFT;
 			} else if (m->input.event.button.button == SDL_BUTTON_RIGHT) {
-				m->input.key |= MB_RIGHT;
-				m->input.key ^= MB_RIGHT;
+				m->input.key |= MB_RIGHT_D;
+				m->input.key ^= MB_RIGHT_D;
 			}
 		} else if (m->input.event.type == SDL_JOYAXISMOTION) {
 			if (m->input.event.jaxis.which == m->input.js.nub0i) {

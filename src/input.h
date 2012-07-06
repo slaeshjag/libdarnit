@@ -15,7 +15,7 @@
 #define		KEY_L			0x400
 #define		KEY_R			0x800
 #define		MB_LEFT			0x1000
-#define		MB_RIGHT		0x2000
+#define		MB_RIGHT_D		0x2000
 
 
 #define		BUTTON_ACCEPT		KEY_B

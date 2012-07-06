@@ -22,7 +22,7 @@
 
 
 #ifdef _WIN32
-	#define EXPORT_THIS
+	#define EXPORT_THIS __declspec(dllexport)
 #else
 	#define	EXPORT_THIS __attribute__ ((visibility ("default")))
 #endif
