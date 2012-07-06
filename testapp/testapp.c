@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 	DARNIT_TILEMAP *tilemap;
 	DARNIT_KEYS keys;
 
-	handle = darnitInit("TESTAPP - libDarner");
+	handle = darnitInit("TESTAPP - libDarnit");
 
 	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", 1, 2);
 	darnitSoundPlaybackStart(handle, music, 2, 0, 127, 127, 0);
