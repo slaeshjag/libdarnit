@@ -30,8 +30,8 @@ void EXPORT_THIS darnitSoundPlaybackStop(void *handle, int playback_key) {
 }
 
 
-int EXPORT_THIS darnitSoundPlaybackStart(void *handle, void *sound_resource, int channels, int loop, int vol_l, int vol_r, int jmpto) {
-	return audioSoundStart(handle, sound_resource, channels, loop, vol_l, vol_r, jmpto);
+int EXPORT_THIS darnitSoundPlaybackStart(void *handle, void *sound_resource, int loop, int vol_l, int vol_r, int jmpto) {
+	return audioSoundStart(handle, sound_resource, 0, loop, vol_l, vol_r, jmpto);
 }
 
 
