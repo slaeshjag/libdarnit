@@ -65,3 +65,10 @@ void EXPORT_THIS darnitTextSurfaceSkip(void *surface, int pixels) {
 
 	return;
 }
+
+
+void EXPORT_THIS darnitTextSurfaceXposSet(void *surface, int x_pos) {
+	textSurfaceSetPos(surface, x_pos);
+
+	return;
+}
