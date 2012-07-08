@@ -494,3 +494,12 @@ void textSurfaceSkip(TEXT_SURFACE *surface, int pixels) {
 
 	return;
 }
+
+
+void textSurfaceSetPos(TEXT_SURFACE *surface, int x_pos) {
+	if (surface == NULL)
+		return;
+	surface->cur_xf = surface->orig_xf + surface->font->screen_pw * x_pos;
+	
+	return;
+}
