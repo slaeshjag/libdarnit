@@ -194,3 +194,17 @@ int EXPORT_THIS darnitRenderFadeChanging(void *handle) {
 
 	return d->video.fade.fading;
 }
+
+
+void EXPORT_THIS darnitRenderStateRestore(void *handle) {
+	DARNIT *d = handle;
+
+	darnitRenderOffset(d, d->video.offset_x, d->video.offset_y);
+	darnitRenderTint(d, d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
+	glEnable(GL_TEXTURE_2D);
+	if (d->video.blend)
+		darnitRenderBlendingEnable(d);
+	else
+		darnitRenderBlendingDisable(d);
+	return;
+}

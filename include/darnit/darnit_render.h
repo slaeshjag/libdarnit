@@ -26,5 +26,6 @@ void darnitRenderOffset(void *handle, int x, int y);
 void darnitRenderFadeIn(void *handle, unsigned int time, float r, float g, float b);
 void darnitRenderFadeOut(void *handle, unsigned int time);
 int darnitRenderFadeChanging(void *handle);
+void darnitRenderStateRestore(void *handle);
 
 #endif
