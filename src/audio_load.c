@@ -11,10 +11,56 @@ int audioDecodePreloaded(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 	return buff_len;
 }
 
+#if 0
+int audioCodecWAVDecode(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
+	short sample_l, sample_r;
+	int i;
+	short *s_buff = buff;
+	WAVE_ST_FORMAT *codec = pb->codec_handle;
+
+	if (codec->channels == pb->channels)
+		return fread(buff, 1, buff_len, pb->fp);
+	
+	/* We have to take the long, slow way it seems... */
+	for (i = 0; i < buff_len; i++) {
+		fread(&sample_l, 2, 1, pb->fp);
+		if (pb->channels == 2) {
+			buff[i << 1] = sample_l;
+			buff[(i << 1) + 1] = sample_l;
+		} else {
+			fread(&sample_r, 2, 1, pb->fp);
+			sample_l = audioSampleMix(sample_l, sample_r);
+			buff[i] = sample_l;
+		}
+	}
+
+	return i << pb->channels;
+}
+
+
+
+int audioDecodeWAV(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
+	int i, b, j;
+
+	if (pb->data != NULL)
+		return audioDecodePreloaded(pb, buff, buf_len, pos);
+	i = b = j = 0;
+
+	do {
+		i = audioCodecWAVDecode(pb->codec_handle, 2, buff + b, (buff_len - b) >> 2);
+		b += i;
+		if (b == buff_len)
+			break;
+	} while (i != 0)
+
+	return b;
+}
+
+
 
 AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 /* TODO: Fix */
-#if 0
+
 	WAVE_HEADER header;
 	WAVE_ST_FORMAT format;
 	WAVE_ST_DATA data;
@@ -84,10 +130,8 @@ AUDIO_HANDLE *audioOpenWAV(const char *fname, int mode, int channels) {
 	ah->fp = NULL;
 
 	return ah;
-#endif
-	return NULL;
 }
-
+#endif
 
 void *audioStopStreamed(AUDIO_HANDLE *pb) {
 	pb->usage--;
@@ -124,6 +168,7 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 	pb->fname = NULL;
 	pb->close_when_done = 0;
 	pb->usage = 1;
+	pb->channels = ah->channels;
 	pb->type = AUDIO_TYPE_OGG;
 
 	return pb;
@@ -132,18 +177,28 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 
 int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 	int i, b, j;
+	short t_buff[2], *s_buff = buff;
 
 
 	if (pb->data != NULL)
 		return audioDecodePreloaded(pb, buff, buff_len, pos);
 	i = b = j = 0;
-	do {
-		i = stb_vorbis_get_samples_short_interleaved(pb->codec_handle, 2, buff + b, (buff_len - b) >> 1);
-		i <<= 2;
-		b += i;
-		if (b == buff_len) break;
-	} while (i > 0);
-	
+	if (pb->channels == 2)
+		do {
+			i = stb_vorbis_get_samples_short_interleaved(pb->codec_handle, 2, buff + b, (buff_len - b) >> 1);
+			i <<= 2;
+			b += i;
+			if (b == buff_len) break;
+		} while (i > 0);
+	else {
+		for (i = 0; i < buff_len >> 1; i++) {
+			b = stb_vorbis_get_samples_short_interleaved(pb->codec_handle, 2, t_buff, 2);
+			if (b == 0) break;
+			s_buff[i] = audioSampleMix(t_buff[0], t_buff[1]);
+		}
+		b = i << 1;
+	}
+
 	return b;
 }
 
@@ -170,7 +225,7 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	ah->codec_handle = NULL;
 	ah->type = AUDIO_TYPE_OGG;
 	ah->usage = 0;
-	ah->channels = 2;
+	ah->channels = channels;
 
 	if (mode == ALOAD_MODE_STR)
 		return ah;
@@ -185,7 +240,7 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	ah->fname = NULL;
 
 	ah->size = stb_vorbis_stream_length_in_samples(pb->codec_handle);
-	ah->size <<= 2;
+	ah->size <<= ah->channels;
 	if ((ah->data = malloc(ah->size)) == NULL) {
 		audioStopStreamed(pb);
 		free(ah);
@@ -213,10 +268,11 @@ AUDIO_HANDLE *audioPlayTracked(AUDIO_HANDLE *ah, int loop, int channels) {
 
 	ModPlug_GetSettings(&mps);
 	mps.mFlags = MODPLUG_ENABLE_OVERSAMPLING;
-	mps.mChannels = channels;
+	mps.mChannels = ah->channels;
 	mps.mBits = 16;
 	mps.mFrequency = AUDIO_SAMPLE_RATE;
 	mps.mResamplingMode = MODPLUG_RESAMPLE_LINEAR;
+	mps.mStereoSeparation = 256;
 	mps.mLoopCount = -1;
 	ModPlug_SetSettings(&mps);
 
@@ -237,7 +293,7 @@ AUDIO_HANDLE *audioPlayTracked(AUDIO_HANDLE *ah, int loop, int channels) {
 		return NULL;
 	}
 
-	pb->channels = channels;
+	pb->channels = ah->channels;
 
 	return pb;
 }
@@ -283,6 +339,7 @@ AUDIO_HANDLE *audioOpenTracked(const char *fname, int mode, int channels) {
 	ah->type = AUDIO_TYPE_TRACKED;
 	ah->codec_handle = NULL;
 	ah->usage = 0;
+	ah->channels = channels;
 
 	if (mode == ALOAD_MODE_STR)
 		return ah;

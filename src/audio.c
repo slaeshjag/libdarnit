@@ -73,7 +73,12 @@ int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int 
 
 
 short audioSampleMix(short s1, short s2) {
-	return s1 + s2 - ((s1*s2) >> 15);
+	int pre_mix;
+	pre_mix = (int) s1 + s2;
+	pre_mix >>= 1;
+	pre_mix -= (int) (s1 * s2 >> 16);
+	
+	return pre_mix;
 }
 
 
@@ -99,8 +104,8 @@ void audioMixDecoded(void *handle, int channel, int frames, void *mixdata) {
 		loop = decoded >> 1;
 
 		for (i = 0; i < decoded >> 1; i++) {
-			m->audio.samplebuf[i<<1] = m->audio.scratchbuf[m->audio.playback_chan[channel].pos];
-			m->audio.samplebuf[(i<<1)+1] = m->audio.scratchbuf[m->audio.playback_chan[channel].pos];
+			m->audio.samplebuf[i<<1] = m->audio.scratchbuf[i];
+			m->audio.samplebuf[(i<<1)+1] = m->audio.scratchbuf[i];
 		}
 	} else {
 		decoded = audioDecode(m->audio.playback_chan[channel].res, m->audio.samplebuf, frames<<2, m->audio.playback_chan[channel].pos);
