@@ -73,12 +73,15 @@ int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int 
 
 
 short audioSampleMix(short s1, short s2) {
-	int pre_mix;
-	pre_mix = (int) s1 + s2;
-	pre_mix >>= 1;
-	pre_mix -= (int) (s1 * s2 >> 16);
+	int s1_, s2_, min_, out;
 	
-	return pre_mix;
+	s1_ = abs(s1);
+	s2_ = abs(s2);
+	min_ = (s1_ > s2_) ? s2_ : s1_;
+	out = s1 + s2;
+	out -= ((out * min_) >> 16);
+	
+	return out;
 }
 
 

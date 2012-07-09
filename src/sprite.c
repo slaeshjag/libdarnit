@@ -64,6 +64,8 @@ void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
 		}
 	}
 
+
+
 	return;
 }
 
