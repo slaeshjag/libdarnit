@@ -1,6 +1,11 @@
 #include "darnit.h"
 
 
+TILEMAP_ENTRY EXPORT_THIS *darnitRenderTilemapNew(void *handle, unsigned int invisibility_divider, void *tilesheet, unsigned int mask, int w, int h) {
+	return tilemapNew(handle, invisibility_divider, tilesheet, mask, w, h);
+}
+
+
 TILEMAP_ENTRY EXPORT_THIS *darnitRenderTilemapCreate(void *handle, const char *fname, unsigned int invisibility_divider, void *tilesheet, unsigned int mask) {
 	return tilemapLoad(handle, fname, invisibility_divider, tilesheet, mask);
 }

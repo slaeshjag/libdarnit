@@ -1,6 +1,30 @@
 #include "darnit.h"
 
 
+TILEMAP_ENTRY *tilemapNew(void *handle, int invs_div, void *tilesheet, unsigned int mask, int w, int h) {
+	TILEMAP_ENTRY *tilemap;
+	int i;
+
+	if ((tilemap = malloc(sizeof(TILEMAP_ENTRY))) == NULL)
+		return NULL;
+	if ((tilemap->data = malloc(sizeof(unsigned int) * w * h)) == NULL) {
+		free(tilemap);
+		return NULL;
+	}
+	
+	for (i = 0; i < w * w; i++)
+		tilemap->data[i] = 0;
+	
+	if ((tilemap->render = renderTilemapCreate(handle, w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
+		free(tilemap->data);
+		free(tilemap);
+		return NULL;
+	}
+
+	return tilemap;
+}
+
+
 TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet, unsigned int mask) {
 	IMGLOAD_DATA data;
 	TILEMAP_ENTRY *tilemap;
