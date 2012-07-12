@@ -30,6 +30,24 @@ void darnit_init_common() {
 }
 
 
+void darnitSetPlatform(void *handle) {
+	DARNIT *d = handle;
+
+	d->platform.screen_w = d->video.w;
+	d->platform.screen_h = d->video.h;
+
+	#if defined PANDORA
+		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_PANDORA;
+	#elif defined _WIN32
+		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_WIN32;
+	#else
+		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_LINUX;
+	#endif
+
+	return;
+}
+
+
 void EXPORT_THIS *darnitInit(const char *wtitle) {
 	DARNIT *d;
 
@@ -122,4 +140,11 @@ int EXPORT_THIS darnitTimeLastFrameTook(void *handle) {
 	DARNIT *d = handle;
 
 	return d->fps.time_at_flip - d->fps.time_at_last_frame;
+}
+
+
+DARNIT_PLATFORM EXPORT_THIS darnitPlatformGet(void *handle) {
+	DARNIT *d = handle;
+
+	return d->platform;
 }

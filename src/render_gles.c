@@ -86,6 +86,8 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 	m->video.camx = 0;
 	m->video.camy = 0;
 
+	m->platform.fullscreen = fullscreen;
+
 	m->video.offset_x = m->video.offset_y = 0;
 
 	SDL_WM_SetCaption(wtitle, NULL);
