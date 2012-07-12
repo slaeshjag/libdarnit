@@ -20,6 +20,15 @@
 #endif
 
 
+#define         DARNIT_PLATFORM_DESKTOP         0x100000
+#define         DARNIT_PLATFORM_HANDHELD        0x200000
+
+#define         DARNIT_PLATFORM_LINUX           0x1
+#define         DARNIT_PLATFORM_WIN32           0x2
+#define         DARNIT_PLATFORM_PANDORA         0x4
+#define         DARNIT_PLATFORM_GCWZERO         0x8
+#define         DARNIT_PLATFORM_GPHCAANOO       0x10
+
 
 #ifdef _WIN32
 	#define EXPORT_THIS __declspec(dllexport)
@@ -33,6 +42,14 @@ typedef struct {
 	unsigned int	y	: 16;
 	signed int	wheel	: 32;
 } DARNIT_MOUSE;
+
+
+typedef struct {
+	unsigned int		platform;
+	unsigned int		screen_w;
+	unsigned int		screen_h;
+	unsigned int		fullscreen;
+} DARNIT_PLATFORM;
 
 
 #include "../deps/stb_truetype.h"
@@ -76,6 +93,7 @@ typedef struct {
 	AUDIO			audio;
 	DARNIT_FPS		fps;
 	TILESHEET_REF_CONT	tsr;
+	DARNIT_PLATFORM		platform;
 } DARNIT;
 
 
