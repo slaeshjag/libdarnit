@@ -13,7 +13,7 @@ void *dynlibOpen(const char *fname) {
 		char *fname_n;
 		void *lib;
 
-		fname_n = malloc(strlen(fname + 3));
+		fname_n = malloc(strlen(fname) + 3);
 		sprintf(fname_n, "./%s", fname);
 		lib = dlopen(fname_n, RTLD_NOW | RTLD_GLOBAL);
 		free(fname_n);
