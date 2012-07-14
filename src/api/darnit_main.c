@@ -60,8 +60,6 @@ void EXPORT_THIS *darnitInit(const char *wtitle) {
 	darnit_init_common();
 #endif
 	renderInit(d);
-	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
-	d->fps.time = SDL_GetTicks() / 1000;
 	
 	#ifdef PANDORA
 	if (videoInit(d, wtitle, 800, 480, 1) < 0);
@@ -71,6 +69,8 @@ void EXPORT_THIS *darnitInit(const char *wtitle) {
 	else if (inputInit(d) < 0);
 	else if (audioInit(d) < 0);
 	else {
+		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
+		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform(d);
 		return d;
 	}
@@ -91,13 +91,13 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 
 	darnit_init_common();
 	renderInit(d);
-	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
-	d->fps.time = SDL_GetTicks() / 1000;
 	
 	if (videoInit(d, wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit(d) < 0);
 	else if (audioInit(d) < 0);
 	else {
+		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
+		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform(d);
 		return d;
 	}
