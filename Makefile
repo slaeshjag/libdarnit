@@ -12,6 +12,11 @@ pandora:
 	cd deps && make
 	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGLES_CM -lEGL -lX11
 
+raspberrypi:
+	mkdir -p bin
+	cd deps && make
+	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGLES_CM -lEGL -lX11 -DHAVE_GLES -I/opt/vc/lib
+
 clean:
 	rm -Rf bin
 	rm -f testapp/testapp
