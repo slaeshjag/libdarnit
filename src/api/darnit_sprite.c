@@ -77,3 +77,20 @@ void EXPORT_THIS darnitSpriteFrameEntrySet(void *sprite, int dir, int frame, int
 
 	return;
 }
+
+
+int EXPORT_THIS darnitSpriteWidth(void *sprite) {
+	SPRITE_ENTRY *sprite_e = sprite;
+	if (sprite == NULL)
+		return 0;
+	return sprite_e->ts->wsq;
+}
+
+
+
+int EXPORT_THIS darnitSpriteHeight(void *sprite) {
+	SPRITE_ENTRY *sprite_e = sprite;
+	if (sprite == NULL)
+		return 0;
+	return sprite_e->ts->hsq;
+}
