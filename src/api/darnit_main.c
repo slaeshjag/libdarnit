@@ -69,8 +69,11 @@ void EXPORT_THIS *darnitInit(const char *wtitle) {
 	if (videoInit(d, wtitle, 800, 480, 0) < 0);
 	#endif
 	else if (inputInit(d) < 0);
-	else if (audioInit(d) < 0); 
-	else return d;
+	else if (audioInit(d) < 0);
+	else {
+		darnitSetPlatform(d);
+		return d;
+	}
 	
 	free(d);
 
@@ -94,7 +97,10 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	if (videoInit(d, wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit(d) < 0);
 	else if (audioInit(d) < 0);
-	else return d;
+	else {
+		darnitSetPlatform(d);
+		return d;
+	}
 	
 	free(d);
 	return NULL;
