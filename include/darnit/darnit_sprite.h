@@ -14,4 +14,7 @@ void darnitSpriteAnimationDisable(void *sprite);
 void darnitSpriteDraw(void *sprite);
 void darnitSpriteFrameEntrySet(void *sprite, int dir, int frame, int tile, int time);
 
+int darnitSpriteWidth(void *sprite);
+int darnitSpriteHeight(void *sprite);
+
 #endif
