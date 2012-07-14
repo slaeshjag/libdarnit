@@ -13,7 +13,8 @@ int renderInit(void *handle) {
 
 	m->video.fade.fading = 0;
 	m->video.fade.fadedir = 0.0f;
-	m->video.fade.a = -1.0f;
+	m->video.fade.a = 0.0f;
+	m->video.fade.fadestart = 0;
 
 	return 0;
 }
