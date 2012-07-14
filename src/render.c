@@ -162,7 +162,7 @@ void renderPopulateTilesheet(void *handle, TILESHEET *ts, int tiles_w, int tiles
 	
 	for (i = 0; i < tiles_h; i++)
 		for (j = 0; j < tiles_w; j++) {
-			p = i * tiles_h + j;
+			p = i * tiles_w + j;
 			ts->tile[p].r = twgran * j;
 			ts->tile[p].s = thgran * i;
 			ts->tile[p].u = ts->tile[p].r + twgran;
