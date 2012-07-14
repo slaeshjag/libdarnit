@@ -82,7 +82,7 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 			} else {
 				nullbuf = (float *) &cache[k];
 				for (l = 0; l < 24; l++)
-					nullbuf[l] = 0.0f;
+					nullbuf[l] = -1.0f;
 			}
 		}
 	}
@@ -182,6 +182,7 @@ void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile) {
 	ci = x * tm->h + y;	/* For some reason, I made the cache indexing in cols instead of rows */
 
 	renderCalcTileCache(&tm->cache[ci], tm->ts, tm->map[tm->map_w * y + x] & tm->mask);
+	renderCalcTilePosCache(&tm->cache[ci], tm->ts, x * tm->ts->wsq, y * tm->ts->hsq);
 
 	return;
 }
