@@ -1,0 +1,40 @@
+#include "stringtable.h"
+
+
+int ui_init(void *handle, int *argc, char ***argv) {
+	MAIN *m = handle;
+
+	gtk_init(argc, argv);
+	m->ui.window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_default_size(GTK_WINDOW(m->ui.window), 760, 400);
+	gtk_widget_set_title(GTK_WIDGET(m->ui.widget), "libDarnit Stringtable Editor");
+
+	
+	/* Set up toolbar */
+	m->ui.vbox_main = gtk_vbox_new(FALSE, 0);
+	gtk_container_add(GTK_CONTAINER(m->ui.window), m->ui.vbox_main);
+
+	m->ui.toolbar = gtk_toolbar_new();
+	gtk_toolbar_set_style(GTK_TOOLBAR(m->ui.toolbar), GTK_TOOLBAR_ICONS);
+	gtk_container_set_border_width(GTK_CONTAINER(m->ui.toolbar), 2);
+	
+	m->ui.new = gtk_button_new_from_stock(GTK_STOCK_NEW);
+	gtk_toolbar_insert(GTK_TOOLBAR(m->ui.toolbar), m->ui.new, -1);
+	m->ui.open = gtk_button_new_from_stock(GTK_STOCK_OPEN);
+	gtk_toolbar_insert(GTK_TOOLBAR(m->ui.toolbar), m->ui.open, -1);
+	m->ui.save = gtk_button_new_from_stock(GTK_STOCK_SAVE);
+	gtk_toolbar_insert(GTK_TOOLBAR(m->ui.toolbar), m->ui.save, -1);
+
+	gtk_box_pack_start(GTK_BOX(m->ui.vbox), m->ui.toolbar, FALSE, FALSE, 0);
+
+	/* Set up section stuff */
+
+
+	gtk_widget_show(m->ui.window);
+
+	g_signal_connect_swapped(G_OBJECT(m->ui.window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+	gtk_main();
+
+	return 0;
+}

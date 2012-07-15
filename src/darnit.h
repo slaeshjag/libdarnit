@@ -70,6 +70,7 @@ typedef struct {
 #include "mt_sprite.h"
 #include "audio_load.h"
 #include "utf8.h"
+#include "util.h"
 
 
 typedef struct {
