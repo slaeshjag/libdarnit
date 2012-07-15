@@ -10,7 +10,9 @@
 
 
 #include	<X11/Xutil.h>
+#ifndef RASPBERRYPI
 #include	<GLES/egl.h>
+#endif
 #include	<EGL/egl.h>
 #include	<GLES/gl.h>
 #include	<GLES/glext.h>
