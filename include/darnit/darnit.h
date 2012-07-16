@@ -26,6 +26,7 @@ extern "C" {
 #include <darnit/darnit_socket.h>
 #include <darnit/darnit_utf8.h>
 #include <darnit/darnit_util.h>
+#include <darnit/darnit_stringtable.h>
 
 
 #ifdef __cplusplus

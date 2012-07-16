@@ -71,6 +71,7 @@ typedef struct {
 #include "audio_load.h"
 #include "utf8.h"
 #include "util.h"
+#include "stringtable.h"
 
 
 typedef struct {

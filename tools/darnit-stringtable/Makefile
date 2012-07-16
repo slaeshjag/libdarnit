@@ -1,5 +1,8 @@
+CFLAGS += -g -O0 -Wall
+LDFLAGS += -lz
+
 default:
-	$(CC) $(CFLAGS) `pkg-config --libs --cflags gtk+-2.0` *.c -o ../../bin/darnit-stringtable
+	$(CC) $(CFLAGS) *.c -o ../../bin/darnit-stringtable $(LDFLAGS)
 
 clean:
 	
