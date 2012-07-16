@@ -24,7 +24,7 @@ typedef struct {
 	unsigned int		time;
 	unsigned int		animate;
 	unsigned int		used;
-	SPRITE_DIRECTION	spr[8];
+	SPRITE_DIRECTION	spr[32];
 	char			tilesheet[32];
 	unsigned int		wsq;
 	unsigned int		hsq;
