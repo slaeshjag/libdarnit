@@ -70,7 +70,9 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 
 	if ((sec = stringtableFindSection(st, section)) == -1)
 		return -1;
-	
+	if (st->section[sec].strings != 0)
+		return 0;
+
 	fseek(st->fp, st->section[sec].file_pos, SEEK_SET);
 	
 	zdata = malloc(st->section[sec].sec.zlen);
