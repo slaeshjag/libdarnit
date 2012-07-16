@@ -2,12 +2,9 @@
 
 void *zCompress(void *indata, unsigned int len, unsigned int *outlen) {
 	void *zdata;
+	int zlen;
 	z_stream zstruct;
 
-	if ((zdata = malloc(len)) == NULL) {
-		fprintf(stderr, "Malloc(%i) failed\n", len);
-		return NULL;
-	}
 
 	zstruct.zalloc = Z_NULL;
 	zstruct.zfree = Z_NULL;
@@ -15,22 +12,28 @@ void *zCompress(void *indata, unsigned int len, unsigned int *outlen) {
 
 	if (deflateInit(&zstruct, 9) != Z_OK) {
 		fprintf(stderr, "deflateInit() failed\n");
-		free(zdata);
 		return NULL;
 	}
 
+	zlen = deflateBound(&zstruct, len);
+
+	if ((zdata = malloc(zlen)) == NULL) {
+		fprintf(stderr, "Malloc(%i) failed\n", len);
+		return NULL;
+	}
+	
 	zstruct.avail_in = len;
 	zstruct.next_in = indata;
-	zstruct.avail_out = len;
+	zstruct.avail_out = zlen;
 	zstruct.next_out = zdata;
 
-	if (deflate(&zstruct, 1) == Z_STREAM_ERROR) {
+	if (deflate(&zstruct, Z_FINISH) != Z_STREAM_END) {
 		fprintf(stderr, "deflate() failed\n");
 		free(zdata);
 		return NULL;
 	}
 
-	*outlen = len - zstruct.avail_out;
+	*outlen = zlen - zstruct.avail_out;
 	zdata = realloc(zdata, *outlen);
 	return zdata;
 }
@@ -67,10 +70,10 @@ int writeSection(const char *fname, FILE *fp) {
 			} else
 				i--;
 		} else if (c == '\n') {
+			name = 0;
 			buff[i] = 0;
 			strings++;
-		} else if (c == '>') {
-			name = 0;
+		} else if (c == '<') {
 			buff[i] = '\n';
 		} else
 			buff[i] = c;
@@ -110,12 +113,14 @@ int writeSection(const char *fname, FILE *fp) {
 	sh.len = htonl(sh.len);
 	sh.stringz = htonl(sh.stringz);
 
-	fwrite(&sh, sizeof(FILE_SECTION_HEADER) * strings, 1, fp);
+	fwrite(&sh, sizeof(FILE_SECTION_HEADER) /** strings*/, 1, fp);
 	fwrite(zdata, ntohl(sh.zlen), 1, fp);
 	fwrite(buff, ntohl(sh.stringz), 1, fp);
 
 	free(zdata);
 	free(buff);
+
+	fprintf(stderr, "Wrote section %s\n", fname);
 
 	return 0;
 }

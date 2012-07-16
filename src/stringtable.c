@@ -54,6 +54,7 @@ const char *stringtableGetEntry(STRINGTABLE *st, const char *key) {
 			if (st->section[i].string[j].key == comp)
 				if (strcmp(st->section[i].string[j].name, key) == 0)
 					return st->section[i].string[j].value;
+			
 	return "NOT IN STRINGTABLE";
 }
 
@@ -98,9 +99,9 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 	str = data;
 	
 	for (i = 0; i < st->section[sec].sec.strings; i++) {
-		st->section[sec].string[i].name = &str[ntohl(str[fe[i].pos])];
-		st->section[sec].string[i].value = &str[ntohl(str[fe[i].val])];
-		st->section[sec].string[i].key = ntohl(fe[i].sum);
+		st->section[sec].string[i].name = &str[ntohl(fe[i].pos)];
+		st->section[sec].string[i].value = &str[ntohl(fe[i].val)];
+		st->section[sec].string[i].key = stringtableCalcComp(st->section[sec].string[i].name);
 	}
 
 	st->section[sec].string_data = data;
@@ -137,7 +138,7 @@ void *stringtableOpen(const char *fname) {
 	st->sections = ntohl(stfm.sections);
 	st->fp = fp;
 
-	if ((st->section = malloc(sizeof(STRINGTABLE_SECTION))) == NULL) {
+	if ((st->section = malloc(sizeof(STRINGTABLE_SECTION) * st->sections)) == NULL) {
 		fclose(fp);
 		free(st);
 		return NULL;
