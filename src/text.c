@@ -395,13 +395,14 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	if ((glyph_e = textGetGlyphEntry(surface->font, glyph)) == NULL)
 		return 1;
 
-	if (surface->pos >= surface->linelen) {
+	w = textGetGlyphWidth(surface->font, glyph);
+	
+	if (surface->pos + w >= surface->linelen) {
 		surface->cur_xf = surface->orig_xf;
 		surface->cur_yf += surface->orig_yf * 2 + surface->font->line_gap * surface->font->screen_ph;
 		surface->pos = 0;
 	} 
 
-	w = textGetGlyphWidth(surface->font, glyph);
 	x = surface->cur_xf;
 	surface->cur_xf += glyph_e->advf;
 	surface->pos += w;
