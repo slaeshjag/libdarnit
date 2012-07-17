@@ -8,7 +8,7 @@ unsigned int darnitFontGetGlyphHS(void *font);
 void darnitTextSurfaceReset(void *surface);
 void *darnitTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y);
 void *darnitTextSurfaceFree(void *surface);
-int darnitTextSurfaceCharAppend(void *surface, char *c);
+int darnitTextSurfaceCharAppend(void *surface, const char *c);
 void darnitTextSurfaceStringAppend(void *surface, const char *string);
 void darnitTextSurfaceDraw(void *surface);
 void darnitTextSurfaceSkip(void *surface, int pixels);
