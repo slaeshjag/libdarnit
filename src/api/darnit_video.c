@@ -168,8 +168,8 @@ void EXPORT_THIS darnitRenderOffset(void *handle, int x, int y) {
 	DARNIT *d = handle;
 	glLoadIdentity();
 	glTranslatef(d->video.swgran * x * -1, d->video.shgran * y, 0.0f);
-	d->video.offset_x = x;
-	d->video.offset_y = y * -1;
+	d->video.offset_x = x * -1;
+	d->video.offset_y = y;
 
 	return;
 }
