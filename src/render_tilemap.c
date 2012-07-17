@@ -151,7 +151,7 @@ void renderTilemapRender(void *handle, RENDER_TILEMAP *tm) {
 	glTranslatef(tm->cam_x, tm->cam_y, 0);
 	renderCache(tm->cache, tm->ts, tm->w * tm->h);
 	glLoadIdentity();
-	glTranslatef(m->video.offset_x, m->video.offset_y, 0);
+	glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0);
 
 	return;
 }
