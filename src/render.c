@@ -210,6 +210,9 @@ void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y) 
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 	unsigned int t = tile;
 
+	if (t >= ts->tiles)
+		return;
+
 	cache->u = ts->tile[t].r;
 	cache->v = ts->tile[t].s;
 	cache->u2 = ts->tile[t].u;
