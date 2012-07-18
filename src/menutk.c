@@ -33,17 +33,22 @@ void menutkTopSelRecalc(MENUTK_ENTRY *menu) {
 			menu->top_sel = menu->selection - menu->scroll_threshold + 1;
 		if (menu->selection < menu->top_sel)
 			menu->top_sel = menu->selection;
-		for (i = 0, start = menu->str; i < menu->top_sel; i++)
+		for (i = 0, start = menu->str; i < menu->top_sel; i++) {
+			fprintf(stderr, "Oops\n");
 			start = strstr(start, "\n") + 1;
-		for (i = 0, end = start; i < menu->scroll_threshold && end != NULL; i++, end++)
-			end = strstr(end, "\n");
-		end--;
+		}
+		for (i = 0, end = start; i < menu->scroll_threshold; i++, end++)
+			if ((end = strstr(end, "\n")) == NULL)
+				break;
 		if (end != NULL)
 			*end = 0;
 		textResetSurface(menu->text);
 		textSurfaceAppendString(menu->text, start);
 		if (end != NULL)
 			*end = '\n';
+	} else if (menu->scroll_threshold == 0 && menu->str != NULL) {
+		textResetSurface(menu->text);
+		textSurfaceAppendString(menu->text, menu->str);
 	}
 
 	return;
@@ -695,14 +700,16 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 		glDisableClientState(GL_COLOR_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnable(GL_TEXTURE_2D);
-		glLoadIdentity();
-		glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0.0f);
+		glTranslatef(-menu->hl.x, -menu->hl.y, 0.0f);
 		glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
 	}
 
 
+	glLoadIdentity();
+	glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0.0f);
 	if (menu->orientation != MENUTK_ORIENT_V_OL)
 		textRender(menu->text);
+
 
 	if (menu->waiting == 1)
 		return -1;

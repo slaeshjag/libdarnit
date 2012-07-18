@@ -70,9 +70,13 @@ int writeSection(const char *fname, FILE *fp) {
 			} else
 				i--;
 		} else if (c == '\n') {
-			name = 0;
-			buff[i] = 0;
-			strings++;
+			if (name == 0)
+				i--;
+			else {
+				name = 0;
+				buff[i] = 0;
+				strings++;
+			}
 		} else if (c == '<') {
 			buff[i] = '\n';
 		} else
