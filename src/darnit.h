@@ -73,6 +73,8 @@ typedef struct {
 #include "util.h"
 #include "stringtable.h"
 
+int darnitTimeLastFrameTook(void *handle);
+
 
 typedef struct {
 	TILE_CACHE		*tc;

@@ -208,3 +208,15 @@ void EXPORT_THIS darnitRenderStateRestore(void *handle) {
 		darnitRenderBlendingDisable(d);
 	return;
 }
+
+
+int EXPORT_THIS darnitRenderTilesheetAnimationApply(void *tilesheet, const char *fname) {
+	return renderTilesheetAnimationApply(tilesheet, fname);
+}
+
+
+void EXPORT_THIS darnitRenderTilesheetAnimationAnimate(void *handle, void *tilesheet) {
+	renderTilesheetAnimate(handle, tilesheet);
+
+	return;
+}

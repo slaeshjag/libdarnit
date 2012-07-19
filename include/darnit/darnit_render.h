@@ -28,4 +28,7 @@ void darnitRenderFadeOut(void *handle, unsigned int time);
 int darnitRenderFadeChanging(void *handle);
 void darnitRenderStateRestore(void *handle);
 
+int darnitRenderTilesheetAnimationApply(void *tilesheet, const char *fname);
+void darnitRenderTilesheetAnimationAnimate(void *handle, void *tilesheet);
+
 #endif
