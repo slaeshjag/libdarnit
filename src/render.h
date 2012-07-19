@@ -48,6 +48,31 @@ typedef struct {
 
 
 typedef struct {
+	unsigned int	tile_src;
+	unsigned int	tile_dst;
+	unsigned int	time;
+} TS_FRAME;
+
+
+typedef struct {
+	TS_FRAME	*frame;
+	unsigned int	frames;
+	unsigned int	time_rest;
+	unsigned int	frame_at;
+} TS_TILE;
+
+
+typedef struct {
+	TS_TILE		*tile;
+	int		tiles;
+	unsigned int	*data;
+	unsigned int	animation_tiles;
+	unsigned int	tile_skip;
+	void		*frame_data;
+} TS_ANIMATION;
+
+
+typedef struct {
 	unsigned int	w;
 	unsigned int	h;
 	TILE		*tile;
@@ -63,6 +88,8 @@ typedef struct {
 	unsigned int	ref_count;
 	unsigned int	ref;
 	unsigned int	format;
+
+	TS_ANIMATION	animation;
 } TILESHEET;
 
 
@@ -109,6 +136,9 @@ void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, flo
 void renderFadeLoop(void *handle);
 void renderFadeFade(void *handle, unsigned int time, float r, float g, float b);
 void renderFadeUnfade(void *handle, unsigned int time);
+
+void renderTilesheetAnimate(void *handle, TILESHEET *ts);
+int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
 
 

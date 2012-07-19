@@ -55,7 +55,7 @@ int renderAddTSRef(void *handle, const char *fname, TILESHEET *ts) {
 
 	return i;
 }
-	
+
 
 void renderDelTSRef(void *handle, int ref) {
 	DARNIT *m = handle;
@@ -91,6 +91,147 @@ TILESHEET *renderGetTilesheetFromRef(void *handle, const char *fname) {
 }
 
 
+void renderTilesheetAnimate(void *handle, TILESHEET *ts) {
+	int i, j, change;
+	DARNIT *m = handle;
+	TS_FRAME *frame;
+
+	if (ts == NULL)
+		return;
+	
+	for (i = 0; i < ts->animation.tiles; i++) {
+		ts->animation.tile[i].time_rest += darnitTimeLastFrameTook(m);
+		j = ts->animation.tile[i].frame[ts->animation.tile[i].frame_at].time;
+		while (ts->animation.tile[i].time_rest >= j) {
+			ts->animation.tile[i].time_rest -= j;
+			ts->animation.tile[i].frame_at++;
+			if (ts->animation.tile[i].frame_at >= ts->animation.tile[i].frames)
+				ts->animation.tile[i].frame_at = 0;
+			j = ts->animation.tile[i].frame[ts->animation.tile[i].frame_at].time;
+			frame = &ts->animation.tile[i].frame[ts->animation.tile[i].frame_at];
+			change = 1;
+		}
+
+		if (change) {
+			i = frame->tile_dst % (ts->w / ts->wsq);
+			j = frame->tile_dst / (ts->w / ts->wsq);
+			renderUpdateTilesheet(ts, i * ts->wsq, j * ts->hsq, &ts->animation.data[ts->animation.tile_skip * frame->tile_src], ts->wsq, ts->hsq);
+		}
+	}
+
+	return;
+}
+
+
+int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
+	unsigned int i, j, tiles, frames, pos;
+	char c, buf[512];
+	FILE *fp;
+	IMGLOAD_DATA img;
+	TS_FRAME *frame;
+	
+	if (ts == NULL)
+		return -1;
+	
+	if (ts->animation.tiles > 0)
+		return -1;
+
+	if ((fp = fopen(fname, "r")) == NULL)
+		return -1;
+	
+	fscanf(fp, "%s\n", buf);
+	pos = ftell(fp);
+	img = imgloadLoad(buf);
+
+	if (img.img_data == NULL) {
+		fclose(fp);
+		return -1;
+	}
+
+	if (img.w != ts->wsq) {
+		fclose(fp);
+		free(img.img_data);
+		return -1;
+	}
+
+	ts->animation.animation_tiles = img.h / ts->hsq;
+	tiles = frames = 0;
+	
+	while (!feof(fp)) {
+		c = fgetc(fp);
+		switch (c) {
+			case 'T':
+				fgets(buf, 512, fp);
+				break;
+			case 'F':
+				fgets(buf, 512, fp);
+				frames++;
+				break;
+			case 'E':
+				fgets(buf, 512, fp);
+				tiles++;
+				break;
+			case '\n':
+				break;
+			default:
+				fgets(buf, 512, fp);
+				break;
+		}
+	}
+
+	i = j = 0;
+	fseek(fp, pos, SEEK_SET);
+
+	
+	frame = malloc(sizeof(TS_FRAME) * frames);
+	ts->animation.tile = malloc(sizeof(TS_TILE) * tiles);
+
+	if (frame == NULL || ts->animation.tile == NULL) {
+		fclose(fp);
+		free(img.img_data);
+		free(frame);
+		free(ts->animation.tile);
+		ts->animation.tile = NULL;
+		return -1;
+	}
+
+	ts->animation.tiles = tiles;
+	ts->animation.tile_skip = ts->wsq * ts->hsq;
+	ts->animation.data = img.img_data;
+	ts->animation.frame_data = frame;
+	frames = 0;
+
+	while (!feof(fp)) {
+		c = fgetc(fp);
+		switch (c) {
+			case 'T':
+				fgets(buf, 512, fp);
+				ts->animation.tile[i].frame = &frame[frames];
+				ts->animation.tile[i].frame_at = 0;
+				ts->animation.tile[i].time_rest = 0;
+				j = 0;
+				break;
+			case 'F':
+				fscanf(fp, "%i %i %i\n", &ts->animation.tile[i].frame[j].tile_src, &ts->animation.tile[i].frame[j].tile_dst, &ts->animation.tile[i].frame[j].time);
+				j++;
+				break;
+			case 'E':
+				ts->animation.tile[i].frames = j;
+				j = 0;
+				i++;
+				break;
+			case '\n':
+				break;
+			default:
+				fgets(buf, 512, fp);
+				break;
+		}
+	}
+
+	return 0;
+}
+
+
 TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
@@ -111,6 +252,10 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 	}
 
 	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
+	ts->animation.tiles = 0;
+	ts->animation.frame_data = NULL;
+	ts->animation.tile = NULL;
+	ts->animation.data = NULL;
 	
 /*	#ifndef HAVE_GLES */
 		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
@@ -180,6 +325,9 @@ void *renderTilesheetFree(void *handle, TILESHEET *ts) {
 	if (ts->ref_count > 0) return ts;
 	videoRemoveTexture(ts->texhandle);
 	renderDelTSRef(m, ts->ref);
+	free(ts->animation.frame_data);
+	free(ts->animation.tile);
+	free(ts->animation.data);
 	free(ts->tile);
 	free(ts);
 
@@ -316,6 +464,10 @@ TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w
 	if ((ts = malloc(sizeof(TILESHEET))) == NULL)
 		return NULL;
 
+	ts->animation.tiles = 0;
+	ts->animation.frame_data = NULL;
+	ts->animation.tile = NULL;
+	ts->animation.data = NULL;
 	ts->format = format;
 	format = (format == RENDER_DATA_TYPE_RGBA) ? GL_RGBA : GL_ALPHA;
 
