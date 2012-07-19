@@ -25,10 +25,10 @@
 #include	<SDL/SDL.h>
 #include	<SDL/SDL_syswm.h>
 
-#ifdef PAMDORA
+#ifdef PANDORA
 	#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
 #else
-	#define FBIO_WAITFORVSYNC
+	#define FBIO_WAITFORVSYNC 0
 #endif
 
 
