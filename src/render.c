@@ -98,8 +98,10 @@ void renderTilesheetAnimate(void *handle, TILESHEET *ts) {
 
 	if (ts == NULL)
 		return;
-	
+
+
 	for (i = 0; i < ts->animation.tiles; i++) {
+		change = 0;
 		ts->animation.tile[i].time_rest += darnitTimeLastFrameTook(m);
 		j = ts->animation.tile[i].frame[ts->animation.tile[i].frame_at].time;
 		while (ts->animation.tile[i].time_rest >= j) {

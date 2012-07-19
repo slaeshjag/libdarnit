@@ -8,6 +8,12 @@
 #define COLOURDEPTH_DEPTH_SIZE		16
 
 
+#ifdef PANDORA
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/fb.h>
+#endif
+
 
 #include	<X11/Xutil.h>
 #ifndef RASPBERRYPI
@@ -18,6 +24,12 @@
 #include	<GLES/glext.h>
 #include	<SDL/SDL.h>
 #include	<SDL/SDL_syswm.h>
+
+#ifdef PAMDORA
+	#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
+#else
+	#define FBIO_WAITFORVSYNC
+#endif
 
 
 static const EGLint egl_config_attrib[] = {
@@ -53,6 +65,7 @@ typedef struct {
 	float				tint_b;
 	float				tint_a;
 	int				blend;
+	int				fbdev;
 } VIDEO;
 
 
