@@ -38,5 +38,6 @@ void videoSwapBuffers(void *handle);
 void videoClearScreen();
 unsigned int videoAddTexture(void *data, unsigned int w, unsigned int h);
 void videoRemoveTexture(unsigned int texture);
+void videoDestroy(void *handle);
 
 #endif

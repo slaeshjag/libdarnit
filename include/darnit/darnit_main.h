@@ -25,5 +25,7 @@ unsigned int darnitTimeGet();
 int darnitFPSGet(void *handle);
 int darnitTimeLastFrameTook(void *handle);
 DARNIT_PLATFORM darnitPlatformGet(void *handle);
+void darnitQuit(void *handle);
+
 
 #endif

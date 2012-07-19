@@ -186,3 +186,17 @@ void videoRemoveTexture(unsigned int texture) {
 	
 	return;
 }
+
+
+void videoDestroy(void *handle) {
+	DARNIT *m = handle;
+
+	if (m->video.eglSurface || m->video.eglContext || m->video.eglDisplay)
+		eglMakeCurrent(m->video.eglDisplay, NULL, NULL, EGL_NO_CONTEXT);
+		eglDestroyContext(m->video.eglDisplay, g_eglContext);
+		eglDestroySurface(m->video.eglDisplay, g_eglSurface);
+		eglTerminate(m->video.eglDisplay);
+	}
+
+	return;
+}
