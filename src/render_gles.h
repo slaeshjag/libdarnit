@@ -77,6 +77,7 @@ unsigned int videoAddTexture(void *data, unsigned int w, unsigned int h);
 unsigned int videoAddTextureRGBA4(void *data, unsigned int w, unsigned int h);
 unsigned int videoAddTextureRGB5A1(void *data, unsigned int w, unsigned int h);
 void videoRemoveTexture(unsigned int texture);
+void videoDestroy(void *handle);
 
 
 #endif

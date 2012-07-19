@@ -154,3 +154,12 @@ DARNIT_PLATFORM EXPORT_THIS darnitPlatformGet(void *handle) {
 
 	return d->platform;
 }
+
+
+void EXPORT_THIS darnitQuit(void *handle) {
+	videoDestroy(handle);
+
+	exit(0);
+
+	return;
+}
