@@ -94,7 +94,14 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 	videoInitGL(screenw, screenh);
 
 	m->video.tint_r = m->video.tint_g = m->video.tint_b = m->video.tint_a = 1.0f;
-	
+
+	#ifdef PANDORA
+	if ((m->video.fbdev = open("/dev/fb0", O_RDONLY)) < 0)
+		fprintf(stderr, "WARNING: Unable to open fbdev for Vsync\n");
+	#else
+		m->video.fbdev = -1;
+	#endif
+
 	return 0;
 }
 
@@ -102,7 +109,13 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 
 void videoSwapBuffers(void *handle) {
 	DARNIT *m = handle;
+	int n;
 	
+	if (m->video.fbdev >= 0) {
+		n = 0;
+		ioctl(m->video.fbdev, FBIO_WAITFORVSYNC, &n);
+	}
+
 	eglSwapBuffers(m->video.eglDisplay, m->video.eglSurface);
 
 	return;
@@ -118,8 +131,8 @@ void videoClearScreen() {
 
 int videoLoop(void *handle) {
 	DARNIT *m = handle;
-	
-	videoSwapBuffers(handle);
+
+	videoSwapBuffers(m);
 	videoClearScreen();
 
 	
