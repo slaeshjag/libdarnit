@@ -1,4 +1,4 @@
-CFLAGS += -Wall -I./src -fPIC -Wl,-soname,libdarnit.so -shared -I./include  -I./deps -O3 -fvisibility=hidden
+CFLAGS += -Wall -I./src -fPIC -Wl,-soname,libdarnit.so -shared -I./include  -I./deps -O0 -g -fvisibility=hidden
 SOURCE = src/api/*.c src/render.c src/input.c src/text.c src/menutk.c src/audio.c src/imgload.c src/sprite.c src/bbox.c src/render_tilemap.c src/tilemap.c src/dynlib.c src/socket.c src/mt_sprite.c src/audio_load.c src/utf8.c src/bitwise.c src/util.c src/stringtable.c deps/*.o
 LDFLAGS += -lSDL -lmodplug -L./bin -ldl
 

@@ -186,3 +186,13 @@ void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile) {
 
 	return;
 }
+
+
+void renderTilemapForceRecalc(RENDER_TILEMAP *tm) {
+	if (tm == NULL) return;
+	
+	renderTilemapCalcPosMap(tm->cache, tm->ts, tm->cam_xi, tm->cam_yi, tm->w, tm->h);
+	renderTilemapCalcMap(tm->cache, tm->ts, tm->cam_xi, tm->cam_yi, tm->w, tm->h, tm->map_w, tm->map_h, tm->map, tm->inv_div, tm->mask);
+
+	return;
+}

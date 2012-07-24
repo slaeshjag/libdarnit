@@ -12,7 +12,7 @@ TILEMAP_ENTRY *tilemapNew(void *handle, int invs_div, void *tilesheet, unsigned 
 		return NULL;
 	}
 	
-	for (i = 0; i < w * w; i++)
+	for (i = 0; i < w * h; i++)
 		tilemap->data[i] = 0;
 	
 	if ((tilemap->render = renderTilemapCreate(handle, w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
@@ -20,6 +20,9 @@ TILEMAP_ENTRY *tilemapNew(void *handle, int invs_div, void *tilesheet, unsigned 
 		free(tilemap);
 		return NULL;
 	}
+
+	tilemap->w = w;
+	tilemap->h = h;
 
 	return tilemap;
 }
