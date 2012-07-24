@@ -272,7 +272,9 @@ AUDIO_HANDLE *audioPlayTracked(AUDIO_HANDLE *ah, int loop, int channels) {
 	mps.mBits = 16;
 	mps.mFrequency = AUDIO_SAMPLE_RATE;
 	mps.mResamplingMode = MODPLUG_RESAMPLE_LINEAR;
+	#ifndef PANDORA /* modplug on the pandora is too outdated, ignore when building for pandora for now */
 	mps.mStereoSeparation = 256;
+	#endif
 	mps.mLoopCount = -1;
 	ModPlug_SetSettings(&mps);
 
