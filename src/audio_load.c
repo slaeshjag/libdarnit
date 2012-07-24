@@ -293,6 +293,7 @@ AUDIO_HANDLE *audioPlayTracked(AUDIO_HANDLE *ah, int loop, int channels) {
 		return NULL;
 	}
 
+	ModPlug_SetMasterVolume(pb->codec_handle, 512);
 	pb->channels = ah->channels;
 
 	return pb;
