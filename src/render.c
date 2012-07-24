@@ -259,18 +259,14 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 	ts->animation.tile = NULL;
 	ts->animation.data = NULL;
 	
-/*	#ifndef HAVE_GLES */
+	imgloadDownsample(&data, convert_to);
+	data_t = data.img_data;
+	if (convert_to == PFORMAT_RGBA8)
 		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
-/*	#else
-		imgloadDownsample(&data, convert_to);
-		data_t = data.img_data;
-		if (convert_to == PFORMAT_RGBA8)
-			ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
-		else if (convert_to == PFORMAT_RGBA4)
-			ts->texhandle = videoAddTextureRGBA4(data_t, ts->w, ts->h);
-		else if (convert_to == PFORMAT_RGB5A1)
-			ts->texhandle = videoAddTextureRGB5A1(data_t, ts->w, ts->h);
-	#endif*/
+	else if (convert_to == PFORMAT_RGBA4)
+		ts->texhandle = videoAddTextureRGBA4(data_t, ts->w, ts->h);
+	else if (convert_to == PFORMAT_RGB5A1)
+		ts->texhandle = videoAddTextureRGB5A1(data_t, ts->w, ts->h);
 	
 	free(data_t);
 

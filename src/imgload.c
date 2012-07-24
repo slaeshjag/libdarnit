@@ -36,26 +36,25 @@ void imgloadDownsample(IMGLOAD_DATA *img, unsigned int target_format) {
 	unsigned short pixel;
 	int i;
 
-	#ifndef HAVE_GLES
+	if (target_format == PFORMAT_RGBA8)
 		return;
-	#endif
-
+	
 	data = malloc(sizeof(unsigned short) * img->w * img->h);
 
 	if (target_format == PFORMAT_RGBA4) {
 		for (i = 0; i < img->w * img->h; i++) {
-			pixel = (img->img_data[i] & 0xF0) >> 4;
-			pixel |= (img->img_data[i] & 0xF000) >> 8;
-			pixel |= (img->img_data[i] & 0xF00000) >> 12;
-			pixel |= (img->img_data[i] & 0xF0000000) >> 16;
+			pixel = ((img->img_data[i] & 0xF0) << 8);
+			pixel |= ((img->img_data[i] & 0xF000) >> 4);
+			pixel |= ((img->img_data[i] & 0xF00000) >> 16);
+			pixel |= ((img->img_data[i] & 0xF0000000) >> 28);
 			data[i] = pixel;
 		}
 	} else if (target_format == PFORMAT_RGB5A1) {
 		for (i = 0; i < img->w * img->h; i++) {
-			pixel = (img->img_data[i] & 0xF8) >> 3;
-			pixel |= (img->img_data[i] & 0xF800) >> 6;
-			pixel |= (img->img_data[i] & 0xF80000) >> 9;
-			pixel |= (img->img_data[i] & 0x80000000) >> 16;
+			pixel = ((img->img_data[i] & 0xF8) << 8);
+			pixel |= ((img->img_data[i] & 0xF800) >> 5);
+			pixel |= ((img->img_data[i] & 0xF80000) >> 18);
+			pixel |= ((img->img_data[i] & 0x80000000) >> 31);
 			data[i] = pixel;
 		}
 	} else
