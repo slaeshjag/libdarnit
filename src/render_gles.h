@@ -1,6 +1,8 @@
 #ifndef __VIDEO_GLES_H__
 #define	__VIDEO_GLES_H__
 
+/* DO NOT INCLUDE THIS FILE MANUALLY, THAT IS HANDLED BY render.h */
+
 
 #define COLOURDEPTH_RED_SIZE  		5
 #define COLOURDEPTH_GREEN_SIZE 		6
