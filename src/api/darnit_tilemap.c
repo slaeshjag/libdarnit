@@ -19,6 +19,13 @@ void EXPORT_THIS darnitRenderTilemapTileSet(TILEMAP_ENTRY *tilemap, int x, int y
 }
 
 
+void EXPORT_THIS darnitRenderTilemapRecalculate(TILEMAP_ENTRY *tilemap) {
+	renderTilemapForceRecalc(tilemap->render);
+	
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTilemapCameraMove(TILEMAP_ENTRY *tilemap, int cam_x, int cam_y) {
 	if (tilemap == NULL) return;
 	renderTilemapCameraMove(tilemap->render, cam_x, cam_y);

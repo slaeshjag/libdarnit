@@ -24,5 +24,6 @@ void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile);
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y);
 void renderTilemapRender(void *handle, RENDER_TILEMAP *tm);
 void renderTilemapFree(RENDER_TILEMAP *tm);
+void renderTilemapForceRecalc(RENDER_TILEMAP *tm);
 
 #endif
