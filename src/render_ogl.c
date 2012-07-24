@@ -1,5 +1,7 @@
 #include "darnit.h"
 
+/* DO NOT FEED THIS FILE TO YOUR COMPILER MANUALLY, THAT IS HANDLED BY render.c */
+
 
 int videoInitGL(int w, int h) {
 	glEnable(GL_TEXTURE_2D);
