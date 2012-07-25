@@ -156,6 +156,20 @@ unsigned int videoAddTexture(void *data, unsigned int w, unsigned int h) {
 }
 
 
+unsigned int videoAddTextureA8(void *data, unsigned int w, unsigned int h) {
+	unsigned int texhandle;
+
+	glGenTextures(1, &texhandle);
+	glBindTexture(GL_TEXTURE_2D,texhandle);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, w, h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, data);
+
+	return texhandle;
+}
+
+
 unsigned int videoAddTextureRGBA4(void *data, unsigned int w, unsigned int h) {
 	unsigned int texhandle;
 

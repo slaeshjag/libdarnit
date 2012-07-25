@@ -12,6 +12,7 @@
 #define PFORMAT_RGBA8		0
 #define	PFORMAT_RGBA4		1
 #define	PFORMAT_RGB5A1		2
+#define	PFORMAT_A8		3
 
 
 typedef struct {

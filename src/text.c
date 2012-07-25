@@ -105,7 +105,7 @@ struct TEXT_FONT_CACHE *textAppendCache(TEXT_FONT *font, struct TEXT_FONT_CACHE 
 	next->next = NULL;
 	next->glyph = NULL;
 
-	if ((next->ts = renderNewTilesheet(font->handle, 1, 1, tex_w, tex_h, RENDER_DATA_TYPE_ALPHA)) == NULL) {
+	if ((next->ts = renderNewTilesheet(font->handle, 1, 1, tex_w, tex_h, PFORMAT_A8)) == NULL) {
 		free(next);
 		return NULL;
 	}
