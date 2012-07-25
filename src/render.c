@@ -272,7 +272,7 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 
 	ts->wsq = wsq;
 	ts->hsq = hsq;
-	ts->format = RENDER_DATA_TYPE_RGBA;
+	ts->format = convert_to;
 	ts->tiles = (ts->w / wsq) * (ts->h / hsq);
 	
 	if ((ts->tile = malloc(ts->tiles * sizeof(TILE))) == NULL) {
@@ -450,15 +450,12 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 
 
 TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
-	unsigned int tilesheet_w, tilesheet_h, size, texture;
+	unsigned int tilesheet_w, tilesheet_h, texture;
 	TILESHEET *ts;
 	
 	tilesheet_w = bitwiseRoundUpToPow2(tiles_w * tile_w);
 	tilesheet_h = bitwiseRoundUpToPow2(tiles_h * tile_h);
 
-	size = tilesheet_w * tilesheet_h;
-	if (format) size *= 4;
-	
 	if ((ts = malloc(sizeof(TILESHEET))) == NULL)
 		return NULL;
 
@@ -466,18 +463,18 @@ TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w
 	ts->animation.frame_data = NULL;
 	ts->animation.tile = NULL;
 	ts->animation.data = NULL;
+	ts->w = tilesheet_w;
+	ts->h = tilesheet_h;
 	ts->format = format;
-	format = (format == RENDER_DATA_TYPE_RGBA) ? GL_RGBA : GL_ALPHA;
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, format, tilesheet_w, tilesheet_h, 0, format, GL_UNSIGNED_BYTE, 0);
-
-	ts->texhandle = texture;
+	if (format == PFORMAT_RGBA8)
+		ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
+	else if (format == PFORMAT_RGBA4)
+		ts->texhandle = videoAddTextureRGBA4(NULL, ts->w, ts->h);
+	else if (format == PFORMAT_RGB5A1)
+		ts->texhandle = videoAddTextureRGB5A1(NULL, ts->w, ts->h);
+	else if (format == PFORMAT_A8)
+		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
 	
 	if ((ts->tile = malloc(sizeof(TILE) * tiles_w * tiles_h)) == NULL) {
 		glDeleteTextures(1, &texture);
@@ -488,8 +485,6 @@ TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w
 	ts->tiles = tiles_w * tiles_h;
 	ts->wsq = tile_w;
 	ts->hsq = tile_h;
-	ts->w = tilesheet_w;
-	ts->h = tilesheet_h;
 	ts->ref = -1;
 
 	renderPopulateTilesheet(handle, ts, tiles_w, tiles_h);
@@ -500,9 +495,10 @@ TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w
 
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h) {
 	unsigned int format;
-	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
 
-	format = (ts->format == RENDER_DATA_TYPE_RGBA) ? GL_RGBA : GL_ALPHA;
+	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
+	format = (ts->format == PFORMAT_A8) ? GL_ALPHA : GL_RGBA;
+
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, pos_x, pos_y, w, h, format, GL_UNSIGNED_BYTE, data);
 

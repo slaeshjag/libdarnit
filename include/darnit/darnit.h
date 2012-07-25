@@ -9,6 +9,7 @@ extern "C" {
 #define		DARNIT_PFORMAT_RGBA8		0
 #define		DARNIT_PFORMAT_RGBA4		1
 #define		DARNIT_PFORMAT_RGB5A1		2
+#define		DARNIT_PFORMAT_ALHPA		3
 
 
 

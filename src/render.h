@@ -7,10 +7,6 @@
 #include <string.h>
 
 
-#define			RENDER_DATA_TYPE_ALPHA		0
-#define			RENDER_DATA_TYPE_RGBA		1
-
-
 typedef struct {
 	float		x;
 	float		y;
