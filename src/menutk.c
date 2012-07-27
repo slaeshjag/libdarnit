@@ -33,15 +33,15 @@ void menutkTopSelRecalc(MENUTK_ENTRY *menu) {
 			menu->top_sel = menu->selection - menu->scroll_threshold + 1;
 		if (menu->selection < menu->top_sel)
 			menu->top_sel = menu->selection;
-		for (i = 0, start = menu->str; i < menu->top_sel; i++) {
-			fprintf(stderr, "Oops\n");
+		for (i = 0, start = menu->str; i < menu->top_sel; i++)
 			start = strstr(start, "\n") + 1;
-		}
 		for (i = 0, end = start; i < menu->scroll_threshold; i++, end++)
 			if ((end = strstr(end, "\n")) == NULL)
 				break;
-		if (end != NULL)
+		if (end != NULL) {
+			end--;
 			*end = 0;
+		}
 		textResetSurface(menu->text);
 		textSurfaceAppendString(menu->text, start);
 		if (end != NULL)
