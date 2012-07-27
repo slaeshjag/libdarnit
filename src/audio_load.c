@@ -206,19 +206,15 @@ int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 
 AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	AUDIO_HANDLE *ah, *pb;
-
+	char *fname_n;
 
 	if (fname == NULL) return NULL;
+	fname_n = utilPathTranslate(fname);
 
 	if ((ah = malloc(sizeof(AUDIO_HANDLE))) == NULL)
 		return NULL;
-	
-	if ((ah->fname = malloc(strlen(fname)+1)) == NULL) {
-		free(ah);
-		return NULL;
-	}
 
-	strcpy(ah->fname, fname);
+	ah->fname = fname_n;
 
 	ah->data = NULL;
 	ah->size = 0;
@@ -313,11 +309,14 @@ AUDIO_HANDLE *audioOpenTracked(const char *fname, int mode, int channels) {
 	AUDIO_HANDLE *ah, *pb;
 	unsigned int *abuff, sz;
 	unsigned int size, i;
+	char *fname_n;
 	FILE *fp;
 
-	if ((fp = fopen(fname, "rb")) == NULL)
+	fname_n = utilPathTranslate(fname);
+	if ((fp = fopen(fname_n, "rb")) == NULL)
 		return NULL;
 
+	free(fname_n);
 	fseek(fp, 0, SEEK_END);
 	size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);

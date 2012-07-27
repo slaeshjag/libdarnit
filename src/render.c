@@ -127,7 +127,7 @@ void renderTilesheetAnimate(void *handle, TILESHEET *ts) {
 
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	unsigned int i, j, tiles, frames, pos;
-	char c, buf[512];
+	char c, buf[512], *fname_n;
 	FILE *fp;
 	IMGLOAD_DATA img;
 	TS_FRAME *frame;
@@ -138,9 +138,12 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	if (ts->animation.tiles > 0)
 		return -1;
 
-	if ((fp = fopen(fname, "r")) == NULL)
+	fname_n = utilPathTranslate(fname);
+
+	if ((fp = fopen(fname_n, "r")) == NULL)
 		return -1;
-	
+	free(fname_n);
+
 	fscanf(fp, "%s\n", buf);
 	pos = ftell(fp);
 	img = imgloadLoad(buf);
@@ -238,9 +241,12 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
 	void *data_t;
+	char *fname_n = utilPathTranslate(fname);
 
-	if ((ts = renderGetTilesheetFromRef(handle, fname)) != NULL)
+	if ((ts = renderGetTilesheetFromRef(handle, fname_n)) != NULL) {
+		free(fname_n);
 		return ts;
+	}
 
 	if ((ts = malloc(sizeof(TILESHEET))) == NULL) {
 		MALLOC_ERROR
@@ -252,6 +258,7 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 		free(ts);
 		return NULL;
 	}
+	free(fname_n);
 
 	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
 	ts->animation.tiles = 0;

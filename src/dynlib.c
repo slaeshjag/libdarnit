@@ -2,23 +2,24 @@
 
 
 void *dynlibOpen(const char *fname) {
+	char *fname_n;
 	if (fname == NULL) return NULL;
+	
 	#ifdef _WIN32
+		fname_n = utilPathTranslate(fname);
 		HINSTANCE *lib;
 
 		lib = malloc(sizeof(HINSTANCE));
-		*lib = LoadLibrary(fname);
-		return lib;
+		*lib = LoadLibrary(fname_n);
 	#else
-		char *fname_n;
 		void *lib;
 
 		fname_n = malloc(strlen(fname) + 3);
 		sprintf(fname_n, "./%s", fname);
 		lib = dlopen(fname_n, RTLD_NOW | RTLD_GLOBAL);
-		free(fname_n);
-		return lib;
 	#endif
+	free(fname_n);
+	return lib;
 }
 
 

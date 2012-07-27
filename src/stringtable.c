@@ -120,14 +120,18 @@ void *stringtableOpen(const char *fname) {
 	int i;
 	STRINGTABLE_FILE_MAIN stfm;
 	STRINGTABLE *st;
+	char *fname_n;
 
 	if ((st = malloc(sizeof(STRINGTABLE))) == NULL)
 		return NULL;
 	
-	if ((fp = fopen(fname, "rb")) == NULL) {
+	fname_n = utilPathTranslate(fname);
+	if ((fp = fopen(fname_n, "rb")) == NULL) {
 		free(st);
+		free(fname_n);
 		return NULL;
 	}
+	free(fname_n);
 
 	fread(&stfm, sizeof(STRINGTABLE_FILE_MAIN), 1, fp);
 

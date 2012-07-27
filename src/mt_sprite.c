@@ -111,15 +111,19 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 
 void *mtSpriteLoad(void *handle, const char *fname) {
 	MTSPRITE_ENTRY *spr;
+	char *fname_n;
 	FILE *fp;
 	int frames, loctiles, tiles, x, y, w, h, t, rx, ry;
 	char c, buff[512], tilesheet[64];
 	void *ts;
 
-	if ((fp = fopen(fname, "r")) == NULL) {
-		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname);
+	fname_n = utilPathTranslate(fname);
+
+	if ((fp = fopen(fname_n, "r")) == NULL) {
+		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname_n);
 		return NULL;
 	}
+	free(fname_n);
 
 	ts = NULL;
 	frames = tiles = 0;
@@ -136,7 +140,9 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 				break;
 			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
 				fscanf(fp, "%s\n", tilesheet);
-				ts = renderTilesheetLoad(handle, tilesheet, 32, 32, PFORMAT_RGBA8);
+				fname_n = utilPathTranslate(tilesheet);
+				ts = renderTilesheetLoad(handle, tilesheet, 32, 32, PFORMAT_RGB5A1);
+				free(fname_n);
 				break; 
 			case '\n':
 				break;
