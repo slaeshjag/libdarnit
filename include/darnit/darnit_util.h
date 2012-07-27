@@ -4,6 +4,7 @@
 
 unsigned int darnitUtilHtonl(unsigned int arg);
 unsigned int darnitUtilNtohl(unsigned int arg);
+char *darnitUtilPathTranslate(const char *path);
 
 
 #endif

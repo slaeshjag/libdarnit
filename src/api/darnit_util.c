@@ -11,4 +11,7 @@ unsigned int EXPORT_THIS darnitUtilNtohl(unsigned int arg) {
 }
 
 
+char EXPORT_THIS *darnitUtilPathTranslate(const char *path) {
+	return utilPathTranslate(path);
+}
 

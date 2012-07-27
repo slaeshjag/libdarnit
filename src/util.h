@@ -10,6 +10,7 @@
 
 unsigned int utilHtonl(unsigned int val);
 unsigned int utilNtohl(unsigned int val);
+char *utilPathTranslate(const char *path);
 
 
 #endif
