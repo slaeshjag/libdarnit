@@ -11,7 +11,6 @@ void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w
 	x2 = x1 + ts->swgran * w;
 	y1 = 1.0f - ts->shgran * ry;
 	y2 = y1 - ts->shgran * h;
-	fprintf(stderr, "X: %f, %i\n", x1, rx);
 
 	u1 = twg * x;
 	u2 = u1 + twg * w;
