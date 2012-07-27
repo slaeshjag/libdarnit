@@ -111,12 +111,15 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 	DARNIT *m = handle;
 	FILE *fp;
 	unsigned int header;
+	char *fname_n = utilPathTranslate(fname);
 	SPRITE_ENTRY *sprite_e;
 
-	if ((fp = fopen(fname, "rb")) == NULL) {
+	if ((fp = fopen(fname_n, "rb")) == NULL) {
+		free(fname_n);
 		FILE_OPEN_ERROR
 		return NULL;
 	}
+	free(fname_n);
 
 	fread(&header, 4, 1, fp);
 

@@ -17,6 +17,7 @@ int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned i
 }
 
 void *textLoadFont(void *handle, const char *fname, int size, int tex_w, int tex_h) {
+	char *fname_n;
 	DARNIT *m = handle;
 	TEXT_FONT *font;
 	FILE *fp;
@@ -26,12 +27,16 @@ void *textLoadFont(void *handle, const char *fname, int size, int tex_w, int tex
 		return NULL;
 	}
 
+	fname_n = utilPathTranslate(fname);
+
 	if ((fp = fopen(fname, "rb")) == NULL) {
+		free(fname_n);
 		fprintf(stderr, "Unable to open file %s\n", fname);
 		free(font);
 		return NULL;
 	}
 
+	free(fname_n);
 	fseek(fp, 0, SEEK_END);
 	flen = ftell(fp);
 	rewind(fp);

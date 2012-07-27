@@ -25,9 +25,14 @@ IMGLOAD_DATA imgloadSTB(const char *fname) {
 
 
 IMGLOAD_DATA imgloadLoad(const char *fname) {
+	IMGLOAD_DATA data;
+	char *fname_n;
 	if (fname == NULL) return imgloadBAD(fname);
+	fname_n = utilPathTranslate(fname);
 	
-	return imgloadSTB(fname);
+	data = imgloadSTB(fname_n);
+	free(fname_n);
+	return data;
 }
 
 
