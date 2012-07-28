@@ -164,6 +164,19 @@ void EXPORT_THIS darnitRenderTint(void *handle, float r, float g, float b, float
 }
 
 
+void EXPORT_THIS darnitRenderClearColorSet(unsigned char r, unsigned char g, unsigned char b) {
+	float rf, gf, bf;
+
+	rf = 1.0f/255 * r;
+	gf = 1.0f/255 * g;
+	bf = 1.0f/255 * b;
+
+	glClearColor(rf, gf, bf, 0.0f);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderOffset(void *handle, int x, int y) {
 	DARNIT *d = handle;
 	glLoadIdentity();

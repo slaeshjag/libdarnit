@@ -17,6 +17,7 @@ void darnitRenderEnd();
 void darnitRenderBlendingEnable(void *handle);
 void darnitRenderBlendingDisable(void *handle);
 void darnitRenderTint(void *handle, float r, float g, float b, float a);
+void darnitRenderClearColorSet(unsigned char r, unsigned char g, unsigned char b);
 void darnitRenderOffset(void *handle, int x, int y);
 
 void darnitRenderFadeIn(void *handle, unsigned int time, float r, float g, float b);
