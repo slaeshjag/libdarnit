@@ -15,3 +15,7 @@ char EXPORT_THIS *darnitUtilPathTranslate(const char *path) {
 	return utilPathTranslate(path);
 }
 
+
+int EXPORT_THIS darnitUtilStringToIntArray(const char *str, const char *delimiter, int *dest, int max_tokens) {
+	return utilStringToIntArray(str, delimiter, dest, max_tokens);
+}

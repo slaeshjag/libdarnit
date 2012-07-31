@@ -35,3 +35,18 @@ char *utilPathTranslate(const char *path) {
 
 	return new_path;
 }
+
+
+int utilStringToIntArray(const char *str, const char *delimiter, int *dest, int max_tokens) {
+	int token;
+
+	for (token = 0; token < max_tokens; token++) {
+		sscanf(str, "%i", &dest[token]);
+		str = strstr(str, delimiter);
+		if (str == NULL)
+			break;
+		str += strlen(delimiter);
+	}
+
+	return token;
+}
