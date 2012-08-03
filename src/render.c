@@ -541,7 +541,7 @@ void renderFadeLoop(void *handle) {
 	} else if (m->video.fade.a >= 1.0f && m->video.fade.fadedir > 0.0f) {
 		m->video.fade.fadedir = 0.0f;
 		m->video.fade.a = 1.0f;
-		m->video.fade.fading = 0;
+		m->video.fade.fading = 2;
 	}
 
 	if (m->video.blend == 0)
@@ -589,7 +589,7 @@ void renderFadeUnfade(void *handle, unsigned int time) {
 	m->video.fade.fadestart = SDL_GetTicks();
 	m->video.fade.fadestart -= (time - m->video.fade.fadeprog);
 	m->video.fade.fadefactor = 1.0f / time;
-	m->video.fade.fading = 1;
+	m->video.fade.fading = -1;
 
 	return;
 }
