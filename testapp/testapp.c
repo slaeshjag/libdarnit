@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	handle = darnitInit("TESTAPP - libDarnit");
 
 	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
-	darnitSoundPlaybackStart(handle, music, 0, 15, 15, 0);
+	darnitSoundPlaybackStart(handle, music, 0, 127, 127, 0);
 
 	test_text = malloc(64);
 	font = darnitFontLoad(handle, "dejavu_sans.ttf", 20, 512, 512);

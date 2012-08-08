@@ -271,7 +271,7 @@ AUDIO_HANDLE *audioPlayTracked(AUDIO_HANDLE *ah, int loop, int channels) {
 	#ifndef PANDORA /* modplug on the pandora is too outdated, ignore when building for pandora for now */
 	mps.mStereoSeparation = 256;
 	#endif
-	mps.mLoopCount = -1;
+	mps.mLoopCount = 55;
 	ModPlug_SetSettings(&mps);
 
 	if ((pb = malloc(sizeof(AUDIO_HANDLE))) == NULL)
