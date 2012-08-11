@@ -66,7 +66,7 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 				t = tilemap[y_cur*map_w + x_cur] & mask;
 			else
 				t = -1;
-			if (inv_div > 0 || (t > -1 && (t % inv_div))) {
+			if (inv_div <= 0 || (t > 0 && (t % inv_div))) {
 				cache[k].u = ts->tile[t].r;
 				cache[k].v = ts->tile[t].s;
 				cache[k].u2 = ts->tile[t].u;
