@@ -232,6 +232,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 	menu->x = x*m->video.swgran-1.0f, menu->y = y*m->video.shgran*-1.0f + 1.0f;
 	menu->waiting = 1;
 	menu->selection = 0;
+	menu->top_sel = 0;
 
 	menu->options = options;
 	menu->advance = option_advance;
