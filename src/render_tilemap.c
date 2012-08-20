@@ -72,7 +72,7 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 				nullbuf = (float *) &cache[k];
 				for (l = 0; l < 24; l++)
 					nullbuf[l] = -1.0f;
-			} else if ((t > 0 && t % inv_div)) {
+			} else if (!(t % inv_div)) {
 				nullbuf = (float *) &cache[k];
 				for (l = 0; l < 24; l++)
 					nullbuf[l] = -1.0f;
