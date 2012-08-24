@@ -50,7 +50,7 @@ void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int
 
 void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, int h, int map_w, int map_h, unsigned int *tilemap, int inv_div, unsigned int mask) {
 	int i, j, k, l;
-	int x_cur, y_cur, blank;
+	int x_cur, y_cur, blank, blank_y;
 	int t;
 	float *nullbuf;
 
@@ -61,22 +61,24 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 			blank = 1;
 		else
 			blank = 0;
-		for (j = 0; j < h; j++, k++, y_cur++) {
+		for (j = 0; j < h; j++, k++, y_cur++, blank_y = 0) {
 			if (y_cur >= 0 && y_cur < map_h && blank == 0)
 				t = tilemap[y_cur*map_w + x_cur] & mask;
 			else
-				t = -1;
+				blank_y = 1;
 
-			/* NOTE TO SELF: BROKEN */
-			if (inv_div <= 0) {
+			if (blank_y == 0) {
+				if (inv_div == 0)
+					blank_y = 0;
+				else if (!(t % inv_div))
+					blank_y = 1;
+			} 
+			
+			if (blank_y) {
 				nullbuf = (float *) &cache[k];
 				for (l = 0; l < 24; l++)
 					nullbuf[l] = -1.0f;
-			} else if (!(t % inv_div)) {
-				nullbuf = (float *) &cache[k];
-				for (l = 0; l < 24; l++)
-					nullbuf[l] = -1.0f;
-			} else {
+			} else { 
 				cache[k].u = ts->tile[t].r;
 				cache[k].v = ts->tile[t].s;
 				cache[k].u2 = ts->tile[t].u;
