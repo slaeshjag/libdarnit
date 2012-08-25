@@ -61,15 +61,14 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 			blank = 1;
 		else
 			blank = 0;
-		for (j = 0; j < h; j++, k++, y_cur++, blank_y = 0) {
+		for (j = 0, blank_y = 0; j < h; j++, k++, y_cur++, blank_y = 0) {
 			if (y_cur >= 0 && y_cur < map_h && blank == 0)
 				t = tilemap[y_cur*map_w + x_cur] & mask;
 			else
 				blank_y = 1;
 
 			if (blank_y == 0) {
-				if (inv_div == 0)
-					blank_y = 0;
+				if (inv_div == 0);
 				else if (!(t % inv_div))
 					blank_y = 1;
 			} 
