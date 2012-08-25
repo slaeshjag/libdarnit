@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
 	tilebuf = darnitRenderTileAlloc(1);
 	darnitRenderTileMove(tilebuf, 0, mapsheet, 64, 64);
 	darnitRenderTileSetTilesheetCoord(tilebuf, 0, mapsheet, 16, 16, 32, 32);
+	fprintf(stderr, "String lenght: %i\n", darnitFontGetStringWidthPixels(font, "ASDFÅÄÖ,,"));
 
 //	for (i = 0; i < 10; i++) 
 //		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
@@ -52,7 +53,7 @@ int main(int argc, char **argv) {
 		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; nub0 (%i,%i) ;; nub1(%i,%i)", mouse.x, mouse.y, mouse.wheel, i*4, j*4, js0_x, js0_y, js1_x, js1_y);
 		sprintf(fps, "%i", darnitTimeLastFrameTook(handle));
 		darnitTextSurfaceStringAppend(text, test);
-		darnitTextSurfaceStringAppend(fps_text, "Hëllô ẇõŗłd¡ чайка");
+		darnitTextSurfaceStringAppend(fps_text, "ASDFÅÄÖ,,");
 
 		if (keys.lmb)
 			darnitRenderFadeIn(handle, 1000, 1.0f, 0.0f, 0.0f);

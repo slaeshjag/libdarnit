@@ -14,6 +14,11 @@ unsigned int EXPORT_THIS darnitFontGetGlyphW(void *font, const char *s) {
 }
 
 
+unsigned int EXPORT_THIS darnitFontGetStringWidthPixels(void *font, const char *string) {
+	return textGetStringWidth(font, string);
+}
+
+
 unsigned int EXPORT_THIS darnitFontGetGlyphH(void *font) {
 	return textFontGetH(font);
 }
