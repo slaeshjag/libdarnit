@@ -259,6 +259,19 @@ int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph) {
 	return glyph_e->adv;
 }
 
+int textGetStringWidth(TEXT_FONT *font, const char *string) {
+	int i, w;
+	unsigned int glyph;
+
+	for (i = w = 0; string[i] != 0; ) {
+		glyph = utf8GetChar(&string[i]);
+		i += utf8GetValidatedCharLength(&string[i]);
+		w += textGetGlyphWidth(font, glyph);
+	}
+
+	return w;
+}
+
 int textFontGetH(TEXT_FONT *font) {
 	if (font == NULL) return -1;
 	return font->font_height;

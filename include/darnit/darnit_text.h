@@ -3,6 +3,7 @@
 
 void *darnitFontLoad(void *handle, const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
 unsigned int darnitFontGetGlyphW(void *font, const char *s);
+unsigned int darnitFontGetStringWidthPixels(void *font, const char *string);
 unsigned int darnitFontGetGlyphH(void *font);
 unsigned int darnitFontGetGlyphHS(void *font);
 void darnitTextSurfaceReset(void *surface);
