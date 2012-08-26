@@ -201,7 +201,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 	menu->top_sel = 0;
 	menu->scroll_threshold = max;
 
-	menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, 0) + 8, textFontGetH(menu->font));
+	menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, 0) + 8, menu->font->ascent - menu->font->descent + 4);
 	menutkHighlightMove(menu, 0, 0);
 	menutkSetColor(menu, color);
 
