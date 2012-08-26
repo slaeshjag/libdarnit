@@ -156,11 +156,13 @@ void videoRemoveTexture(unsigned int texture) {
 
 
 void videoDestroy(void *handle) {
-	DARNIT *m = handle;
+	//DARNIT *m = handle;
 
-	m->video.camx = 0;	/* Hack to avoid warnings */
+	//m->video.camx = 0;	/* Hack to avoid warnings */
 
 	/* This is an unused stub, atm, it's only needed for GL|ES */
 
+  // WHY HAX?!?!?
+  DARNIT_UNUSED(handle);
 	return;
 }

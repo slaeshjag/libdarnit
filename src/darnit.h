@@ -19,6 +19,7 @@
 	#include <fcntl.h>
 #endif
 
+#define					DARNIT_UNUSED(x) (void)x
 
 #define         DARNIT_PLATFORM_DESKTOP         0x100000
 #define         DARNIT_PLATFORM_HANDHELD        0x200000
