@@ -1,5 +1,6 @@
 #include "darnit.h"
 
+void darnitQuit(void *handle);
 
 void inputKeymapReset(void *handle) {
 	DARNIT *m = handle;
@@ -105,6 +106,8 @@ void inputPoll(void *handle) {
 				m->input.key |= KEY_L;
 			else if (m->input.event.key.keysym.sym == m->input.map.r)
 				m->input.key |= KEY_R;
+			else if (m->input.event.key.keysym.sym == SDLK_ESCAPE)
+				darnitQuit(m);
 			if (m->input.event.key.keysym.sym == SDLK_LSHIFT)
 				m->input.upper |= 2;
 			else if (m->input.event.key.keysym.sym == SDLK_RSHIFT)
