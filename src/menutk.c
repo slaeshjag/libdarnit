@@ -100,14 +100,15 @@ int menutkSelectionPos(MENUTK_ENTRY *menu, int selection) {
 
 	len = strlen(menu->str);
 
-	for (i = w = cnt = 0; i < len; i++) {
+	for (i = w = cnt = 0; i < len;) {
 		if (menu->str[i] == '\n') {
 			cnt++;
-			w += (menu->option_space << 2);
+			w += (menu->option_space);
 		} else if (cnt == selection)
 			return w;
 		else
-			w += textGetGlyphWidth(menu->text->font, utf8GetChar(&menu->str[i]));;
+			w += textGetGlyphWidth(menu->text->font, utf8GetChar(&menu->str[i]));
+		i += utf8GetValidatedCharLength(&menu->str[i]);
 	}
 
 	return w;
@@ -179,12 +180,15 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 			cnt++;
 	
 	menu->text = textMakeRenderSurface(len + 10, menu->font, ~0, x+4, y);
+	menu->option_space = menu->text->font->font_height * 2;
 
-	for (i = 0; i < len; i++) {
+	for (i = 0; i < len;) {
 		if (options[i] != '\n')
 			i += textSurfaceAppendChar(menu->text, &options[i]);
-		else
+		else {
+			i++;
 			textSurfaceSkip(menu->text, menu->text->font->font_height * 2); 
+		}
 	}
 
 	menu->waiting = 1;
@@ -420,7 +424,7 @@ void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
 	menu->change = 1;
 	if (menu->selection > -1) {
 		menutkHighlightRecalculate(menu, menutkSelectionWidth(menu, menu->selection) + 8, menu->font->ascent - menu->font->descent + 4);
-		menutkHighlightMove(menu, menutkSelectionPos(menu, menu->selection)-menu->font->ascent+menu->font->font_height-2, 0);
+		menutkHighlightMove(menu, menutkSelectionPos(menu, menu->selection)-menu->font->ascent+menu->font->font_height-4, 0);
 	}
 	
 	return;
