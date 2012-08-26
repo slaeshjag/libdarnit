@@ -1,7 +1,7 @@
 #ifndef __INPUT_H__
 #define	__INPUT_H__
 
-
+// TODO: Sara wants an escape key!
 #define		KEY_LEFT		0x1
 #define		KEY_RIGHT		0x2
 #define		KEY_UP			0x4
