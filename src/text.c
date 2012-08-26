@@ -482,6 +482,7 @@ void textRender(TEXT_SURFACE *surface) {
 	if (surface == NULL) return;
 	if (surface->index == 0)
 		return;
+	
 	next = surface->g_cache;
 	while (next != NULL) {
 		renderCache(next->t_cache, next->f_cache->ts, next->glyphs);
