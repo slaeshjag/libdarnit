@@ -175,10 +175,10 @@ struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned 
 	stbtt_GetGlyphBox(&font->face, glyph_index, &x1, &y1, &x2, &y2);
 	stbtt_GetGlyphHMetrics(&font->face, glyph_index, &ad, &sb);
 
-	alloc->u1 = index->sheet_pwf * pos_x + 0.0005f;
-	alloc->v1 = index->sheet_phf * pos_y + 0.001f;
-	alloc->u2 = index->sheet_pwf * pos_x + index->sheet_pwf * (w) - 0.0005f;
-	alloc->v2 = index->sheet_phf * pos_y + index->sheet_phf * (h) - 0.001f;
+	alloc->u1 = index->sheet_pwf * pos_x;
+	alloc->v1 = index->sheet_phf * pos_y;
+	alloc->u2 = index->sheet_pwf * pos_x + index->sheet_pwf * (w);
+	alloc->v2 = index->sheet_phf * pos_y + index->sheet_phf * (h);
 	alloc->wf = index->sheet_pwf * w;
 	alloc->hf = index->sheet_phf * h;
 	alloc->risei = y2 * font->scale;
