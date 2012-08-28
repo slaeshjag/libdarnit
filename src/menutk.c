@@ -740,11 +740,13 @@ void menutkWaitForNewSelection(MENUTK_ENTRY *menu) {
 		return;
 
 	menu->waiting = 1;
-	menu->changed = 1;
+	menu->change = 1;
 	if (menu->selection == -2)
 		menu->selection = 0;
-	menutkTopSelRecalc(menu);
-	menutkHighlightMove(menu, 0, menu->advance*(menu->selection - menu->top_sel));
+	if (menu->orientation == MENUTK_ORIENT_V || menu->orientation == MENUTK_ORIENT_V_OL) {
+		menutkTopSelRecalc(menu);
+		menutkHighlightMove(menu, 0, menu->advance*(menu->selection - menu->top_sel));
+	}
 
 	return;
 }
