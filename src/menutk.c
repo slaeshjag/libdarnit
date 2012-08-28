@@ -740,6 +740,7 @@ void menutkWaitForNewSelection(MENUTK_ENTRY *menu) {
 		return;
 
 	menu->waiting = 1;
+	menu->changed = 1;
 	if (menu->selection == -2)
 		menu->selection = 0;
 	menutkTopSelRecalc(menu);
