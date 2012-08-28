@@ -740,6 +740,10 @@ void menutkWaitForNewSelection(MENUTK_ENTRY *menu) {
 		return;
 
 	menu->waiting = 1;
+	if (menu->selection == -2)
+		menu->selection = 0;
+	menutkTopSelRecalc(menu);
+	menutkHighlightMove(menu, 0, menu->advance*(menu->selection - menu->top_sel));
 
 	return;
 }
