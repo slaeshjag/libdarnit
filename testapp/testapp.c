@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
 	darnitSoundPlaybackStart(handle, music, 0, 127, 127, 0);
 
 	test_text = malloc(64);
-	font = darnitFontLoad(handle, "dejavu_sans.ttf", 20, 512, 512);
+	font = darnitFontLoad(handle, "dejavu_sans.ttf", 28, 512, 512);
 	surface = darnitMenuVerticalCreate(handle, "Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 3);
 
 	sprite = darnitSpriteLoad(handle, "test.spr", 0, DARNIT_PFORMAT_RGB5A1);
@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
 	tilemap = darnitRenderTilemapCreate(handle, "map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
-	sprintf(test_text, "Héllo, world. Modify m€!");
+	sprintf(test_text, "Héllo, world. Modify m€! Test of offsets");
 	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 200);
 
 	mtsprite = darnitMTSpriteLoad(handle, "testspr.mts");
