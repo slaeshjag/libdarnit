@@ -103,6 +103,7 @@ typedef struct {
 int textInit(void *handle);
 void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec);
 int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph);
+float textGetGlyphWidthf(TEXT_FONT *font, unsigned int glyph);
 int textGetStringWidth(TEXT_FONT *font, const char *string);
 int textFontGetH(TEXT_FONT *font);
 int textFontGetHS(TEXT_FONT *font);

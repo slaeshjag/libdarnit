@@ -2,12 +2,13 @@
 
 
 int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned int width) {
-	int i, j, k;
+	int i, k;
+	float j;
 	unsigned int glyph;
 
 	for (i = j = k = 0; str[i] != 0; k++) {
 		glyph = utf8GetChar(&str[i]);
-		j += textGetGlyphWidth(surface->font, glyph);
+		j += textGetGlyphWidthf(surface->font, glyph);
 		if (j > width)
 			return k;
 		i += utf8GetValidatedCharLength(&str[i]);
@@ -253,6 +254,15 @@ struct TEXT_FONT_GLYPH *textGetGlyphEntry(TEXT_FONT *font, unsigned int glyph) {
 }
 
 
+float textGetGlyphWidthf(TEXT_FONT *font, unsigned int glyph) {
+	struct TEXT_FONT_GLYPH *glyph_e;
+
+	if ((glyph_e = textGetGlyphEntry(font, glyph)) == NULL)
+		return 0;
+	return glyph_e->advf;
+}
+
+
 int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph) {
 	struct TEXT_FONT_GLYPH *glyph_e;
 
@@ -260,6 +270,7 @@ int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph) {
 		return 0;
 	return glyph_e->adv;
 }
+
 
 int textGetStringWidth(TEXT_FONT *font, const char *string) {
 	int i, w;
@@ -418,7 +429,7 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 	struct TEXT_FONT_GLYPH *glyph_e;
 	unsigned int glyph = cp;
-	float x, y, x2, y2;
+	float x, y, x2, y2, wf;
 	int w;
 
 	if (surface->len == surface->index) return 1;
@@ -426,10 +437,12 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	if ((glyph_e = textGetGlyphEntry(surface->font, glyph)) == NULL)
 		return 1;
 
+	wf = textGetGlyphWidthf(surface->font, glyph);
 	w = textGetGlyphWidth(surface->font, glyph);
+	surface->pos += w;
 	surface->cur_xf += textGetKern(surface, cp);
 	
-	if (surface->pos + w >= surface->linelen) {
+	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelen) {
 		surface->cur_xf = surface->orig_xf;
 		surface->cur_yf += surface->orig_yf * 2 + surface->font->line_gap * surface->font->screen_ph;
 		surface->pos = 0;
