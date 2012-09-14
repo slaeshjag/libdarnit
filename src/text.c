@@ -154,6 +154,7 @@ struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned 
 	int pos_x, pos_y, w, h, x1, x2, y1, y2, ad, sb;
 	unsigned char *data;
 	struct TEXT_FONT_GLYPH *next, *alloc;
+	float skipf;
 
 	if ((alloc = malloc(sizeof(struct TEXT_FONT_GLYPH))) == NULL)
 		return NULL;
@@ -186,10 +187,11 @@ struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned 
 
 	alloc->cw = w;
 	alloc->ch = h;
-	alloc->adv = font->scale * ad;
+	alloc->adv = lrintf(font->scale * ad);
 	alloc->advf = index->ts->swgran * alloc->adv;
-	alloc->skip = font->scale * x1;
-	alloc->skipf = index->ts->swgran * font->scale * x1;
+	skipf = font->scale * sb;
+	alloc->skip = skipf;
+	alloc->skipf = index->ts->swgran * skipf;
 
 	alloc->glyph = glyph;
 	alloc->tex_cache = index;
@@ -304,6 +306,7 @@ void textResetSurface(TEXT_SURFACE *srf) {
 	srf->pos = 0;
 	srf->line = 0;
 	srf->index = 0;
+	srf->last = 0;
 	srf->cur_xf = srf->orig_xf;
 	srf->cur_yf = srf->orig_yf;
 
@@ -348,6 +351,7 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	surface->orig_yf = surface->cur_yf;
 	surface->x = font->screen_pw * (x + (linelen >> 1)) - 1.0f;
 	surface->y = 1.0f - font->screen_ph * (y + (font->ascent>>1));
+	surface->last = 0;
 
 	surface->g_cache = surface->l_cache = NULL;
 
@@ -399,6 +403,15 @@ int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch) {
 }
 
 
+float textGetKern(TEXT_SURFACE *surface, unsigned int cp) {
+	float adv;
+	
+	adv = surface->font->scale * stbtt_GetGlyphKernAdvance(&surface->font->face, surface->last, cp);
+	adv *= surface->font->cache->ts->swgran;
+
+	return adv;
+}
+
 
 int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	if (surface == NULL) return 1;
@@ -414,6 +427,7 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		return 1;
 
 	w = textGetGlyphWidth(surface->font, glyph);
+	surface->cur_xf += textGetKern(surface, cp);
 	
 	if (surface->pos + w >= surface->linelen) {
 		surface->cur_xf = surface->orig_xf;
@@ -454,7 +468,9 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 		surface->l_cache->glyphs++;
 		surface->index++;
-	} 
+	}
+
+	surface->last = cp;
 	
 	return 1;
 }
