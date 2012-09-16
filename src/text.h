@@ -95,6 +95,7 @@ typedef struct {
 
 	float			cur_xf;
 	float			cur_yf;
+	float			yf_skip;
 	float			orig_xf;
 	float			orig_yf;
 } TEXT_SURFACE;
