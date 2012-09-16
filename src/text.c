@@ -364,7 +364,6 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	surface->x = font->screen_pw * (x + (linelen >> 1)) - 1.0f;
 	surface->y = 1.0f - font->screen_ph * (y + ((font->ascent + font->descent) >> 1));
 	surface->last = 0;
-	fprintf(stderr, "Ascent: %i\n", (font->ascent));
 
 	surface->g_cache = surface->l_cache = NULL;
 
