@@ -51,6 +51,14 @@ void menutkTopSelRecalc(MENUTK_ENTRY *menu) {
 		textSurfaceAppendString(menu->text, menu->str);
 	}
 
+	if (menu->orientation == MENUTK_ORIENT_V_OL && menu->scroll_threshold > 0) {
+		if (menu->selection - menu->top_sel >= menu->scroll_threshold)
+			menu->top_sel = menu->selection - menu->scroll_threshold + 1;
+		if (menu->selection < menu->top_sel)
+			menu->top_sel = menu->selection;
+	}
+		
+
 	return;
 }
 
@@ -223,7 +231,7 @@ void menutkAdjustTextinputCursor(void *handle, MENUTK_ENTRY *menu) {
 }
 
 
-void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option) {
+void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option, int max_h) {
 	DARNIT *m = handle;
 	MENUTK_ENTRY *menu;
 
@@ -248,7 +256,9 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 	menu->time = SDL_GetTicks();
 	menu->autorep = 0;
 	menu->str = NULL;
+	menu->scroll_threshold = max_h;
 
+	menutkTopSelRecalc(menu);
 
 	menutkHighlightRecalculate(menu, menuw, shadeh);
 	menutkHighlightMove(menu, 0, 0);
