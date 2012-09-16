@@ -187,7 +187,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 		if (options[i] == '\n')
 			cnt++;
 	
-	menu->text = textMakeRenderSurface(len + 10, menu->font, ~0, x+4, y);
+	menu->text = textMakeRenderSurface(len + 10, menu->font, ~0, x+4, y + 2);
 	menu->option_space = menu->text->font->font_height * 2;
 
 	for (i = 0; i < len;) {

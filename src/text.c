@@ -357,12 +357,14 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	if (linelen == ~0)
 		linelen = 0;
 	surface->cur_xf = m->video.swgran * -1 * (linelen >> 1);
-	surface->cur_yf = m->video.shgran * (font->font_height >> 1) * -1;
+	surface->cur_yf = m->video.shgran * ((font->font_height) >> 1) * -1;
+	surface->yf_skip = m->video.shgran * ((float) font->font_height + font->line_gap) * -1;
 	surface->orig_xf = surface->cur_xf;
 	surface->orig_yf = surface->cur_yf;
 	surface->x = font->screen_pw * (x + (linelen >> 1)) - 1.0f;
-	surface->y = 1.0f - font->screen_ph * (y + (font->ascent>>1));
+	surface->y = 1.0f - font->screen_ph * (y + ((font->ascent + font->descent) >> 1));
 	surface->last = 0;
+	fprintf(stderr, "Ascent: %i\n", (font->ascent));
 
 	surface->g_cache = surface->l_cache = NULL;
 
@@ -444,17 +446,17 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	
 	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelen) {
 		surface->cur_xf = surface->orig_xf;
-		surface->cur_yf += surface->orig_yf * 2 + surface->font->line_gap * surface->font->screen_ph;
-		surface->pos = 0;
+		surface->cur_yf += surface->yf_skip;
+		surface->pos = w;
 	} 
 
+//	surface->pos += w;
 	x = surface->cur_xf;
 	surface->cur_xf += glyph_e->advf;
-	surface->pos += w;
 
 	if (cp == '\n') {
 		surface->cur_xf = surface->orig_xf;
-		surface->cur_yf += surface->orig_yf * 2 + surface->font->line_gap * surface->font->screen_ph;
+		surface->cur_yf += surface->yf_skip;
 		surface->pos = 0;
 		return 1;
 	}
@@ -466,7 +468,7 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	y = y2 - surface->font->screen_ph * glyph_e->ch;
 
 
-	if (cp != ' ') {							/* "Temporary" work-around that makes OpenGL|ES happier... */
+	if (cp != ' ') {						/* "Temporary" work-around that makes OpenGL|ES happier... */
 		renderSetTileCoordinates(&surface->cache[surface->index], x, y, x2, y2, glyph_e->u1, glyph_e->v1, glyph_e->u2, glyph_e->v2);
 
 		if (surface->l_cache == NULL || glyph_e->tex_cache != surface->l_cache->f_cache) {
