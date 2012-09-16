@@ -751,8 +751,10 @@ void menutkWaitForNewSelection(MENUTK_ENTRY *menu) {
 
 	menu->waiting = 1;
 	menu->change = 1;
-	if (menu->selection == -2)
+	if (menu->selection == -2) {
+		menu->top_sel = 0;
 		menu->selection = 0;
+	}
 	if (menu->orientation == MENUTK_ORIENT_V || menu->orientation == MENUTK_ORIENT_V_OL) {
 		menutkTopSelRecalc(menu);
 		menutkHighlightMove(menu, 0, menu->advance*(menu->selection - menu->top_sel));
