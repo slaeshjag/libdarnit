@@ -12,7 +12,7 @@ void EXPORT_THIS *darnitMenuVerticalCreate(void *handle, const char *options, in
 
 
 void EXPORT_THIS *darnitMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option, int max_h) {
-	return menutkVerticalShadeCreate(handle, x, y, shade_h, y_advance, options, shade_w, 0, skip_option);
+	return menutkVerticalShadeCreate(handle, x, y, shade_h, y_advance, options, shade_w, 0, skip_option, max_h);
 }
 
 
