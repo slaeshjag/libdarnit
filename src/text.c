@@ -354,6 +354,7 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	
 	surface->len = chars;
 	surface->linelen = linelen;
+	surface->linelenf = surface->font->screen_pw * linelen;
 	if (linelen == ~0)
 		linelen = 0;
 	surface->cur_xf = m->video.swgran * -1 * (linelen >> 1);
@@ -442,14 +443,13 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	w = textGetGlyphWidth(surface->font, glyph);
 	surface->pos += w;
 	surface->cur_xf += textGetKern(surface, cp);
-	
-	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelen) {
+
+	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelenf) {
 		surface->cur_xf = surface->orig_xf;
 		surface->cur_yf += surface->yf_skip;
 		surface->pos = w;
-	} 
-
-//	surface->pos += w;
+	} else
+		surface->pos += w;
 	x = surface->cur_xf;
 	surface->cur_xf += glyph_e->advf;
 

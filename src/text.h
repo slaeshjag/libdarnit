@@ -90,6 +90,7 @@ typedef struct {
 	float			y;
 	int			len;
 	unsigned int		linelen;
+	float			linelenf;
 	unsigned int		last;
 
 
