@@ -50,3 +50,24 @@ int utilStringToIntArray(const char *str, const char *delimiter, int *dest, int 
 
 	return token;
 }
+
+
+void utilBlockToHostEndian(void *handle, unsigned int *block, int elements) {
+	DARNIT *m = handle;
+	DARNIT_ENDIAN_CONVERT ec;
+	int i;
+
+	if (m->platform.platform & DARNIT_PLATFORM_BIGENDIAN)
+		return;
+	
+	/* OPTIMIZE */
+	for (i = 0; i < elements; i++) {
+		ec.c[0] = ((unsigned int) block[i] >> 24);
+		ec.c[1] = ((unsigned int) block[i] >> 16) & 0xFF;
+		ec.c[2] = ((unsigned int) block[i] >> 8) & 0xFF;
+		ec.c[3] = block[i] & 0xFF;
+		block[i] = ec.i;
+	}
+
+	return;
+}

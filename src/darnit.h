@@ -30,6 +30,7 @@
 #define         DARNIT_PLATFORM_PANDORA         0x4
 #define         DARNIT_PLATFORM_GCWZERO         0x8
 #define         DARNIT_PLATFORM_GPHCAANOO       0x10
+#define		DARNIT_PLATFORM_BIGENDIAN	0x80000000
 
 
 #ifdef _WIN32
@@ -37,6 +38,12 @@
 #else
 	#define	EXPORT_THIS __attribute__ ((visibility ("default")))
 #endif
+
+
+typedef union {
+	unsigned int	i;
+	unsigned char	c[4];
+} DARNIT_ENDIAN_CONVERT;
 
 
 typedef struct {
@@ -74,6 +81,7 @@ typedef struct {
 #include "utf8.h"
 #include "util.h"
 #include "stringtable.h"
+#include "filesystem.h"
 
 int darnitTimeLastFrameTook(void *handle);
 
@@ -97,6 +105,7 @@ typedef struct {
 	VIDEO			video;
 	INPUT_STRUCT		input;
 	AUDIO			audio;
+	FILESYSTEM		fs;
 	DARNIT_FPS		fps;
 	TILESHEET_REF_CONT	tsr;
 	DARNIT_PLATFORM		platform;
