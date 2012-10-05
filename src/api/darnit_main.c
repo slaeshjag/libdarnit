@@ -32,6 +32,7 @@ void darnit_init_common() {
 
 void darnitSetPlatform(void *handle) {
 	DARNIT *d = handle;
+	DARNIT_ENDIAN_CONVERT end;
 
 	d->platform.screen_w = d->video.w;
 	d->platform.screen_h = d->video.h;
@@ -44,11 +45,15 @@ void darnitSetPlatform(void *handle) {
 		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_LINUX;
 	#endif
 
+	end.i = 0xFF000000;
+	if (end.c[0] == 0xFF)
+		d->platform.platform |= DARNIT_PLATFORM_BIGENDIAN;
+
 	return;
 }
 
 
-void EXPORT_THIS *darnitInit(const char *wtitle) {
+void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 	DARNIT *d;
 
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
@@ -72,6 +77,8 @@ void EXPORT_THIS *darnitInit(const char *wtitle) {
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform(d);
+		if (fsInit(d, data_dir) < 0)
+			return NULL;
 		return d;
 	}
 	
@@ -81,7 +88,7 @@ void EXPORT_THIS *darnitInit(const char *wtitle) {
 }
 
 
-void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen) {
+void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir) {
 	DARNIT *d;
 
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
@@ -99,6 +106,8 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform(d);
+		if (fsInit(d, data_dir) < 0)
+			return NULL;
 		return d;
 	}
 	

@@ -12,6 +12,7 @@ unsigned int utilHtonl(unsigned int val);
 unsigned int utilNtohl(unsigned int val);
 char *utilPathTranslate(const char *path);
 int utilStringToIntArray(const char *str, const char *delimiter, int *dest, int max_tokens);
+void utilBlockToHostEndian(void *handle, unsigned int *block, int elements);
 
 
 #endif
