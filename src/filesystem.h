@@ -27,8 +27,9 @@ typedef struct {
 typedef struct {
 	char				name[128];
 	unsigned int			sum;
-	long long			pos;
-	long long			lenght;
+	unsigned int			pos;
+	unsigned int			length;
+	unsigned int			comp;
 } FILESYSTEM_IMAGE_FILE;
 
 
@@ -59,6 +60,12 @@ size_t fsFileWrite(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
 off_t fsFileTell(FILESYSTEM_FILE *file);
 int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode);
 FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
+
+
+/* Internal stuff. Etc. */
+off_t fsContainerFILELength(void *handle, FILE *fp, const char *name);
+FILESYSTEM_FILE *fsContainerFS(void *handle, FILE *fp);
+FILE *fsContainerFileInternalGet(void *handle, const char *name);
 
 
 #endif

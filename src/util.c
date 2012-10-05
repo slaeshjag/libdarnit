@@ -71,3 +71,14 @@ void utilBlockToHostEndian(void *handle, unsigned int *block, int elements) {
 
 	return;
 }
+
+
+unsigned int utilStringSum(const char *str) {
+	const unsigned char *str_u = (const unsigned char *) str;
+	int i;
+	unsigned int sum = 0;
+
+	for (i = 0; str_u[i]; i++)
+		sum += str_u[i];
+	return sum;
+}

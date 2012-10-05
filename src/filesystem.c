@@ -102,9 +102,12 @@ FILESYSTEM_FILE *fsFileOpen(void *handle, const char *name, const char *mode) {
 		free(path_new);
 
 		/* Look in data containers */
-		if ((fp = fsContainerFileInternalGet(name, mode)) == NULL);
+		path_new = malloc(strlen(name) + 1);
+		sprintf(path_new, "%s", name);
+		if ((fp = fsContainerFileInternalGet(handle, path_new)) == NULL);
 		else
-			return fsFileNew(name, mode, fsFILEDup(fsCointainerFS(fp)), fsContainerFILELenght(fp));
+			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(handle, fp)), fsContainerFILELength(handle, fp, name));
+		free(path_new);
 	} else {
 		write = 1;
 		/* Write-dir up next... */
@@ -173,7 +176,7 @@ size_t fsFileWriteInts(void *handle, void *buffer, size_t ints, FILESYSTEM_FILE 
 off_t fsFileTell(FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
-	return ftell(file->fp);
+	return file->pos;
 }
 
 
@@ -233,7 +236,7 @@ int fsMount(void *handle, const char *name) {
 	if ((img->file = fsFileOpen(m, name, "rb")) == NULL) {
 		free(img);
 		return -1;
-	} 
+	}
 	
 	fsFileReadInts(handle, (unsigned int *) &header, sizeof(header) >> 2, img->file);
 
@@ -254,10 +257,110 @@ int fsMount(void *handle, const char *name) {
 	for (i = 0; i < img->dir_ents; i++) {
 		fsFileRead(img->dir[i].name, 128, img->file);
 		fsFileReadInts(handle, &img->dir[i].sum, 3, img->file);
+		img->dir[i].comp = utilStringSum(img->dir[i].name);
 	}
 
 	img->next = m->fs.mount;
 	m->fs.mount = img;
 
 	return 0;
+}
+
+
+void fsUnmount(void *handle, const char *name) {
+	DARNIT *m = handle;
+	struct FILESYSTEM_IMAGE *next, *old;
+	char *path;
+	
+	if (m->fs.mount == NULL)
+		return;
+	path = utilPathTranslate(name);
+	if (strcmp(m->fs.mount->file->file, path) == 0) {
+		next = m->fs.mount->next;
+		free(m->fs.mount);
+		m->fs.mount = next;
+		free(path);
+		return;
+	}
+
+	old = m->fs.mount;
+	next = m->fs.mount->next;
+	while (next != NULL) {
+		if (strcmp(next->file->file, path) == 0) {
+			old->next = next->next;
+			free(next);
+			free(path);
+			return;
+		}
+	}
+	
+	free(path);
+
+	return;
+}
+
+
+off_t fsContainerFILELength(void *handle, FILE *fp, const char *name) {
+	DARNIT *m = handle;
+	struct FILESYSTEM_IMAGE *next;
+	unsigned int comp;
+	int i;
+	char *path;
+
+	path = utilPathTranslate(name);
+	comp = utilStringSum(path);
+	next = m->fs.mount;
+	while (next) {
+		for (i = 0; i < next->dir_ents && next->file->fp == fp; i++)
+			if (next->dir[i].comp == comp && strcmp(next->dir[i].name, path) == 0) {
+				free(path);
+				return next->dir[i].length;
+			}
+		next = next->next;
+	}
+
+	free(path);
+
+	return 0;
+}
+
+
+FILESYSTEM_FILE *fsContainerFS(void *handle, FILE *fp) {
+	DARNIT *m = handle;
+	struct FILESYSTEM_IMAGE *next;
+
+	next = m->fs.mount;
+	while (next) {
+		if (next->file->fp == fp)
+			return next->file;
+		next = next->next;
+	}
+
+	return NULL;
+}
+
+
+FILE *fsContainerFileInternalGet(void *handle, const char *name) {
+	DARNIT *m = handle;
+	unsigned int comp;
+	struct FILESYSTEM_IMAGE *next;
+	int i;
+	char *path;
+
+	path = utilPathTranslate(name);
+	comp = utilStringSum(path);
+	next = m->fs.mount;
+	while (next) {
+		for (i = 0; i < next->dir_ents; i++)
+			if (next->dir[i].comp == comp)
+				if (strcmp(path, next->file->file) == 0) {
+					free(path);
+					return next->file->fp;
+				}
+		next = next->next;
+	}
+
+	free(path);
+
+	return NULL;
 }
