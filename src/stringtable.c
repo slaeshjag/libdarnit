@@ -1,22 +1,11 @@
 #include "darnit.h"
 
 
-unsigned int stringtableCalcComp(const char *section) {
-	int i;
-	unsigned int comp = 0;
-	
-	for (i = 0; i < strlen(section); i++)
-		comp += section[i];
-	
-	return comp;
-}
-
-
 int stringtableFindSection(STRINGTABLE *st, const char *section) {
 	int i;
 	unsigned int comp;
 
-	comp = stringtableCalcComp(section);
+	comp = utilStringSum(section);
 	for (i = 0; i < st->sections; i++)
 		if (st->section[i].name_comp == comp)
 			if (strcmp(section, st->section[i].sec.name) == 0)
@@ -45,7 +34,7 @@ int stringtableUnloadSection(STRINGTABLE *st, const char *section) {
 
 const char *stringtableGetEntry(STRINGTABLE *st, const char *key) {
 	int i, j;
-	unsigned int comp = stringtableCalcComp(key);
+	unsigned int comp = utilStringSum(key);
 	if (st == NULL)
 		return "STRINGTABLE NOT LOADED";
 
@@ -103,7 +92,7 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 	for (i = 0; i < st->section[sec].sec.strings; i++) {
 		st->section[sec].string[i].name = &str[ntohl(fe[i].pos)];
 		st->section[sec].string[i].value = &str[ntohl(fe[i].val)];
-		st->section[sec].string[i].key = stringtableCalcComp(st->section[sec].string[i].name);
+		st->section[sec].string[i].key = utilStringSum(st->section[sec].string[i].name);
 	}
 
 	st->section[sec].string_data = data;
@@ -161,7 +150,7 @@ void *stringtableOpen(const char *fname) {
 		st->section[i].string = NULL;
 		st->section[i].strings = 0;
 		st->section[i].string_data = NULL;
-		st->section[i].name_comp = stringtableCalcComp(st->section[i].sec.name);
+		st->section[i].name_comp = utilStringSum(st->section[i].sec.name);
 		fseek(fp, st->section[i].sec.zlen + st->section[i].sec.stringz, SEEK_CUR);
 	}
 
