@@ -62,9 +62,9 @@ typedef struct {
 } INPUT_STRUCT;
 
 
-void inputPoll(void *handle);
-int inputInit(void *handle);
-unsigned int inputASCIIPop(void *handle);
-void inputKeymapReset(void *handle);
+void inputPoll();
+int inputInit();
+unsigned int inputASCIIPop();
+void inputKeymapReset();
 
 #endif

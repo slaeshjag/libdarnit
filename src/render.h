@@ -115,25 +115,25 @@ typedef struct {
 } FADE_STRUCT;
 
 
-int renderInit(void *handle);
+int renderInit();
 
-TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
-void renderPopulateTilesheet(void *handle, TILESHEET *ts, int tiles_w, int tiles_h);
-void *renderTilesheetFree(void *handle, TILESHEET *ts);
-void renderMapCacheSetTile(void *handle, unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
+TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
+void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h);
+void *renderTilesheetFree(TILESHEET *ts);
+void renderMapCacheSetTile(unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);
 void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
-TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
+TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
-void renderFadeLoop(void *handle);
-void renderFadeFade(void *handle, unsigned int time, float r, float g, float b);
-void renderFadeUnfade(void *handle, unsigned int time);
+void renderFadeLoop();
+void renderFadeFade(unsigned int time, float r, float g, float b);
+void renderFadeUnfade(unsigned int time);
 
-void renderTilesheetAnimate(void *handle, TILESHEET *ts);
+void renderTilesheetAnimate(TILESHEET *ts);
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
 

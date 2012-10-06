@@ -1,30 +1,29 @@
 #include "darnit.h"
 
 
-int fsInit(void *handle, const char *dir_name) {
-	DARNIT *m = handle;
+int fsInit(const char *dir_name) {
 	const char *data_dir;
 	
-	if (m->platform.platform & DARNIT_PLATFORM_PANDORA) {
-		m->fs.data_dir = "./";
-		m->fs.write_dir = "./";
-	} else if (m->platform.platform & DARNIT_PLATFORM_LINUX) {
+	if (d->platform.platform & DARNIT_PLATFORM_PANDORA) {
+		d->fs.data_dir = "./";
+		d->fs.write_dir = "./";
+	} else if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
 		data_dir = getenv("HOME");
 
-		if ((m->fs.write_dir = malloc(strlen(data_dir) + 3 + strlen(dir_name))) == NULL)
+		if ((d->fs.write_dir = malloc(strlen(data_dir) + 3 + strlen(dir_name))) == NULL)
 			return -1;
-		sprintf(m->fs.write_dir, "%s/.%s", data_dir, dir_name);
+		sprintf(d->fs.write_dir, "%s/.%s", data_dir, dir_name);
 
-		if ((m->fs.data_dir = malloc(strlen(DATA_PATH) + 2 + strlen(dir_name))) == NULL)
+		if ((d->fs.data_dir = malloc(strlen(DATA_PATH) + 2 + strlen(dir_name))) == NULL)
 			return -1;
-		sprintf(m->fs.data_dir, "%s/%s", DATA_PATH, dir_name);
+		sprintf(d->fs.data_dir, "%s/%s", DATA_PATH, dir_name);
 	} else {
 		/* TODO: Add more platforms */
-		m->fs.data_dir = (char *) "./";
-		m->fs.write_dir = (char *) "./";
+		d->fs.data_dir = (char *) "./";
+		d->fs.write_dir = (char *) "./";
 	}
 
-	m->fs.mount = NULL;
+	d->fs.mount = NULL;
 
 	return 0;
 }
@@ -78,23 +77,22 @@ FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_si
 }
 
 
-FILESYSTEM_FILE *fsFileOpen(void *handle, const char *name, const char *mode) {
-	DARNIT *m = handle;
+FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 	char path[DARNIT_PATH_MAX];
 	char *path_new;
 	FILE *fp;
 	int write = 0;
 
-	if (strlen(m->fs.data_dir) + 2 + strlen(name) > DARNIT_PATH_MAX)
+	if (strlen(d->fs.data_dir) + 2 + strlen(name) > DARNIT_PATH_MAX)
 		return NULL;
-	if (strlen(m->fs.write_dir) + 2 + strlen(name) > DARNIT_PATH_MAX)
+	if (strlen(d->fs.write_dir) + 2 + strlen(name) > DARNIT_PATH_MAX)
 		return NULL;
 	
 	if (*name == '/');				/* Path is absolute, skip all FS stuff */
 	else if (strstr(mode, "w") == NULL 
 	    && strstr(mode, "a") == NULL) {		/* Try read-only locations */
 		/* Build data-dir path */
-		sprintf(path, "%s/%s", m->fs.data_dir, name);
+		sprintf(path, "%s/%s", d->fs.data_dir, name);
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else
@@ -104,14 +102,14 @@ FILESYSTEM_FILE *fsFileOpen(void *handle, const char *name, const char *mode) {
 		/* Look in data containers */
 		path_new = malloc(strlen(name) + 1);
 		sprintf(path_new, "%s", name);
-		if ((fp = fsContainerFileInternalGet(handle, path_new)) == NULL);
+		if ((fp = fsContainerFileInternalGet(path_new)) == NULL);
 		else
-			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(handle, fp)), fsContainerFILELength(handle, fp, name));
+			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name));
 		free(path_new);
 	} else {
 		write = 1;
 		/* Write-dir up next... */
-		sprintf(path, "%s/%s", m->fs.write_dir, name);
+		sprintf(path, "%s/%s", d->fs.write_dir, name);
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else
@@ -132,22 +130,24 @@ FILESYSTEM_FILE *fsFileOpen(void *handle, const char *name, const char *mode) {
 size_t fsFileRead(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
-	if (file->pos + bytes > file->size)
+	if (bytes < 0)
 		return 0;
+	if (file->pos + bytes > file->size)
+		bytes = file->size - file->pos;
 	file->pos += file->size;
 	fread(buffer, bytes, 1, file->fp);
 	return bytes;				/* This *should* always be true. Unless there's disk problems */
 }
 
 
-size_t fsFileReadInts(void *handle, unsigned int *buffer, size_t ints, FILESYSTEM_FILE *file) {
+size_t fsFileReadInts(unsigned int *buffer, size_t ints, FILESYSTEM_FILE *file) {
 	int bytes;
 	if (file == NULL)
 		return 0;
 	
 	bytes = fsFileRead(buffer, ints<<2, file);
 	bytes >>= 2;
-	utilBlockToHostEndian(handle, buffer, bytes);
+	utilBlockToHostEndian(buffer, bytes);
 
 	return bytes;
 }
@@ -156,18 +156,21 @@ size_t fsFileReadInts(void *handle, unsigned int *buffer, size_t ints, FILESYSTE
 size_t fsFileWrite(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
+	if (bytes < 0)
+		return 0;
+	file->pos += bytes;
 	return fwrite(buffer, 1, bytes, file->fp);
 }
 
 
-size_t fsFileWriteInts(void *handle, void *buffer, size_t ints, FILESYSTEM_FILE *file) {
+size_t fsFileWriteInts(void *buffer, size_t ints, FILESYSTEM_FILE *file) {
 	int bytes;
 	if (file == NULL)
 		return 0;
 	
-	utilBlockToHostEndian(handle, buffer, ints);		/* It actually just swaps endian */
+	utilBlockToHostEndian(buffer, ints);			/* It actually just swaps endian */
 	bytes = fsFileWrite(buffer, ints << 2, file);
-	utilBlockToHostEndian(handle, buffer, ints);		/* Swap it back */
+	utilBlockToHostEndian(buffer, ints);			/* Swap it back */
 	
 	return bytes >> 2;
 }
@@ -177,6 +180,15 @@ off_t fsFileTell(FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
 	return file->pos;
+}
+
+
+int fsFileEOF(FILESYSTEM_FILE *file) {
+	if (file->pos == file->size)
+		return 1;
+	if (file->size == -1)
+		return feof(file->fp);
+	return 0;
 }
 
 
@@ -225,20 +237,19 @@ FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file) {
 }
 
 
-int fsMount(void *handle, const char *name) {
-	DARNIT *m = handle;
+int fsMount(const char *name) {
 	struct FILESYSTEM_IMAGE *img;
 	FILESYSTEM_IMG_HEADER header;
 	int i;
 
 	if ((img = malloc(sizeof(struct FILESYSTEM_IMAGE))) == NULL)
 		return -1;
-	if ((img->file = fsFileOpen(m, name, "rb")) == NULL) {
+	if ((img->file = fsFileOpen(name, "rb")) == NULL) {
 		free(img);
 		return -1;
 	}
 	
-	fsFileReadInts(handle, (unsigned int *) &header, sizeof(header) >> 2, img->file);
+	fsFileReadInts((unsigned int *) &header, sizeof(header) >> 2, img->file);
 
 	if (header.magic != DARNIT_FS_IMG_MAGIC || header.version != DARNIT_FS_IMG_VERSION) {
 		fsFileClose(img->file);
@@ -256,35 +267,34 @@ int fsMount(void *handle, const char *name) {
 	
 	for (i = 0; i < img->dir_ents; i++) {
 		fsFileRead(img->dir[i].name, 128, img->file);
-		fsFileReadInts(handle, &img->dir[i].sum, 3, img->file);
+		fsFileReadInts(&img->dir[i].pos, 2, img->file);
 		img->dir[i].comp = utilStringSum(img->dir[i].name);
 	}
 
-	img->next = m->fs.mount;
-	m->fs.mount = img;
+	img->next = d->fs.mount;
+	d->fs.mount = img;
 
 	return 0;
 }
 
 
-void fsUnmount(void *handle, const char *name) {
-	DARNIT *m = handle;
+void fsUnmount(const char *name) {
 	struct FILESYSTEM_IMAGE *next, *old;
 	char *path;
 	
-	if (m->fs.mount == NULL)
+	if (d->fs.mount == NULL)
 		return;
 	path = utilPathTranslate(name);
-	if (strcmp(m->fs.mount->file->file, path) == 0) {
-		next = m->fs.mount->next;
-		free(m->fs.mount);
-		m->fs.mount = next;
+	if (strcmp(d->fs.mount->file->file, path) == 0) {
+		next = d->fs.mount->next;
+		free(d->fs.mount);
+		d->fs.mount = next;
 		free(path);
 		return;
 	}
 
-	old = m->fs.mount;
-	next = m->fs.mount->next;
+	old = d->fs.mount;
+	next = d->fs.mount->next;
 	while (next != NULL) {
 		if (strcmp(next->file->file, path) == 0) {
 			old->next = next->next;
@@ -300,8 +310,7 @@ void fsUnmount(void *handle, const char *name) {
 }
 
 
-off_t fsContainerFILELength(void *handle, FILE *fp, const char *name) {
-	DARNIT *m = handle;
+off_t fsContainerFILELength(FILE *fp, const char *name) {
 	struct FILESYSTEM_IMAGE *next;
 	unsigned int comp;
 	int i;
@@ -309,7 +318,7 @@ off_t fsContainerFILELength(void *handle, FILE *fp, const char *name) {
 
 	path = utilPathTranslate(name);
 	comp = utilStringSum(path);
-	next = m->fs.mount;
+	next = d->fs.mount;
 	while (next) {
 		for (i = 0; i < next->dir_ents && next->file->fp == fp; i++)
 			if (next->dir[i].comp == comp && strcmp(next->dir[i].name, path) == 0) {
@@ -325,11 +334,10 @@ off_t fsContainerFILELength(void *handle, FILE *fp, const char *name) {
 }
 
 
-FILESYSTEM_FILE *fsContainerFS(void *handle, FILE *fp) {
-	DARNIT *m = handle;
+FILESYSTEM_FILE *fsContainerFS(FILE *fp) {
 	struct FILESYSTEM_IMAGE *next;
 
-	next = m->fs.mount;
+	next = d->fs.mount;
 	while (next) {
 		if (next->file->fp == fp)
 			return next->file;
@@ -340,8 +348,7 @@ FILESYSTEM_FILE *fsContainerFS(void *handle, FILE *fp) {
 }
 
 
-FILE *fsContainerFileInternalGet(void *handle, const char *name) {
-	DARNIT *m = handle;
+FILE *fsContainerFileInternalGet(const char *name) {
 	unsigned int comp;
 	struct FILESYSTEM_IMAGE *next;
 	int i;
@@ -349,7 +356,7 @@ FILE *fsContainerFileInternalGet(void *handle, const char *name) {
 
 	path = utilPathTranslate(name);
 	comp = utilStringSum(path);
-	next = m->fs.mount;
+	next = d->fs.mount;
 	while (next) {
 		for (i = 0; i < next->dir_ents; i++)
 			if (next->dir[i].comp == comp)

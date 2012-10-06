@@ -18,14 +18,14 @@ typedef struct {
 	unsigned int		fullscreen;
 } DARNIT_PLATFORM;
 
-void *darnitInit(const char *wtitle);
-void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen);
-void darnitLoop(void *handle);
+void darnitInit(const char *wtitle);
+void darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen);
+void darnitLoop();
 unsigned int darnitTimeGet();
-int darnitFPSGet(void *handle);
-int darnitTimeLastFrameTook(void *handle);
-DARNIT_PLATFORM darnitPlatformGet(void *handle);
-void darnitQuit(void *handle);
+int darnitFPSGet();
+int darnitTimeLastFrameTook();
+DARNIT_PLATFORM darnitPlatformGet();
+void darnitQuit();
 
 
 #endif

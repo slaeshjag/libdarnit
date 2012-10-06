@@ -16,27 +16,26 @@ void EXPORT_THIS *darnitSoundUnload(void *sound_resource) {
 }
 
 
-void EXPORT_THIS darnitSoundPlaybackStopAll(void *handle) {
-	audioSoundClear(handle);
+void EXPORT_THIS darnitSoundPlaybackStopAll() {
+	audioSoundClear();
 
 	return;
 }
 
 
-void EXPORT_THIS darnitSoundPlaybackStop(void *handle, int playback_key) {
-	audioSoundStop(handle, playback_key);
+void EXPORT_THIS darnitSoundPlaybackStop(int playback_key) {
+	audioSoundStop(playback_key);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitSoundPlaybackStart(void *handle, void *sound_resource, int loop, int vol_l, int vol_r, int jmpto) {
-	return audioSoundStart(handle, sound_resource, 0, loop, vol_l, vol_r, jmpto);
+int EXPORT_THIS darnitSoundPlaybackStart(void *sound_resource, int loop, int vol_l, int vol_r, int jmpto) {
+	return audioSoundStart(sound_resource, 0, loop, vol_l, vol_r, jmpto);
 }
 
 
-int EXPORT_THIS darnitSoundPlaybackCheck(void *handle, int playback_key) {
-	DARNIT *d = handle;
+int EXPORT_THIS darnitSoundPlaybackCheck(int playback_key) {
 	int i;
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
@@ -46,8 +45,7 @@ int EXPORT_THIS darnitSoundPlaybackCheck(void *handle, int playback_key) {
 }
 
 
-void EXPORT_THIS darnitSoundPlaybackVolumeSet(void *handle, unsigned int playback_key, int vol_l, int vol_r) {
-	DARNIT *d = handle;
+void EXPORT_THIS darnitSoundPlaybackVolumeSet(unsigned int playback_key, int vol_l, int vol_r) {
 	int i;
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)

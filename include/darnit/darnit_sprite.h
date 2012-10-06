@@ -2,8 +2,8 @@
 #define	__DARNIT_SPRITE_H__
 
 void *darnitSpriteNew(void *tilesheet);
-void *darnitSpriteLoad(void *handle, const char *fname, int dir, unsigned int target_format);
-void darnitSpriteDelete(void *handle, void *sprite);
+void *darnitSpriteLoad(const char *fname, int dir, unsigned int target_format);
+void darnitSpriteDelete(void *sprite);
 void darnitSpriteDirectionChange(void *sprite, int dir);
 void darnitSpriteActivate(void *sprite, int dir);
 void darnitSpriteSetFrame(void *sprite, int frame);

@@ -5,23 +5,20 @@
 #endif
 
 
-int renderInit(void *handle) {
-	DARNIT *m = handle;
+int renderInit() {
+	d->tsr.cnt = 0;
+	d->tsr.tsr = NULL;
 
-	m->tsr.cnt = 0;
-	m->tsr.tsr = NULL;
-
-	m->video.fade.fading = 0;
-	m->video.fade.fadedir = 0.0f;
-	m->video.fade.a = 0.0f;
-	m->video.fade.fadestart = 0;
+	d->video.fade.fading = 0;
+	d->video.fade.fadedir = 0.0f;
+	d->video.fade.a = 0.0f;
+	d->video.fade.fadestart = 0;
 
 	return 0;
 }
 
 
-int renderAddTSRef(void *handle, const char *fname, TILESHEET *ts) {
-	DARNIT *m = handle;
+int renderAddTSRef(const char *fname, TILESHEET *ts) {
 	void *tmp;
 	int i, len, fast_cmp;
 
@@ -31,46 +28,43 @@ int renderAddTSRef(void *handle, const char *fname, TILESHEET *ts) {
 	for (i = fast_cmp = 0; i < len; i++)
 		fast_cmp += fname[i];
 	
-	for (i = 0; i < m->tsr.cnt; i++)
-		if (m->tsr.tsr[i].fast_cmp == 0)
+	for (i = 0; i < d->tsr.cnt; i++)
+		if (d->tsr.tsr[i].fast_cmp == 0)
 			break;
 	
-	if (i == m->tsr.cnt) {
-		m->tsr.cnt++;
-		if ((tmp = realloc(m->tsr.tsr, sizeof(TILESHEET_REF) * m->tsr.cnt)) == NULL) {
-			m->tsr.cnt--;
+	if (i == d->tsr.cnt) {
+		d->tsr.cnt++;
+		if ((tmp = realloc(d->tsr.tsr, sizeof(TILESHEET_REF) * d->tsr.cnt)) == NULL) {
+			d->tsr.cnt--;
 			return -1;
 		}
-		m->tsr.tsr = tmp;
+		d->tsr.tsr = tmp;
 	}
 
-	if ((m->tsr.tsr[i].fname = malloc(strlen(fname)+1)) == NULL) {
-		m->tsr.tsr[i].fast_cmp = 0;
+	if ((d->tsr.tsr[i].fname = malloc(strlen(fname)+1)) == NULL) {
+		d->tsr.tsr[i].fast_cmp = 0;
 		return -1;
 	}
 
-	strcpy(m->tsr.tsr[i].fname, fname);
-	m->tsr.tsr[i].fast_cmp = fast_cmp;
-	m->tsr.tsr[i].ref = ts;
+	strcpy(d->tsr.tsr[i].fname, fname);
+	d->tsr.tsr[i].fast_cmp = fast_cmp;
+	d->tsr.tsr[i].ref = ts;
 
 	return i;
 }
 
 
-void renderDelTSRef(void *handle, int ref) {
-	DARNIT *m = handle;
-
-	if (ref < 0 || ref >= m->tsr.cnt)
+void renderDelTSRef(int ref) {
+	if (ref < 0 || ref >= d->tsr.cnt)
 		return;
 	
-	m->tsr.tsr[ref].fast_cmp = 0;
+	d->tsr.tsr[ref].fast_cmp = 0;
 
 	return;
 }
 
 
-TILESHEET *renderGetTilesheetFromRef(void *handle, const char *fname) {
-	DARNIT *m = handle;
+TILESHEET *renderGetTilesheetFromRef(const char *fname) {
 	int i, len, fast_cmp;
 
 	if (fname == NULL) return NULL;
@@ -79,11 +73,11 @@ TILESHEET *renderGetTilesheetFromRef(void *handle, const char *fname) {
 	for (i = fast_cmp = 0; i < len; i++)
 		fast_cmp += fname[i];
 	
-	for (i = 0; i < m->tsr.cnt; i++) {
-		if (m->tsr.tsr[i].fast_cmp == fast_cmp)
-			if (strcmp(m->tsr.tsr[i].fname, fname) == 0) {
-				m->tsr.tsr[i].ref->ref_count++;
-				return m->tsr.tsr[i].ref;
+	for (i = 0; i < d->tsr.cnt; i++) {
+		if (d->tsr.tsr[i].fast_cmp == fast_cmp)
+			if (strcmp(d->tsr.tsr[i].fname, fname) == 0) {
+				d->tsr.tsr[i].ref->ref_count++;
+				return d->tsr.tsr[i].ref;
 			}
 	}
 
@@ -91,9 +85,8 @@ TILESHEET *renderGetTilesheetFromRef(void *handle, const char *fname) {
 }
 
 
-void renderTilesheetAnimate(void *handle, TILESHEET *ts) {
+void renderTilesheetAnimate(TILESHEET *ts) {
 	int i, j, change;
-	DARNIT *m = handle;
 	TS_FRAME *frame;
 
 	if (ts == NULL)
@@ -102,7 +95,7 @@ void renderTilesheetAnimate(void *handle, TILESHEET *ts) {
 
 	for (i = 0; i < ts->animation.tiles; i++) {
 		change = 0;
-		ts->animation.tile[i].time_rest += darnitTimeLastFrameTook(m);
+		ts->animation.tile[i].time_rest += darnitTimeLastFrameTook();
 		j = ts->animation.tile[i].frame[ts->animation.tile[i].frame_at].time;
 		while (ts->animation.tile[i].time_rest >= j) {
 			ts->animation.tile[i].time_rest -= j;
@@ -237,13 +230,13 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 }
 
 
-TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
+TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
 	void *data_t;
 	char *fname_n = utilPathTranslate(fname);
 
-	if ((ts = renderGetTilesheetFromRef(handle, fname_n)) != NULL) {
+	if ((ts = renderGetTilesheetFromRef(fname_n)) != NULL) {
 		free(fname_n);
 		return ts;
 	}
@@ -289,25 +282,24 @@ TILESHEET *renderTilesheetLoad(void *handle, const char *fname, unsigned int wsq
 		return NULL;
 	}
 
-	renderPopulateTilesheet(handle, ts, ts->w / wsq, ts->h / hsq);
-	renderAddTSRef(handle, fname, ts);
+	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
+	renderAddTSRef(fname, ts);
 
 	return ts;
 }
 
 
-void renderPopulateTilesheet(void *handle, TILESHEET *ts, int tiles_w, int tiles_h) {
-	DARNIT *m = handle;
+void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h) {
 	float twgran, thgran;
 	int i, j, p;
 
 	twgran = 1.0f / ts->w * ts->wsq;
 	thgran = 1.0f / ts->h * ts->hsq;
 
-	ts->sw = m->video.swgran * ts->wsq;
-	ts->sh = m->video.shgran * ts->hsq;
-	ts->swgran = m->video.swgran;
-	ts->shgran = m->video.shgran;
+	ts->sw = d->video.swgran * ts->wsq;
+	ts->sh = d->video.shgran * ts->hsq;
+	ts->swgran = d->video.swgran;
+	ts->shgran = d->video.shgran;
 	ts->ref_count = 0;
 	
 	for (i = 0; i < tiles_h; i++)
@@ -322,14 +314,13 @@ void renderPopulateTilesheet(void *handle, TILESHEET *ts, int tiles_w, int tiles
 }
 
 
-void *renderTilesheetFree(void *handle, TILESHEET *ts) {
-	DARNIT *m = handle;
+void *renderTilesheetFree(TILESHEET *ts) {
 	if (ts == NULL) return NULL;
 
 	ts->ref_count--;
 	if (ts->ref_count > 0) return ts;
 	videoRemoveTexture(ts->texhandle);
-	renderDelTSRef(m, ts->ref);
+	renderDelTSRef(ts->ref);
 	free(ts->animation.frame_data);
 	free(ts->animation.tile);
 	free(ts->animation.data);
@@ -456,7 +447,7 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 }
 
 
-TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
+TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
 	unsigned int tilesheet_w, tilesheet_h, texture;
 	TILESHEET *ts;
 	
@@ -494,7 +485,7 @@ TILESHEET *renderNewTilesheet(void *handle, int tiles_w, int tiles_h, int tile_w
 	ts->hsq = tile_h;
 	ts->ref = -1;
 
-	renderPopulateTilesheet(handle, ts, tiles_w, tiles_h);
+	renderPopulateTilesheet(ts, tiles_w, tiles_h);
 
 	return ts;
 }
@@ -513,83 +504,78 @@ void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int 
 }
 
 
-void renderFadeLoop(void *handle) {
-	DARNIT *m = handle;
+void renderFadeLoop() {
 	int timediff;
 	float coords[] = { -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f };
 
-	if (m->video.fade.a == 0.0f && m->video.fade.fading == 0)
+	if (d->video.fade.a == 0.0f && d->video.fade.fading == 0)
 		return;
 
-	timediff = SDL_GetTicks() - m->video.fade.fadestart;
+	timediff = SDL_GetTicks() - d->video.fade.fadestart;
 
 	if (timediff < 0)
 		timediff = 1;
 	
-	if (m->video.fade.fadedir != 0.0f) {
-		m->video.fade.a = m->video.fade.fadefactor * m->video.fade.fadedir * timediff;
-		m->video.fade.fadeprog = timediff;
+	if (d->video.fade.fadedir != 0.0f) {
+		d->video.fade.a = d->video.fade.fadefactor * d->video.fade.fadedir * timediff;
+		d->video.fade.fadeprog = timediff;
 	}
 
-	if (m->video.fade.fadedir < 0)
-		m->video.fade.a += 1.0f;
+	if (d->video.fade.fadedir < 0)
+		d->video.fade.a += 1.0f;
 	
-	if (m->video.fade.a < 0.0f && m->video.fade.fadedir < 0.0f) {
-		m->video.fade.fadedir = 0.0f;
-		m->video.fade.a = 0.0f;
-		m->video.fade.fading = 0;
-	} else if (m->video.fade.a >= 1.0f && m->video.fade.fadedir > 0.0f) {
-		m->video.fade.fadedir = 0.0f;
-		m->video.fade.a = 1.0f;
-		m->video.fade.fading = 2;
+	if (d->video.fade.a < 0.0f && d->video.fade.fadedir < 0.0f) {
+		d->video.fade.fadedir = 0.0f;
+		d->video.fade.a = 0.0f;
+		d->video.fade.fading = 0;
+	} else if (d->video.fade.a >= 1.0f && d->video.fade.fadedir > 0.0f) {
+		d->video.fade.fadedir = 0.0f;
+		d->video.fade.a = 1.0f;
+		d->video.fade.fading = 2;
 	}
 
-	if (m->video.blend == 0)
+	if (d->video.blend == 0)
 		glEnable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
-	glColor4f(m->video.fade.r, m->video.fade.g, m->video.fade.b, m->video.fade.a);
+	glColor4f(d->video.fade.r, d->video.fade.g, d->video.fade.b, d->video.fade.a);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, coords);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glEnable(GL_TEXTURE_2D);
-	glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
-	if (m->video.blend == 0)
+	glColor4f(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
+	if (d->video.blend == 0)
 		glDisable(GL_BLEND);
 
 	return;
 }
 
 
-void renderFadeFade(void *handle, unsigned int time, float r, float g, float b) {
-	DARNIT *m = handle;
-
-	if (m->video.fade.fadedir == 1.0f)
+void renderFadeFade(unsigned int time, float r, float g, float b) {
+	if (d->video.fade.fadedir == 1.0f)
 		return;
 
-	m->video.fade.r = r;
-	m->video.fade.g = g;
-	m->video.fade.b = b;
-	m->video.fade.fadefactor = 1.0f / time;
-	m->video.fade.fadedir = 1.0f;
-	m->video.fade.fadestart = SDL_GetTicks();
-	m->video.fade.fading = 1;
+	d->video.fade.r = r;
+	d->video.fade.g = g;
+	d->video.fade.b = b;
+	d->video.fade.fadefactor = 1.0f / time;
+	d->video.fade.fadedir = 1.0f;
+	d->video.fade.fadestart = SDL_GetTicks();
+	d->video.fade.fading = 1;
 
 	return;
 }
 
 
-void renderFadeUnfade(void *handle, unsigned int time) {
-	DARNIT *m = handle;
-
-	if (m->video.fade.fadedir == -1.0f)
+void renderFadeUnfade(unsigned int time) {
+	if (d->video.fade.fadedir == -1.0f)
 		return;
 
-	m->video.fade.fadedir = -1.0f;
-	m->video.fade.fadestart = SDL_GetTicks();
-	m->video.fade.fadestart -= (time - m->video.fade.fadeprog);
-	m->video.fade.fadefactor = 1.0f / time;
-	m->video.fade.fading = -1;
+	d->video.fade.fadedir = -1.0f;
+	d->video.fade.fadestart = SDL_GetTicks();
+	d->video.fade.fadestart -= (time - d->video.fade.fadeprog);
+	d->video.fade.fadefactor = 1.0f / time;
+	d->video.fade.fading = -1;
 
 	return;
 }

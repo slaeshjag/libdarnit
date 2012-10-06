@@ -1,9 +1,7 @@
 #include "darnit.h"
 
 
-unsigned int EXPORT_THIS darnitButtonGet(void *handle) {
-	DARNIT *d = handle;
-
+unsigned int EXPORT_THIS darnitButtonGet() {
 	return (d->input.key ^ d->input.keypending);
 }
 
@@ -13,34 +11,28 @@ unsigned int EXPORT_THIS darnitButtonZero() {
 }
 
 
-void EXPORT_THIS darnitButtonSet(void *handle, unsigned int button) {
-	DARNIT *d = handle;
-
+void EXPORT_THIS darnitButtonSet(unsigned int button) {
 	d->input.keypending |= button;
 
 	return;
 }
 
 
-void EXPORT_THIS darnitButtonMappingReset(void *handle) {
-	inputKeymapReset(handle);
+void EXPORT_THIS darnitButtonMappingReset() {
+	inputKeymapReset();
 
 	return;
 }
 
 
-void EXPORT_THIS darnitButtonMappingSet(void *handle, INPUT_MAP map) {
-	DARNIT *d = handle;
-
+void EXPORT_THIS darnitButtonMappingSet(INPUT_MAP map) {
 	d->input.map = map;
 
 	return;
 }
 
 
-INPUT_MAP EXPORT_THIS darnitButtonMappingGet(void *handle) {
-	DARNIT *d = handle;
-
+INPUT_MAP EXPORT_THIS darnitButtonMappingGet() {
 	return d->input.map;
 }
 
@@ -59,16 +51,12 @@ void EXPORT_THIS darnitInputUngrab() {
 }
 
 
-DARNIT_MOUSE EXPORT_THIS darnitMouseGet(void *handle) {
-	DARNIT *d = handle;
-
+DARNIT_MOUSE EXPORT_THIS darnitMouseGet() {
 	return d->input.mouse;
 }
 
 
-void EXPORT_THIS darnitJoystickGet(void *handle, int *js0_x, int *js0_y, int *js1_x, int *js1_y) {
-	DARNIT *d = handle;
-
+void EXPORT_THIS darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_y) {
 	if (js0_x != NULL)
 		*js0_x = d->input.js.nub0_x;
 	if (js0_y != NULL)

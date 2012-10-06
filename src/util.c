@@ -52,12 +52,11 @@ int utilStringToIntArray(const char *str, const char *delimiter, int *dest, int 
 }
 
 
-void utilBlockToHostEndian(void *handle, unsigned int *block, int elements) {
-	DARNIT *m = handle;
+void utilBlockToHostEndian(unsigned int *block, int elements) {
 	DARNIT_ENDIAN_CONVERT ec;
 	int i;
 
-	if (m->platform.platform & DARNIT_PLATFORM_BIGENDIAN)
+	if (d->platform.platform & DARNIT_PLATFORM_BIGENDIAN)
 		return;
 	
 	/* OPTIMIZE */

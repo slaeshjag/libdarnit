@@ -83,7 +83,7 @@ typedef struct {
 #include "stringtable.h"
 #include "filesystem.h"
 
-int darnitTimeLastFrameTook(void *handle);
+int darnitTimeLastFrameTook();
 
 
 typedef struct {
@@ -110,6 +110,10 @@ typedef struct {
 	TILESHEET_REF_CONT	tsr;
 	DARNIT_PLATFORM		platform;
 } DARNIT;
+
+
+/* It has finally happened. I made that annoying handle global. I know <.< */
+DARNIT *d;
 
 
 #endif

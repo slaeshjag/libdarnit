@@ -1,7 +1,7 @@
 #include "darnit.h"
 
 
-TILEMAP_ENTRY *tilemapNew(void *handle, int invs_div, void *tilesheet, unsigned int mask, int w, int h) {
+TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int w, int h) {
 	TILEMAP_ENTRY *tilemap;
 	int i;
 
@@ -15,7 +15,7 @@ TILEMAP_ENTRY *tilemapNew(void *handle, int invs_div, void *tilesheet, unsigned 
 	for (i = 0; i < w * h; i++)
 		tilemap->data[i] = 0;
 	
-	if ((tilemap->render = renderTilemapCreate(handle, w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
+	if ((tilemap->render = renderTilemapCreate(w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
 		free(tilemap->data);
 		free(tilemap);
 		return NULL;
@@ -28,7 +28,7 @@ TILEMAP_ENTRY *tilemapNew(void *handle, int invs_div, void *tilesheet, unsigned 
 }
 
 
-TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *tilesheet, unsigned int mask) {
+TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, unsigned int mask) {
 	IMGLOAD_DATA data;
 	TILEMAP_ENTRY *tilemap;
 	int i;
@@ -55,7 +55,7 @@ TILEMAP_ENTRY *tilemapLoad(void *handle, const char *fname, int invs_div, void *
 		tilemap->data[i] = tmp;
 	}
 
-	tilemap->render = renderTilemapCreate(handle, tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask);
+	tilemap->render = renderTilemapCreate(tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask);
 
 	return tilemap;
 }

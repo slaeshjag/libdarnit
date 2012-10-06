@@ -6,8 +6,8 @@ void EXPORT_THIS *darnitMTSpriteNew(void *tilesheet) {
 }
 
 
-void EXPORT_THIS *darnitMTSpriteLoad(void *handle, const char *fname) {
-	return mtSpriteLoad(handle, fname);
+void EXPORT_THIS *darnitMTSpriteLoad(const char *fname) {
+	return mtSpriteLoad(fname);
 }
 
 
@@ -53,6 +53,6 @@ void EXPORT_THIS darnitMTSpriteDraw(void *mtsprite) {
 }
 
 
-void EXPORT_THIS *darnitMTSpriteDelete(void *handle, void *mtsprite) {
-	return mtSpriteDelete(handle, mtsprite);
+void EXPORT_THIS *darnitMTSpriteDelete(void *mtsprite) {
+	return mtSpriteDelete(mtsprite);
 }

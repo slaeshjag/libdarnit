@@ -165,8 +165,7 @@ void menutkVerticalShadeIncreaseSelectionsByOne(MENUTK_ENTRY *menu) {
 }
 
 
-void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int color, int max) {
-	DARNIT *m = handle;
+void *menutkHorisontalCreate(const char *options, int x, int y, TEXT_FONT *font, int color, int max) {
 	MENUTK_ENTRY *menu;
 	int i, len, cnt;
 
@@ -177,7 +176,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 
 	menu->orientation = MENUTK_ORIENT_H;
 	menu->font = font;
-	menu->x = x*m->video.swgran-1.0f, menu->y = y*m->video.shgran*-1.0f + 1.0f;
+	menu->x = x*d->video.swgran-1.0f, menu->y = y*d->video.shgran*-1.0f + 1.0f;
 	menu->str = malloc(strlen(options) + 1);
 	strcpy(menu->str, options);
 	
@@ -203,7 +202,7 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 	menu->selection = 0;
 	menu->options = cnt;
 	menu->skip_option = -1;
-	menu->swgran = m->video.swgran, menu->shgran = m->video.shgran;
+	menu->swgran = d->video.swgran, menu->shgran = d->video.shgran;
 	menu->change = 1;
 	menu->hidden = 0;
 	menu->top_sel = 0;
@@ -217,22 +216,20 @@ void *menutkHorisontalCreate(void *handle, const char *options, int x, int y, TE
 }
 
 
-void menutkAdjustTextinputCursor(void *handle, MENUTK_ENTRY *menu) {
-	DARNIT *m = handle;
+void menutkAdjustTextinputCursor(MENUTK_ENTRY *menu) {
 	if (menu == NULL) return;
 
-	menu->hl.color[0].a = m->video.tint_a;
-	menu->hl.color[0].r = m->video.tint_r;
-	menu->hl.color[0].g = m->video.tint_g;
-	menu->hl.color[0].b = m->video.tint_b;
+	menu->hl.color[0].a = d->video.tint_a;
+	menu->hl.color[0].r = d->video.tint_r;
+	menu->hl.color[0].g = d->video.tint_g;
+	menu->hl.color[0].b = d->video.tint_b;
 	menu->hl.color[1] = menu->hl.color[2] = menu->hl.color[3] = menu->hl.color[0];
 
 	return;
 }
 
 
-void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option, int max_h) {
-	DARNIT *m = handle;
+void *menutkVerticalShadeCreate(int x, int y, int shadeh, int option_advance, int options, int menuw, int color, int skip_option, int max_h) {
 	MENUTK_ENTRY *menu;
 
 	if ((menu = malloc(sizeof(MENUTK_ENTRY))) == NULL) {
@@ -241,7 +238,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 	}
 
 	menu->orientation = MENUTK_ORIENT_V_OL;
-	menu->x = x*m->video.swgran-1.0f, menu->y = y*m->video.shgran*-1.0f + 1.0f;
+	menu->x = x*d->video.swgran-1.0f, menu->y = y*d->video.shgran*-1.0f + 1.0f;
 	menu->waiting = 1;
 	menu->selection = 0;
 	menu->top_sel = 0;
@@ -249,7 +246,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 	menu->options = options;
 	menu->advance = option_advance;
 	menu->skip_option = skip_option;
-	menu->swgran = m->video.swgran, menu->shgran = m->video.shgran;
+	menu->swgran = d->video.swgran, menu->shgran = d->video.shgran;
 	menu->change = 1;
 	menu->hidden = 0;
 	menu->text = NULL;
@@ -273,8 +270,7 @@ void *menutkVerticalShadeCreate(void *handle, int x, int y, int shadeh, int opti
 }
 
 
-void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color, int max_h) {
-	DARNIT *m = handle;
+void *menutkVerticalCreate(const char *options, int x, int y, TEXT_FONT *font, int menuw, int textskip_x, int color, int max_h) {
 	MENUTK_ENTRY *menu;
 	int i, len, cnt;
 
@@ -285,7 +281,7 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 	
 	menu->orientation = MENUTK_ORIENT_V;
 	menu->font = font;
-	menu->x = x*m->video.swgran-1.0f, menu->y = (y*m->video.shgran*-1.0f) + 1.0f;
+	menu->x = x*d->video.swgran-1.0f, menu->y = (y*d->video.shgran*-1.0f) + 1.0f;
 
 	menu->str = malloc(strlen(options) + 1);
 	strcpy(menu->str, options);
@@ -303,7 +299,7 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 	menu->advance = textFontGetHS(menu->font);
 	menu->skip_option = -1;
 	menu->options = cnt;
-	menu->swgran = m->video.swgran, menu->shgran = m->video.shgran;
+	menu->swgran = d->video.swgran, menu->shgran = d->video.shgran;
 	menu->change = 1;
 	menu->hidden = 0;
 	menu->time = SDL_GetTicks();
@@ -321,8 +317,7 @@ void *menutkVerticalCreate(void *handle, const char *options, int x, int y, TEXT
 }
 
 
-void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int y, TEXT_FONT *font, int step, int min, int max) {
-	DARNIT *m = handle;
+void *menutkSpinbuttonCreate(const char *comment_text, int x, int y, TEXT_FONT *font, int step, int min, int max) {
 	int len;
 	char tst[10];
 	MENUTK_ENTRY *menu;
@@ -333,7 +328,7 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 	}
 
 	menu->orientation = MENUTK_SPINBTN;
-	menu->x = x*m->video.swgran-1.0f, menu->y = (y*m->video.shgran*-1.0f) + 1.0f;
+	menu->x = x*d->video.swgran-1.0f, menu->y = (y*d->video.shgran*-1.0f) + 1.0f;
 	menu->str = malloc(strlen(comment_text) + 1);
 	strcpy(menu->str, comment_text);
 
@@ -358,7 +353,6 @@ void *menutkSpinbuttonCreate(void *handle, const char *comment_text, int x, int 
 
 
 void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_len, int field_len) {
-	DARNIT *m = font->handle;
 	MENUTK_ENTRY *menu;
 	int i;
 
@@ -367,7 +361,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 		return NULL;
 	}
 
-	menu->x = x*m->video.swgran-1.0f, menu->y = (y*m->video.shgran*-1.0f) + 1.0f;
+	menu->x = x*d->video.swgran-1.0f, menu->y = (y*d->video.shgran*-1.0f) + 1.0f;
 	menu->textinput_buf = buf;
 	menu->font = font;
 	menu->text = textMakeRenderSurface(field_len>>1, font, ~0, x, y);
@@ -378,8 +372,8 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menu->change = 1;
 	menu->cursor_display = 0;
 	menu->options = buf_len - 1;
-	menu->swgran = m->video.swgran;
-	menu->shgran = m->video.shgran;
+	menu->swgran = d->video.swgran;
+	menu->shgran = d->video.shgran;
 
 	menu->codepoint = malloc(sizeof(unsigned int) * buf_len);
 
@@ -397,7 +391,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 
 	menu->codepoint_use = i;
 	menu->codepoint[i] = 0;
-	menutkAdjustTextinputCursor(m, menu);
+	menutkAdjustTextinputCursor(menu);
 	menutkHighlightMove(menu, 0, 0);
 	menu->selection = -1;
 	menu->str = NULL;
@@ -406,27 +400,24 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 }
 
 
-void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
-	DARNIT *m = handle;
-
-
-	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
+void menutkInputH(MENUTK_ENTRY *menu) {
+	if ((d->input.key ^ d->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
-		m->input.keypending |= BUTTON_ACCEPT;
-	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
+		d->input.keypending |= BUTTON_ACCEPT;
+	} else if ((d->input.key ^ d->input.keypending) & BUTTON_CANCEL) {
 		menu->waiting = 0;
 		menu->selection = -2;
-		m->input.keypending |= BUTTON_CANCEL;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
+		d->input.keypending |= BUTTON_CANCEL;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_RIGHT) {
 		menu->selection++;
 		if (menu->selection == menu->options)
 			menu->selection = 0;
-		m->input.keypending |= KEY_RIGHT;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_LEFT) {
+		d->input.keypending |= KEY_RIGHT;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_LEFT) {
 		menu->selection--;
 		if (menu->selection == -1)
 			menu->selection = menu->options - 1;
-		m->input.keypending |= KEY_LEFT;
+		d->input.keypending |= KEY_LEFT;
 	} else
 		return;
 
@@ -441,20 +432,19 @@ void menutkInputH(void *handle, MENUTK_ENTRY *menu) {
 }
 
 
-void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
-	DARNIT *m = handle;
+void menutkInputV(MENUTK_ENTRY *menu) {
 	unsigned int step = SDL_GetTicks();
 	
 	step -= menu->time;
 
-	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
+	if ((d->input.key ^ d->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
-		m->input.keypending |= BUTTON_ACCEPT;
-	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
+		d->input.keypending |= BUTTON_ACCEPT;
+	} else if ((d->input.key ^ d->input.keypending) & BUTTON_CANCEL) {
 		menu->waiting = 0;
 		menu->selection = -2;
-		m->input.keypending |= BUTTON_CANCEL;
-	} else if (((m->input.key ^ m->input.keypending) & KEY_DOWN) || ((m->input.key & KEY_DOWN) && menu->autorep && step >= MENUTK_AUTOREP_STEP)) {
+		d->input.keypending |= BUTTON_CANCEL;
+	} else if (((d->input.key ^ d->input.keypending) & KEY_DOWN) || ((d->input.key & KEY_DOWN) && menu->autorep && step >= MENUTK_AUTOREP_STEP)) {
 		menu->selection++;
 		if (menu->selection == menu->skip_option)
 			menu->selection++;
@@ -462,8 +452,8 @@ void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
 			menu->selection = 0;
 		if (menu->selection == menu->skip_option)
 			menu->selection++;
-		m->input.keypending |= KEY_DOWN;
-	} else if (((m->input.key ^ m->input.keypending) & KEY_UP) || ((m->input.key & KEY_UP) && menu->autorep && step >= MENUTK_AUTOREP_STEP)) {
+		d->input.keypending |= KEY_DOWN;
+	} else if (((d->input.key ^ d->input.keypending) & KEY_UP) || ((d->input.key & KEY_UP) && menu->autorep && step >= MENUTK_AUTOREP_STEP)) {
 		menu->selection--;
 		if (menu->selection == menu->skip_option)
 			menu->selection--;
@@ -471,14 +461,14 @@ void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
 			menu->selection = menu->options - 1;
 		if (menu->selection == menu->skip_option)
 			menu->selection--;
-		m->input.keypending |= KEY_UP;
+		d->input.keypending |= KEY_UP;
 	} else {
 		if (menu->autorep && step >= MENUTK_AUTOREP_STEP)
 			menu->autorep = 0;
-		else if (menu->autorep != 1 && step >= MENUTK_AUTOREP_DELAY && (m->input.key & (KEY_UP | KEY_DOWN))) {
+		else if (menu->autorep != 1 && step >= MENUTK_AUTOREP_DELAY && (d->input.key & (KEY_UP | KEY_DOWN))) {
 			menu->time = SDL_GetTicks();
 			menu->autorep = 1;
-		} else if (!(m->input.key & (KEY_UP | KEY_DOWN))) {
+		} else if (!(d->input.key & (KEY_UP | KEY_DOWN))) {
 			menu->autorep = 0;
 			menu->time = SDL_GetTicks();
 		}
@@ -497,35 +487,32 @@ void menutkInputV(void *handle, MENUTK_ENTRY *menu) {
 }
 
 
-void menutkSpinbuttonInput(void *handle, MENUTK_ENTRY *menu) {
-	DARNIT *m = handle;
-
-	
-	if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
+void menutkSpinbuttonInput(MENUTK_ENTRY *menu) {
+	if ((d->input.key ^ d->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
-		m->input.keypending |= BUTTON_ACCEPT;
-	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
+		d->input.keypending |= BUTTON_ACCEPT;
+	} else if ((d->input.key ^ d->input.keypending) & BUTTON_CANCEL) {
 		menu->waiting = 0;
 		menu->selection = -2;
-		m->input.keypending |= BUTTON_CANCEL;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_UP) {
+		d->input.keypending |= BUTTON_CANCEL;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_UP) {
 		if (menu->selection == menu->options)
 			menu->selection = menu->min;
 		else
 			menu->selection += menu->advance;
 		if (menu->selection > menu->options)
 			menu->selection = menu->options;
-		m->input.keypending |= KEY_UP;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_DOWN) {
-		m->input.keypending |= KEY_DOWN;
+		d->input.keypending |= KEY_UP;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_DOWN) {
+		d->input.keypending |= KEY_DOWN;
 		if (menu->selection == menu->min)
 			menu->selection = menu->options;
 		else
 			menu->selection -= menu->advance;
 		if (menu->selection < menu->min)
 			menu->selection = menu->min;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
-		m->input.keypending |= KEY_RIGHT;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_RIGHT) {
+		d->input.keypending |= KEY_RIGHT;
 		menu->selection = menu->options>>1;
 		if (menu->selection < menu->min)
 			menu->selection = menu->min;
@@ -552,11 +539,10 @@ void menutkUpdateCursorBlink(MENUTK_ENTRY *menu) {
 }
 
 
-void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
-	DARNIT *m = handle;
+void menutkTextinputInput(MENUTK_ENTRY *menu) {
 	unsigned int key, i, tmp, change;
 
-	key = inputASCIIPop(handle);
+	key = inputASCIIPop();
 	change = 1;
 
 	if (key == 127 && menu->selection >= 0) {
@@ -600,23 +586,23 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 
 
 	if (menu->selection == -1);
-	else if ((m->input.key ^ m->input.keypending) & BUTTON_ACCEPT) {
+	else if ((d->input.key ^ d->input.keypending) & BUTTON_ACCEPT) {
 		menu->waiting = 0;
-		m->input.keypending |= BUTTON_ACCEPT;
+		d->input.keypending |= BUTTON_ACCEPT;
 		menu->cursor_display = 0;
-	} else if ((m->input.key ^ m->input.keypending) & BUTTON_CANCEL) {
+	} else if ((d->input.key ^ d->input.keypending) & BUTTON_CANCEL) {
 		menu->waiting = 0;
 		menu->selection = -2;
 		menu->cursor_display = 0;
-		m->input.keypending |= BUTTON_CANCEL;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_LEFT) {
+		d->input.keypending |= BUTTON_CANCEL;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_LEFT) {
 		if (menu->selection > 0)
 			menu->selection--;
-		m->input.keypending |= KEY_LEFT;
-	} else if ((m->input.key ^ m->input.keypending) & KEY_RIGHT) {
+		d->input.keypending |= KEY_LEFT;
+	} else if ((d->input.key ^ d->input.keypending) & KEY_RIGHT) {
 		if (menu->selection < menu->codepoint_use)
 			menu->selection++;
-		m->input.keypending |= KEY_RIGHT;
+		d->input.keypending |= KEY_RIGHT;
 	} else
 		change = 0;
 
@@ -682,21 +668,19 @@ void menutkTextinputInput(void *handle, MENUTK_ENTRY *menu) {
 	return;
 }
 
-int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
-	DARNIT *m = handle; 
-
+int menutkMenuRoutine(MENUTK_ENTRY *menu) {
 	if (menu == NULL)
 		return -2;
 
 	if (menu->waiting == 1) {
 		if (menu->orientation == MENUTK_ORIENT_H)
-			menutkInputH(m, menu);
+			menutkInputH(menu);
 		else if (menu->orientation == MENUTK_ORIENT_V || menu->orientation == MENUTK_ORIENT_V_OL)
-			menutkInputV(m, menu);
+			menutkInputV(menu);
 		else if (menu->orientation == MENUTK_SPINBTN)
-			menutkSpinbuttonInput(m, menu);
+			menutkSpinbuttonInput(menu);
 		else if (menu->orientation == MENUTK_TEXTINPUT)
-			menutkTextinputInput(m, menu);
+			menutkTextinputInput(menu);
 	}
 
 	if (menu->hidden == 1)
@@ -716,12 +700,12 @@ int menutkMenuRoutine(void *handle, MENUTK_ENTRY *menu) {
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		glTranslatef(-menu->hl.x, -menu->hl.y, 0.0f);
-		glColor4f(m->video.tint_r, m->video.tint_g, m->video.tint_b, m->video.tint_a);
+		glColor4f(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
 	}
 
 
 	glLoadIdentity();
-	glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0.0f);
+	glTranslatef(d->video.swgran * d->video.offset_x, d->video.shgran * d->video.offset_y, 0.0f);
 	if (menu->orientation != MENUTK_ORIENT_V_OL)
 		textRender(menu->text);
 
