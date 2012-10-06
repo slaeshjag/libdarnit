@@ -6,6 +6,11 @@
 #define	DARNIT_FS_IMG_MAGIC	0x83B3661B
 #define	DARNIT_FS_IMG_VERSION	0xBBA77ABC
 
+#ifndef _WIN32
+	#include	<sys/stat.h>
+	#include	<sys/types.h>
+#endif
+
 
 typedef struct {
 	unsigned int			magic;
