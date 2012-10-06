@@ -6,13 +6,13 @@ void EXPORT_THIS *darnitSpriteNew(void *tilesheet) {
 }
 
 
-void EXPORT_THIS *darnitSpriteLoad(void *handle, const char *fname, int dir, unsigned int target_format) {
-	return spriteLoad(handle, fname, dir, target_format);
+void EXPORT_THIS *darnitSpriteLoad(const char *fname, int dir, unsigned int target_format) {
+	return spriteLoad(fname, dir, target_format);
 }
 
 
-void EXPORT_THIS *darnitSpriteDelete(void *handle, void *sprite) {
-	return spriteDelete(handle, sprite);
+void EXPORT_THIS *darnitSpriteDelete(void *sprite) {
+	return spriteDelete(sprite);
 }
 
 

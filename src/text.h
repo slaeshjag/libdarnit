@@ -63,10 +63,6 @@ typedef struct {
 
 	float			line_pos_x;
 	float			line_pos_y;
-	float			screen_pw;
-	float			screen_ph;
-
-	void			*handle;
 } TEXT_FONT;
 
 
@@ -102,14 +98,13 @@ typedef struct {
 } TEXT_SURFACE;
 
 
-int textInit(void *handle);
-void *textLoadFont(void *handle, const char *fname, int w, int h, int linespec);
+int textInit();
+void *textLoadFont(const char *fname, int w, int h, int linespec);
 int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph);
 float textGetGlyphWidthf(TEXT_FONT *font, unsigned int glyph);
 int textGetStringWidth(TEXT_FONT *font, const char *string);
 int textFontGetH(TEXT_FONT *font);
 int textFontGetHS(TEXT_FONT *font);
-int textInit(void *handle);
 void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y);
 void textResetSurface(TEXT_SURFACE *srf);
 int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch);

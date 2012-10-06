@@ -67,12 +67,12 @@ typedef struct {
 } AUDIO;
 
 
-int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int vol_l, int vol_h, int jmpto);
-void audioSoundStop(void *handle, int key);
-void audioSoundClear(void *handle);
+int audioSoundStart(AUDIO_HANDLE *ah, int channels, int loop, int vol_l, int vol_h, int jmpto);
+void audioSoundStop(int key);
+void audioSoundClear();
 short audioSampleMix(short s1, short s2);
 void audioFrameMix(short *target, short *source1, short *source2, int frames);
-int audioInit(void *handle);
+int audioInit();
 
 
 

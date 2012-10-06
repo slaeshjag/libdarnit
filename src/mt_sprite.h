@@ -24,14 +24,14 @@ typedef struct {
 
 
 void *mtSpriteNew(int tiles, int frames, void *ts);
-void *mtSpriteLoad(void *handle, const char *fname);
+void *mtSpriteLoad(const char *fname);
 void mtSpriteDraw(MTSPRITE_ENTRY *spr);
 void mtSpriteEnableAnimation(MTSPRITE_ENTRY *spr);
 void mtSpritePauseAnimation(MTSPRITE_ENTRY *spr);
 void mtSpriteSetAsFrame(MTSPRITE_ENTRY *spr, int time);
 void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, int ry);
 void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr);
-void *mtSpriteDelete(void *handle, MTSPRITE_ENTRY *spr);
+void *mtSpriteDelete(MTSPRITE_ENTRY *spr);
 
 
 #endif

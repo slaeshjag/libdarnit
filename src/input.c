@@ -1,59 +1,56 @@
 #include "darnit.h"
 
-void darnitQuit(void *handle);
+void darnitQuit();
 
-void inputKeymapReset(void *handle) {
-	DARNIT *m = handle;
-
-	m->input.map.up = SDLK_UP;
-	m->input.map.down = SDLK_DOWN;
-	m->input.map.left = SDLK_LEFT;
-	m->input.map.right = SDLK_RIGHT;
+void inputKeymapReset() {
+	d->input.map.up = SDLK_UP;
+	d->input.map.down = SDLK_DOWN;
+	d->input.map.left = SDLK_LEFT;
+	d->input.map.right = SDLK_RIGHT;
 	#ifdef PANDORA
-	m->input.map.x = SDLK_PAGEDOWN;
-	m->input.map.y = SDLK_PAGEUP;
-	m->input.map.a = SDLK_HOME;
-	m->input.map.b = SDLK_END;
-	m->input.map.start = SDLK_LALT;
-	m->input.map.select = SDLK_LCTRL;
-	m->input.map.l = SDLK_RSHIFT;
-	m->input.map.r = SDLK_RCTRL;
+	d->input.map.x = SDLK_PAGEDOWN;
+	d->input.map.y = SDLK_PAGEUP;
+	d->input.map.a = SDLK_HOME;
+	d->input.map.b = SDLK_END;
+	d->input.map.start = SDLK_LALT;
+	d->input.map.select = SDLK_LCTRL;
+	d->input.map.l = SDLK_RSHIFT;
+	d->input.map.r = SDLK_RCTRL;
 	#else
-	m->input.map.x = SDLK_s;
-	m->input.map.y = SDLK_w;
-	m->input.map.a = SDLK_a;
-	m->input.map.b = SDLK_d;
-	m->input.map.l = SDLK_q;
-	m->input.map.r = SDLK_e;
-	m->input.map.start = SDLK_RETURN;
-	m->input.map.select = SDLK_RSHIFT;
+	d->input.map.x = SDLK_s;
+	d->input.map.y = SDLK_w;
+	d->input.map.a = SDLK_a;
+	d->input.map.b = SDLK_d;
+	d->input.map.l = SDLK_q;
+	d->input.map.r = SDLK_e;
+	d->input.map.start = SDLK_RETURN;
+	d->input.map.select = SDLK_RSHIFT;
 	#endif
 
-	m->input.key = 0;
+	d->input.key = 0;
 
 	return;
 }
 
 
-int inputInitJoystick(void *handle) {
-	DARNIT *m = handle;
+int inputInitJoystick() {
 	int i;
 
-	m->input.js.nub0 = m->input.js.nub1 = NULL;
-	m->input.js.nub0i = m->input.js.nub1i = -1;
-	m->input.js.nub0_x = m->input.js.nub0_y = m->input.js.nub1_x = m->input.js.nub1_y = 0;
+	d->input.js.nub0 = d->input.js.nub1 = NULL;
+	d->input.js.nub0i = d->input.js.nub1i = -1;
+	d->input.js.nub0_x = d->input.js.nub0_y = d->input.js.nub1_x = d->input.js.nub1_y = 0;
 
 	for (i = 0; i < SDL_NumJoysticks(); i++) {
 		if (strcmp("nub0", SDL_JoystickName(i)) == 0) {
-			m->input.js.nub0 = SDL_JoystickOpen(i);
-			m->input.js.nub0i = i;
+			d->input.js.nub0 = SDL_JoystickOpen(i);
+			d->input.js.nub0i = i;
 		} else if (strcmp("nub1", SDL_JoystickName(i)) == 0) {
-			m->input.js.nub1 = SDL_JoystickOpen(i);
-			m->input.js.nub1i = i;
+			d->input.js.nub1 = SDL_JoystickOpen(i);
+			d->input.js.nub1i = i;
 		}
 	}
 
-	if (m->input.js.nub0 != NULL || m->input.js.nub1 != NULL)
+	if (d->input.js.nub0 != NULL || d->input.js.nub1 != NULL)
 		SDL_JoystickEventState(SDL_ENABLE);
 	
 	return 0;
@@ -61,157 +58,152 @@ int inputInitJoystick(void *handle) {
 		
 
 
-int inputInit(void *handle) {
-	DARNIT *m = handle;
+int inputInit() {
+	d->input.key = 0;
+	d->input.keypending = 0;
+	d->input.upper = 0;
+	d->input.lastkey = 0;
+	d->input.mouse.x = d->input.mouse.y = d->input.mouse.wheel = 0;
 
-	m->input.key = 0;
-	m->input.keypending = 0;
-	m->input.upper = 0;
-	m->input.lastkey = 0;
-	m->input.mouse.x = m->input.mouse.y = m->input.mouse.wheel = 0;
-
-	inputKeymapReset(m);
-	inputInitJoystick(m);
+	inputKeymapReset();
+	inputInitJoystick();
 
 	return 0;
 }
 
 
-void inputPoll(void *handle) {
-	DARNIT *m = handle;
-	
-	while (SDL_PollEvent(&m->input.event)) {
-		if (m->input.event.type == SDL_KEYDOWN) {
-			if (m->input.event.key.keysym.sym == m->input.map.up)
-				m->input.key |= KEY_UP;
-			else if (m->input.event.key.keysym.sym == m->input.map.down)
-				m->input.key |= KEY_DOWN;
-			else if (m->input.event.key.keysym.sym == m->input.map.left)
-				m->input.key |= KEY_LEFT;
-			else if (m->input.event.key.keysym.sym == m->input.map.right)
-				m->input.key |= KEY_RIGHT;
-			else if (m->input.event.key.keysym.sym == m->input.map.x)
-				m->input.key |= KEY_X;
-			else if (m->input.event.key.keysym.sym == m->input.map.y)
-				m->input.key |= KEY_Y;
-			else if (m->input.event.key.keysym.sym == m->input.map.a)
-				m->input.key |= KEY_A;
-			else if (m->input.event.key.keysym.sym == m->input.map.b)
-				m->input.key |= KEY_B;
-			else if (m->input.event.key.keysym.sym == m->input.map.start)
-				m->input.key |= KEY_START;
-			else if (m->input.event.key.keysym.sym == m->input.map.select)
-				m->input.key |= KEY_SELECT;
-			else if (m->input.event.key.keysym.sym == m->input.map.l)
-				m->input.key |= KEY_L;
-			else if (m->input.event.key.keysym.sym == m->input.map.r)
-				m->input.key |= KEY_R;
-			else if (m->input.event.key.keysym.sym == SDLK_ESCAPE)
-				darnitQuit(m);
-			if (m->input.event.key.keysym.sym == SDLK_LSHIFT)
-				m->input.upper |= 2;
-			else if (m->input.event.key.keysym.sym == SDLK_RSHIFT)
-				m->input.upper |= 1;
-			if (m->input.event.key.keysym.sym < 0x80)	/* ASCII */
-				m->input.lastkey = m->input.event.key.keysym.sym;
+void inputPoll() {
+	while (SDL_PollEvent(&d->input.event)) {
+		if (d->input.event.type == SDL_KEYDOWN) {
+			if (d->input.event.key.keysym.sym == d->input.map.up)
+				d->input.key |= KEY_UP;
+			else if (d->input.event.key.keysym.sym == d->input.map.down)
+				d->input.key |= KEY_DOWN;
+			else if (d->input.event.key.keysym.sym == d->input.map.left)
+				d->input.key |= KEY_LEFT;
+			else if (d->input.event.key.keysym.sym == d->input.map.right)
+				d->input.key |= KEY_RIGHT;
+			else if (d->input.event.key.keysym.sym == d->input.map.x)
+				d->input.key |= KEY_X;
+			else if (d->input.event.key.keysym.sym == d->input.map.y)
+				d->input.key |= KEY_Y;
+			else if (d->input.event.key.keysym.sym == d->input.map.a)
+				d->input.key |= KEY_A;
+			else if (d->input.event.key.keysym.sym == d->input.map.b)
+				d->input.key |= KEY_B;
+			else if (d->input.event.key.keysym.sym == d->input.map.start)
+				d->input.key |= KEY_START;
+			else if (d->input.event.key.keysym.sym == d->input.map.select)
+				d->input.key |= KEY_SELECT;
+			else if (d->input.event.key.keysym.sym == d->input.map.l)
+				d->input.key |= KEY_L;
+			else if (d->input.event.key.keysym.sym == d->input.map.r)
+				d->input.key |= KEY_R;
+			else if (d->input.event.key.keysym.sym == SDLK_ESCAPE)
+				darnitQuit();
+			if (d->input.event.key.keysym.sym == SDLK_LSHIFT)
+				d->input.upper |= 2;
+			else if (d->input.event.key.keysym.sym == SDLK_RSHIFT)
+				d->input.upper |= 1;
+			if (d->input.event.key.keysym.sym < 0x80)	/* ASCII */
+				d->input.lastkey = d->input.event.key.keysym.sym;
 
-		} else if (m->input.event.type == SDL_KEYUP) {
-			if (m->input.event.key.keysym.sym == m->input.map.up) {
-				m->input.key |= KEY_UP;
-				m->input.key ^= KEY_UP;
-			} else if (m->input.event.key.keysym.sym == m->input.map.down) {
-				m->input.key |= KEY_DOWN;
-				m->input.key ^= KEY_DOWN;
-			} else if (m->input.event.key.keysym.sym == m->input.map.left) {
-				m->input.key |= KEY_LEFT;
-				m->input.key ^= KEY_LEFT;
-			} else if (m->input.event.key.keysym.sym == m->input.map.right) {
-				m->input.key |= KEY_RIGHT;
-				m->input.key ^= KEY_RIGHT;
-			} else if (m->input.event.key.keysym.sym == m->input.map.x) {
-				m->input.key |= KEY_X;
-				m->input.key ^= KEY_X;
-			} else if (m->input.event.key.keysym.sym == m->input.map.y) {
-				m->input.key |= KEY_Y;
-				m->input.key ^= KEY_Y;
-			} else if (m->input.event.key.keysym.sym == m->input.map.a) {
-				m->input.key |= KEY_A;
-				m->input.key ^= KEY_A;
-			} else if (m->input.event.key.keysym.sym == m->input.map.b) {
-				m->input.key |= KEY_B;
-				m->input.key ^= KEY_B;
-			} else if (m->input.event.key.keysym.sym == m->input.map.start) {
-				m->input.key |= KEY_START;
-				m->input.key ^= KEY_START;
-			} else if (m->input.event.key.keysym.sym == m->input.map.select) {
-				m->input.key |= KEY_SELECT;
-				m->input.key ^= KEY_SELECT;
-			} else if (m->input.event.key.keysym.sym == m->input.map.l) {
-				m->input.key |= KEY_L;
-				m->input.key ^= KEY_L;
-			} else if (m->input.event.key.keysym.sym == m->input.map.r) {
-				m->input.key |= KEY_R;
-				m->input.key ^= KEY_R;
+		} else if (d->input.event.type == SDL_KEYUP) {
+			if (d->input.event.key.keysym.sym == d->input.map.up) {
+				d->input.key |= KEY_UP;
+				d->input.key ^= KEY_UP;
+			} else if (d->input.event.key.keysym.sym == d->input.map.down) {
+				d->input.key |= KEY_DOWN;
+				d->input.key ^= KEY_DOWN;
+			} else if (d->input.event.key.keysym.sym == d->input.map.left) {
+				d->input.key |= KEY_LEFT;
+				d->input.key ^= KEY_LEFT;
+			} else if (d->input.event.key.keysym.sym == d->input.map.right) {
+				d->input.key |= KEY_RIGHT;
+				d->input.key ^= KEY_RIGHT;
+			} else if (d->input.event.key.keysym.sym == d->input.map.x) {
+				d->input.key |= KEY_X;
+				d->input.key ^= KEY_X;
+			} else if (d->input.event.key.keysym.sym == d->input.map.y) {
+				d->input.key |= KEY_Y;
+				d->input.key ^= KEY_Y;
+			} else if (d->input.event.key.keysym.sym == d->input.map.a) {
+				d->input.key |= KEY_A;
+				d->input.key ^= KEY_A;
+			} else if (d->input.event.key.keysym.sym == d->input.map.b) {
+				d->input.key |= KEY_B;
+				d->input.key ^= KEY_B;
+			} else if (d->input.event.key.keysym.sym == d->input.map.start) {
+				d->input.key |= KEY_START;
+				d->input.key ^= KEY_START;
+			} else if (d->input.event.key.keysym.sym == d->input.map.select) {
+				d->input.key |= KEY_SELECT;
+				d->input.key ^= KEY_SELECT;
+			} else if (d->input.event.key.keysym.sym == d->input.map.l) {
+				d->input.key |= KEY_L;
+				d->input.key ^= KEY_L;
+			} else if (d->input.event.key.keysym.sym == d->input.map.r) {
+				d->input.key |= KEY_R;
+				d->input.key ^= KEY_R;
 			}
 
-			if (m->input.event.key.keysym.sym == SDLK_LSHIFT) {
-				m->input.upper |= 2;
-				m->input.upper ^= 2;
-			} else if (m->input.event.key.keysym.sym == SDLK_RSHIFT) {
-				m->input.upper |= 1;
-				m->input.upper ^= 1;
+			if (d->input.event.key.keysym.sym == SDLK_LSHIFT) {
+				d->input.upper |= 2;
+				d->input.upper ^= 2;
+			} else if (d->input.event.key.keysym.sym == SDLK_RSHIFT) {
+				d->input.upper |= 1;
+				d->input.upper ^= 1;
 			}
-		} else if (m->input.event.type == SDL_MOUSEMOTION) {
-			m->input.mouse.x = m->input.event.motion.x;
-			m->input.mouse.y = m->input.event.motion.y;
-		} else if (m->input.event.type == SDL_MOUSEBUTTONDOWN) {
-			if (m->input.event.button.button == SDL_BUTTON_LEFT)
-				m->input.key |= MB_LEFT;
-			else if (m->input.event.button.button == SDL_BUTTON_RIGHT)
-				m->input.key |= MB_RIGHT_D;
-			else if (m->input.event.button.button == SDL_BUTTON_WHEELUP)
-				m->input.mouse.wheel--;
-			else if (m->input.event.button.button == SDL_BUTTON_WHEELDOWN)
-				m->input.mouse.wheel++;
-		} else if (m->input.event.type == SDL_MOUSEBUTTONUP) {
-			if (m->input.event.button.button == SDL_BUTTON_LEFT) {
-				m->input.key |= MB_LEFT;
-				m->input.key ^= MB_LEFT;
-			} else if (m->input.event.button.button == SDL_BUTTON_RIGHT) {
-				m->input.key |= MB_RIGHT_D;
-				m->input.key ^= MB_RIGHT_D;
+		} else if (d->input.event.type == SDL_MOUSEMOTION) {
+			d->input.mouse.x = d->input.event.motion.x;
+			d->input.mouse.y = d->input.event.motion.y;
+		} else if (d->input.event.type == SDL_MOUSEBUTTONDOWN) {
+			if (d->input.event.button.button == SDL_BUTTON_LEFT)
+				d->input.key |= MB_LEFT;
+			else if (d->input.event.button.button == SDL_BUTTON_RIGHT)
+				d->input.key |= MB_RIGHT_D;
+			else if (d->input.event.button.button == SDL_BUTTON_WHEELUP)
+				d->input.mouse.wheel--;
+			else if (d->input.event.button.button == SDL_BUTTON_WHEELDOWN)
+				d->input.mouse.wheel++;
+		} else if (d->input.event.type == SDL_MOUSEBUTTONUP) {
+			if (d->input.event.button.button == SDL_BUTTON_LEFT) {
+				d->input.key |= MB_LEFT;
+				d->input.key ^= MB_LEFT;
+			} else if (d->input.event.button.button == SDL_BUTTON_RIGHT) {
+				d->input.key |= MB_RIGHT_D;
+				d->input.key ^= MB_RIGHT_D;
 			}
-		} else if (m->input.event.type == SDL_JOYAXISMOTION) {
-			if (m->input.event.jaxis.which == m->input.js.nub0i) {
-				if (m->input.event.jaxis.axis == 0)
-					m->input.js.nub0_x = m->input.event.jaxis.value;
+		} else if (d->input.event.type == SDL_JOYAXISMOTION) {
+			if (d->input.event.jaxis.which == d->input.js.nub0i) {
+				if (d->input.event.jaxis.axis == 0)
+					d->input.js.nub0_x = d->input.event.jaxis.value;
 				else
-					m->input.js.nub0_y = m->input.event.jaxis.value;
+					d->input.js.nub0_y = d->input.event.jaxis.value;
 			} else {
-				if (m->input.event.jaxis.axis == 0)
-					m->input.js.nub1_x = m->input.event.jaxis.value;
+				if (d->input.event.jaxis.axis == 0)
+					d->input.js.nub1_x = d->input.event.jaxis.value;
 				else
-					m->input.js.nub1_y = m->input.event.jaxis.value;
+					d->input.js.nub1_y = d->input.event.jaxis.value;
 			}
-		}  else if (m->input.event.type == SDL_QUIT)
+		}  else if (d->input.event.type == SDL_QUIT)
 			exit(0);
 	}
 
-	m->input.keypending &= m->input.key;
+	d->input.keypending &= d->input.key;
 	
 	return;
 }
 
 
 
-unsigned int inputASCIIPop(void *handle) {
+unsigned int inputASCIIPop() {
 	unsigned int key;
-	DARNIT *m = handle;
-
-	key = m->input.lastkey;
-	if (key >= 'a' && key <= 'z' && m->input.upper)
+	
+	key = d->input.lastkey;
+	if (key >= 'a' && key <= 'z' && d->input.upper)
 		key -= ('a' - 'A');
-	m->input.lastkey = 0;
+	d->input.lastkey = 0;
 
 	return key;
 }

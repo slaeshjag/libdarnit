@@ -109,7 +109,7 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 }
 
 
-void *mtSpriteLoad(void *handle, const char *fname) {
+void *mtSpriteLoad(const char *fname) {
 	MTSPRITE_ENTRY *spr;
 	char *fname_n;
 	FILE *fp;
@@ -141,7 +141,7 @@ void *mtSpriteLoad(void *handle, const char *fname) {
 			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
 				fscanf(fp, "%s\n", tilesheet);
 				fname_n = utilPathTranslate(tilesheet);
-				ts = renderTilesheetLoad(handle, tilesheet, 32, 32, PFORMAT_RGB5A1);
+				ts = renderTilesheetLoad(tilesheet, 32, 32, PFORMAT_RGB5A1);
 				free(fname_n);
 				break; 
 			case '\n':
@@ -265,10 +265,10 @@ void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr) {
 }
 
 
-void *mtSpriteDelete(void *handle, MTSPRITE_ENTRY *spr) {
+void *mtSpriteDelete(MTSPRITE_ENTRY *spr) {
 	if (spr == NULL) return NULL;
 	
-	spr->ts = renderTilesheetFree(handle, spr->ts);
+	spr->ts = renderTilesheetFree(spr->ts);
 	free(spr->cache);
 	free(spr->frame);
 	free(spr);

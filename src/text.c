@@ -17,9 +17,8 @@ int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned i
 	return k;
 }
 
-void *textLoadFont(void *handle, const char *fname, int size, int tex_w, int tex_h) {
+void *textLoadFont(const char *fname, int size, int tex_w, int tex_h) {
 	char *fname_n;
-	DARNIT *m = handle;
 	TEXT_FONT *font;
 	FILE *fp;
 	int flen, asc, desc, linegap;
@@ -69,10 +68,6 @@ void *textLoadFont(void *handle, const char *fname, int size, int tex_w, int tex
 	font->ascent = font->scale * asc;
 	font->descent = font->scale * desc;
 
-	font->screen_pw = m->video.swgran;
-	font->screen_ph = m->video.shgran;
-	font->handle = handle;
-
 	return font;
 }
 
@@ -111,7 +106,7 @@ struct TEXT_FONT_CACHE *textAppendCache(TEXT_FONT *font, struct TEXT_FONT_CACHE 
 	next->next = NULL;
 	next->glyph = NULL;
 
-	if ((next->ts = renderNewTilesheet(font->handle, 1, 1, tex_w, tex_h, PFORMAT_A8)) == NULL) {
+	if ((next->ts = renderNewTilesheet(1, 1, tex_w, tex_h, PFORMAT_A8)) == NULL) {
 		free(next);
 		return NULL;
 	}
@@ -328,7 +323,6 @@ void textResetSurface(TEXT_SURFACE *srf) {
 
 void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y) {
 	TEXT_SURFACE *surface;
-	DARNIT *m = font->handle;
 	int i;
 	float *arr;
 
@@ -354,16 +348,16 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	
 	surface->len = chars;
 	surface->linelen = linelen;
-	surface->linelenf = surface->font->screen_pw * linelen;
+	surface->linelenf = d->video.swgran * linelen;
 	if (linelen == ~0)
 		linelen = 0;
-	surface->cur_xf = m->video.swgran * -1 * (linelen >> 1);
-	surface->cur_yf = m->video.shgran * ((font->font_height) >> 1) * -1;
-	surface->yf_skip = m->video.shgran * ((float) font->font_height + font->line_gap) * -1;
+	surface->cur_xf = d->video.swgran * -1 * (linelen >> 1);
+	surface->cur_yf = d->video.shgran * ((font->font_height) >> 1) * -1;
+	surface->yf_skip = d->video.shgran * ((float) font->font_height + font->line_gap) * -1;
 	surface->orig_xf = surface->cur_xf;
 	surface->orig_yf = surface->cur_yf;
-	surface->x = font->screen_pw * (x + (linelen >> 1)) - 1.0f;
-	surface->y = 1.0f - font->screen_ph * (y + ((font->ascent + font->descent) >> 1));
+	surface->x = d->video.swgran * (x + (linelen >> 1)) - 1.0f;
+	surface->y = 1.0f - d->video.shgran * (y + ((font->ascent + font->descent) >> 1));
 	surface->last = 0;
 
 	surface->g_cache = surface->l_cache = NULL;
@@ -462,9 +456,9 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 
 	x += glyph_e->skipf;
-	x2 = x + surface->font->screen_pw * glyph_e->cw;
+	x2 = x + d->video.swgran * glyph_e->cw;
 	y2 = surface->cur_yf + glyph_e->rise;
-	y = y2 - surface->font->screen_ph * glyph_e->ch;
+	y = y2 - d->video.shgran * glyph_e->ch;
 
 
 	if (cp != ' ') {						/* "Temporary" work-around that makes OpenGL|ES happier... */
@@ -542,7 +536,7 @@ void *textSurfaceDestroy(TEXT_SURFACE *surface) {
 void textSurfaceSkip(TEXT_SURFACE *surface, int pixels) {
 	if (surface == NULL)
 		return;
-	surface->cur_xf += surface->font->screen_pw * pixels;
+	surface->cur_xf += d->video.swgran * pixels;
 
 	return;
 }
@@ -551,7 +545,7 @@ void textSurfaceSkip(TEXT_SURFACE *surface, int pixels) {
 void textSurfaceSetPos(TEXT_SURFACE *surface, int x_pos) {
 	if (surface == NULL)
 		return;
-	surface->cur_xf = surface->orig_xf + surface->font->screen_pw * x_pos;
+	surface->cur_xf = surface->orig_xf + d->video.swgran * x_pos;
 	
 	return;
 }

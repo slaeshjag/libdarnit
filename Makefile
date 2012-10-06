@@ -31,6 +31,7 @@ install:
 	cp bin/*.so /usr/local/lib/
 	cp bin/darnit-stringtable /usr/local/bin
 	cp bin/darnit-mksprite /usr/local/bin
+	cp bin/darnit-fsimage /usr/local/bin
 	cp -Rv include/darnit /usr/local/include
 	ldconfig
 

@@ -38,12 +38,12 @@ typedef struct {
 unsigned int videoAddTextureRGBA4(void *data, unsigned int w, unsigned int h);
 unsigned int videoAddTextureRGB5A1(void *data, unsigned int w, unsigned int h);
 unsigned int videoAddTextureA8(void *data, unsigned int w, unsigned int h);
-int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen);
-int videoLoop(void *handle);
-void videoSwapBuffers(void *handle);
+int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen);
+int videoLoop();
+void videoSwapBuffers();
 void videoClearScreen();
 unsigned int videoAddTexture(void *data, unsigned int w, unsigned int h);
 void videoRemoveTexture(unsigned int texture);
-void videoDestroy(void *handle);
+void videoDestroy();
 
 #endif

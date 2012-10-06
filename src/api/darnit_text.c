@@ -1,8 +1,8 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitFontLoad(void *handle, const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing) {
-	return textLoadFont(handle, fname, glyph_w, glyph_h, line_spacing);
+void EXPORT_THIS *darnitFontLoad(const char *fname, unsigned int glyph_w, unsigned int glyph_h, int line_spacing) {
+	return textLoadFont(fname, glyph_w, glyph_h, line_spacing);
 }
 
 

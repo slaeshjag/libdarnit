@@ -1,23 +1,23 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitMenuHorizontalCreate(void *handle, const char *options, int x, int y, void *font, int max_w) {
-	return menutkHorisontalCreate(handle, options, x, y, font, 0, max_w);
+void EXPORT_THIS *darnitMenuHorizontalCreate(const char *options, int x, int y, void *font, int max_w) {
+	return menutkHorisontalCreate(options, x, y, font, 0, max_w);
 }
 
 
 void EXPORT_THIS *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
-	return menutkVerticalCreate(handle, options, x, y, font, menuw, textskip_x, 0, max_h);
+	return menutkVerticalCreate(options, x, y, font, menuw, textskip_x, 0, max_h);
 }
 
 
-void EXPORT_THIS *darnitMenuVerticalShadeCreate(void *handle, int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option, int max_h) {
-	return menutkVerticalShadeCreate(handle, x, y, shade_h, y_advance, options, shade_w, 0, skip_option, max_h);
+void EXPORT_THIS *darnitMenuVerticalShadeCreate(int x, int y, int shade_w, int shade_h, int y_advance, int options, int skip_option, int max_h) {
+	return menutkVerticalShadeCreate(x, y, shade_h, y_advance, options, shade_w, 0, skip_option, max_h);
 }
 
 
-void EXPORT_THIS *darnitMenuSpinbuttonCreate(void *handle, const char *label, int x, int y, void *font, int step, int min, int max) {
-	return menutkSpinbuttonCreate(handle, label, x, y, font, step, min, max);
+void EXPORT_THIS *darnitMenuSpinbuttonCreate(const char *label, int x, int y, void *font, int step, int min, int max) {
+	return menutkSpinbuttonCreate(label, x, y, font, step, min, max);
 }
 
 
@@ -55,8 +55,8 @@ void EXPORT_THIS darnitMenuShadeColorSet(void *menu, float r, float g, float b, 
 }
 
 
-int EXPORT_THIS darnitMenuHandle(void *handle, void *menu) {
-	return menutkMenuRoutine(handle, menu);
+int EXPORT_THIS darnitMenuHandle(void *menu) {
+	return menutkMenuRoutine(menu);
 }
 
 

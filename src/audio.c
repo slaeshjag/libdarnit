@@ -1,74 +1,70 @@
 #include "darnit.h"
 
 
-void audioSoundStop(void *handle, int key) {
-	DARNIT *m = handle;
+void audioSoundStop(int key) {
 	int i;
 	
 	if (key == -1)
 		return;
 
-	SDL_mutexP(m->audio.lock);
+	SDL_mutexP(d->audio.lock);
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
-		if (m->audio.playback_chan[i].key == key)
+		if (d->audio.playback_chan[i].key == key)
 			break;
 	if (i == AUDIO_PLAYBACK_CHANNELS) {
-		SDL_mutexV(m->audio.lock);
+		SDL_mutexV(d->audio.lock);
 		return;
 	}
 
 	
-	audioUnload(m->audio.playback_chan[i].res);
-	m->audio.playback_chan[i].key = -1;
+	audioUnload(d->audio.playback_chan[i].res);
+	d->audio.playback_chan[i].key = -1;
 	
-	SDL_mutexV(m->audio.lock);
+	SDL_mutexV(d->audio.lock);
 	
 	return;
 }
 
 
-void audioSoundClear(void *handle) {
-	DARNIT *m = handle;
+void audioSoundClear() {
 	int i;
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
-		audioSoundStop(handle, m->audio.playback_chan[i].key);
+		audioSoundStop(d->audio.playback_chan[i].key);
 
 	return;
 }
 
 
-int audioPlaySlotGet(void *handle) {
-	DARNIT *m = handle;
+int audioPlaySlotGet() {
 	int i;
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
-		if (m->audio.playback_chan[i].key == -1)
+		if (d->audio.playback_chan[i].key == -1)
 			return i;
 	
 	return -1;
 }
 
 
-int audioSoundStart(void *handle, AUDIO_HANDLE *ah, int channels, int loop, int vol_l, int vol_r, int jmpto) {
-	DARNIT *m = handle;
+int audioSoundStart(AUDIO_HANDLE *ah, int channels, int loop, int vol_l, int vol_r, int jmpto) {
 	int i;
 
-	if ((i = audioPlaySlotGet(handle)) == -1)
+	if ((i = audioPlaySlotGet()) == -1)
 		return -1;
 	
-	m->audio.playback_chan[i].pos = 0;
-	m->audio.playback_chan[i].lvol = vol_l;
-	m->audio.playback_chan[i].rvol = vol_r;
-	m->audio.playback_chan[i].len = 0;
-	if ((m->audio.playback_chan[i].res = audioPlay(ah, channels, loop)) == NULL)
+	d->audio.playback_chan[i].pos = 0;
+	d->audio.playback_chan[i].lvol = vol_l;
+	d->audio.playback_chan[i].rvol = vol_r;
+	d->audio.playback_chan[i].len = 0;
+	if ((d->audio.playback_chan[i].res = audioPlay(ah, channels, loop)) == NULL)
 		return -1;
 	
-	m->audio.playback_chan[i].key = m->audio.cnt;
-	m->audio.cnt++;
+	d->audio.playback_chan[i].key = d->audio.cnt;
+	d->audio.cnt++;
 
-	return m->audio.playback_chan[i].key;
+	return d->audio.playback_chan[i].key;
 }
 
 
@@ -97,53 +93,51 @@ void audioFrameMix(short *target, short *source1, short *source2, int frames) {
 }
 
 
-void audioMixDecoded(void *handle, int channel, int frames, void *mixdata) {
-	DARNIT *m = handle;
+void audioMixDecoded(int channel, int frames, void *mixdata) {
 	int i, sample, decoded, loop;
 
 
-	if (m->audio.playback_chan[channel].res->channels == 1) {
-		decoded = audioDecode(m->audio.playback_chan[channel].res, m->audio.scratchbuf, frames<<1, m->audio.playback_chan[channel].pos);
+	if (d->audio.playback_chan[channel].res->channels == 1) {
+		decoded = audioDecode(d->audio.playback_chan[channel].res, d->audio.scratchbuf, frames<<1, d->audio.playback_chan[channel].pos);
 		loop = decoded >> 1;
 
 		for (i = 0; i < decoded >> 1; i++) {
-			m->audio.samplebuf[i<<1] = m->audio.scratchbuf[i];
-			m->audio.samplebuf[(i<<1)+1] = m->audio.scratchbuf[i];
+			d->audio.samplebuf[i<<1] = d->audio.scratchbuf[i];
+			d->audio.samplebuf[(i<<1)+1] = d->audio.scratchbuf[i];
 		}
 	} else {
-		decoded = audioDecode(m->audio.playback_chan[channel].res, m->audio.samplebuf, frames<<2, m->audio.playback_chan[channel].pos);
+		decoded = audioDecode(d->audio.playback_chan[channel].res, d->audio.samplebuf, frames<<2, d->audio.playback_chan[channel].pos);
 		loop = decoded >> 2;
 	}
 	
 	i = loop << 1;
 
 	for (; i < frames<<1; i++)
-		m->audio.samplebuf[i] = 0;
+		d->audio.samplebuf[i] = 0;
 	for (i = 0; i < loop; i++) {
-		sample = m->audio.samplebuf[i<<1];
-		sample *= m->audio.playback_chan[channel].lvol;
+		sample = d->audio.samplebuf[i<<1];
+		sample *= d->audio.playback_chan[channel].lvol;
 		sample >>= 7;
-		m->audio.samplebuf[i<<1] = sample;
+		d->audio.samplebuf[i<<1] = sample;
 		
-		sample = m->audio.samplebuf[(i<<1)+1];
-		sample *= m->audio.playback_chan[channel].rvol;
+		sample = d->audio.samplebuf[(i<<1)+1];
+		sample *= d->audio.playback_chan[channel].rvol;
 		sample >>= 7;
-		m->audio.samplebuf[(i<<1)+1] = sample;
+		d->audio.samplebuf[(i<<1)+1] = sample;
 	}
 
-	m->audio.playback_chan[channel].pos += decoded;
+	d->audio.playback_chan[channel].pos += decoded;
 	
 	if (decoded == 0)
-		m->audio.playback_chan[channel].key = -1;
+		d->audio.playback_chan[channel].key = -1;
 
-	audioFrameMix(mixdata, m->audio.samplebuf, mixdata, frames);
+	audioFrameMix(mixdata, d->audio.samplebuf, mixdata, frames);
 
 	return;
 }
 
 
-void audioDecodeAndMix(void *handle, int frames, void *mixdata) {
-	DARNIT *m = handle;
+void audioDecodeAndMix(int frames, void *mixdata) {
 	int i, samples;
 	short *mixbuf = mixdata;
 
@@ -152,32 +146,30 @@ void audioDecodeAndMix(void *handle, int frames, void *mixdata) {
 		mixbuf[i] = 0;
 	
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++) {
-		if (m->audio.playback_chan[i].key == -1)
+		if (d->audio.playback_chan[i].key == -1)
 			continue;
-		audioMixDecoded(m, i, frames, mixdata);
+		audioMixDecoded(i, frames, mixdata);
 	}
 
 	return;
 }
 
 
-void audioMix(void *handle, Uint8 *mixdata, int bytes) {
-	DARNIT *m = handle;
+void audioMix(void *data, Uint8 *mixdata, int bytes) {
 	int frames;
 
 	frames = bytes >>2;
-	SDL_mutexP(m->audio.lock);
+	SDL_mutexP(d->audio.lock);
 	
-	audioDecodeAndMix(m, frames, mixdata);
+	audioDecodeAndMix(frames, mixdata);
 	
-	SDL_mutexV(m->audio.lock);
+	SDL_mutexV(d->audio.lock);
 
 	return;
 }
 
 
-int audioInit(void *handle) {
-	DARNIT *m = handle;
+int audioInit() {
 	SDL_AudioSpec fmt;
 	int i;
 
@@ -186,29 +178,29 @@ int audioInit(void *handle) {
 	fmt.channels = 2;
 	fmt.samples = 1024;
 	fmt.callback = audioMix;
-	fmt.userdata = handle;
+	fmt.userdata = NULL;
 
-	m->audio.lock = SDL_CreateMutex();
+	d->audio.lock = SDL_CreateMutex();
 
-	if ((m->audio.samplebuf = malloc(1024*4*4)) == NULL) {
+	if ((d->audio.samplebuf = malloc(1024*4*4)) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
 		return -1;
 	}
-	if ((m->audio.scratchbuf = malloc(1024*4*4)) == NULL) {
-		free(m->audio.samplebuf);
+	if ((d->audio.scratchbuf = malloc(1024*4*4)) == NULL) {
+		free(d->audio.samplebuf);
 		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
 		return -1;
 	}
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
-		m->audio.playback_chan[i].key = -1;
+		d->audio.playback_chan[i].key = -1;
 
 	if (SDL_OpenAudio(&fmt, NULL) < 0) {
 		fprintf(stderr, "libDarnit: Unable to open audio: %s\n", SDL_GetError());
 		return -1;
 	}
 
-	m->audio.cnt = 0;
+	d->audio.cnt = 0;
 
 	SDL_PauseAudio(0);
 

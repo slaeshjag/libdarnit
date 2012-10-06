@@ -1,7 +1,7 @@
 #ifndef __DARNIT_TEXT_H__
 #define	__DARNIT_TEXT_H__
 
-void *darnitFontLoad(void *handle, const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
+void *darnitFontLoad(const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
 unsigned int darnitFontGetGlyphW(void *font, const char *s);
 unsigned int darnitFontGetStringWidthPixels(void *font, const char *string);
 unsigned int darnitFontGetGlyphH(void *font);

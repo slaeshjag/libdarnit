@@ -26,7 +26,6 @@ typedef struct {
 
 typedef struct {
 	char				name[128];
-	unsigned int			sum;
 	unsigned int			pos;
 	unsigned int			length;
 	unsigned int			comp;
@@ -50,22 +49,23 @@ typedef struct {
 
 
 
-int fsInit(void *handle, const char *dir_name);
+int fsInit(const char *dir_name);
 off_t fsFILELenghtGet(FILE *fp);
 FILE *fsFILEDup(FILESYSTEM_FILE *file);
 FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size);
-FILESYSTEM_FILE *fsFileOpen(void *handle, const char *name, const char *mode);
+FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode);
 size_t fsFileRead(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
 size_t fsFileWrite(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
 off_t fsFileTell(FILESYSTEM_FILE *file);
+int fsFileEOF(FILESYSTEM_FILE *file);
 int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode);
 FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
 
 
 /* Internal stuff. Etc. */
-off_t fsContainerFILELength(void *handle, FILE *fp, const char *name);
-FILESYSTEM_FILE *fsContainerFS(void *handle, FILE *fp);
-FILE *fsContainerFileInternalGet(void *handle, const char *name);
+off_t fsContainerFILELength(FILE *fp, const char *name);
+FILESYSTEM_FILE *fsContainerFS(FILE *fp);
+FILE *fsContainerFileInternalGet(const char *name);
 
 
 #endif

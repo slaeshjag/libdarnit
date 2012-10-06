@@ -31,7 +31,7 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 
 
 
-void spriteLoadText(void *handle, FILE *fp, SPRITE_ENTRY *se) {
+void spriteLoadText(FILE *fp, SPRITE_ENTRY *se) {
 	unsigned int i, j;
 	char c, buf[512];
 
@@ -107,8 +107,7 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 }
 
 
-void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int target_format) {
-	DARNIT *m = handle;
+void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format) {
 	FILE *fp;
 	unsigned int header;
 	char *fname_n = utilPathTranslate(fname);
@@ -129,12 +128,12 @@ void *spriteLoad(void *handle, const char *fname, unsigned int dir, unsigned int
 	}
 	
 	if (header != 0x00FF10EF)
-		spriteLoadText(m, fp, sprite_e);
+		spriteLoadText(fp, sprite_e);
 	else 
 		fread(sprite_e, 1, sizeof(SPRITE_ENTRY), fp);
 
 	fclose(fp);
-	if ((sprite_e->ts = renderTilesheetLoad(m, sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format)) == NULL) {
+	if ((sprite_e->ts = renderTilesheetLoad(sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format)) == NULL) {
 		free(sprite_e);
 		return NULL;
 	}
@@ -242,11 +241,11 @@ void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
 }
 
 
-void *spriteDelete(void *handle, SPRITE_ENTRY *sprite) {
+void *spriteDelete(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return NULL;
 
 	if (*sprite->tilesheet != 0)
-		sprite->ts = renderTilesheetFree(handle, sprite->ts);
+		sprite->ts = renderTilesheetFree(sprite->ts);
 	free(sprite);
 
 	return NULL;

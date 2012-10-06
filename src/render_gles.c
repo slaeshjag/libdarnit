@@ -20,7 +20,7 @@ int videoInitGL(int w, int h) {
 }
 
 
-int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen) {
+int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	DARNIT *m = handle;
 	EGLint configs_avail = 0;
 	SDL_SysWMinfo sysinfo;
@@ -32,27 +32,27 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 	/* here goes SDL init code */
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	if (!(m->video.XDisplay = XOpenDisplay(NULL))) {
+	if (!(d->video.XDisplay = XOpenDisplay(NULL))) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to get a display handle from X\n");
 		return -1;
 	}
 	
-	if (!(m->video.eglDisplay = eglGetDisplay((EGLNativeDisplayType) m->video.XDisplay))) {
+	if (!(d->video.eglDisplay = eglGetDisplay((EGLNativeDisplayType) d->video.XDisplay))) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to get a display handle from EGL\n");
 		return -1;
 	}
 	
-	if (!eglInitialize(m->video.eglDisplay, NULL, NULL)) {
+	if (!eglInitialize(d->video.eglDisplay, NULL, NULL)) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to initialize EGL\n");
 		return -1;
 	}
 	
-	if ((m->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
+	if ((d->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to set up a window for SDL\n");
 		return -1;
 	}
 	
-	if (eglChooseConfig(m->video.eglDisplay, egl_config_attrib, &m->video.eglConfig, 1, &configs_avail) != EGL_TRUE)  {
+	if (eglChooseConfig(d->video.eglDisplay, egl_config_attrib, &d->video.eglConfig, 1, &configs_avail) != EGL_TRUE)  {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to find a config for EGL (%i)\n", configs_avail);
 		return -1;
 	}
@@ -63,45 +63,45 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 		return -1;
 	}
 	
-	if ((m->video.eglSurface = eglCreateWindowSurface(m->video.eglDisplay, m->video.eglConfig, (EGLNativeWindowType) sysinfo.info.x11.window, 0)) == EGL_NO_SURFACE) {
+	if ((d->video.eglSurface = eglCreateWindowSurface(d->video.eglDisplay, d->video.eglConfig, (EGLNativeWindowType) sysinfo.info.x11.window, 0)) == EGL_NO_SURFACE) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to create a EGL surface\n");
 		return -1;
 	}
 	
 	eglBindAPI(EGL_OPENGL_ES_API);
-	if ((m->video.eglContext = eglCreateContext(m->video.eglDisplay, m->video.eglConfig, NULL, NULL)) == EGL_NO_CONTEXT) {
+	if ((d->video.eglContext = eglCreateContext(d->video.eglDisplay, d->video.eglConfig, NULL, NULL)) == EGL_NO_CONTEXT) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to create a EGL context\n");
 		return -1;
 	}
 	
-	if (eglMakeCurrent(m->video.eglDisplay, m->video.eglSurface, m->video.eglSurface, m->video.eglContext) == EGL_FALSE) {
+	if (eglMakeCurrent(d->video.eglDisplay, d->video.eglSurface, d->video.eglSurface, d->video.eglContext) == EGL_FALSE) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to make the EGL context current\n");
 		return -1;
 	}
 	
-	m->video.swgran = 2.0f/screenw;
-	m->video.shgran = 2.0f/screenh;
+	d->video.swgran = 2.0f/screenw;
+	d->video.shgran = 2.0f/screenh;
 
-	m->video.w = screenw;
-	m->video.h = screenh;
+	d->video.w = screenw;
+	d->video.h = screenh;
 
-	m->video.camx = 0;
-	m->video.camy = 0;
+	d->video.camx = 0;
+	d->video.camy = 0;
 
-	m->platform.fullscreen = fullscreen;
+	d->platform.fullscreen = fullscreen;
 
-	m->video.offset_x = m->video.offset_y = 0;
+	d->video.offset_x = d->video.offset_y = 0;
 
 	SDL_WM_SetCaption(wtitle, NULL);
 	videoInitGL(screenw, screenh);
 
-	m->video.tint_r = m->video.tint_g = m->video.tint_b = m->video.tint_a = 1.0f;
+	d->video.tint_r = d->video.tint_g = d->video.tint_b = d->video.tint_a = 1.0f;
 
 	#ifdef PANDORA
-	if ((m->video.fbdev = open("/dev/fb0", O_RDONLY)) < 0)
+	if ((d->video.fbdev = open("/dev/fb0", O_RDONLY)) < 0)
 		fprintf(stderr, "WARNING: Unable to open fbdev for Vsync\n");
 	#else
-		m->video.fbdev = -1;
+		d->video.fbdev = -1;
 	#endif
 
 	return 0;
@@ -109,16 +109,16 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 
 
 
-void videoSwapBuffers(void *handle) {
+void videoSwapBuffers() {
 	DARNIT *m = handle;
 	int n;
 	
-	if (m->video.fbdev >= 0) {
+	if (d->video.fbdev >= 0) {
 		n = 0;
-		ioctl(m->video.fbdev, FBIO_WAITFORVSYNC, &n);
+		ioctl(d->video.fbdev, FBIO_WAITFORVSYNC, &n);
 	}
 
-	eglSwapBuffers(m->video.eglDisplay, m->video.eglSurface);
+	eglSwapBuffers(d->video.eglDisplay, d->video.eglSurface);
 
 	return;
 }
@@ -131,7 +131,7 @@ void videoClearScreen() {
 }
 
 
-int videoLoop(void *handle) {
+int videoLoop() {
 	DARNIT *m = handle;
 
 	videoSwapBuffers(m);
@@ -204,14 +204,12 @@ void videoRemoveTexture(unsigned int texture) {
 }
 
 
-void videoDestroy(void *handle) {
-	DARNIT *m = handle;
-
-	if (m->video.eglSurface || m->video.eglContext || m->video.eglDisplay) {
-		eglMakeCurrent(m->video.eglDisplay, NULL, NULL, EGL_NO_CONTEXT);
-		eglDestroyContext(m->video.eglDisplay, m->video.eglContext);
-		eglDestroySurface(m->video.eglDisplay, m->video.eglSurface);
-		eglTerminate(m->video.eglDisplay);
+void videoDestroy() {
+	if (d->video.eglSurface || d->video.eglContext || d->video.eglDisplay) {
+		eglMakeCurrent(d->video.eglDisplay, NULL, NULL, EGL_NO_CONTEXT);
+		eglDestroyContext(d->video.eglDisplay, d->video.eglContext);
+		eglDestroySurface(d->video.eglDisplay, d->video.eglSurface);
+		eglTerminate(d->video.eglDisplay);
 	}
 
 	return;

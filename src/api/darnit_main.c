@@ -30,8 +30,7 @@ void darnit_init_common() {
 }
 
 
-void darnitSetPlatform(void *handle) {
-	DARNIT *d = handle;
+void darnitSetPlatform() {
 	DARNIT_ENDIAN_CONVERT end;
 
 	d->platform.screen_w = d->video.w;
@@ -67,17 +66,17 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 	renderInit(d);
 	
 	#ifdef PANDORA
-	if (videoInit(d, wtitle, 800, 480, 1) < 0);
+	if (videoInit(wtitle, 800, 480, 1) < 0);
 	#else
-	if (videoInit(d, wtitle, 800, 480, 0) < 0);
+	if (videoInit(wtitle, 800, 480, 0) < 0);
 	#endif
-	else if (inputInit(d) < 0);
-	else if (audioInit(d) < 0);
+	else if (inputInit() < 0);
+	else if (audioInit() < 0);
 	else {
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
-		darnitSetPlatform(d);
-		if (fsInit(d, data_dir) < 0)
+		darnitSetPlatform();
+		if (fsInit(data_dir) < 0)
 			return NULL;
 		return d;
 	}
@@ -97,16 +96,16 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	}
 
 	darnit_init_common();
-	renderInit(d);
+	renderInit();
 	
-	if (videoInit(d, wtitle, win_w, win_h, fullscreen) < 0);
+	if (videoInit(wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit(d) < 0);
 	else if (audioInit(d) < 0);
 	else {
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
-		darnitSetPlatform(d);
-		if (fsInit(d, data_dir) < 0)
+		darnitSetPlatform();
+		if (fsInit(data_dir) < 0)
 			return NULL;
 		return d;
 	}
@@ -116,8 +115,7 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 }
 
 
-void EXPORT_THIS darnitLoop(void *handle) {
-	DARNIT *d = handle;
+void EXPORT_THIS darnitLoop() {
 	int time = SDL_GetTicks();
 	
 	if (time / 1000 != d->fps.time) {
@@ -144,29 +142,23 @@ unsigned int EXPORT_THIS darnitTimeGet() {
 }
 
 
-int EXPORT_THIS darnitFPSGet(void *handle) {
-	DARNIT *d = handle;
-
+int EXPORT_THIS darnitFPSGet() {
 	return d->fps.frames_last;
 }
 
 
-int EXPORT_THIS darnitTimeLastFrameTook(void *handle) {
-	DARNIT *d = handle;
-
+int EXPORT_THIS darnitTimeLastFrameTook() {
 	return d->fps.time_at_flip - d->fps.time_at_last_frame;
 }
 
 
-DARNIT_PLATFORM EXPORT_THIS darnitPlatformGet(void *handle) {
-	DARNIT *d = handle;
-
+DARNIT_PLATFORM EXPORT_THIS darnitPlatformGet() {
 	return d->platform;
 }
 
 
-void EXPORT_THIS darnitQuit(void *handle) {
-	videoDestroy(handle);
+void EXPORT_THIS darnitQuit() {
+	videoDestroy();
 
 	exit(0);
 

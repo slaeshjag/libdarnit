@@ -1,13 +1,13 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitRenderTilesheetNew(void *handle, int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
-	return renderNewTilesheet(handle, tiles_w, tiles_h, tile_w, tile_h, format);
+void EXPORT_THIS *darnitRenderTilesheetNew(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
+	return renderNewTilesheet(tiles_w, tiles_h, tile_w, tile_h, format);
 }
 
 
-void EXPORT_THIS *darnitRenderTilesheetLoad(void *handle, const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
-	return renderTilesheetLoad(handle, fname, wsq, hsq, target_format);
+void EXPORT_THIS *darnitRenderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
+	return renderTilesheetLoad(fname, wsq, hsq, target_format);
 }
 
 
@@ -18,8 +18,8 @@ void EXPORT_THIS darnitRenderTilesheetUpdate(void *tilesheet, int sheet_x, int s
 }
 
 
-void EXPORT_THIS *darnitRenderTilesheetFree(void *handle, void *tilesheet) {
-	return renderTilesheetFree(handle, tilesheet);
+void EXPORT_THIS *darnitRenderTilesheetFree(void *tilesheet) {
+	return renderTilesheetFree(tilesheet);
 }
 
 
@@ -135,24 +135,19 @@ void EXPORT_THIS darnitRenderEnd() {
 }
 
 
-void EXPORT_THIS darnitRenderBlendingEnable(void *handle) {
-	DARNIT *d = handle;
-	
+void EXPORT_THIS darnitRenderBlendingEnable() {
 	d->video.blend = 1;
 	glEnable(GL_BLEND);
 }
 
 
-void EXPORT_THIS darnitRenderBlendingDisable(void *handle) {
-	DARNIT *d = handle;
-
+void EXPORT_THIS darnitRenderBlendingDisable() {
 	d->video.blend = 0;
 	glDisable(GL_BLEND);
 }
 
 
-void EXPORT_THIS darnitRenderTint(void *handle, float r, float g, float b, float a) {
-	DARNIT *d = handle;
+void EXPORT_THIS darnitRenderTint(float r, float g, float b, float a) {
 	glColor4f(r, g, b, a);
 	d->video.tint_r = r;
 	d->video.tint_g = g;
@@ -177,8 +172,7 @@ void EXPORT_THIS darnitRenderClearColorSet(unsigned char r, unsigned char g, uns
 }
 
 
-void EXPORT_THIS darnitRenderOffset(void *handle, int x, int y) {
-	DARNIT *d = handle;
+void EXPORT_THIS darnitRenderOffset(int x, int y) {
 	glLoadIdentity();
 	glTranslatef(d->video.swgran * x * -1, d->video.shgran * y, 0.0f);
 	d->video.offset_x = x * -1;
@@ -188,37 +182,33 @@ void EXPORT_THIS darnitRenderOffset(void *handle, int x, int y) {
 }
 
 
-void EXPORT_THIS darnitRenderFadeIn(void *handle, unsigned int time, float r, float g, float b) {
-	renderFadeFade(handle, time, r, g, b);
+void EXPORT_THIS darnitRenderFadeIn(unsigned int time, float r, float g, float b) {
+	renderFadeFade(time, r, g, b);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderFadeOut(void *handle, unsigned int time) {
-	renderFadeUnfade(handle, time);
+void EXPORT_THIS darnitRenderFadeOut(unsigned int time) {
+	renderFadeUnfade(time);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitRenderFadeChanging(void *handle) {
-	DARNIT *d = handle;
-
+int EXPORT_THIS darnitRenderFadeChanging() {
 	return d->video.fade.fading;
 }
 
 
-void EXPORT_THIS darnitRenderStateRestore(void *handle) {
-	DARNIT *d = handle;
-
-	darnitRenderOffset(d, d->video.offset_x, d->video.offset_y);
-	darnitRenderTint(d, d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
+void EXPORT_THIS darnitRenderStateRestore() {
+	darnitRenderOffset(d->video.offset_x, d->video.offset_y);
+	darnitRenderTint(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
 	glEnable(GL_TEXTURE_2D);
 	if (d->video.blend)
-		darnitRenderBlendingEnable(d);
+		darnitRenderBlendingEnable();
 	else
-		darnitRenderBlendingDisable(d);
+		darnitRenderBlendingDisable();
 	return;
 }
 
@@ -228,8 +218,8 @@ int EXPORT_THIS darnitRenderTilesheetAnimationApply(void *tilesheet, const char 
 }
 
 
-void EXPORT_THIS darnitRenderTilesheetAnimationAnimate(void *handle, void *tilesheet) {
-	renderTilesheetAnimate(handle, tilesheet);
+void EXPORT_THIS darnitRenderTilesheetAnimationAnimate(void *tilesheet) {
+	renderTilesheetAnimate(tilesheet);
 
 	return;
 }

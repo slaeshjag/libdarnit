@@ -19,8 +19,7 @@ int videoInitGL(int w, int h) {
 }
 
 
-int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fullscreen) {
-	DARNIT *m = handle;
+int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	unsigned int mode;
 
 	mode = SDL_OPENGL;
@@ -30,54 +29,53 @@ int videoInit(void *handle, const char *wtitle, int screenw, int screenh, int fu
 	/* here goes SDL init code */
 	SDL_Init(SDL_INIT_EVERYTHING);
 	
-	if ((m->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
+	if ((d->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to set up a window for SDL\n");
 		return -1;
 	}
 	
-	m->video.swgran = 2.0f/screenw;
-	m->video.shgran = 2.0f/screenh;
+	d->video.swgran = 2.0f/screenw;
+	d->video.shgran = 2.0f/screenh;
 
-	m->video.w = screenw;
-	m->video.h = screenh;
+	d->video.w = screenw;
+	d->video.h = screenh;
 
-	m->video.camx = 0;
-	m->video.camy = 0;
-	m->video.offset_x = m->video.offset_y = 0;
-	m->video.time = SDL_GetTicks();
+	d->video.camx = 0;
+	d->video.camy = 0;
+	d->video.offset_x = d->video.offset_y = 0;
+	d->video.time = SDL_GetTicks();
 	
 	SDL_WM_SetCaption(wtitle, NULL);
 	videoInitGL(screenw, screenh);
 
-	m->platform.fullscreen = fullscreen;
-	m->video.tint_r = m->video.tint_g = m->video.tint_b = m->video.tint_a = 1.0f;
+	d->platform.fullscreen = fullscreen;
+	d->video.tint_r = d->video.tint_g = d->video.tint_b = d->video.tint_a = 1.0f;
 	
 	return 0;
 }
 
 
 
-int videoLoop(void *handle) {
-	DARNIT *m = handle;
+int videoLoop() {
 	int delay;
 
-	videoSwapBuffers(m);
+	videoSwapBuffers();
 	videoClearScreen();
 
-	delay = 16 - (SDL_GetTicks() - m->video.time);
+	delay = 16 - (SDL_GetTicks() - d->video.time);
 
 	if (delay < 0)
 		delay = 0;
 
 	SDL_Delay(delay);
-	m->video.time = SDL_GetTicks();
+	d->video.time = SDL_GetTicks();
 
 	
 	return 0;
 }
 
 
-void videoSwapBuffers(void *handle) {
+void videoSwapBuffers() {
 	
 	SDL_GL_SwapBuffers();
 	
@@ -155,9 +153,9 @@ void videoRemoveTexture(unsigned int texture) {
 }
 
 
-void videoDestroy(void *handle) {
+void videoDestroy() {
   // Something to remember me by!
   // WHY HAX?!?!?
-  DARNIT_UNUSED(handle);
+/*  DARNIT_UNUSED(handle);*/
 	return;
 }

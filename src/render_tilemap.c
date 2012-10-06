@@ -126,8 +126,7 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 }
 
 
-void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int inv_div, TILESHEET *ts, unsigned int mask) {
-	DARNIT *m = handle;
+void *renderTilemapCreate(unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int inv_div, TILESHEET *ts, unsigned int mask) {
 	RENDER_TILEMAP *tm;
 	
 	if ((tm = malloc(sizeof(RENDER_TILEMAP))) == NULL) {
@@ -141,8 +140,8 @@ void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned
 	tm->map = map;
 	tm->inv_div = inv_div;
 	tm->ts = ts;
-	tm->w = m->video.w / ts->wsq + 2;
-	tm->h = m->video.h / ts->hsq + 2;
+	tm->w = d->video.w / ts->wsq + 2;
+	tm->h = d->video.h / ts->hsq + 2;
 	tm->mask = mask;
 
 	tm->cache = malloc(sizeof(TILE_CACHE) * tm->w * tm->h);
@@ -152,13 +151,12 @@ void *renderTilemapCreate(void *handle, unsigned int w, unsigned int h, unsigned
 }
 
 
-void renderTilemapRender(void *handle, RENDER_TILEMAP *tm) {
-	DARNIT *m = handle;
+void renderTilemapRender(RENDER_TILEMAP *tm) {
 	glLoadIdentity();
 	glTranslatef(tm->cam_x, tm->cam_y, 0);
 	renderCache(tm->cache, tm->ts, tm->w * tm->h);
 	glLoadIdentity();
-	glTranslatef(m->video.swgran * m->video.offset_x, m->video.shgran * m->video.offset_y, 0);
+	glTranslatef(d->video.swgran * d->video.offset_x, d->video.shgran * d->video.offset_y, 0);
 
 	return;
 }
