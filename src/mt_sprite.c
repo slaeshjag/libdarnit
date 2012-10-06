@@ -111,63 +111,61 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 
 void *mtSpriteLoad(const char *fname) {
 	MTSPRITE_ENTRY *spr;
-	char *fname_n;
-	FILE *fp;
+	FILESYSTEM_FILE *fp;
 	int frames, loctiles, tiles, x, y, w, h, t, rx, ry;
-	char c, buff[512], tilesheet[64];
+	char c, buff[512];
 	void *ts;
 
-	fname_n = utilPathTranslate(fname);
-
-	if ((fp = fopen(fname_n, "r")) == NULL) {
-		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname_n);
+	if ((fp = fsFileOpen(fname, "rb")) == NULL) {
+		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname);
 		return NULL;
 	}
-	free(fname_n);
-
+	
 	ts = NULL;
 	frames = tiles = 0;
-	while (!feof(fp)) {
-		c = fgetc(fp);
+	while (!fsFileEOF(fp)) {
+		fsFileRead((void *) &c, 1, fp);
 		switch (c) {
 			case 'F':
-				fgets(buff, 512, fp);
+				fsFileGets(buff, 512, fp);
 				frames++;
 				break;
 			case 'T':
-				fgets(buff, 512, fp);
+				fsFileGets(buff, 512, fp);
 				tiles++;
 				break;
 			case 'R':	/* ONE resource per file, and it must be the first thing in the file */
-				fscanf(fp, "%s\n", tilesheet);
-				fname_n = utilPathTranslate(tilesheet);
-				ts = renderTilesheetLoad(tilesheet, 32, 32, PFORMAT_RGB5A1);
-				free(fname_n);
+				fsFileSkipWhitespace(fp);
+				fsFileGets(buff, 512, fp);
+				if (buff[strlen(buff) - 1] == '\n')
+					buff[strlen(buff) - 1] = 0;
+				ts = renderTilesheetLoad(buff, 32, 32, PFORMAT_RGB5A1);
 				break; 
 			case '\n':
 				break;
 			default:
-				fgets(buff, 512, fp);
+				fsFileGets(buff, 512, fp);
 				break;
 		}
 	}
 
 	if ((spr = mtSpriteNew(tiles, frames, ts)) == NULL) {
-		fclose(fp);
+		fsFileClose(fp);
 		free(spr->cache);
 		free(spr);
 		return NULL;
 	}
 
-	rewind(fp);
+	fsFileSeek(fp, 0, SEEK_SET);
 
 	/* I know, two-pass parsing is kinda paper-tape era-ish. But I don't know what else to do D: */
 	frames = loctiles = tiles = 0;
-	while (!feof(fp)) {
-		c = getc(fp);
+	while (!fsFileEOF(fp)) {
+		fsFileRead(&c, 1, fp);
 		switch (c) {
 			case 'F':
-				fscanf(fp, "%i\n", &t);
+				fsFileGets(buff, 512, fp);
+				t = atoi(buff);
 				if (frames != 0)
 					spr->frame[frames-1].tiles = loctiles;
 				loctiles = 0;
@@ -176,7 +174,8 @@ void *mtSpriteLoad(const char *fname) {
 				frames++;
 				break;
 			case 'T':
-				fscanf(fp, "%i %i %i %i %i %i\n", &x, &y, &w, &h, &rx, &ry);
+				fsFileGets(buff, 512, fp);
+				sscanf(buff, "%i %i %i %i %i %i\n", &x, &y, &w, &h, &rx, &ry);
 				mtSpriteCalcCacheTile(spr->ts, &spr->cache[tiles], x, y, w, h, rx, ry);
 				tiles++;
 				loctiles++;
@@ -184,7 +183,7 @@ void *mtSpriteLoad(const char *fname) {
 			case '\n':
 				break;
 			default:
-				fgets(buff, 512, fp);
+				fsFileGets(buff, 512, fp);
 				break;
 		}
 	}
@@ -192,7 +191,7 @@ void *mtSpriteLoad(const char *fname) {
 	spr->frame[frames-1].tiles = loctiles;
 	spr->time_left = spr->frame->time;
 
-	fclose(fp);
+	fsFileClose(fp);
 
 	return spr;
 }
