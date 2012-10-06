@@ -23,6 +23,12 @@ int fsInit(const char *dir_name) {
 		d->fs.write_dir = (char *) "./";
 	}
 
+	#ifdef _WIN32
+		CreateDirectory(d->fs.write_dir, NULL);
+	#else
+		mkdir(d->fs.write_dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	#endif
+
 	d->fs.mount = NULL;
 
 	return 0;

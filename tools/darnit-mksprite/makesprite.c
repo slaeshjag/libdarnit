@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 32; i++) {
 		for (j = 0; j < 8; j++) {
 			se.spr[i].tile[j].time = 50;
 			se.spr[i].tile[j].tile = 0;

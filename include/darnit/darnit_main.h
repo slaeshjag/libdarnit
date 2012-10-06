@@ -18,8 +18,8 @@ typedef struct {
 	unsigned int		fullscreen;
 } DARNIT_PLATFORM;
 
-void *darnitInit(const char *wtitle);
-void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen);
+void *darnitInit(const char *wtitle, const char *data_dir);
+void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir);
 void darnitLoop();
 unsigned int darnitTimeGet();
 int darnitFPSGet();

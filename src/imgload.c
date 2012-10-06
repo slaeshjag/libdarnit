@@ -13,12 +13,34 @@ IMGLOAD_DATA imgloadBAD(const char *fname) {
 }
 
 
+int imgloadRead(void *user, char *data, int size) {
+	return fsFileRead(data, size, user);
+}
+
+
+void imgloadSkip(void *user, unsigned n) {
+	fsFileSeek(user, n, SEEK_CUR);
+
+	return;
+}
+
+
+int imgloadEOF(void *user) {
+	return fsFileEOF(user);
+}
+
+
 IMGLOAD_DATA imgloadSTB(const char *fname) {
 	int t;
+	static stbi_io_callbacks callbacks = { imgloadRead, imgloadSkip, imgloadEOF };
 	IMGLOAD_DATA img;
+	FILESYSTEM_FILE *file;
+
+	if ((file = fsFileOpen(fname, "rb")) == NULL)
+		return imgloadBAD(fname);
 	
 	img.w = img.h = 0;
-	img.img_data = (void *) stbi_load(fname, (int *) &img.w, (int *) &img.h, &t, 4);
+	img.img_data = (void *) stbi_load_from_callbacks(&callbacks, file, (int *) &img.w, (int *) &img.h, &t, 4);
 	
 	return img;
 }
