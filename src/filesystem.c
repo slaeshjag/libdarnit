@@ -119,7 +119,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 
 	/* Mkay, that didn't work. I guess we'll try open it directly */
 	path_new = utilPathTranslate(path);
-	if ((fp = fopen(path_new, mode)) == NULL);
+	if ((fp = fopen(name, mode)) == NULL);
 	else						/* W00t! */
 		return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp));
 	free(path_new);
@@ -127,14 +127,14 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 }
 
 
-size_t fsFileRead(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
+size_t fsFileRead(void *buffer, long long bytes, FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
 	if (bytes < 0)
 		return 0;
 	if (file->pos + bytes > file->size)
 		bytes = file->size - file->pos;
-	file->pos += file->size;
+	file->pos += bytes;
 	fread(buffer, bytes, 1, file->fp);
 	return bytes;				/* This *should* always be true. Unless there's disk problems */
 }
@@ -176,10 +176,37 @@ size_t fsFileWriteInts(void *buffer, size_t ints, FILESYSTEM_FILE *file) {
 }
 
 
+size_t fsFileGets(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
+	int lim;
+	if (file == NULL)
+		return 0;
+	if (bytes <= 0)
+		return 0;
+	lim = (bytes > file->size - file->pos) ? file->size - file->pos : bytes;
+	fgets(buffer, lim, file->fp);
+	file->pos += strlen(buffer);
+
+	return strlen(buffer);
+}
+
+
 off_t fsFileTell(FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
 	return file->pos;
+}
+
+
+void fsFileSkipWhitespace(FILESYSTEM_FILE *file) {
+	char c;
+
+	do {
+		fsFileRead(&c, 1, file);
+		if (fsFileEOF(file)) break;
+	} while (c == ' ' || c == '\t');
+
+	fsFileSeek(file, -1, SEEK_CUR);
+	return;
 }
 
 
