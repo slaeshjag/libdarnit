@@ -53,8 +53,6 @@ void darnitSetPlatform() {
 
 
 void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
-	DARNIT *d;
-
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
 		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
 		return d;
@@ -92,7 +90,7 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
 		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
-		return d;
+		return NULL;
 	}
 
 	darnit_init_common();
