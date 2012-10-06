@@ -6,7 +6,7 @@ void EXPORT_THIS *darnitMenuHorizontalCreate(const char *options, int x, int y, 
 }
 
 
-void EXPORT_THIS *darnitMenuVerticalCreate(void *handle, const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
+void EXPORT_THIS *darnitMenuVerticalCreate(const char *options, int x, int y, void *font, int menuw, int textskip_x, int max_h) {
 	return menutkVerticalCreate(options, x, y, font, menuw, textskip_x, 0, max_h);
 }
 
