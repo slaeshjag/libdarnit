@@ -21,7 +21,6 @@ int videoInitGL(int w, int h) {
 
 
 int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
-	DARNIT *m = handle;
 	EGLint configs_avail = 0;
 	SDL_SysWMinfo sysinfo;
 	unsigned int mode;
@@ -110,7 +109,6 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 
 
 void videoSwapBuffers() {
-	DARNIT *m = handle;
 	int n;
 	
 	if (d->video.fbdev >= 0) {
@@ -132,9 +130,7 @@ void videoClearScreen() {
 
 
 int videoLoop() {
-	DARNIT *m = handle;
-
-	videoSwapBuffers(m);
+	videoSwapBuffers(d);
 	videoClearScreen();
 
 	
