@@ -1,14 +1,16 @@
 #ifndef	__DARNIT_MTSPRITE_H__
 #define	__DARNIT_MTSPRITE_H__
 
-void *darnitMTSpriteNew(void *tilesheet);
-void *darnitMTSpriteLoad(const char *fname);
-void darnitMTSpriteAnimationEnable(void *mtsprite);
-void darnitMTSpriteAnimationPause(void *mtsprite);
-void darnitMTSpriteTileAdd(void *sprite, int x, int y, int w, int h, int rx, int ry);
-void darnitMTSpriteFrameSet(void *sprite, int time);
-void darnitMTSpriteAnimationDisable(void *mtsprite);
-void darnitMTSpriteDraw(void *mtsprite);
-void *darnitMTSpriteDelete(void *mtsprite);
+typedef void DARNIT_MTSPRITE;
+
+DARNIT_MTSPRITE *darnitMTSpriteNew(void *tilesheet);
+DARNIT_MTSPRITE *darnitMTSpriteLoad(const char *fname);
+void darnitMTSpriteAnimationEnable(DARNIT_MTSPRITE *mtsprite);
+void darnitMTSpriteAnimationPause(DARNIT_MTSPRITE *mtsprite);
+void darnitMTSpriteTileAdd(DARNIT_MTSPRITE *sprite, int x, int y, int w, int h, int rx, int ry);
+void darnitMTSpriteFrameSet(DARNIT_MTSPRITE *sprite, int time);
+void darnitMTSpriteAnimationDisable(DARNIT_MTSPRITE *mtsprite);
+void darnitMTSpriteDraw(DARNIT_MTSPRITE *mtsprite);
+void *darnitMTSpriteDelete(DARNIT_MTSPRITE *mtsprite);
 
 #endif

@@ -1,18 +1,21 @@
 #ifndef __DARNIT_TEXT_H__
 #define	__DARNIT_TEXT_H__
 
-void *darnitFontLoad(const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
-unsigned int darnitFontGetGlyphW(void *font, const char *s);
-unsigned int darnitFontGetStringWidthPixels(void *font, const char *string);
-unsigned int darnitFontGetGlyphH(void *font);
-unsigned int darnitFontGetGlyphHS(void *font);
-void darnitTextSurfaceReset(void *surface);
-void *darnitTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y);
-void *darnitTextSurfaceFree(void *surface);
-int darnitTextSurfaceCharAppend(void *surface, const char *c);
-void darnitTextSurfaceStringAppend(void *surface, const char *string);
-void darnitTextSurfaceDraw(void *surface);
-void darnitTextSurfaceSkip(void *surface, int pixels);
-void darnitTextSurfaceXposSet(void *surface, int x_pos);
+typedef void DARNIT_FONT;
+typedef void DARNIT_TEXT_SURFACE;
+
+DARNIT_FONT *darnitFontLoad(const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
+unsigned int darnitFontGetGlyphW(DARNIT_FONT *font, const char *s);
+unsigned int darnitFontGetStringWidthPixels(DARNIT_FONT *font, const char *string);
+unsigned int darnitFontGetGlyphH(DARNIT_FONT *font);
+unsigned int darnitFontGetGlyphHS(DARNIT_FONT *font);
+void darnitTextSurfaceReset(DARNIT_TEXT_SURFACE *surface);
+DARNIT_TEXT_SURFACE *darnitTextSurfaceAlloc(DARNIT_FONT *font, unsigned int glyphs, unsigned int linelen, int x, int y);
+DARNIT_TEXT_SURFACE *darnitTextSurfaceFree(DARNIT_TEXT_SURFACE *surface);
+int darnitTextSurfaceCharAppend(DARNIT_TEXT_SURFACE *surface, const char *c);
+void darnitTextSurfaceStringAppend(DARNIT_TEXT_SURFACE *surface, const char *string);
+void darnitTextSurfaceDraw(DARNIT_TEXT_SURFACE *surface);
+void darnitTextSurfaceSkip(DARNIT_TEXT_SURFACE *surface, int pixels);
+void darnitTextSurfaceXposSet(DARNIT_TEXT_SURFACE *surface, int x_pos);
 
 #endif
