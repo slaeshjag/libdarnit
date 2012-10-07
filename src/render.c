@@ -120,8 +120,8 @@ void renderTilesheetAnimate(TILESHEET *ts) {
 
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	unsigned int i, j, tiles, frames, pos;
-	char c, buf[512], *fname_n;
-	FILE *fp;
+	char c, buf[512];
+	FILESYSTEM_FILE *fp;
 	IMGLOAD_DATA img;
 	TS_FRAME *frame;
 	
@@ -131,23 +131,20 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	if (ts->animation.tiles > 0)
 		return -1;
 
-	fname_n = utilPathTranslate(fname);
-
-	if ((fp = fopen(fname_n, "r")) == NULL)
+	if ((fp = fsFileOpen(fname, "rb")) == NULL)
 		return -1;
-	free(fname_n);
 
-	fscanf(fp, "%s\n", buf);
-	pos = ftell(fp);
+	fsFileGetLine(buf, 512, fp);
+	pos = fsFileTell(fp);
 	img = imgloadLoad(buf);
 
 	if (img.img_data == NULL) {
-		fclose(fp);
+		fsFileClose(fp);
 		return -1;
 	}
 
 	if (img.w != ts->wsq) {
-		fclose(fp);
+		fsFileClose(fp);
 		free(img.img_data);
 		return -1;
 	}
@@ -155,37 +152,37 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	ts->animation.animation_tiles = img.h / ts->hsq;
 	tiles = frames = 0;
 	
-	while (!feof(fp)) {
-		c = fgetc(fp);
+	while (!fsFileEOF(fp)) {
+		fsFileRead(&c, 1, fp);
 		switch (c) {
 			case 'T':
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				break;
 			case 'F':
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				frames++;
 				break;
 			case 'E':
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				tiles++;
 				break;
 			case '\n':
 				break;
 			default:
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				break;
 		}
 	}
 
 	i = j = 0;
-	fseek(fp, pos, SEEK_SET);
+	fsFileSeek(fp, pos, SEEK_SET);
 
 	
 	frame = malloc(sizeof(TS_FRAME) * frames);
 	ts->animation.tile = malloc(sizeof(TS_TILE) * tiles);
 
 	if (frame == NULL || ts->animation.tile == NULL) {
-		fclose(fp);
+		fsFileClose(fp);
 		free(img.img_data);
 		free(frame);
 		free(ts->animation.tile);
@@ -199,21 +196,23 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	ts->animation.frame_data = frame;
 	frames = 0;
 
-	while (!feof(fp)) {
-		c = fgetc(fp);
+	while (!fsFileEOF(fp)) {
+		fsFileRead(&c, 1, fp);
 		switch (c) {
 			case 'T':
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				ts->animation.tile[i].frame = &frame[frames];
 				ts->animation.tile[i].frame_at = 0;
 				ts->animation.tile[i].time_rest = 0;
 				j = 0;
 				break;
 			case 'F':
-				fscanf(fp, "%i %i %i\n", &ts->animation.tile[i].frame[j].tile_src, &ts->animation.tile[i].frame[j].tile_dst, &ts->animation.tile[i].frame[j].time);
+				fsFileGets(buf, 512, fp);
+				sscanf(buf, "%i %i %i\n", &ts->animation.tile[i].frame[j].tile_src, &ts->animation.tile[i].frame[j].tile_dst, &ts->animation.tile[i].frame[j].time);
 				j++;
 				break;
 			case 'E':
+				fsFileGets(buf, 512, fp);
 				ts->animation.tile[i].frames = j;
 				j = 0;
 				i++;
@@ -221,10 +220,12 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 			case '\n':
 				break;
 			default:
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				break;
 		}
 	}
+
+	fsFileClose(fp);
 
 	return 0;
 }
@@ -234,10 +235,8 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	TILESHEET *ts;
 	IMGLOAD_DATA data;
 	void *data_t;
-	char *fname_n = utilPathTranslate(fname);
 
-	if ((ts = renderGetTilesheetFromRef(fname_n)) != NULL) {
-		free(fname_n);
+	if ((ts = renderGetTilesheetFromRef(fname)) != NULL) {
 		return ts;
 	}
 
@@ -251,7 +250,6 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 		free(ts);
 		return NULL;
 	}
-	free(fname_n);
 
 	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
 	ts->animation.tiles = 0;

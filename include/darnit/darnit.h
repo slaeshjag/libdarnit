@@ -28,6 +28,7 @@ extern "C" {
 #include <darnit/darnit_utf8.h>
 #include <darnit/darnit_util.h>
 #include <darnit/darnit_stringtable.h>
+#include <darnit/darnit_filesystem.h>
 
 
 #ifdef __cplusplus

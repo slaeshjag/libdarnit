@@ -62,7 +62,7 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 	if (st->section[sec].strings != 0)
 		return 0;
 
-	fseek(st->fp, st->section[sec].file_pos, SEEK_SET);
+	fsFileSeek(st->fp, st->section[sec].file_pos, SEEK_SET);
 	
 	zdata = malloc(st->section[sec].sec.zlen);
 	data = malloc(st->section[sec].sec.len);
@@ -79,8 +79,8 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 		return -1;
 	}
 
-	fread(zdata, st->section[sec].sec.zlen, 1, st->fp);
-	fread(fez, st->section[sec].sec.stringz, 1, st->fp);
+	fsFileRead(zdata, st->section[sec].sec.zlen, st->fp);
+	fsFileRead(fez, st->section[sec].sec.stringz, st->fp);
 	
 	stbi_zlib_decode_buffer(data, st->section[sec].sec.len, zdata, st->section[sec].sec.zlen);
 	stbi_zlib_decode_buffer((void *) fe, st->section[sec].sec.strings * sizeof(STRINGTABLE_FILE_ENTRY), fez, st->section[sec].sec.stringz);
@@ -105,27 +105,23 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 
 
 void *stringtableOpen(const char *fname) {
-	FILE *fp;
+	FILESYSTEM_FILE *fp;
 	int i;
 	STRINGTABLE_FILE_MAIN stfm;
 	STRINGTABLE *st;
-	char *fname_n;
 
 	if ((st = malloc(sizeof(STRINGTABLE))) == NULL)
 		return NULL;
 	
-	fname_n = utilPathTranslate(fname);
-	if ((fp = fopen(fname_n, "rb")) == NULL) {
+	if ((fp = fsFileOpen(fname, "rb")) == NULL) {
 		free(st);
-		free(fname_n);
 		return NULL;
 	}
-	free(fname_n);
 
-	fread(&stfm, sizeof(STRINGTABLE_FILE_MAIN), 1, fp);
+	fsFileRead(&stfm, sizeof(STRINGTABLE_FILE_MAIN), fp);
 
 	if (ntohl(stfm.magic) != STRINGTABLE_MAGIC) {
-		fclose(fp);
+		fsFileClose(fp);
 		free(st);
 		return NULL;
 	}
@@ -134,24 +130,24 @@ void *stringtableOpen(const char *fname) {
 	st->fp = fp;
 
 	if ((st->section = malloc(sizeof(STRINGTABLE_SECTION) * st->sections)) == NULL) {
-		fclose(fp);
+		fsFileClose(fp);
 		free(st);
 		return NULL;
 	}
 
 	for (i = 0; i < st->sections; i++) {
-		fread(&st->section[i].sec, sizeof(STRINGTABLE_FILE_SECTION), 1, fp);
+		fsFileRead(&st->section[i].sec, sizeof(STRINGTABLE_FILE_SECTION), fp);
 		st->section[i].sec.zlen = ntohl(st->section[i].sec.zlen);
 		st->section[i].sec.strings = ntohl(st->section[i].sec.strings);
 		st->section[i].sec.len = ntohl(st->section[i].sec.len);
 		st->section[i].sec.stringz = ntohl(st->section[i].sec.stringz);
 
-		st->section[i].file_pos = ftell(fp);
+		st->section[i].file_pos = fsFileTell(fp);
 		st->section[i].string = NULL;
 		st->section[i].strings = 0;
 		st->section[i].string_data = NULL;
 		st->section[i].name_comp = utilStringSum(st->section[i].sec.name);
-		fseek(fp, st->section[i].sec.zlen + st->section[i].sec.stringz, SEEK_CUR);
+		fsFileSeek(fp, st->section[i].sec.zlen + st->section[i].sec.stringz, SEEK_CUR);
 	}
 
 	return st;
@@ -167,7 +163,7 @@ void *stringtableClose(STRINGTABLE *st) {
 	for (i = 0; i < st->sections; i++)
 		stringtableUnloadSection(st, st->section[i].sec.name);
 	free(st->section);
-	fclose(st->fp);
+	fsFileClose(st->fp);
 	free(st);
 
 	return NULL;

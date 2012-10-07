@@ -18,38 +18,33 @@ int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned i
 }
 
 void *textLoadFont(const char *fname, int size, int tex_w, int tex_h) {
-	char *fname_n;
 	TEXT_FONT *font;
-	FILE *fp;
+	FILESYSTEM_FILE *fp;
 	int flen, asc, desc, linegap;
 
 	if ((font = malloc(sizeof(TEXT_FONT))) == NULL) {
 		return NULL;
 	}
 
-	fname_n = utilPathTranslate(fname);
-
-	if ((fp = fopen(fname, "rb")) == NULL) {
-		free(fname_n);
+	if ((fp = fsFileOpen(fname, "rb")) == NULL) {
 		fprintf(stderr, "Unable to open file %s\n", fname);
 		free(font);
 		return NULL;
 	}
 
-	free(fname_n);
-	fseek(fp, 0, SEEK_END);
-	flen = ftell(fp);
-	rewind(fp);
+	fsFileSeek(fp, 0, SEEK_END);
+	flen = fsFileTell(fp);
+	fsFileSeek(fp, 0, SEEK_SET);
 
 	if ((font->font_data = malloc(flen)) == NULL) {
-		fclose(fp);
+		fsFileClose(fp);
 		free(font);
 		return NULL;
 	}
 
-	fread(font->font_data, flen, 1, fp);
+	fsFileRead(font->font_data, flen, fp);
 	font->font_data_len = flen;
-	fclose(fp);
+	fsFileClose(fp);
 
 	if (stbtt_InitFont(&font->face, font->font_data, 0) == 0) {
 		free(font->font_data);
