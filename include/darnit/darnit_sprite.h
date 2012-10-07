@@ -1,20 +1,22 @@
 #ifndef	__DARNIT_SPRITE_H__
 #define	__DARNIT_SPRITE_H__
 
-void *darnitSpriteNew(void *tilesheet);
-void *darnitSpriteLoad(const char *fname, int dir, unsigned int target_format);
-void darnitSpriteDelete(void *sprite);
-void darnitSpriteDirectionChange(void *sprite, int dir);
-void darnitSpriteActivate(void *sprite, int dir);
-void darnitSpriteSetFrame(void *sprite, int frame);
-void darnitSpriteMove(void *sprite, int x, int y);
-void darnitSpriteAnimationEnable(void *sprite);
-void darnitSpriteAnimationPause(void *sprite);
-void darnitSpriteAnimationDisable(void *sprite);
-void darnitSpriteDraw(void *sprite);
-void darnitSpriteFrameEntrySet(void *sprite, int dir, int frame, int tile, int time);
+typedef void DARNIT_SPRITE;
 
-int darnitSpriteWidth(void *sprite);
-int darnitSpriteHeight(void *sprite);
+DARNIT_SPRITE *darnitSpriteNew(DARNIT_TILESHEET *tilesheet);
+DARNIT_SPRITE *darnitSpriteLoad(const char *fname, int dir, unsigned int target_format);
+DARNIT_SPRITE *darnitSpriteDelete(DARNIT_SPRITE *sprite);
+void darnitSpriteDirectionChange(DARNIT_SPRITE *sprite, int dir);
+void darnitSpriteActivate(DARNIT_SPRITE *sprite, int dir);
+void darnitSpriteSetFrame(DARNIT_SPRITE *sprite, int frame);
+void darnitSpriteMove(DARNIT_SPRITE *sprite, int x, int y);
+void darnitSpriteAnimationEnable(DARNIT_SPRITE *sprite);
+void darnitSpriteAnimationPause(DARNIT_SPRITE *sprite);
+void darnitSpriteAnimationDisable(DARNIT_SPRITE *sprite);
+void darnitSpriteDraw(DARNIT_SPRITE *sprite);
+void darnitSpriteFrameEntrySet(DARNIT_SPRITE *sprite, int dir, int frame, int tile, int time);
+
+int darnitSpriteWidth(DARNIT_SPRITE *sprite);
+int darnitSpriteHeight(DARNIT_SPRITE *sprite);
 
 #endif

@@ -1,13 +1,16 @@
 #ifndef __DARNIT_BBOX_H__
 #define	__DARNIT_BBOX_H__
 
-void *darnitBBoxNew(unsigned int size);
-void *darnitBBoxFree(void *bbox);
-int darnitBBoxCollTest(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
-int darnitBBoxEntryAdd(void *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
-void darnitBBoxEntryDelete(void *bbox, int key);
-void darnitBBoxEntryMove(void *bbox, int key, unsigned int x, unsigned int y);
-void darnitBBoxEntryResize(void *bbox, int key, unsigned int w, unsigned int h);
-void darnitBBoxClear(void *bbox);
+typedef void DARNIT_BBOX;
+
+
+DARNIT_BBOX *darnitBBoxNew(unsigned int size);
+DARNIT_BBOX *darnitBBoxFree(void *bbox);
+int darnitBBoxCollTest(DARNIT_BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
+int darnitBBoxEntryAdd(DARNIT_BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+void darnitBBoxEntryDelete(DARNIT_BBOX *bbox, int key);
+void darnitBBoxEntryMove(DARNIT_BBOX *bbox, int key, unsigned int x, unsigned int y);
+void darnitBBoxEntryResize(DARNIT_BBOX *bbox, int key, unsigned int w, unsigned int h);
+void darnitBBoxClear(DARNIT_BBOX *bbox);
 
 #endif
