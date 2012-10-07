@@ -17,6 +17,30 @@ int fsInit(const char *dir_name) {
 		if ((d->fs.data_dir = malloc(strlen(DATA_PATH) + 2 + strlen(dir_name))) == NULL)
 			return -1;
 		sprintf(d->fs.data_dir, "%s/%s", DATA_PATH, dir_name);
+	} else if (d->platform.platform & DARNIT_PLATFORM_WIN32) { 
+		data_dir = getenv("%%APPDATA%%");
+
+		if ((d->fs.write_dir = malloc(strlen(data_dir) + 2 + strlen(dir_name))) == NULL)
+			return -1;
+		sprintf(d->fs.write_dir, "%s/%s", data_dir, dir_name);
+
+		/* Ugh... WinAPI... */
+		#ifdef _WIN32
+			char tmp[256], val[256];
+			int sz;
+			sprintf(tmp, "software/libdarnit/%s", dir_name);
+		
+			if (RegGetValue(HKEY_LOCAL_MACHINE, tmp, "path", RRF_RT_ANY, NULL, val, &sz) != ERROR_SUCCESS)
+				d->fs.data_dir = "./";
+			else {
+				if ((d->fs.data_dir = malloc(strlen(val) + 1)) == NULL)
+					d->fs.data_dir = "./";
+				else
+					sprintf(d->fs.data_dir, "%s", val);
+			}
+		#else
+			d->fs.data_dir = "./";
+		#endif
 	} else {
 		/* TODO: Add more platforms */
 		d->fs.data_dir = (char *) "./";

@@ -131,7 +131,6 @@ void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format
 		spriteLoadText(fp, sprite_e);
 	else 
 		fread(sprite_e, 1, sizeof(SPRITE_ENTRY), fp);
-	fprintf(stderr, "%i\n", sizeof(SPRITE_ENTRY));
 
 	fclose(fp);
 	if ((sprite_e->ts = renderTilesheetLoad(sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format)) == NULL) {
