@@ -45,7 +45,7 @@ typedef struct {
 typedef struct {
 	STRINGTABLE_SECTION	*section;
 	unsigned int		sections;
-	FILE			*fp;
+	FILESYSTEM_FILE		*fp;
 } STRINGTABLE;
 
 

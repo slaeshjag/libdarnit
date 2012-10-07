@@ -157,7 +157,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 }
 
 
-size_t fsFileRead(void *buffer, long long bytes, FILESYSTEM_FILE *file) {
+size_t fsFileRead(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
 	if (bytes < 0)
@@ -220,6 +220,15 @@ size_t fsFileGets(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
 }
 
 
+size_t fsFileGetLine(char *buffer, size_t bytes, FILESYSTEM_FILE *file) {
+	if (file == NULL)
+		return 0;
+	if (buffer[(bytes = fsFileGets(buffer, bytes, file)) - 1] == '\n')
+		buffer[bytes - 1] = 0;
+	return bytes;
+}	
+
+
 off_t fsFileTell(FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return 0;
@@ -253,7 +262,7 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 	if (file == NULL)
 		return 0;
 	if (mode == SEEK_SET) {
-		if ((file->size <= offset && file->size > 0) || offset < 0)
+		if ((file->size < offset && file->size > 0) || offset < 0)
 			return -1;
 		else {
 			file->pos = offset;
@@ -261,7 +270,7 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 			return 0;
 		}
 	} else if (mode == SEEK_CUR) {
-		if ((file->pos + offset >= file->size && file->size > 0) || file->pos + offset < 0)
+		if ((file->pos + offset > file->size && file->size > 0) || file->pos + offset < 0)
 			return -1;
 		else {
 			file->pos += offset;
@@ -269,7 +278,7 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 			return 0;
 		}
 	} else if (mode == SEEK_END) {
-		if ((file->pos + offset >= file->size && file->size > 0) || file->size + offset < 0)
+		if ((file->pos + offset > file->size && file->size > 0) || file->size + offset < 0)
 			return -1;
 		else {
 			file->pos = file->size + offset;

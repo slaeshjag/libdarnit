@@ -62,6 +62,7 @@ typedef struct {
 
 
 #include "../deps/stb_truetype.h"
+#include "filesystem.h"
 #include "bitwise.h"
 #include "render.h"
 #include "input.h"
@@ -81,7 +82,6 @@ typedef struct {
 #include "utf8.h"
 #include "util.h"
 #include "stringtable.h"
-#include "filesystem.h"
 
 int darnitTimeLastFrameTook();
 

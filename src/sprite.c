@@ -31,24 +31,26 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 
 
 
-void spriteLoadText(FILE *fp, SPRITE_ENTRY *se) {
+void spriteLoadText(FILESYSTEM_FILE *fp, SPRITE_ENTRY *se) {
 	unsigned int i, j;
 	char c, buf[512];
 
-	rewind(fp);
-	fscanf(fp, "%s %i %i\n", se->tilesheet, &se->wsq, &se->hsq);
+	fsFileSeek(fp, 0, SEEK_SET);
+	fsFileGets(buf, 512, fp);
+	sscanf(buf, "%s %i %i\n", se->tilesheet, &se->wsq, &se->hsq);
 
 	j = i = 0;
 
-	while (!feof(fp)) {
-		c = fgetc(fp);
+	while (!fsFileEOF(fp)) {
+		fsFileRead(&c, 1, fp);
 		switch (c) {
 			case 'D':
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				j = 0;
 				break;
 			case 'T':
-				fscanf(fp, "%i %i\n", &se->spr[i].tile[j].time, &se->spr[i].tile[j].tile);
+				fsFileGets(buf, 512, fp);
+				sscanf(buf, "%i %i\n", &se->spr[i].tile[j].time, &se->spr[i].tile[j].tile);
 				j++;
 				break;
 			case 'E':
@@ -59,7 +61,7 @@ void spriteLoadText(FILE *fp, SPRITE_ENTRY *se) {
 			case '\n':
 				break;
 			default:
-				fgets(buf, 512, fp);
+				fsFileGets(buf, 512, fp);
 				break;
 		}
 	}
@@ -108,31 +110,28 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 
 
 void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format) {
-	FILE *fp;
+	FILESYSTEM_FILE *fp;
 	unsigned int header;
-	char *fname_n = utilPathTranslate(fname);
 	SPRITE_ENTRY *sprite_e;
 
-	if ((fp = fopen(fname_n, "rb")) == NULL) {
-		free(fname_n);
+	if ((fp = fsFileOpen(fname, "rb")) == NULL) {
 		FILE_OPEN_ERROR
 		return NULL;
 	}
-	free(fname_n);
 
-	fread(&header, 4, 1, fp);
+	fsFileRead(&header, 4, fp);
 
 	if ((sprite_e = spriteNew(NULL)) == NULL) {
-		fclose(fp);
+		fsFileClose(fp);
 		return NULL;
 	}
 	
 	if (header != 0x00FF10EF)
 		spriteLoadText(fp, sprite_e);
 	else 
-		fread(sprite_e, 1, sizeof(SPRITE_ENTRY), fp);
+		fsFileRead(sprite_e, sizeof(SPRITE_ENTRY), fp);
 
-	fclose(fp);
+	fsFileClose(fp);
 	if ((sprite_e->ts = renderTilesheetLoad(sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format)) == NULL) {
 		free(sprite_e);
 		return NULL;
