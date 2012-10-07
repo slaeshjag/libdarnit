@@ -54,10 +54,13 @@ typedef struct {
 
 
 
+int fsMount(const char *name);
+void fsUnmount(const char *name);
+
 int fsInit(const char *dir_name);
 off_t fsFILELenghtGet(FILE *fp);
 FILE *fsFILEDup(FILESYSTEM_FILE *file);
-FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size);
+FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start);
 FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode);
 size_t fsFileReadInts(unsigned int *buffer, size_t ints, FILESYSTEM_FILE *file);
 size_t fsFileRead(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
@@ -74,6 +77,7 @@ FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
 
 /* Internal stuff. Etc. */
 off_t fsContainerFILELength(FILE *fp, const char *name);
+off_t fsContainerFILEStart(FILE *fp, const char *name);
 FILESYSTEM_FILE *fsContainerFS(FILE *fp);
 FILE *fsContainerFileInternalGet(const char *name);
 

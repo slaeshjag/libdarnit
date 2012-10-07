@@ -4,6 +4,18 @@
 #include "darnit.h"
 
 
+int EXPORT_THIS darnitFSMount(const char *fname) {
+	return fsMount(fname);
+}
+
+
+void EXPORT_THIS darnitFSUnmount(const char *fname) {
+	fsUnmount(fname);
+	
+	return;
+}
+
+
 FILESYSTEM_FILE EXPORT_THIS *darnitFileOpen(const char *fname, const char *mode) {
 	return fsFileOpen(fname, mode);
 }
