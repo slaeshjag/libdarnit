@@ -5,7 +5,7 @@ typedef void DARNIT_BBOX;
 
 
 DARNIT_BBOX *darnitBBoxNew(unsigned int size);
-DARNIT_BBOX *darnitBBoxFree(void *bbox);
+DARNIT_BBOX *darnitBBoxFree(DARNIT_BBOX *bbox);
 int darnitBBoxCollTest(DARNIT_BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
 int darnitBBoxEntryAdd(DARNIT_BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void darnitBBoxEntryDelete(DARNIT_BBOX *bbox, int key);
