@@ -5,6 +5,9 @@
 
 typedef void DARNIT_FILE;
 
+int darnitFSMount(const char *fname);
+void darnitFSUnmount(const char *fname);
+
 DARNIT_FILE *darnitFileOpen(const char *fname, const char *mode);
 DARNIT_FILE *darnitFileClose(DARNIT_FILE *file);
 

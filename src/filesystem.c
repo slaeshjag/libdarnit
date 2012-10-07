@@ -84,7 +84,7 @@ FILE *fsFILEDup(FILESYSTEM_FILE *file) {
 }
 
 
-FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size) {
+FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start) {
 	FILESYSTEM_FILE *file;
 
 	if ((file = malloc(sizeof(FILESYSTEM_FILE))) == NULL)
@@ -99,9 +99,10 @@ FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_si
 
 	file->file = name;
 	sprintf(file->mode, "%s", mode);
-	file->offset = ftell(file->fp);
+	file->offset = file_start;
 	file->pos = 0;
 	file->size = file_size;
+	fseek(file->fp, file_start, SEEK_SET);
 
 	return file;
 }
@@ -126,7 +127,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp));
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
 		free(path_new);
 
 		/* Look in data containers */
@@ -134,7 +135,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		sprintf(path_new, "%s", name);
 		if ((fp = fsContainerFileInternalGet(path_new)) == NULL);
 		else
-			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name));
+			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
 		free(path_new);
 	} else {
 		write = 1;
@@ -143,15 +144,15 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else
-			return fsFileNew(path_new, mode, fp, -1);
+			return fsFileNew(path_new, mode, fp, -1, 0);
 		free(path_new);
 	}
 
 	/* Mkay, that didn't work. I guess we'll try open it directly */
-	path_new = utilPathTranslate(path);
-	if ((fp = fopen(name, mode)) == NULL);
+	path_new = utilPathTranslate(name);
+	if ((fp = fopen(path_new, mode)) == NULL);
 	else						/* W00t! */
-		return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp));
+		return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0);
 	free(path_new);
 	return NULL;
 }
@@ -265,7 +266,7 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 		if ((file->size < offset && file->size > 0) || offset < 0)
 			return -1;
 		else {
-			file->pos = offset;
+			file->pos = offset + file->offset;
 			fseek(file->fp, file->pos, SEEK_SET);
 			return 0;
 		}
@@ -335,6 +336,7 @@ int fsMount(const char *name) {
 		fsFileRead(img->dir[i].name, 128, img->file);
 		fsFileReadInts(&img->dir[i].pos, 2, img->file);
 		img->dir[i].comp = utilStringSum(img->dir[i].name);
+		img->dir[i].pos += (12 + 136 * img->dir_ents);
 	}
 
 	img->next = d->fs.mount;
@@ -376,27 +378,39 @@ void fsUnmount(const char *name) {
 }
 
 
-off_t fsContainerFILELength(FILE *fp, const char *name) {
+FILESYSTEM_IMAGE_FILE *fsContainerGetDir(FILE *fp, const char *name) {
 	struct FILESYSTEM_IMAGE *next;
 	unsigned int comp;
 	int i;
-	char *path;
 
-	path = utilPathTranslate(name);
-	comp = utilStringSum(path);
+	comp = utilStringSum(name);
 	next = d->fs.mount;
 	while (next) {
 		for (i = 0; i < next->dir_ents && next->file->fp == fp; i++)
-			if (next->dir[i].comp == comp && strcmp(next->dir[i].name, path) == 0) {
-				free(path);
-				return next->dir[i].length;
-			}
+			if (next->dir[i].comp == comp && strcmp(next->dir[i].name, name) == 0)
+				return &next->dir[i];
 		next = next->next;
 	}
 
-	free(path);
-
 	return 0;
+}
+
+
+off_t fsContainerFILEStart(FILE *fp, const char *name) {
+	FILESYSTEM_IMAGE_FILE *img;
+
+	if ((img = fsContainerGetDir(fp, name)) == NULL)
+		return 0;
+	return img->pos;
+}
+
+
+off_t fsContainerFILELength(FILE *fp, const char *name) {
+	FILESYSTEM_IMAGE_FILE *img;
+
+	if ((img = fsContainerGetDir(fp, name)) == NULL)
+		return 0;
+	return img->length;
 }
 
 
@@ -418,22 +432,17 @@ FILE *fsContainerFileInternalGet(const char *name) {
 	unsigned int comp;
 	struct FILESYSTEM_IMAGE *next;
 	int i;
-	char *path;
 
-	path = utilPathTranslate(name);
-	comp = utilStringSum(path);
+	comp = utilStringSum(name);
 	next = d->fs.mount;
 	while (next) {
 		for (i = 0; i < next->dir_ents; i++)
 			if (next->dir[i].comp == comp)
-				if (strcmp(path, next->file->file) == 0) {
-					free(path);
+				if (strcmp(name, next->dir[i].name) == 0) {
 					return next->file->fp;
 				}
 		next = next->next;
 	}
-
-	free(path);
 
 	return NULL;
 }
