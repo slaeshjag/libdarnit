@@ -1,6 +1,9 @@
 #ifndef __TILEMAP_H__
 #define	__TILEMAP_H__
 
+#define	TILEMAP_DEFAULT_INV_DIV		0xFFF
+
+
 typedef struct {
 	int			w;
 	int			h;
