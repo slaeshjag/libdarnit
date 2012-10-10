@@ -82,6 +82,7 @@ typedef struct {
 #include "utf8.h"
 #include "util.h"
 #include "stringtable.h"
+#include "ldmz.h"
 
 int darnitTimeLastFrameTook();
 
