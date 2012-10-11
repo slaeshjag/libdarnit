@@ -23,8 +23,39 @@ const char *mapLayerPropGet(LDMZ_MAP *map, int layer, const char *key) {
 }
 
 
+void mapCameraMove(LDMZ_MAP *map, int x, int y) {
+	int i;
+
+	if (!map)
+		return;
+
+	map->cam_x = x;
+	map->cam_y = y;
+
+	for (i = 0; i < map->layers; i++)
+		renderTilemapCameraMove(map->layer[i].tilemap->render, x, y);
+	
+	return;
+}
+
+
 LDMZ_MAP *mapDestroy(LDMZ_MAP *map) {
-	/* STUB */
+	int i;
+	
+	if (!map)
+		return NULL;
+
+	free(map->stringrefs);
+	free(map->object);
+	free(map->stringdata);
+
+	for (i = 0; i < map->layers; i++) {
+		tilemapFree(map->layer[i].tilemap);
+		renderTilesheetFree(map->layer[i].ts);
+	}
+
+	free(map->layer);
+	free(map);
 
 	return NULL;
 }
