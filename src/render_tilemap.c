@@ -13,8 +13,8 @@ void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int
 	x_start *= ts->sw;
 	y_start *= ts->sh;
 	y_adv_buf = malloc(sizeof(float) * (h + 1));
-	x_start -= 1.0f;
-	y_start = 1.0f - y_start;
+	x_start = -1.0f;
+	y_start = 1.0f;
 
 
 	for (i = 0; i < (w + 1); i++) {
@@ -101,9 +101,9 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	int x, y, w, h, map_w, map_h;
-
-	tm->cam_x = tm->ts->swgran * cam_x * -1;
-	tm->cam_y = tm->ts->shgran * cam_y;
+	
+	tm->cam_x = tm->ts->swgran * (cam_x % tm->ts->wsq) * -1;
+	tm->cam_y = tm->ts->shgran * (cam_y % tm->ts->hsq);
 
 	x = cam_x / tm->ts->wsq;
 	y = cam_y / tm->ts->hsq;
