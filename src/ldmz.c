@@ -33,7 +33,8 @@ void mapCameraMove(LDMZ_MAP *map, int x, int y) {
 	map->cam_y = y;
 
 	for (i = 0; i < map->layers; i++)
-		renderTilemapCameraMove(map->layer[i].tilemap->render, x, y);
+		renderTilemapCameraMove(map->layer[i].tilemap->render, x + map->layer[i].offset_x,
+		    y + map->layer[i].offset_y);
 	
 	return;
 }
