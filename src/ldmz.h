@@ -84,4 +84,11 @@ typedef struct {
 } LDMZ_MAP;
 
 
+const char *mapPropSearch(LDMZ_REF *ref, const char *key);
+const char *mapLayerPropGet(LDMZ_MAP *map, int layer, const char *key);
+void mapCameraMove(LDMZ_MAP *map, int x, int y);
+LDMZ_MAP *mapDestroy(LDMZ_MAP *map);
+LDMZ_MAP *mapLoad(const char *fname);
+
+
 #endif
