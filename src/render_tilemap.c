@@ -105,8 +105,8 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	tm->cam_x = tm->ts->swgran * (cam_x % tm->ts->wsq) * -1;
 	tm->cam_y = tm->ts->shgran * (cam_y % tm->ts->hsq);
 
-	x = cam_x / tm->ts->wsq;
-	y = cam_y / tm->ts->hsq;
+	x = floorf((float) cam_x / tm->ts->wsq);
+	y = floorf((float) cam_y / tm->ts->hsq);
 	
 	if (x == tm->cam_xi && y == tm->cam_yi)
 		return;
