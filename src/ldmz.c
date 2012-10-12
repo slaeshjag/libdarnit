@@ -93,7 +93,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	map_r = malloc(map_h.strtable_refs_len);
 	map_l = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
 	object = malloc(map_h.objects * sizeof(LDMZ_OBJECT));
-	map->object = malloc(sizeof(LDMZ_REF) * (map_h.objects));
+	map->object = malloc(sizeof(LDMZ_OBJECT) * (map_h.objects));
 	map->layer = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
 
 	map->stringdata = stringdata;
