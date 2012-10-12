@@ -2,7 +2,6 @@
 #define	__DARNIT_MAP_H__
 
 typedef void			DARNIT_MAP_REF;
-typedef void			DARNIT_MAP_LAYER;
 typedef void			DARNIT_MAP_STRINGDATA;
 
 typedef struct {
@@ -11,6 +10,17 @@ typedef struct {
 	unsigned int		l;
 	DARNIT_MAP_REF		*ref;
 } DARNIT_MAP_OBJECT;
+
+
+typedef struct {
+	DARNIT_TILEMAP		*tilemap;
+	DARNIT_TILESHEET	*ts;
+	DARNIT_MAP_REF		*ref;
+	unsigned int		offset_x;
+	unsigned int		offset_y;
+	unsigned int		tile_w;
+	unsigned int		tile_h;
+} DARNIT_MAP_LAYER;
 
 
 typedef struct {
