@@ -13,8 +13,9 @@ typedef struct {
 	unsigned int		strtable_refs_zlen;
 	unsigned int		layers;
 	unsigned int		layer_zlen;
-	unsigned int		object_zlen;
 	unsigned int		objects;
+	unsigned int		object_zlen;
+	unsigned int		refs;
 	unsigned int		main_ref;
 } LDMZ_FILE_MAP;
 
@@ -28,8 +29,8 @@ typedef struct {
 typedef struct {
 	unsigned int		layer_w;
 	unsigned int		layer_h;
-	unsigned int		layer_offset_x;
-	unsigned int		layer_offset_y;
+	int			layer_offset_x;
+	int			layer_offset_y;
 	unsigned int		layer_zlen;
 	unsigned int		prop_ref;
 	unsigned int		tile_w;

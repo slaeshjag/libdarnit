@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
 	DARNIT_MOUSE mouse;
 	DARNIT_TILEMAP *tilemap;
 	DARNIT_KEYS keys;
+	DARNIT_MAP *map;
 
 	handle = darnitInit("TESTAPP - libDarnit", "testapp");
 
@@ -26,7 +27,9 @@ int main(int argc, char **argv) {
 	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 460);
 
 	mapsheet = darnitRenderTilesheetLoad("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
-	tilemap = darnitRenderTilemapCreate("map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
+	if ((map = darnitMapLoad("testmap.ldmz")) == NULL)
+		fprintf(stderr, "Map load failed\n");
+//	tilemap = darnitRenderTilemapCreate("map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
 	darnitSpriteAnimationEnable(sprite);
 	sprintf(test_text, "Héllo, world. Modify m€! Test of offsets");
@@ -72,9 +75,9 @@ int main(int argc, char **argv) {
 			j++;
 
 		if (keys.r == 1)
-			darnitRenderTilemapCameraMove(tilemap, i*4, j*4);
+			darnitRenderTilemapCameraMove(map->layer->tilemap, i*4, j*4);
 //		darnitRenderTint(handle, 1.0f, 1.0f, 1.0f, 1.0f);
-		darnitRenderTilemap(tilemap);
+		darnitRenderTilemap(map->layer->tilemap);
 		darnitRenderBlendingEnable();
 		if (keys.l == 1)
 			if (darnitMenuHandle(surface) != -1)

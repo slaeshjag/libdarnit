@@ -91,7 +91,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	map = malloc(sizeof(LDMZ_MAP));
 	map->stringrefs = malloc(sizeof(LDMZ_REF) * (map_h.strtable_refs_len / sizeof(LDMZ_FILE_STRTABLE_REF)));
 	map_r = malloc(map_h.strtable_refs_len);
-	map_l = malloc(map_h.layer_zlen);
+	map_l = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
 	object = malloc(map_h.objects * sizeof(LDMZ_OBJECT));
 	map->object = malloc(sizeof(LDMZ_REF) * (map_h.objects));
 	map->layer = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
@@ -118,7 +118,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	buff = tmp;
 	fsFileRead(buff, map_h.strtable_refs_zlen, file);
 	stbi_zlib_decode_buffer((void *) map_r, map_h.strtable_refs_len, buff, map_h.strtable_refs_zlen);
-	utilBlockToHostEndian((unsigned int *) map_r, map_h.strtable_refs_len / sizeof(LDMZ_FILE_STRTABLE_REF));
+	utilBlockToHostEndian((unsigned int *) map_r, map_h.strtable_refs_len / 4);
 	for (i = 0; i < (map_h.strtable_refs_len / sizeof(LDMZ_FILE_STRTABLE_REF)); i++) {
 		if (map_r[i].key != -1) {
 			map->stringrefs[i].key = &stringdata[map_r[i].key];
@@ -134,8 +134,9 @@ LDMZ_MAP *mapLoad(const char *fname) {
 
 	/**** OBJECTS ****/
 
-	if ((tmp = realloc(buff, map_h.objects * sizeof(LDMZ_FILE_OBJECT))) == NULL)
+	if ((tmp = realloc(buff, map_h.object_zlen)) == NULL && map_h.objects > 0) {
 		goto error;		/* Down at the bottom of the function */
+	}
 	buff = tmp;
 	fsFileRead(buff, map_h.object_zlen, file);
 	stbi_zlib_decode_buffer((void *) object, sizeof(LDMZ_OBJECT) * map_h.objects, buff, map_h.object_zlen);
@@ -151,7 +152,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 
 	/**** MAP LAYER ****/
 
-	if ((tmp = realloc(buff, map_h.layers * sizeof(LDMZ_FILE_LAYER))) == NULL)
+	if ((tmp = realloc(buff, map_h.layer_zlen)) == NULL)
 		goto error;		/* Down at the bottom of the function */
 	buff = tmp;
 	fsFileRead(buff, map_h.layer_zlen, file);
@@ -168,9 +169,9 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		map->layer[i].tile_h = map_l[i].tile_h;
 		map->layer[i].ref = &map->stringrefs[map_l[i].prop_ref];
 
-		if ((tmp = realloc(buff, map_l[i].layer_zlen)) == NULL)
+		if ((tmp = realloc(buff, map_l[i].layer_zlen)) == NULL) 
 			goto error;		/* Down at the bottom of the function */
-		tmp = buff;
+		buff = tmp;
 		fsFileRead(buff, map_l[i].layer_zlen, file);
 		if (mapLayerPropGet(map, i, "tileset") == NULL) {
 			if (mapPropGet(map, "tileset") == NULL)
@@ -190,9 +191,10 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		renderTilemapCameraMove(map->layer[i].tilemap->render, map->cam_x + map->layer[i].offset_x, 
 		    map->cam_y + map->layer[i].offset_y);
 		fsFileRead(buff, map_l[i].layer_zlen, file);
-		stbi_zlib_decode_buffer((void *) map->layer[i].tilemap->data, map_l[i].layer_w * map_l[i].layer_h, 
-		    buff, map_h.layer_zlen);
+		stbi_zlib_decode_buffer((void *) map->layer[i].tilemap->data, map_l[i].layer_w * map_l[i].layer_h * 4, 
+		    buff, map_l[i].layer_zlen);
 		utilBlockToHostEndian(map->layer[i].tilemap->data, map_l[i].layer_w * map_l[i].layer_h);
+		renderTilemapForceRecalc(map->layer[i].tilemap->render);
 	}
 	
 	free(map_l);
