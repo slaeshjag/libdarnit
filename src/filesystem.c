@@ -266,8 +266,8 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 		if ((file->size < offset && file->size > 0) || offset < 0)
 			return -1;
 		else {
-			file->pos = offset + file->offset;
-			fseek(file->fp, file->pos, SEEK_SET);
+			file->pos = offset;
+			fseek(file->fp, file->pos + file->offset, SEEK_SET);
 			return 0;
 		}
 	} else if (mode == SEEK_CUR) {
@@ -282,8 +282,8 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 		if ((file->pos + offset > file->size && file->size > 0) || file->size + offset < 0)
 			return -1;
 		else {
-			file->pos = file->size + offset;
-			fseek(file->fp, file->pos, SEEK_SET);
+			file->pos = file->size;
+			fseek(file->fp, file->pos + offset, SEEK_SET);
 			return 0;
 		}
 	}
