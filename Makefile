@@ -6,20 +6,22 @@ default:
 	mkdir -p bin
 	make base
 	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGL
+	cd tools && make
 
 pandora:
 	mkdir -p bin
 	make base
 	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGLES_CM -lEGL -lX11
+	cd tools && make
 
 raspberrypi:
 	mkdir -p bin
 	make base
 	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGLES_CM -lEGL -lX11 -DHAVE_GLES -DRASPBERRYPI -I/opt/vc/include -L/opt/vc/lib
+	cd tools && make
 
 base:
 	cd deps && make
-	cd tools && make
 
 clean:
 	rm -Rf bin
@@ -32,6 +34,7 @@ install:
 	cp bin/darnit-stringtable /usr/local/bin
 	cp bin/darnit-mksprite /usr/local/bin
 	cp bin/darnit-fsimage /usr/local/bin
+	cp bin/darnit-spriteview /usr/local/bin
 	cp -Rv include/darnit /usr/local/include
 	ldconfig
 
