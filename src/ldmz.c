@@ -99,6 +99,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	map->stringdata = stringdata;
 	map->cam_x = map->cam_y = 0;
 	map->layers = map_h.layers;
+	map->objects = map_h.objects;
 
 	if (!map || (!stringdata && map_h.strtable_len > 0) || (!map->stringrefs && map_h.strtable_refs_len > 0)
 	    || (!map->object && map_h.objects) || (!map->layer && map_h.layers) 
