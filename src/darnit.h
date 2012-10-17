@@ -35,6 +35,7 @@
 
 #ifdef _WIN32
 	#define EXPORT_THIS __declspec(dllexport)
+	#define	off_t				long long int
 #else
 	#define	EXPORT_THIS __attribute__ ((visibility ("default")))
 #endif

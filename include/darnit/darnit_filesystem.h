@@ -3,6 +3,10 @@
 
 #include <stdlib.h>
 
+#ifdef _WIN32
+	#define		off_t		long long int
+#endif
+
 typedef void DARNIT_FILE;
 
 int darnitFSMount(const char *fname);
