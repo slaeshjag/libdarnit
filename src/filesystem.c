@@ -10,9 +10,11 @@ int fsInit(const char *dir_name) {
 	} else if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
 		data_dir = getenv("HOME");
 
-		if ((d->fs.write_dir = malloc(strlen(data_dir) + 3 + strlen(dir_name))) == NULL)
+		if ((d->fs.write_dir = malloc(strlen(data_dir) + 3 + strlen(dir_name) + strlen(".darnit/"))) == NULL)
 			return -1;
-		sprintf(d->fs.write_dir, "%s/.%s", data_dir, dir_name);
+		sprintf(d->fs.write_dir, "%s/.darnit", data_dir);
+		mkdir(d->fs.write_dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		sprintf(d->fs.write_dir, "%s/.darnit/%s", data_dir, dir_name);
 
 		if ((d->fs.data_dir = malloc(strlen(DATA_PATH) + 2 + strlen(dir_name))) == NULL)
 			return -1;
