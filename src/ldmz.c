@@ -91,7 +91,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	map = malloc(sizeof(LDMZ_MAP));
 	map->stringrefs = malloc(sizeof(LDMZ_REF) * (map_h.strtable_refs_len / sizeof(LDMZ_FILE_STRTABLE_REF)));
 	map_r = malloc(map_h.strtable_refs_len);
-	map_l = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
+	map_l = malloc(sizeof(LDMZ_FILE_LAYER) * map_h.layers);
 	object = malloc(map_h.objects * sizeof(LDMZ_OBJECT));
 	map->object = malloc(sizeof(LDMZ_OBJECT) * (map_h.objects));
 	map->layer = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
@@ -157,8 +157,8 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		goto error;		/* Down at the bottom of the function */
 	buff = tmp;
 	fsFileRead(buff, map_h.layer_zlen, file);
-	stbi_zlib_decode_buffer((void *)map_l, sizeof(LDMZ_LAYER) * map_h.layers, buff, map_h.layer_zlen);
-	utilBlockToHostEndian((unsigned int *) map_l, (sizeof(LDMZ_LAYER) * map_h.layers) >> 2);
+	stbi_zlib_decode_buffer((void *)map_l, sizeof(LDMZ_FILE_LAYER) * map_h.layers, buff, map_h.layer_zlen);
+	utilBlockToHostEndian((unsigned int *) map_l, (sizeof(LDMZ_FILE_LAYER) * map_h.layers) >> 2);
 	for (i = 0; i < map_h.layers; i++) {
 		map->layer[i].tilemap = NULL;
 		map->layer[i].ts = NULL;

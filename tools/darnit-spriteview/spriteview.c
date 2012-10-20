@@ -23,7 +23,8 @@ int main(int argc, char **argv) {
 
 	darnitSpriteMove(sprite, 0, 0);
 	darnitSpriteAnimationEnable(sprite);
-
+	darnitRenderBlendingEnable();
+	
 	for (;;) {
 		darnitRenderBegin();
 		darnitSpriteDraw(sprite);
