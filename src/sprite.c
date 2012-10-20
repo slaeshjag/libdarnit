@@ -144,7 +144,7 @@ void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format
 
 
 
-void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y) {
+void spriteTeleport(SPRITE_ENTRY *sprite, int x, int y) {
 	if (sprite == NULL) return;
 
 	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);

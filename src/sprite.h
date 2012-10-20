@@ -43,7 +43,7 @@ typedef struct {
 
 SPRITE_ENTRY *spriteNew(TILESHEET *ts);
 void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format);
-void spriteTeleport(SPRITE_ENTRY *sprite, unsigned int x, unsigned int y);
+void spriteTeleport(SPRITE_ENTRY *sprite, int x, int y);
 void spriteEnableAnimation(SPRITE_ENTRY *sprite);
 void spritePauseAnimation(SPRITE_ENTRY *sprite);
 void spriteDisableAnimation(SPRITE_ENTRY *sprite);
