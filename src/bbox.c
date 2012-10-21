@@ -128,9 +128,9 @@ int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, 
 
 	if (bbox->sortmode == SORT_MODE_X) {
 		for (; i > TARGET_FILTER; i>>=1) {
-			if (bbox->bbox[test+i].xb < x)
+			if (bbox->bbox[test+i].xb > x)
 				test += i;
-			else if (bbox->bbox[test].xb < x);
+			else if (bbox->bbox[test].xb > x);
 			else
 				test -= i;
 		}
@@ -150,6 +150,7 @@ int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, 
 			test = 0;
 	}
 	
+	fprintf(stderr, "Starting test at test=%i\n", test);
 	no = 0;
 
 	for (i = test; i < bbox->bboxes; i++) {
@@ -191,6 +192,8 @@ void *bboxNew(unsigned int size) {
 
 	bboxSort(bbox);
 	bbox->sortmode = SORT_MODE_X;
+	bbox->bboxes = 0;
+	bbox->cnt = 0;
 
 	return bbox;
 }
