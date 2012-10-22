@@ -61,7 +61,7 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 #ifdef _WIN32
 	darnit_init_common();
 #endif
-	renderInit(d);
+	renderInit();
 	
 	#ifdef PANDORA
 	if (videoInit(wtitle, 800, 480, 1) < 0);
@@ -86,19 +86,19 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 
 
 void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir) {
-	DARNIT *d;
-
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
 		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
-		return NULL;
+		return d;
 	}
 
+	#ifdef _WIN32
 	darnit_init_common();
+	#endif
 	renderInit();
 	
 	if (videoInit(wtitle, win_w, win_h, fullscreen) < 0);
-	else if (inputInit(d) < 0);
-	else if (audioInit(d) < 0);
+	else if (inputInit() < 0);
+	else if (audioInit() < 0);
 	else {
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
