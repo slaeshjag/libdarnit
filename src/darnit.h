@@ -95,6 +95,13 @@ typedef struct {
 
 
 typedef struct {
+	LINE_CACHE		*lc;
+	unsigned int		lines;
+	unsigned int		line_w;
+} DARNIT_RENDER_LINE_BUFFER;
+
+
+typedef struct {
 	int			frames_counting;
 	int			frames_last;
 	int			time;

@@ -3,6 +3,7 @@
 
 typedef void DARNIT_TILESHEET;
 typedef void DARNIT_TILE;
+typedef void DARNIT_LINE;
 
 
 DARNIT_TILESHEET *darnitRenderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format);
@@ -16,6 +17,12 @@ void darnitRenderTileClear(DARNIT_TILE *tile_p, unsigned int tile);
 void darnitRenderTileDraw(DARNIT_TILE *tile_p, void *tilesheet, unsigned int tiles);
 DARNIT_TILE *darnitRenderTileAlloc(unsigned int tiles);
 DARNIT_TILE *darnitRenderTileFree(DARNIT_TILE *tile_p);
+
+DARNIT_LINE *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w);
+void darnitRenderLineMove(DARNIT_LINE *line_p, unsigned int line, int x1, int y1, int x2, int y2);
+void darnitRenderLineDraw(DARNIT_LINE *line_p, int lines);
+DARNIT_LINE *darnitRenderTileFree(DARNIT_LINE *line_p);
+
 void darnitRenderBegin();
 void darnitRenderEnd();
 void darnitRenderBlendingEnable();

@@ -349,6 +349,16 @@ void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y) 
 }
 
 
+void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2) {
+	cache->x1 = (d->video.swgran * x) - 1.0f;
+	cache->y1 = 1.0f - (d->video.shgran * y);
+	cache->x2 = (d->video.swgran * x2) - 1.0f;
+	cache->y2 = 1.0f - (d->video.shgran * y2);
+
+	return;
+}
+
+
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 	unsigned int t = tile;
 
@@ -440,6 +450,19 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 	glTexCoordPointer(2, GL_FLOAT, 16, &cache->u);
 
 	glDrawArrays(GL_TRIANGLES, 0, tiles*6);
+
+	return;
+}
+
+
+
+void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
+	if (!cache)
+		return;
+
+	glLineWidth(line_w);
+	glVertexPointer(2, GL_FLOAT, 0, cache);
+	glDrawArrays(GL_LINES, 0, lines * 2);
 
 	return;
 }
