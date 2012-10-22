@@ -36,6 +36,14 @@ typedef struct {
 
 
 typedef struct {
+	float		x1;
+	float		y1;
+	float		x2;
+	float		y2;
+} LINE_CACHE;
+
+
+typedef struct {
 	float		r;
 	float		s;
 	float		u;
@@ -122,10 +130,12 @@ void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h);
 void *renderTilesheetFree(TILESHEET *ts);
 void renderMapCacheSetTile(unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);
+void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2);
 void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
+void renderLineCache(LINE_CACHE *cache, int lines, int line_w);
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
