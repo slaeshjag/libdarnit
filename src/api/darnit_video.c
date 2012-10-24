@@ -61,6 +61,18 @@ void EXPORT_THIS darnitRenderLineMove(DARNIT_RENDER_LINE_BUFFER *buf, unsigned i
 }
 
 
+void EXPORT_THIS darnitRenderRectSet(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int x1, int y1, int x2, int y2) {
+	RECT_CACHE *cache;
+
+	if (buf->rects <= rect)
+		return;
+	cache = &buf->rc[rect];
+	renderRectCalc(cache, x1, y1, x2, y2);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTileSetTilesheetCoord(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, 
 							unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
 	TILE_CACHE *cache;
@@ -111,6 +123,17 @@ void EXPORT_THIS darnitRenderLineDraw(DARNIT_RENDER_LINE_BUFFER *buf, int lines)
 }
 
 
+void EXPORT_THIS darnitRenderRectDraw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
+	if (buf == NULL)
+		return;
+	if (buf->rects < rects)
+		rects = buf->rects;
+	renderRectCache(buf->rc, rects);
+
+	return;
+}
+
+
 void EXPORT_THIS *darnitRenderTileAlloc(unsigned int tiles) {
 	DARNIT_RENDER_BUFFER *buf;
 	int i, j;
@@ -127,6 +150,27 @@ void EXPORT_THIS *darnitRenderTileAlloc(unsigned int tiles) {
 	}
 
 	buf->tiles = tiles;
+
+	return buf;
+}
+
+
+
+void EXPORT_THIS *darnitRenderRectAlloc(unsigned int rects) {
+	DARNIT_RENDER_RECT_BUFFER *buf;
+	int i, j;
+	float *arr;
+
+	buf = malloc(sizeof(DARNIT_RENDER_RECT_BUFFER));
+	if ((buf->rc = malloc(sizeof(RECT_CACHE)*rects)) == NULL)
+		return NULL;
+	for (i = 0; i < rects; i++) {
+		arr = (void *) &buf->rc[i];
+		for (j = 0; j < 12; j++)
+			arr[j] = 0.0f;
+	}
+
+	buf->rects = rects;
 
 	return buf;
 }
@@ -166,6 +210,17 @@ void EXPORT_THIS *darnitRenderLineFree(DARNIT_RENDER_LINE_BUFFER *buf) {
 	if (buf == NULL)
 		return NULL;
 	free(buf->lc);
+	free(buf);
+
+	return NULL;
+}
+
+
+
+void EXPORT_THIS *darnitRenderRectFree(DARNIT_RENDER_RECT_BUFFER *buf) {
+	if (buf == NULL)
+		return NULL;
+	free(buf->rc);
 	free(buf);
 
 	return NULL;

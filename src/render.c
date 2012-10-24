@@ -359,6 +359,23 @@ void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2) {
 }
 
 
+void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2) {
+	float xf, yf, xf2, yf2;
+
+	xf = (d->video.swgran * x) - 1.0f;
+	yf = 1.0f - (d->video.shgran * y);
+	xf2 = (d->video.swgran * x2) - 1.0f;
+	yf2 = 1.0f - (d->video.shgran * y);
+
+	cache->coord[0].x = cache->coord[5].x = cache->coord[4].x = xf;
+	cache->coord[0].y = cache->coord[5].y = cache->coord[1].y = yf;
+	cache->coord[1].x = cache->coord[2].x = cache->coord[3].x = xf2;
+	cache->coord[2].x = cache->coord[3].x = cache->coord[4].x = yf2;
+
+	return;
+}
+
+
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 	unsigned int t = tile;
 
@@ -455,14 +472,28 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 }
 
 
+void renderRectCache(RECT_CACHE *cache, int rects) {
+	if (!cache)
+		return;
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, cache);
+	glDrawArrays(GL_TRIANGLES, 0, rects * 6);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	return;
+}
+
 
 void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
 	if (!cache)
 		return;
 
 	glLineWidth(line_w);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_LINES, 0, lines * 2);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	return;
 }
