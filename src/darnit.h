@@ -104,6 +104,12 @@ typedef struct {
 
 
 typedef struct {
+	RECT_CACHE		*rc;
+	unsigned int		rects;
+} DARNIT_RENDER_RECT_BUFFER;
+
+
+typedef struct {
 	int			frames_counting;
 	int			frames_last;
 	int			time;
