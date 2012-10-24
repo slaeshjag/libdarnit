@@ -476,8 +476,12 @@ void renderRectCache(RECT_CACHE *cache, int rects) {
 	if (!cache)
 		return;
 
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_TRIANGLES, 0, rects * 6);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
 
 	return;
 }
@@ -487,9 +491,13 @@ void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
 	if (!cache)
 		return;
 
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
 	glLineWidth(line_w);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_LINES, 0, lines * 2);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
 
 	return;
 }
