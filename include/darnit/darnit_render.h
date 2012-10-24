@@ -22,7 +22,7 @@ DARNIT_TILE *darnitRenderTileFree(DARNIT_TILE *tile_p);
 DARNIT_LINE *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w);
 void darnitRenderLineMove(DARNIT_LINE *line_p, unsigned int line, int x1, int y1, int x2, int y2);
 void darnitRenderLineDraw(DARNIT_LINE *line_p, int lines);
-DARNIT_LINE *darnitRenderTileFree(DARNIT_LINE *line_p);
+DARNIT_LINE *darnitRenderLineFree(DARNIT_LINE *line_p);
 
 DARNIT_RECT *darnitRenderRectAlloc(unsigned int rects);
 void darnitRenderRectSet(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
