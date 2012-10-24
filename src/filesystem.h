@@ -58,6 +58,7 @@ int fsMount(const char *name);
 void fsUnmount(const char *name);
 
 int fsInit(const char *dir_name);
+void fsDirectoryCreate(const char *dir_name);
 off_t fsFILELenghtGet(FILE *fp);
 FILE *fsFILEDup(FILESYSTEM_FILE *file);
 FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start);

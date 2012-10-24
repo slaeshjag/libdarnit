@@ -61,6 +61,24 @@ int fsInit(const char *dir_name) {
 }
 
 
+void fsDirectoryCreate(const char *dir_name) {
+	char tmp[256];
+	if (strlen(dir_name) + 2 + strlen(d->fs.write_dir) > 256)
+		return;
+	#ifdef _WIN32
+		sprintf(tmp, "%s\\%s", d->fs.write_dir, dir_name);
+		CreateDirectory(tmp, NULL);
+	#else
+		sprintf(tmp, "%s/%s", d->fs.write_dir, dir_name);
+		mkdir(tmp, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	#endif
+
+	return;
+}
+	
+		
+
+
 off_t fsFILELenghtGet(FILE *fp) {
 	off_t orig, end;
 
