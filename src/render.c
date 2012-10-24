@@ -370,7 +370,7 @@ void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2) {
 	cache->coord[0].x = cache->coord[5].x = cache->coord[4].x = xf;
 	cache->coord[0].y = cache->coord[5].y = cache->coord[1].y = yf;
 	cache->coord[1].x = cache->coord[2].x = cache->coord[3].x = xf2;
-	cache->coord[2].x = cache->coord[3].x = cache->coord[4].x = yf2;
+	cache->coord[2].y = cache->coord[3].y = cache->coord[4].y = yf2;
 
 	return;
 }
@@ -476,10 +476,10 @@ void renderRectCache(RECT_CACHE *cache, int rects) {
 	if (!cache)
 		return;
 
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_TRIANGLES, 0, rects * 6);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+//	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	return;
 }
