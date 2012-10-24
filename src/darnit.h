@@ -51,6 +51,8 @@ typedef struct {
 	unsigned int	x	: 16;
 	unsigned int	y	: 16;
 	signed int	wheel	: 32;
+	unsigned int	mb_l	: 1;
+	unsigned int	mb_r	: 1;
 } DARNIT_MOUSE;
 
 

@@ -158,11 +158,13 @@ void inputPoll() {
 			d->input.mouse.x = d->input.event.motion.x;
 			d->input.mouse.y = d->input.event.motion.y;
 		} else if (d->input.event.type == SDL_MOUSEBUTTONDOWN) {
-			if (d->input.event.button.button == SDL_BUTTON_LEFT)
+			if (d->input.event.button.button == SDL_BUTTON_LEFT) {
 				d->input.key |= MB_LEFT;
-			else if (d->input.event.button.button == SDL_BUTTON_RIGHT)
+				d->input.mouse.mb_l = 1;
+			} else if (d->input.event.button.button == SDL_BUTTON_RIGHT) {
 				d->input.key |= MB_RIGHT_D;
-			else if (d->input.event.button.button == SDL_BUTTON_WHEELUP)
+				d->input.mouse.mb_r = 1;
+			} else if (d->input.event.button.button == SDL_BUTTON_WHEELUP)
 				d->input.mouse.wheel--;
 			else if (d->input.event.button.button == SDL_BUTTON_WHEELDOWN)
 				d->input.mouse.wheel++;
@@ -170,9 +172,11 @@ void inputPoll() {
 			if (d->input.event.button.button == SDL_BUTTON_LEFT) {
 				d->input.key |= MB_LEFT;
 				d->input.key ^= MB_LEFT;
+				d->input.mouse.mb_l = 0;
 			} else if (d->input.event.button.button == SDL_BUTTON_RIGHT) {
 				d->input.key |= MB_RIGHT_D;
 				d->input.key ^= MB_RIGHT_D;
+				d->input.mouse.mb_r = 0;
 			}
 		} else if (d->input.event.type == SDL_JOYAXISMOTION) {
 			if (d->input.event.jaxis.which == d->input.js.nub0i) {
