@@ -365,7 +365,7 @@ void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2) {
 	xf = (d->video.swgran * x) - 1.0f;
 	yf = 1.0f - (d->video.shgran * y);
 	xf2 = (d->video.swgran * x2) - 1.0f;
-	yf2 = 1.0f - (d->video.shgran * y);
+	yf2 = 1.0f - (d->video.shgran * y2);
 
 	cache->coord[0].x = cache->coord[5].x = cache->coord[4].x = xf;
 	cache->coord[0].y = cache->coord[5].y = cache->coord[1].y = yf;
@@ -476,10 +476,8 @@ void renderRectCache(RECT_CACHE *cache, int rects) {
 	if (!cache)
 		return;
 
-//	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_TRIANGLES, 0, rects * 6);
-//	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	return;
 }
@@ -490,10 +488,8 @@ void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
 		return;
 
 	glLineWidth(line_w);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_LINES, 0, lines * 2);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	return;
 }
