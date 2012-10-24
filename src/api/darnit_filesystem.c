@@ -26,6 +26,13 @@ FILESYSTEM_FILE EXPORT_THIS *darnitFileClose(FILESYSTEM_FILE *file) {
 }
 
 
+void EXPORT_THIS darnitDirectoryCreate(const char *dir_name) {
+	fsDirectoryCreate(dir_name);
+
+	return;
+}
+
+
 size_t EXPORT_THIS darnitFileIntsRead(void *buffer, size_t ints, FILESYSTEM_FILE *file) {
 	return fsFileReadInts(buffer, ints, file);
 }

@@ -15,6 +15,7 @@ void darnitFSUnmount(const char *fname);
 DARNIT_FILE *darnitFileOpen(const char *fname, const char *mode);
 DARNIT_FILE *darnitFileClose(DARNIT_FILE *file);
 
+void darnitDirectoryCreate(void *dir_name);
 size_t darnitFileIntsRead(void *buffer, size_t ints, DARNIT_FILE *file);
 size_t darnitFileRead(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t darnitFileIntsWrite(void *buffer, size_t ints, DARNIT_FILE *file);
