@@ -295,6 +295,28 @@ int textStringWordLength(TEXT_FONT *font, const char *string, int *bytes) {
 }
 
 
+int textStringBytesOnLine(TEXT_FONT *font, const char *string, int linelen, int *w_m) {
+	int i, w;
+	unsigned int glyph;
+
+	if (!font)
+		return 0;
+	
+	for (i = w = 0; string[i] != 0;) {
+		glyph = utf8GetChar(&string[i]);
+		if (textGetGlyphWidth(font, glyph) + w > linelen) {
+			*w_m = w;
+			return i;
+		}
+		w += textGetGlyphWidth(font, glyph);
+		i += utf8GetValidatedCharLength(&string[i]);
+	}
+
+	*w_m = w;
+	return i;
+}
+
+
 int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *w_set) {
 	int i, j,  w, w_max, t, b;
 
@@ -304,8 +326,13 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 	for (j = 0; *string; j++) {
 		for (i = w = 0; *string != 0 && *string != '\n';) {
 			t = textStringWordLength(font, string, &b);
-			if (t + w >= linelen)
-				break;
+			if (t + w >= linelen) {
+				if (w > 0)
+					break;
+				else 
+					b = textStringBytesOnLine(font, string, linelen, &t);
+			}
+
 			string += b;
 			w += t;
 
