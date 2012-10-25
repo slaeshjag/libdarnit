@@ -632,7 +632,7 @@ void menutkTextinputInput(MENUTK_ENTRY *menu) {
 		menu->top_sel = menu->top_sel + ((i - menu->top_sel) >> 1);
 	
 
-	if (selection >= 0)
+	if (menu->selection >= 0)
 		menutkHighlightRecalculate(menu, textGetGlyphWidth(menu->font, menu->codepoint[menu->selection]), textFontGetH(menu->font));
 	for (i = tmp = 0; i < (menu->selection - menu->top_sel) && menu->selection != -2; i++)
 		tmp += textGetGlyphWidth(menu->font, menu->codepoint[menu->top_sel + i]);
