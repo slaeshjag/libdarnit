@@ -343,6 +343,11 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 				string++;
 			}
 		}
+		if (w == 0) {		// We can't fit a single glyph. Meh. //
+			*w_set = 0;
+			return 0;
+		}
+			
 		if (w > w_max)
 			w_max = w;
 		if (*string == '\n')
