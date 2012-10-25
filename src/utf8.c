@@ -165,4 +165,3 @@ int utf8Encode(unsigned int ch, char *str_s, int buf_len) {
 
 	return i;
 }
-

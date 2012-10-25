@@ -103,6 +103,10 @@ void *textLoadFont(const char *fname, int w, int h, int linespec);
 int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph);
 float textGetGlyphWidthf(TEXT_FONT *font, unsigned int glyph);
 int textGetStringWidth(TEXT_FONT *font, const char *string);
+
+int textStringWordLength(TEXT_FONT *font, const char *string, int *bytes);
+int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *w_set);
+
 int textFontGetH(TEXT_FONT *font);
 int textFontGetHS(TEXT_FONT *font);
 void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y);

@@ -275,6 +275,57 @@ int textGetStringWidth(TEXT_FONT *font, const char *string) {
 	return w;
 }
 
+
+int textStringWordLength(TEXT_FONT *font, const char *string, int *bytes) {
+	int i, w;
+	unsigned int glyph;
+
+	if (!font)
+		return 0;
+
+	for (i = w = 0; string[i] != 0 && string[i] != ' ' && string[i] != '\n';) {
+		glyph = utf8GetChar(&string[i]);
+		i += utf8GetValidatedCharLength(&string[i]);
+		w += textGetGlyphWidth(font, glyph);
+	}
+	
+	if (bytes)
+		*bytes = i;
+	return w;
+}
+
+
+int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *w_set) {
+	int i, j,  w, w_max, t, b;
+
+	if (!font)
+		return 0;
+	w_max = 0;
+	for (j = 0; *string; j++) {
+		for (i = w = 0; *string != 0 && *string != '\n';) {
+			t = textStringWordLength(font, string, &b);
+			if (t + w >= linelen)
+				break;
+			string += b;
+			w += t;
+
+			if (*string == ' ') {
+				if (textGetGlyphWidth(font, ' ') + w >= linelen)
+					break;
+				w += textGetGlyphWidth(font, ' ');
+				string++;
+			}
+		}
+		if (w > w_max)
+			w_max = w;
+	}
+
+	if (w_set)
+		*w_set = w_max;
+	return j * textFontGetHS(font);
+}
+
+
 int textFontGetH(TEXT_FONT *font) {
 	if (font == NULL) return -1;
 	return font->font_height;
@@ -544,3 +595,4 @@ void textSurfaceSetPos(TEXT_SURFACE *surface, int x_pos) {
 	
 	return;
 }
+
