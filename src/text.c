@@ -318,6 +318,8 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 		}
 		if (w > w_max)
 			w_max = w;
+		if (*string == '\n')
+			string++;
 	}
 
 	if (w_set)
