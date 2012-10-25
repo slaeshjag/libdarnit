@@ -255,6 +255,20 @@ void EXPORT_THIS darnitRenderBlendingDisable() {
 }
 
 
+void EXPORT_THIS darnitRenderTintGet(float *r, float *g, float *b, float *a) {
+	if (r)
+		*r = d->video.tint_r;
+	if (g)
+		*g = d->video.tint_g;
+	if (b)
+		*b = d->video.tint_b;
+	if (a)
+		*a = d->video.tint_a;
+	return;
+}
+
+
+
 void EXPORT_THIS darnitRenderTint(float r, float g, float b, float a) {
 	glColor4f(r, g, b, a);
 	d->video.tint_r = r;
