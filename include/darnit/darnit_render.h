@@ -34,6 +34,7 @@ void darnitRenderEnd();
 void darnitRenderBlendingEnable();
 void darnitRenderBlendingDisable();
 void darnitRenderTint(float r, float g, float b, float a);
+void darnitRenderTintGet(float *r, float *g, float *b, float *a);
 void darnitRenderClearColorSet(unsigned char r, unsigned char g, unsigned char b);
 void darnitRenderOffset(int x, int y);
 
