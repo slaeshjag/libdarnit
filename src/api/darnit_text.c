@@ -29,6 +29,16 @@ unsigned int EXPORT_THIS darnitFontGetGlyphHS(void *font) {
 }
 
 
+unsigned int EXPORT_THIS darnitTextWordWidth(void *font, const char *string, unsigned int *bytes) {
+	return textStringWordLength(font, string, (int *) bytes);
+}
+
+
+unsigned int EXPORT_THIS darnitTextStringGeometrics(void *font, const char *string, int linelen, int *string_w) {
+	return textStringGeometrics(font, string, linelen, string_w);
+}
+
+
 void EXPORT_THIS darnitTextSurfaceReset(void *surface) {
 	textResetSurface(surface);
 

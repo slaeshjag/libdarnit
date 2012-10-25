@@ -7,6 +7,8 @@ typedef void DARNIT_TEXT_SURFACE;
 DARNIT_FONT *darnitFontLoad(const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
 unsigned int darnitFontGetGlyphW(DARNIT_FONT *font, const char *s);
 unsigned int darnitFontGetStringWidthPixels(DARNIT_FONT *font, const char *string);
+unsigned int darnitTextWordWidth(DARNIT_FONT *font, const char *string, unsigned int *bytes);
+unsigned int darnitTextStringGeometrics(DARNIT_FONT *font, const char *string, int linelen, int *string_w);
 unsigned int darnitFontGetGlyphH(DARNIT_FONT *font);
 unsigned int darnitFontGetGlyphHS(DARNIT_FONT *font);
 void darnitTextSurfaceReset(DARNIT_TEXT_SURFACE *surface);
