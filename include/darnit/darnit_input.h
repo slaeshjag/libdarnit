@@ -59,5 +59,8 @@ void darnitButtonMappingReset();
 void darnitButtonMappingSet(DARNIT_INPUT_MAP map);
 DARNIT_INPUT_MAP darnitButtonMappingGet();
 void darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_y);
+void darnitKeyboardRawPush(int sym);
+int darnitKeyboardRawPop();
+void darnitKeyboardRawClear();
 
 #endif

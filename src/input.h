@@ -21,6 +21,7 @@
 #define		BUTTON_ACCEPT		KEY_B
 #define		BUTTON_CANCEL		KEY_A
 
+#define		RAW_BUFFER_LEN		8
 
 typedef struct {
 	unsigned int			up;
@@ -51,6 +52,12 @@ typedef struct {
 
 
 typedef struct {
+	int				raw[RAW_BUFFER_LEN];
+	unsigned int			use;
+} INPUT_RAW;
+
+
+typedef struct {
 	SDL_Event			event;
 	unsigned int			key;
 	unsigned int			keypending;
@@ -59,9 +66,12 @@ typedef struct {
 	DARNIT_MOUSE			mouse;
 	INPUT_MAP			map;
 	INPUT_JOYSTICK			js;
+	INPUT_RAW			raw;
 } INPUT_STRUCT;
 
 
+void inputRawPush(int sym);
+int inputRawPop();
 void inputPoll();
 int inputInit();
 unsigned int inputASCIIPop();

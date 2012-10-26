@@ -68,3 +68,21 @@ void EXPORT_THIS darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_
 	
 	return;
 }
+
+
+void EXPORT_THIS darnitKeyboardRawPush(int sym) {
+	inputRawPush(sym);
+
+	return;
+}
+
+
+int EXPORT_THIS darnitKeyboardRawPop() {
+	return inputRawPop();
+}
+
+
+void EXPORT_THIS darnitKeyboardRawClear() {
+	d->input.raw.use = 0;
+	return;
+}
