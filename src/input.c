@@ -3,20 +3,23 @@
 void darnitQuit();
 
 
-void inputRawPush(int sym) {
+void inputRawPush(int sym, int action) {
 	if (d->input.raw.use == RAW_BUFFER_LEN)
 		return;
 	d->input.raw.raw[d->input.raw.use] = sym;
+	d->input.raw.action[d->input.raw.use] = action;
 	d->input.raw.use++;
 
 	return;
 }
 
 
-int inputRawPop() {
+int inputRawPop(int *action) {
 	if (d->input.raw.use == 0)
 		return 0;
 	d->input.raw.use--;
+	if(action)
+		*action=d->input.raw.action[d->input.raw.use];
 
 	return d->input.raw.raw[d->input.raw.use];
 }
@@ -127,7 +130,7 @@ void inputPoll() {
 				d->input.upper |= 1;
 			if (d->input.event.key.keysym.sym < 0x80)	/* ASCII */
 				d->input.lastkey = d->input.event.key.keysym.sym;
-			inputRawPush(d->input.event.key.keysym.sym);
+			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_PRESS);
 
 		} else if (d->input.event.type == SDL_KEYUP) {
 			if (d->input.event.key.keysym.sym == d->input.map.up) {
@@ -175,6 +178,8 @@ void inputPoll() {
 				d->input.upper |= 1;
 				d->input.upper ^= 1;
 			}
+			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_RELEASE);
+			
 		} else if (d->input.event.type == SDL_MOUSEMOTION) {
 			d->input.mouse.x = d->input.event.motion.x;
 			d->input.mouse.y = d->input.event.motion.y;
