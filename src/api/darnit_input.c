@@ -70,15 +70,15 @@ void EXPORT_THIS darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_
 }
 
 
-void EXPORT_THIS darnitKeyboardRawPush(int sym) {
-	inputRawPush(sym);
+void EXPORT_THIS darnitKeyboardRawPush(int sym, int action) {
+	inputRawPush(sym, action);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitKeyboardRawPop() {
-	return inputRawPop();
+int EXPORT_THIS darnitKeyboardRawPop(int *action) {
+	return inputRawPop(action);
 }
 
 

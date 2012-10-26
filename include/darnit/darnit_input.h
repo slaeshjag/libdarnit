@@ -4,6 +4,9 @@
 #define		BUTTON_ACCEPT		b
 #define		BUTTON_CANCEL		a
 
+#define DARNIT_KEYACTION_PRESS		1
+#define DARNIT_KEYACTION_RELEASE	2
+
 
 typedef struct {
 	unsigned int	left	: 1;
@@ -47,8 +50,6 @@ typedef struct {
 	unsigned int			r;
 } DARNIT_INPUT_MAP;
 
-
-
 DARNIT_KEYS darnitButtonGet();
 void darnitButtonSet(DARNIT_KEYS buttons);
 DARNIT_KEYS darnitButtonZero();
@@ -59,8 +60,8 @@ void darnitButtonMappingReset();
 void darnitButtonMappingSet(DARNIT_INPUT_MAP map);
 DARNIT_INPUT_MAP darnitButtonMappingGet();
 void darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_y);
-void darnitKeyboardRawPush(int sym);
-int darnitKeyboardRawPop();
+void darnitKeyboardRawPush(int sym, int action);
+int darnitKeyboardRawPop(int *action);
 void darnitKeyboardRawClear();
 
 #endif
