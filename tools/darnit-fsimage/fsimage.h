@@ -25,6 +25,7 @@ typedef struct {
 	char				name[128];
 	unsigned int			pos;
 	unsigned int			len;
+	unsigned int			pad;
 } FILE_ENTRY;
 
 
