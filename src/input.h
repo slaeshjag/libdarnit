@@ -21,6 +21,9 @@
 #define		BUTTON_ACCEPT		KEY_B
 #define		BUTTON_CANCEL		KEY_A
 
+#define DARNIT_KEYACTION_PRESS		1
+#define DARNIT_KEYACTION_RELEASE	2
+
 #define		RAW_BUFFER_LEN		8
 
 typedef struct {
@@ -53,6 +56,7 @@ typedef struct {
 
 typedef struct {
 	int				raw[RAW_BUFFER_LEN];
+	int				action[RAW_BUFFER_LEN];
 	unsigned int			use;
 } INPUT_RAW;
 
@@ -70,8 +74,8 @@ typedef struct {
 } INPUT_STRUCT;
 
 
-void inputRawPush(int sym);
-int inputRawPop();
+void inputRawPush(int sym, int action);
+int inputRawPop(int *action);
 void inputPoll();
 int inputInit();
 unsigned int inputASCIIPop();
