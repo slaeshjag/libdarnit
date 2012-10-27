@@ -42,12 +42,12 @@ void inputKeymapReset() {
 	#else
 	d->input.map.x = SDLK_s;
 	d->input.map.y = SDLK_w;
-	d->input.map.a = SDLK_a;
-	d->input.map.b = SDLK_d;
-	d->input.map.l = SDLK_q;
-	d->input.map.r = SDLK_e;
+	d->input.map.a = SDLK_LCTRL;
+	d->input.map.b = SDLK_LALT;
+	d->input.map.l = SDLK_a;
+	d->input.map.r = SDLK_d;
 	d->input.map.start = SDLK_RETURN;
-	d->input.map.select = SDLK_RSHIFT;
+	d->input.map.select = SDLK_ESCAPE;
 	#endif
 
 	d->input.key = 0;
@@ -122,8 +122,11 @@ void inputPoll() {
 				d->input.key |= KEY_L;
 			else if (d->input.event.key.keysym.sym == d->input.map.r)
 				d->input.key |= KEY_R;
+			/* I'm sorry Sara... */
+			#ifdef PANDORA
 			else if (d->input.event.key.keysym.sym == SDLK_ESCAPE)
 				darnitQuit();
+			#endif
 			if (d->input.event.key.keysym.sym == SDLK_LSHIFT)
 				d->input.upper |= 2;
 			else if (d->input.event.key.keysym.sym == SDLK_RSHIFT)
