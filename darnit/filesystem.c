@@ -154,8 +154,9 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		path_new = malloc(strlen(name) + 1);
 		sprintf(path_new, "%s", name);
 		if ((fp = fsContainerFileInternalGet(path_new)) == NULL);
-		else
+		else {
 			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
+		}
 		free(path_new);
 	} else {
 		write = 1;
@@ -354,7 +355,7 @@ int fsMount(const char *name) {
 	
 	for (i = 0; i < img->dir_ents; i++) {
 		fsFileRead(img->dir[i].name, 128, img->file);
-		fsFileReadInts(&img->dir[i].pos, 2, img->file);
+		fsFileReadInts(&img->dir[i].pos, 3, img->file);
 		img->dir[i].comp = utilStringSum(img->dir[i].name);
 		img->dir[i].pos += (12 + 136 * img->dir_ents);
 	}
