@@ -1,7 +1,8 @@
 #darnit-fsimage is used to create LDI image files
 
 CFLAGS += -O3 -Wall
-LDFLAGS = -L../../bin -ldarnit 
+LDFLAGS += -L../../bin -ldarnit 
+CFLAGS += -I../../include
 
 SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
