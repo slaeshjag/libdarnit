@@ -1,11 +1,25 @@
-default:
-	cd darnit-stringtable && make
-	cd darnit-mksprite && make
-	cd darnit-fsimage && make
-	cd darnit-spriteview && make
 
-clean:	
-	cd darnit-stringtable && make clean
-	cd darnit-mksprite && make clean
-	cd darnit-fsimage && make clean
-	cd darnit-spriteview && make clean
+MAKEFLAGS += --no-print-directory
+.PHONY: all clean
+
+all:
+	@echo " [ CD ] tools/darnit-fsimage"
+	@make -C darnit-fsimage
+	@echo " [ CD ] tools/darnit-mksprite"
+	@make -C darnit-mksprite
+	@echo " [ CD ] tools/darnit-spriteview"
+	@make -C darnit-spriteview
+	@echo " [ CD ] tools/darnit-stringtable"
+	@make -C darnit-stringtable
+	@echo "Done."
+	@echo 
+clean:
+	@echo " [ CD ] tools/darnit-fsimage"
+	@make -C darnit-fsimage clean
+	@echo " [ CD ] tools/darnit-mksprite"
+	@make -C darnit-mksprite clean
+	@echo " [ CD ] tools/darnit-spriteview"
+	@make -C darnit-spriteview clean
+	@echo " [ CD ] tools/darnit-stringtable"
+	@make -C darnit-stringtable clean
+	@echo "Done."

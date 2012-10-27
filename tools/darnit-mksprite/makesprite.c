@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-#include "sprite.h"
+#include "makesprite.h"
 
 
 int main(int argc, char **argv) {
