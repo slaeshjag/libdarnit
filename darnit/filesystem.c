@@ -357,7 +357,7 @@ int fsMount(const char *name) {
 		fsFileRead(img->dir[i].name, 128, img->file);
 		fsFileReadInts(&img->dir[i].pos, 3, img->file);
 		img->dir[i].comp = utilStringSum(img->dir[i].name);
-		img->dir[i].pos += (12 + 136 * img->dir_ents);
+		img->dir[i].pos += (12 + 140 * img->dir_ents);
 	}
 
 	img->next = d->fs.mount;
