@@ -43,7 +43,7 @@ clean:
 	@echo "Source tree cleaned."
 	@echo
 
-install: all
+install: 
 	@echo " [INST] include/darnit"
 	@install -d -m 0755 include/darnit $(PREFIX)/include
 	@echo " [INST] bin/libdarnit.so"
