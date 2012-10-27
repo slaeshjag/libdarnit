@@ -10,35 +10,35 @@ all:
 	@echo " [INIT] bin/"
 	@$(MKDIR) bin/
 	@echo " [ CD ] deps/"
-	@make -C deps/
+	+@make -C deps/
 	@echo " [ CD ] darnit/"
-	@make -C darnit/
+	+@make -C darnit/
 	@echo " [ CD ] tools/"
-	@make -C tools/
+	+@make -C tools/
 	@echo "Build complete."
 	@echo 
 
 pandora:
 	@echo " [INIT]"
-	@$(MKDIR)
+	@$(MKDIR) bin/
 	@echo " [ CD ] deps/"
-	@make -C deps/
+	+@make -C deps/
 	@echo " [ CD ] darnit/"
-	@make -C darnit/ pandora
+	+@make -C darnit/ pandora
 	@echo " [ CD ] tools/"
-	@make -C tools/
+	+@make -C tools/
 	@echo "Build complete."
 	@echo
 
 clean:
 	@echo " [ RM ] bin/"
-	@$(RM) bin/
+	+@$(RM) bin/
 	@echo " [ CD ] deps/"
-	@make -C deps/ clean
+	+@make -C deps/ clean
 	@echo " [ CD ] darnit/"
-	@make -C darnit/ clean
+	+@make -C darnit/ clean
 	@echo " [ CD ] tools/"
-	@make -C tools/ clean
+	+@make -C tools/ clean
 	@echo
 	@echo "Source tree cleaned."
 	@echo

@@ -4,22 +4,22 @@ MAKEFLAGS += --no-print-directory
 
 all:
 	@echo " [ CD ] tools/darnit-fsimage"
-	@make -C darnit-fsimage
+	+@make -C darnit-fsimage
 	@echo " [ CD ] tools/darnit-mksprite"
-	@make -C darnit-mksprite
+	+@make -C darnit-mksprite
 	@echo " [ CD ] tools/darnit-spriteview"
-	@make -C darnit-spriteview
+	+@make -C darnit-spriteview
 	@echo " [ CD ] tools/darnit-stringtable"
-	@make -C darnit-stringtable
+	+@make -C darnit-stringtable
 	@echo "Done."
 	@echo 
 clean:
 	@echo " [ CD ] tools/darnit-fsimage"
-	@make -C darnit-fsimage clean
+	+@make -C darnit-fsimage clean
 	@echo " [ CD ] tools/darnit-mksprite"
-	@make -C darnit-mksprite clean
+	+@make -C darnit-mksprite clean
 	@echo " [ CD ] tools/darnit-spriteview"
-	@make -C darnit-spriteview clean
+	+@make -C darnit-spriteview clean
 	@echo " [ CD ] tools/darnit-stringtable"
-	@make -C darnit-stringtable clean
+	+@make -C darnit-stringtable clean
 	@echo "Done."
