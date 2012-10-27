@@ -18,13 +18,15 @@ OBJFILES=$(SRCFILES:.c=.o)
 
 all: $(OBJFILES)
 	@echo " [ CD ] darnit/api/"
-	@make -C api/
+	+@make -C api/
 	@echo " [ LD ] $(LIB)"
 	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS) $(DESKTOPFLAGS)
 	@echo "Done."
 	@echo
 
 pandora: $(OBJFILES)
+	@echo " [ CD ] darnit/api/"
+	@make -C api/
 	@echo " [ LD ] $(LIB)"
 	@$(CC) $(CFLAGS) $(SRCFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS) $(PANDORAFLAGS)
 	@echo " [STRIP] $(LIB)"
