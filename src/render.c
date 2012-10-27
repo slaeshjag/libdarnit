@@ -1,7 +1,9 @@
+#include "darnit.h"
+
 #ifndef HAVE_GLES
-	#include "render_ogl.c"
+	#include "render/render_ogl.c"
 #else
-	#include "render_gles.c"	
+	#include "render/render_gles.c"	
 #endif
 
 

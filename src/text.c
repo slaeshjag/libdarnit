@@ -318,13 +318,13 @@ int textStringBytesOnLine(TEXT_FONT *font, const char *string, int linelen, int 
 
 
 int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *w_set) {
-	int i, j,  w, w_max, t, b;
+	int j,  w, w_max, t, b;
 
 	if (!font)
 		return 0;
 	w_max = 0;
 	for (j = 0; *string; j++) {
-		for (i = w = 0; *string != 0 && *string != '\n';) {
+		for (w = 0; *string != 0 && *string != '\n';) {
 			t = textStringWordLength(font, string, &b);
 			if (t + w >= linelen) {
 				if (w > 0)

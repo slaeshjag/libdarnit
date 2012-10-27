@@ -162,9 +162,9 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
 
 #ifndef HAVE_GLES
-#include "render_ogl.h"
+#include "render/render_ogl.h"
 #else
-#include "render_gles.h"
+#include "render/render_gles.h"
 #endif
 
 
