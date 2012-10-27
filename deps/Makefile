@@ -19,6 +19,7 @@ all: $(OBJFILES)
 	@echo 
 
 clean:
+	@echo
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)
 	@echo " [ RM ] $(LIBOUT)"

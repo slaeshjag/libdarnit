@@ -1,43 +1,56 @@
-CFLAGS += -Wall -I./src -fPIC -Wl,-soname,libdarnit.so -shared -I./include  -I./deps -O0 -g -fvisibility=hidden -DDATA_PATH=\"/usr/share/games\"
-SOURCE = src/api/*.c src/render.c src/input.c src/text.c src/menutk.c src/audio.c src/imgload.c src/sprite.c src/bbox.c src/render_tilemap.c src/tilemap.c src/dynlib.c src/socket.c src/mt_sprite.c src/audio_load.c src/utf8.c src/bitwise.c src/util.c src/stringtable.c src/filesystem.c src/ldmz.c deps/*.o
-LDFLAGS += -lSDL -lmodplug -L./bin -ldl
+#Project: libDarnit
 
-default:
-	mkdir -p bin
-	make base
-	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGL
-	cd tools && make
+PREFIX = /usr/local
+MAKEFLAGS += --no-print-directory
+MKDIR = mkdir -p
+RM = rm -Rf
+.PHONY: all pandora install clean
+
+all:
+	@echo " [INIT] bin/"
+	@$(MKDIR) bin/
+	@echo " [ CD ] deps/"
+	@make -C deps/
+	@echo " [ CD ] darnit/"
+	@make -C darnit/
+	@echo " [ CD ] tools/"
+	@make -C tools/
+	@echo "Build complete."
+	@echo 
 
 pandora:
-	mkdir -p bin
-	make base
-	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGLES_CM -lEGL -lX11
-	cd tools && make
-
-raspberrypi:
-	mkdir -p bin
-	make base
-	$(CC) $(CFLAGS) $(SOURCE) -o bin/libdarnit.so $(LDFLAGS) -lGLES_CM -lEGL -lX11 -DHAVE_GLES -DRASPBERRYPI -I/opt/vc/include -L/opt/vc/lib
-	cd tools && make
-
-base:
-	cd deps && make
+	@echo " [INIT]"
+	@$(MKDIR)
+	@echo " [ CD ] deps/"
+	@make -C deps/
+	@echo " [ CD ] darnit/"
+	@make -C darnit/ pandora
+	@echo " [ CD ] tools/"
+	@make -C tools/
+	@echo "Build complete."
+	@echo
 
 clean:
-	rm -Rf bin
-	rm -f testapp/testapp
-	cd deps && make clean
-	cd tools && make clean
+	@echo " [ RM ] bin/"
+	@$(RM) bin/
+	@echo " [ CD ] deps/"
+	@make -C deps/ clean
+	@echo " [ CD ] darnit/"
+	@make -C darnit/ clean
+	@echo " [ CD ] tools/"
+	@make -C tools/ clean
+	@echo
+	@echo "Source tree cleaned."
+	@echo
 
-install:
-	cp bin/*.so /usr/local/lib/
-	cp bin/darnit-stringtable /usr/local/bin
-	cp bin/darnit-mksprite /usr/local/bin
-	cp bin/darnit-fsimage /usr/local/bin
-	cp bin/darnit-spriteview /usr/local/bin
-	cp -Rv include/darnit /usr/local/include
-	ldconfig
-
-install-yactfeau:
-	cp bin/*.so /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/lib
-	cp -Rv include/darnit /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr/include
+install: all
+	@echo " [INST] include/darnit"
+	@install -d -m 0755 include/darnit $(PREFIX)/include
+	@echo " [INST] bin/libdarnit.so"
+	@install -m 0755 bin/libdarnit.so $(PREFIX)/lib
+	@ldconfig
+	@echo " [INST] tools"
+	@install -m 0755 bin/darnit-* $(PREFIX)/bin
+	@echo
+	@echo "libDarnit installed."
+	@echo 

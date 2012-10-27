@@ -11,19 +11,22 @@ DESKTOPFLAGS = -lGL
 PANDORAFLAGS = -lGLES_CM -lEGL -lX11
 
 DEPFILES = ../deps/deps.a
+APIFILES = api/*.o
 SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
-.PHONY: add pandora clean
+.PHONY: all pandora clean
 
 all: $(OBJFILES)
+	@echo " [ CD ] darnit/api/"
+	@make -C api/
 	@echo " [ LD ] $(LIB)"
-	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(LDFLAGS) $(DESKTOPFLAGS)
+	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS) $(DESKTOPFLAGS)
 	@echo "Done."
 	@echo
 
 pandora: $(OBJFILES)
 	@echo " [ LD ] $(LIB)"
-	@$(CC) $(CFLAGS) $(SRCFILES) $(DEPFILES) $(LDFLAGS) $(PANDORAFLAGS)
+	@$(CC) $(CFLAGS) $(SRCFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS) $(PANDORAFLAGS)
 	@echo " [STRIP] $(LIB)"
 	@$(STRIP) $(LIB)
 	@echo "Done."
@@ -31,6 +34,8 @@ pandora: $(OBJFILES)
 
 clean:
 	@echo
+	@echo " [ CD ] darnit/api/"
+	@make -C api/ clean
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)
 	@echo "Done."
