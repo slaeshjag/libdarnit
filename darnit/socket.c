@@ -86,6 +86,8 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 	free(buff_tmp);
 
 	if (ret == len)
+		return len;
+	if (ret > -1)
 		return 0;
 	
 	return -1;
