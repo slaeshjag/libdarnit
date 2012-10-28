@@ -30,7 +30,16 @@ void *socketConnect(const char *host, int port) {
 	#endif
 
 	sock->socket = socket(AF_INET, SOCK_STREAM, 0);
-	hp = gethostbyname(host);
+	if ((hp = gethostbyname(host)) == NULL) {
+		#ifdef _WIN32
+			closesocket(sock->socket);
+		#else
+			close(sock->socket);
+		#endif
+		free(sock);
+		return NULL;
+	}
+
 	memset(&sin, 0, sizeof(struct sockaddr_in));
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
