@@ -72,13 +72,13 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 	if (sock == NULL) return -1;
 
 	ret = recv(sock->socket, buff, len, 0);
-	if (ret < 1 && ret != EAGAIN && ret != EWOULDBLOCK) {
+	if (ret < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
 		fprintf(stderr, "Socket error; connection died\n");
 		socketClose(sock);
 		return -1;
 	}
 
-	if (ret == EWOULDBLOCK)
+	if (errno == EWOULDBLOCK || errno == EAGAIN)
 		return 0;
 	return ret;
 }
@@ -98,7 +98,9 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 		return len;
 	if (ret > -1)
 		return 0;
-	
+	if (errno == EAGAIN || errno == EWOULDBLOCK)
+		return 0;
+
 	return -1;
 }
 
