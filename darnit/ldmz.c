@@ -111,7 +111,6 @@ LDMZ_MAP *mapLoad(const char *fname) {
 
 	fsFileRead(buff, map_h.strtable_zlen, file);
 	stbi_zlib_decode_buffer(stringdata, map_h.strtable_len, buff, map_h.strtable_zlen);
-	
 	/**** REFS ****/
 
 	if ((tmp = realloc(buff, map_h.strtable_refs_zlen)) == NULL)
@@ -173,7 +172,6 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		if ((tmp = realloc(buff, map_l[i].layer_zlen)) == NULL) 
 			goto error;		/* Down at the bottom of the function */
 		buff = tmp;
-		fsFileRead(buff, map_l[i].layer_zlen, file);
 		if (mapLayerPropGet(map, i, "tileset") == NULL) {
 			if (mapPropGet(map, "tileset") == NULL)
 				goto error;	/* Down at the bottom of the function */
