@@ -2,6 +2,13 @@
 #define	__RENDER_H__
 
 
+#define	LOGIC_OP_AND	1
+#define	LOGIC_OP_NAND	2
+#define	LOGIC_OP_OR	3
+#define	LOGIC_OP_NOR	4
+#define	LOGIC_OP_XOR	5
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -159,6 +166,7 @@ void renderFadeUnfade(unsigned int time);
 void renderTilesheetAnimate(TILESHEET *ts);
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
+void renderSetLogicOp(unsigned int logicop);
 
 
 #ifndef HAVE_GLES

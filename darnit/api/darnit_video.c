@@ -345,3 +345,10 @@ void EXPORT_THIS darnitRenderTilesheetAnimationAnimate(void *tilesheet) {
 
 	return;
 }
+
+
+void EXPORT_THIS darnitRenderLogicOp(unsigned int logicop) {
+	renderSetLogicOp(logicop);
+
+	return;
+}

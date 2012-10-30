@@ -90,6 +90,7 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 				cache[k].v5 = ts->tile[t].v;
 				cache[k].u6 = ts->tile[t].r;
 				cache[k].v6 = ts->tile[t].s;
+				fprintf(stderr, "Setting a tile!\n");
 			}
 		}
 	}
