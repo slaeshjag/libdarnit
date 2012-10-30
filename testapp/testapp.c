@@ -73,6 +73,8 @@ int main(int argc, char **argv) {
 			j--;
 		if (keys.down == 1)
 			j++;
+		if (keys.select)
+			fprintf(stderr, "Blololol\n");
 
 		if (keys.r == 1)
 			darnitRenderTilemapCameraMove(map->layer->tilemap, i*4, j*4);
