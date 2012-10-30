@@ -1,6 +1,13 @@
 #ifndef __DARNIT_RENDER_H__
 #define	__DARNIT_RENDER_H__
 
+#define	DARNIT_RENDER_LOGIC_OP_NONE	0
+#define	DARNIT_RENDER_LOGIC_OP_AND	1
+#define	DARNIT_RENDER_LOGIC_OP_NAND	2
+#define	DARNIT_RENDER_LOGIC_OP_OR	3
+#define	DARNIT_RENDER_LOGIC_OP_NOR	4
+#define	DARNIT_RENDER_LOGIC_OP_XOR	5
+
 typedef void DARNIT_TILESHEET;
 typedef void DARNIT_TILE;
 typedef void DARNIT_LINE;
@@ -45,5 +52,7 @@ void darnitRenderStateRestore();
 
 int darnitRenderTilesheetAnimationApply(DARNIT_TILESHEET *tilesheet, const char *fname);
 void darnitRenderTilesheetAnimationAnimate(DARNIT_TILESHEET *tilesheet);
+
+void darnitRenderLogicOp(unsigned int logicop);
 
 #endif
