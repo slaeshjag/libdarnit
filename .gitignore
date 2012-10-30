@@ -2,3 +2,4 @@
 bin/
 *.o
 *.a
+testapp/testapp
