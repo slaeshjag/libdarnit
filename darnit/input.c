@@ -86,6 +86,7 @@ int inputInit() {
 	d->input.keypending = 0;
 	d->input.upper = 0;
 	d->input.lastkey = 0;
+	d->input.raw.use = 0;
 	d->input.mouse.x = d->input.mouse.y = d->input.mouse.wheel = 0;
 
 	inputKeymapReset();

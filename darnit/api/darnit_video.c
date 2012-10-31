@@ -23,6 +23,13 @@ void EXPORT_THIS *darnitRenderTilesheetFree(void *tilesheet) {
 }
 
 
+void EXPORT_THIS darnitRenderTileBlit(void *tilesheet, unsigned int tile, int x, int y) {
+	renderBlitTile(tilesheet, tile, x, y);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
 	TILE_CACHE *cache;
 
