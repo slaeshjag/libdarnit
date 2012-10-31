@@ -163,6 +163,8 @@ void renderFadeLoop();
 void renderFadeFade(unsigned int time, float r, float g, float b);
 void renderFadeUnfade(unsigned int time);
 
+void renderBlitTile(TILESHEET *ts, unsigned int tile, int x, int y);
+
 void renderTilesheetAnimate(TILESHEET *ts);
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
