@@ -71,6 +71,7 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else {
+		SDL_ShowCursor(0);
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform();
@@ -100,6 +101,7 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else {
+		SDL_ShowCursor(0);
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform();

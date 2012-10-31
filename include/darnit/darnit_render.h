@@ -55,4 +55,17 @@ void darnitRenderTilesheetAnimationAnimate(DARNIT_TILESHEET *tilesheet);
 
 void darnitRenderLogicOp(unsigned int logicop);
 
+
+
+
+
+
+
+
+
+
+/* Please don't use this function. I hate it <.< */
+void darnitRenderTileBlit(void *tilesheet, unsigned int tile, int x, int y);
+
+
 #endif
