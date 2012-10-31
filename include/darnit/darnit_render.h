@@ -36,6 +36,7 @@ void darnitRenderRectSet(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1,
 void darnitRenderRectDraw(DARNIT_RECT *rect_p, int rects);
 DARNIT_RECT *darnitRenderRectFree(DARNIT_RECT *rect_p);
 
+void darnitRenderLineGet(DARNIT_LINE *buf, unsigned int line, int *x, int *y, int *x2, int *y2);
 void darnitRenderBegin();
 void darnitRenderEnd();
 void darnitRenderBlendingEnable();
