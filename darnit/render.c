@@ -637,3 +637,39 @@ void renderFadeUnfade(unsigned int time) {
 
 	return;
 }
+
+
+void renderSetLogicOp(unsigned int logicop) {
+	unsigned int mode;
+	if (!logicop) {
+		glDisable(GL_COLOR_LOGIC_OP);
+		return;
+	}
+
+	glEnable(GL_COLOR_LOGIC_OP);
+
+	switch (logicop) {
+		case LOGIC_OP_AND:
+			mode = GL_AND;
+			break;
+		case LOGIC_OP_NAND:
+			mode = GL_NAND;
+			break;
+		case LOGIC_OP_OR:
+			mode = GL_OR;
+			break;
+		case LOGIC_OP_NOR:
+			mode = GL_NOR;
+			break;
+		case LOGIC_OP_XOR:
+			mode = GL_XOR;
+			break;
+		default:
+			mode = GL_COPY;
+			break;
+	}
+
+	glLogicOp(mode);
+
+	return;
+}

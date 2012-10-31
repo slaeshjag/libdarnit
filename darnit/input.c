@@ -225,7 +225,7 @@ void inputPoll() {
 
 	d->input.keypending &= d->input.key;
 
-	d->input.key = ((unsigned int) SDL_GetModState()) << 16;
+	d->input.key |= (((unsigned int) SDL_GetModState()) << 16);
 	
 	return;
 }
