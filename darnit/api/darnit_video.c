@@ -234,6 +234,15 @@ void EXPORT_THIS *darnitRenderRectFree(DARNIT_RENDER_RECT_BUFFER *buf) {
 }
 
 
+void EXPORT_THIS darnitRenderLineGet(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int *x, int *y, int *x2, int *y2) {
+	if (line >= buf->lines)
+		return;
+	renderLineGet(&buf->lc[line], x, y, x2, y2);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderBegin() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
