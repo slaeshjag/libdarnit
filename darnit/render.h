@@ -156,6 +156,7 @@ void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
 void renderLineCache(LINE_CACHE *cache, int lines, int line_w);
 void renderRectCache(RECT_CACHE *cache, int rects);
+void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2);
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
