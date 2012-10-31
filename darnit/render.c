@@ -430,6 +430,17 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 }
 
 
+void renderBlitTile(TILESHEET *ts, unsigned int tile, int x, int y) {
+	TILE_CACHE tile_c;
+
+	renderCalcTileCache(&tile_c, ts, tile);
+	renderCalcTilePosCache(&tile_c, ts, x, y);
+	renderCache(&tile_c, ts, 1);
+	
+	return;
+}
+
+
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2) {
 	cache->u = u;
 	cache->v = v;
