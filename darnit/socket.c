@@ -3,31 +3,15 @@
 
 void *socketConnect(const char *host, int port, void (*callback)(int, void *, void *), void *data) {
 	struct sockaddr_in sin;
+	struct hostent *hp;
 	SOCKET_STRUCT *sock;
 
-	#ifdef _WIN32
-		WSADATA wsaData;
-		WORD version;
-		struct hostent *hp;
-		u_long iMode=1;
-	#else
-		int x;
-		struct hostent *hp;
+	#ifndef _WIN32
+	int x;
 	#endif
 
 	sock = malloc(sizeof(SOCKET_STRUCT));
 
-	#ifdef _WIN32
-		version = MAKEWORD(2, 0);
-		if (WSAStartup(version, &wsaData) != 0) {
-			free(sock);
-			return NULL;
-		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
-			WSACleanup();
-			free(sock);
-			return NULL;
-		}
-	#endif
 
 	sock->socket = socket(AF_INET, SOCK_STREAM, 0);
 	if ((hp = gethostbyname(host)) == NULL) {
@@ -217,6 +201,21 @@ void socketLoopDisconnect(SOCKET_STRUCT *sock) {
 }
 
 int socketInit() {
+	#ifdef _WIN32
+		WSADATA wsaData;
+		WORD version;
+		u_long iMode=1;
+		version = MAKEWORD(2, 0);
+		
+		if (WSAStartup(version, &wsaData) != 0) {
+			free(sock);
+			return NULL;
+		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
+			WSACleanup();
+			free(sock);
+			return NULL;
+		}
+	#endif
 	d->connect_list = NULL;
 
 	return 0;
