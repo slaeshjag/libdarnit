@@ -31,6 +31,7 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len);
 int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len);
 int socketSend(SOCKET_STRUCT *sock, void *buff, int len);
 void *socketClose(SOCKET_STRUCT *sock);
+void socketLoopDisconnect(SOCKET_STRUCT *sock);
 
 
 #endif
