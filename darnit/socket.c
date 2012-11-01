@@ -170,7 +170,7 @@ void socketConnectLoop() {
 		(list->callback)(0, list->data, list->socket);
 		tmp_p = list;
 		*parent = list->next;
-		next = *parent;
+		list = *parent;
 		free(tmp_p);
 		continue;
 
