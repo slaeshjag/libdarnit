@@ -71,7 +71,7 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 	int ret;
 	if (sock == NULL) return -1;
 
-	ret = recv(sock->socket, buff, len, 0);
+	ret = recv(sock->socket, buff, len, MSG_NOSIGNAL);
 	if (ret < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
 		fprintf(stderr, "Socket error; connection died\n");
 		socketClose(sock);
@@ -91,7 +91,7 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 
 	buff_tmp = malloc(len);
 	if ((ret = recv(sock->socket, buff_tmp, len, MSG_PEEK)) == len)
-		recv(sock->socket, buff, len, 0);
+		recv(sock->socket, buff, len, MSG_NOSIGNAL);
 	free(buff_tmp);
 
 	if (ret == len)
@@ -107,7 +107,7 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 
 int socketSend(SOCKET_STRUCT *sock, void *buff, int len) {
 	if (sock == NULL) return -1;
-	return send(sock->socket, buff, len, 0);
+	return send(sock->socket, buff, len, MSG_NOSIGNAL);
 }
 
 
