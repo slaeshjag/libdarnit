@@ -165,8 +165,8 @@ void socketConnectLoop() {
 		if ((t = recv(list->socket->socket, &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
-		} else if (t == 0)
-			goto loop;
+		}
+
 		(list->callback)(0, list->data, list->socket);
 		tmp_p = list;
 		*parent = list->next;
