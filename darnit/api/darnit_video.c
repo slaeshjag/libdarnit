@@ -23,6 +23,13 @@ void EXPORT_THIS *darnitRenderTilesheetFree(void *tilesheet) {
 }
 
 
+void EXPORT_THIS darnitRenderTileBlit(void *tilesheet, unsigned int tile, int x, int y) {
+	renderBlitTile(tilesheet, tile, x, y);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
 	TILE_CACHE *cache;
 
@@ -224,6 +231,15 @@ void EXPORT_THIS *darnitRenderRectFree(DARNIT_RENDER_RECT_BUFFER *buf) {
 	free(buf);
 
 	return NULL;
+}
+
+
+void EXPORT_THIS darnitRenderLineGet(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int *x, int *y, int *x2, int *y2) {
+	if (line >= buf->lines)
+		return;
+	renderLineGet(&buf->lc[line], x, y, x2, y2);
+
+	return;
 }
 
 
