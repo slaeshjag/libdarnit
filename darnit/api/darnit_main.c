@@ -70,6 +70,7 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 	#endif
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
+	else if (socketInit() < 0);
 	else {
 		SDL_ShowCursor(0);
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
@@ -100,6 +101,7 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	if (videoInit(wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
+	else if (socketInit() < 0);
 	else {
 		SDL_ShowCursor(0);
 		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
@@ -132,6 +134,7 @@ void EXPORT_THIS darnitLoop() {
 
 	d->fps.time_at_last_frame = d->fps.time_at_flip;
 	d->fps.time_at_flip = SDL_GetTicks();
+	socketConnectLoop();
 
 	return;
 }

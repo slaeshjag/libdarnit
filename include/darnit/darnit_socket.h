@@ -3,7 +3,7 @@
 
 typedef void DARNIT_SOCKET;
 
-DARNIT_SOCKET *darnitSocketConnect(const char *host, int port);
+DARNIT_SOCKET *darnitSocketConnect(const char *host, int port, void (*callback)(int ret, void *data, void *socket), void *data);
 int darnitSocketRecv(DARNIT_SOCKET *sock, void *buff, int len);
 int darnitSocketRecvTry(DARNIT_SOCKET *sock, void *buff, int len);
 int darnitSocketSend(DARNIT_SOCKET *sock, void *buff, int len);
