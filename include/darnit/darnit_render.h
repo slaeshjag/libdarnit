@@ -36,6 +36,7 @@ void darnitRenderRectSet(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1,
 void darnitRenderRectDraw(DARNIT_RECT *rect_p, int rects);
 DARNIT_RECT *darnitRenderRectFree(DARNIT_RECT *rect_p);
 
+void darnitRenderLineGet(DARNIT_LINE *buf, unsigned int line, int *x, int *y, int *x2, int *y2);
 void darnitRenderBegin();
 void darnitRenderEnd();
 void darnitRenderBlendingEnable();
@@ -54,5 +55,18 @@ int darnitRenderTilesheetAnimationApply(DARNIT_TILESHEET *tilesheet, const char 
 void darnitRenderTilesheetAnimationAnimate(DARNIT_TILESHEET *tilesheet);
 
 void darnitRenderLogicOp(unsigned int logicop);
+
+
+
+
+
+
+
+
+
+
+/* Please don't use this function. I hate it <.< */
+void darnitRenderTileBlit(void *tilesheet, unsigned int tile, int x, int y);
+
 
 #endif
