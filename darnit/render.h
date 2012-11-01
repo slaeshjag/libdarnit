@@ -142,6 +142,7 @@ typedef struct {
 
 
 int renderInit();
+videoInitPartial();
 
 TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
 void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h);

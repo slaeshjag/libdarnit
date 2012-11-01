@@ -97,8 +97,9 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	darnit_init_common();
 	#endif
 	renderInit();
-	
-	if (videoInit(wtitle, win_w, win_h, fullscreen) < 0);
+
+	if (videoInitPartial());
+	else if (videoInit(wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);

@@ -26,9 +26,6 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	mode = SDL_SWSURFACE;
 	if (fullscreen) mode |= SDL_FULLSCREEN;
 	
-	/* here goes SDL init code */
-	SDL_Init(SDL_INIT_EVERYTHING);
-	
 	if (!(d->video.XDisplay = XOpenDisplay(NULL))) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to get a display handle from X\n");
 		return -1;
