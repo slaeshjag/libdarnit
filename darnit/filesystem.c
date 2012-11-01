@@ -22,7 +22,7 @@ int fsInit(const char *dir_name) {
 		sprintf(d->fs.data_dir, "%s/%s", DATA_PATH, dir_name);
 		#endif
 	} else if (d->platform.platform & DARNIT_PLATFORM_WIN32) { 
-		data_dir = getenv("%%APPDATA%%");
+		data_dir = getenv("APPDATA");
 
 		if ((d->fs.write_dir = malloc(strlen(data_dir) + 2 + strlen(dir_name))) == NULL)
 			return -1;
@@ -160,14 +160,21 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
 		}
 		free(path_new);
-	} else {
+	} 
+	
+	if (*name != '/') {
 		write = 1;
 		/* Write-dir up next... */
 		sprintf(path, "%s/%s", d->fs.write_dir, name);
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
-		else
-			return fsFileNew(path_new, mode, fp, -1, 0);
+		else {
+			if (strstr(mode, "w"))
+				return fsFileNew(path_new, mode, fp, -1, 0);
+			if (strstr(mode, "a"))
+				return fsFileNew(path_new, mode, fp, -1, 0);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+		}
 		free(path_new);
 	}
 
