@@ -1,7 +1,7 @@
 #include "darnit.h"
 
 
-void *socketConnect(const char *host, int port) {
+void *socketConnect(const char *host, int port, void (*callback)(int, void *, void *), void *data) {
 	struct sockaddr_in sin;
 	SOCKET_STRUCT *sock;
 
@@ -49,19 +49,31 @@ void *socketConnect(const char *host, int port) {
 	#else
 		sin.sin_addr.s_addr = *(unsigned long *) hp->h_addr_list[0];
 	#endif
-	
+
+	if (callback) {
+		#ifdef _WIN32
+			ioctlsocket(sock->socket, FIONBIO, &iMode);
+		#else
+			x = fcntl(sock->socket, F_GETFL, 0);
+			fcntl(sock->socket, F_SETFL, x | O_NONBLOCK);
+		#endif
+	}
+
 	if (connect(sock->socket, (void *) &sin, sizeof(struct sockaddr_in)) == -1) {
 		fprintf(stderr, "libDarnit: Unable to connect to host %s\n", host);
 		free(sock);
 		return NULL;
 	}
 	
-	#ifdef _WIN32
-		ioctlsocket(sock->socket, FIONBIO, &iMode);
-	#else
-		x = fcntl(sock->socket, F_GETFL, 0);
-		fcntl(sock->socket, F_SETFL, x | O_NONBLOCK);
-	#endif
+	if (!callback) {
+		#ifdef _WIN32
+			ioctlsocket(sock->socket, FIONBIO, &iMode);
+		#else
+			x = fcntl(sock->socket, F_GETFL, 0);
+			fcntl(sock->socket, F_SETFL, x | O_NONBLOCK);
+		#endif
+	} else
+		socketListAdd(sock, callback, data);
 
 	return sock;
 }
@@ -90,7 +102,7 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 	void *buff_tmp;
 
 	buff_tmp = malloc(len);
-	if ((ret = recv(sock->socket, buff_tmp, len, MSG_PEEK)) == len)
+	if ((ret = recv(sock->socket, buff_tmp, len, MSG_PEEK | MSG_NOSIGNAL)) == len)
 		recv(sock->socket, buff, len, MSG_NOSIGNAL);
 	free(buff_tmp);
 
@@ -122,4 +134,52 @@ void *socketClose(SOCKET_STRUCT *sock) {
 	free(sock);
 
 	return NULL;
+}
+
+
+void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void *, void *), void *data) {
+	SOCKET_LIST *entry;
+
+	if ((entry = malloc(sizeof(SOCKET_LIST))) == NULL)
+		return;
+	entry->next = d->connect_list;
+	d->connect_list = entry->next;
+	
+	entry->socket = sock;
+	entry->callback = callback;
+	entry->data = data;
+
+	return;
+}
+
+
+void socketConnectLoop() {
+	SOCKET_LIST *list, **parent, *tmp_p;
+	int tmp, t;
+
+	parent = &d->connect_list;
+	list = *parent;
+	while (list != NULL) {
+		if ((t = recv(list->socket->socket, &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+			if (errno == EWOULDBLOCK || errno == EAGAIN)
+				goto loop;
+		} else if (t == 0)
+			goto loop;
+		(list->callback)(0, list->data, list->socket);
+		tmp_p = list;
+		*parent = list->next;
+		free(tmp_p);
+		continue;
+
+		loop:
+			parent = &list->next;
+	}
+
+	return;
+}
+
+int socketInit() {
+	d->connect_list = NULL;
+
+	return 0;
 }

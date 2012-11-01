@@ -1,8 +1,8 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitSocketConnect(const char *host, int port) {
-	return socketConnect(host, port);
+void EXPORT_THIS *darnitSocketConnect(const char *host, int port, void (*callback)(int ret, void *data, void *socket), void *data) {
+	return socketConnect(host, port, callback, data);
 }
 
 
