@@ -126,6 +126,7 @@ typedef struct {
 	DARNIT_FPS		fps;
 	TILESHEET_REF_CONT	tsr;
 	DARNIT_PLATFORM		platform;
+	SOCKET_LIST		*connect_list;
 } DARNIT;
 
 
