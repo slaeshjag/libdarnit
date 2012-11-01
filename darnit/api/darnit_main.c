@@ -84,6 +84,7 @@ int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int ful
 	SDL_ShowCursor(0);
 	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 	d->fps.time = SDL_GetTicks() / 1000;
+	darnitSetPlatform();
 
 	return videoInit(wtitle, win_w, win_h, fullscreen);
 }
