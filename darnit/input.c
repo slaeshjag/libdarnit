@@ -87,7 +87,8 @@ int inputInit() {
 	d->input.upper = 0;
 	d->input.lastkey = 0;
 	d->input.raw.use = 0;
-	d->input.mouse.x = d->input.mouse.y = d->input.mouse.wheel = 0;
+	d->input.key = 0;
+	d->input.mouse.x = d->input.mouse.y = d->input.mouse.wheel = d->input.mouse.mb_l = d->input.mouse.mb_r = 0;
 
 	inputKeymapReset();
 	inputInitJoystick();
