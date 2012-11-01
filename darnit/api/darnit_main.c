@@ -1,5 +1,8 @@
 #include "darnit.h"
 
+void *darnitInitPartial(const char *data_dir);
+int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen);
+
 
 static void cleanup(void) {
 	#ifdef _WIN32
@@ -53,42 +56,40 @@ void darnitSetPlatform() {
 
 
 void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
-	if ((d = malloc(sizeof(DARNIT))) == NULL) {
-		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
-		return d;
-	}
-
-#ifdef _WIN32
-	darnit_init_common();
-#endif
-	renderInit();
-	
-	if (videoInitPartial() < 0);
+	if (darnitInitPartial(data_dir) == NULL)
+		return NULL;
 	#ifdef PANDORA
-	else if (videoInit(wtitle, 800, 480, 1) < 0);
+	if (darnitInitRest(wtitle, 800, 480, 1) < 0)
+		return NULL;
 	#else
-	else if (videoInit(wtitle, 800, 480, 0) < 0);
+	if (darnitInitRest(wtitle, 800, 480, 0) < 0)
+		return NULL;
 	#endif
-	else if (inputInit() < 0);
-	else if (audioInit() < 0);
-	else if (socketInit() < 0);
-	else {
-		SDL_ShowCursor(0);
-		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
-		d->fps.time = SDL_GetTicks() / 1000;
-		darnitSetPlatform();
-		if (fsInit(data_dir) < 0)
-			return NULL;
-		return d;
-	}
-	
-	free(d);
 
-	return NULL;
+	return d;
 }
 
 
 void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir) {
+	if (darnitInitPartial(data_dir) == NULL)
+		return NULL;
+	if (darnitInitRest(wtitle, win_w, win_h, fullscreen) < 0)
+		return NULL;
+	return d;
+}
+
+
+int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen) {
+	renderInit();
+	SDL_ShowCursor(0);
+	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
+	d->fps.time = SDL_GetTicks() / 1000;
+
+	return videoInit(wtitle, win_w, win_h, fullscreen);
+}
+
+
+void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
 		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
 		return d;
@@ -97,23 +98,18 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 	#ifdef _WIN32
 	darnit_init_common();
 	#endif
-	renderInit();
 
 	if (videoInitPartial());
-	else if (videoInit(wtitle, win_w, win_h, fullscreen) < 0);
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);
 	else {
-		SDL_ShowCursor(0);
-		d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
-		d->fps.time = SDL_GetTicks() / 1000;
 		darnitSetPlatform();
 		if (fsInit(data_dir) < 0)
 			return NULL;
 		return d;
 	}
-	
+
 	free(d);
 	return NULL;
 }

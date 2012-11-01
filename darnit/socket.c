@@ -161,6 +161,7 @@ void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void *, void *), v
 
 void socketConnectLoop() {
 	SOCKET_LIST *list, **parent, *tmp_p;
+	void *tmp_sock;
 	int tmp, t;
 
 	parent = &d->connect_list;
@@ -176,7 +177,9 @@ void socketConnectLoop() {
 
 		tmp_p = list;
 		*parent = list->next;
-		(list->callback)(t, list->data, list->socket);
+		tmp_sock = list->socket;
+		list->socket = NULL;
+		(list->callback)(t, list->data, tmp_sock);
 		list = *parent;
 		free(tmp_p);
 		continue;
