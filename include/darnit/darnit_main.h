@@ -28,4 +28,11 @@ DARNIT_PLATFORM darnitPlatformGet();
 void darnitQuit();
 
 
+/* Special init funcs, in case you need to parse a config file or something before you init video */
+/* If you call initPartial, you must not call darnitInit nor darnitInitCustom. You must not call any rendering or timing function either, as these are undefined before video inits */
+/* When you want to init video, call darnitInitRest() */
+
+void *darnitInitPartial(const char *data_dir);
+int darnitInitRest(const char wtitle, int win_w, int win_h, int fullscreen);
+
 #endif
