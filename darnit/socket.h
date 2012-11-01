@@ -9,12 +9,24 @@ typedef struct {
 	#endif
 } SOCKET_STRUCT;
 
+
+typedef struct SOCKET_LIST {
+	SOCKET_STRUCT		*socket;
+	void			(*callback)(int, void *, void *);
+	void			*data;
+	struct SOCKET_LIST	*next;
+} SOCKET_LIST;
+
+
 #ifdef _WIN32
 	#define		EWOULDBLOCK 	WSAEWOULDBLOCK
 #endif
 
 
-void *socketConnect(const char *host, int port);
+int socketInit();
+void socketConnectLoop();
+void *socketConnect(const char *host, int port, void (*callback)(int, void *, void *), void *data);
+void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void*, void *), void *data);
 int socketRecv(SOCKET_STRUCT *sock, char *buff, int len);
 int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len);
 int socketSend(SOCKET_STRUCT *sock, void *buff, int len);
