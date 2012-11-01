@@ -80,13 +80,16 @@ void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int
 
 
 int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen) {
+	int t;
 	renderInit();
 	SDL_ShowCursor(0);
 	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
 	d->fps.time = SDL_GetTicks() / 1000;
+
+	t = videoInit(wtitle, win_w, win_h, fullscreen);
 	darnitSetPlatform();
 
-	return videoInit(wtitle, win_w, win_h, fullscreen);
+	return t;
 }
 
 
