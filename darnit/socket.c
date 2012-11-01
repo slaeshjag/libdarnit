@@ -171,10 +171,13 @@ void socketConnectLoop() {
 				goto loop;
 		}
 
+		if (t == 1)
+			t *= -1;
+
 		tmp_p = list;
 		*parent = list->next;
-		list = *parent;
 		(list->callback)(t, list->data, list->socket);
+		list = *parent;
 		free(tmp_p);
 		continue;
 
