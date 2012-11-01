@@ -694,3 +694,8 @@ void renderSetLogicOp(unsigned int logicop) {
 
 	return;
 }
+
+
+int videoInitPartial() {
+	return SDL_Init(SDL_INIT_EVERYTHING);
+}
