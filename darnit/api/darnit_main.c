@@ -63,10 +63,11 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 #endif
 	renderInit();
 	
+	if (videoInitPartial() < 0);
 	#ifdef PANDORA
-	if (videoInit(wtitle, 800, 480, 1) < 0);
+	else if (videoInit(wtitle, 800, 480, 1) < 0);
 	#else
-	if (videoInit(wtitle, 800, 480, 0) < 0);
+	else if (videoInit(wtitle, 800, 480, 0) < 0);
 	#endif
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
