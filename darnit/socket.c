@@ -129,6 +129,8 @@ int socketSend(SOCKET_STRUCT *sock, void *buff, int len) {
 
 void *socketClose(SOCKET_STRUCT *sock) {
 	if (sock == NULL) return NULL;
+
+	socketLoopDisconnect(sock);
 	#ifdef _WIN32
 		closesocket(sock->socket);
 	#else
@@ -179,6 +181,30 @@ void socketConnectLoop() {
 		loop:
 			parent = &list->next;
 			list = *parent;
+	}
+
+	return;
+}
+
+
+void socketLoopDisconnect(SOCKET_STRUCT *sock) {
+	SOCKET_LIST *list, **parent, *tmp;
+
+	if (sock == NULL)
+		return;
+	parent = &d->connect_list;
+	list = *parent;
+	while (list != NULL) {
+		if (list->socket == sock) {
+			tmp = list;
+			*parent = list->next;
+			list = *parent;
+			free(tmp);
+			return;
+		}
+
+		parent = &list->next;
+		list = *parent;
 	}
 
 	return;
