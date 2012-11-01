@@ -31,6 +31,8 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 
 	sock->socket = socket(AF_INET, SOCK_STREAM, 0);
 	if ((hp = gethostbyname(host)) == NULL) {
+		if (callback)
+			(callback)(-1, NULL, data);
 		#ifdef _WIN32
 			closesocket(sock->socket);
 		#else
@@ -167,7 +169,7 @@ void socketConnectLoop() {
 				goto loop;
 		}
 
-		(list->callback)(0, list->data, list->socket);
+		(list->callback)(t, list->data, list->socket);
 		tmp_p = list;
 		*parent = list->next;
 		list = *parent;
