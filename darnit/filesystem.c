@@ -8,6 +8,7 @@ int fsInit(const char *dir_name) {
 		d->fs.data_dir = "./";
 		d->fs.write_dir = "./";
 	} else if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+		#ifndef _WIN32
 		data_dir = getenv("HOME");
 
 		if ((d->fs.write_dir = malloc(strlen(data_dir) + 3 + strlen(dir_name) + strlen(".darnit/"))) == NULL)
@@ -19,6 +20,7 @@ int fsInit(const char *dir_name) {
 		if ((d->fs.data_dir = malloc(strlen(DATA_PATH) + 2 + strlen(dir_name))) == NULL)
 			return -1;
 		sprintf(d->fs.data_dir, "%s/%s", DATA_PATH, dir_name);
+		#endif
 	} else if (d->platform.platform & DARNIT_PLATFORM_WIN32) { 
 		data_dir = getenv("%%APPDATA%%");
 
@@ -32,7 +34,7 @@ int fsInit(const char *dir_name) {
 			int sz;
 			sprintf(tmp, "software/libdarnit/%s", dir_name);
 		
-			if (RegGetValue(HKEY_LOCAL_MACHINE, tmp, "path", RRF_RT_ANY, NULL, val, &sz) != ERROR_SUCCESS)
+			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS)
 				d->fs.data_dir = "./";
 			else {
 				if ((d->fs.data_dir = malloc(strlen(val) + 1)) == NULL)
