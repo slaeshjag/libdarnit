@@ -8,6 +8,8 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 
 	#ifndef _WIN32
 	int x;
+	#else
+	u_long iMode=1;
 	#endif
 
 	sock = malloc(sizeof(SOCKET_STRUCT));
@@ -204,7 +206,6 @@ int socketInit() {
 	#ifdef _WIN32
 		WSADATA wsaData;
 		WORD version;
-		u_long iMode=1;
 		version = MAKEWORD(2, 0);
 		
 		if (WSAStartup(version, &wsaData) != 0) {

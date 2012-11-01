@@ -9,6 +9,8 @@
 #ifndef _WIN32
 	#include	<sys/stat.h>
 	#include	<sys/types.h>
+#else
+	#define		DATA_PATH
 #endif
 
 
