@@ -60,9 +60,11 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 	}
 
 	if (connect(sock->socket, (void *) &sin, sizeof(struct sockaddr_in)) == -1) {
-		fprintf(stderr, "libDarnit: Unable to connect to host %s\n", host);
-		free(sock);
-		return NULL;
+		if (!callback) {
+			fprintf(stderr, "libDarnit: Unable to connect to host %s\n", host);
+			free(sock);
+			return NULL;
+		}
 	}
 	
 	if (!callback) {
