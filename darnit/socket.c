@@ -145,7 +145,7 @@ void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void *, void *), v
 	if ((entry = malloc(sizeof(SOCKET_LIST))) == NULL)
 		return;
 	entry->next = d->connect_list;
-	d->connect_list = entry->next;
+	d->connect_list = entry;
 	
 	entry->socket = sock;
 	entry->callback = callback;
