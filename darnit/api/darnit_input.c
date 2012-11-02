@@ -89,5 +89,5 @@ void EXPORT_THIS darnitKeyboardRawClear() {
 
 
 const char EXPORT_THIS darnitKeyboardSymNameGet(int sym) {
-	return SDL_KeyName(sym);
+	return SDL_GetKeyName(sym);
 }
