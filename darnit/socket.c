@@ -153,7 +153,7 @@ void socketConnectLoop() {
 	parent = &d->connect_list;
 	list = *parent;
 	while (list != NULL) {
-		if ((t = recv(list->socket->socket, &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
 		}
@@ -209,12 +209,10 @@ int socketInit() {
 		version = MAKEWORD(2, 0);
 		
 		if (WSAStartup(version, &wsaData) != 0) {
-			free(sock);
-			return NULL;
+			return -1;
 		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
 			WSACleanup();
-			free(sock);
-			return NULL;
+			return -1;
 		}
 	#endif
 	d->connect_list = NULL;
