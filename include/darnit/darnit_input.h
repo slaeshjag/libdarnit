@@ -78,4 +78,7 @@ void darnitKeyboardRawPush(int sym, int action);
 int darnitKeyboardRawPop(int *action);
 void darnitKeyboardRawClear();
 
+/* The returned pointer is only valid until you call this function again */
+const char *darnitKeyboardSymNameGet(int sym);
+
 #endif

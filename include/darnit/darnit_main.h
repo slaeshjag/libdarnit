@@ -33,6 +33,6 @@ void darnitQuit();
 /* When you want to init video, call darnitInitRest() */
 
 void *darnitInitPartial(const char *data_dir);
-int darnitInitRest(const char wtitle, int win_w, int win_h, int fullscreen);
+int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen);
 
 #endif

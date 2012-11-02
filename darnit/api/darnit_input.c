@@ -86,3 +86,8 @@ void EXPORT_THIS darnitKeyboardRawClear() {
 	d->input.raw.use = 0;
 	return;
 }
+
+
+const char EXPORT_THIS darnitKeyboardSymNameGet(int sym) {
+	return SDL_KeyName(sym);
+}
