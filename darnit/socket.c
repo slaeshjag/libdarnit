@@ -80,8 +80,14 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 		return -1;
 	}
 
+	#ifndef _WIN32
 	if (errno == EWOULDBLOCK || errno == EAGAIN)
 		return 0;
+	#else
+	int error_n = WSAGetLastError();
+	if (error_n == WSAEWOULDBLOCK)
+		return 0;
+	#endif
 	return ret;
 }
 
@@ -100,8 +106,14 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 		return len;
 	if (ret > -1)
 		return 0;
+	#ifndef _WIN32
 	if (errno == EAGAIN || errno == EWOULDBLOCK)
 		return 0;
+	#else
+	int error_n = WSAGetLastError();
+	if (error_n == WSAEWOULDBLOCK)
+		return 0;
+	#endif
 
 	return -1;
 }
