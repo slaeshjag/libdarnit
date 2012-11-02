@@ -11,6 +11,7 @@
 	#include	<sys/types.h>
 #else
 	#define		DATA_PATH
+	#include 	<shlwapi.h>
 #endif
 
 
