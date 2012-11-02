@@ -283,7 +283,7 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	}
 
 	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
-	renderAddTSRef(fname, ts);
+	ts->ref = renderAddTSRef(fname, ts);
 
 	return ts;
 }
