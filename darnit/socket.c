@@ -166,8 +166,14 @@ void socketConnectLoop() {
 	list = *parent;
 	while (list != NULL) {
 		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+			#ifndef _WIN32
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
+			#else
+			int error_n = WSAGetLastError();
+			if (error_n == WSAEWOULDBLOCK || error_n == WSAEALREADY)
+				goto loop;
+			#endif
 		}
 
 		if (t == 1)
