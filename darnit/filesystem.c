@@ -163,7 +163,8 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 	} 
 	
 	if (*name != '/') {
-		write = 1;
+		if (strstr(mode, "w") || strstr(mode, "a"))
+			write = 1;
 		/* Write-dir up next... */
 		sprintf(path, "%s/%s", d->fs.write_dir, name);
 		path_new = utilPathTranslate(path);
