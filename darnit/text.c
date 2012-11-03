@@ -69,7 +69,7 @@ void *textLoadFont(const char *fname, int size, int tex_w, int tex_h) {
 
 int textWillGlyphFit(struct TEXT_FONT_CACHE *cache, int w, int h) {
 	int pos_y;
-	
+
 	pos_y = (cache->line_pos_x + w >= cache->sheet_w) ? cache->line_pos_y + cache->line_height : cache->line_pos_y;
 	if (pos_y + h >= cache->sheet_h)
 		return -1;
@@ -200,7 +200,9 @@ struct TEXT_FONT_GLYPH *textRenderGlyphToCache(TEXT_FONT *font, unsigned int gly
 	
 	next = font->cache;
 	glyph_index = stbtt_FindGlyphIndex(&font->face, glyph);
-
+	
+	/* Just in case the coords aren't reported correctly o_O */
+	x1 = y1 = x2 = y2 = 0;
 	stbtt_GetCodepointBox(&font->face, glyph_index, &x1, &y1, &x2, &y2);
 
 	x1 = font->scale * x1;
