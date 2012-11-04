@@ -3,31 +3,17 @@
 
 void *socketConnect(const char *host, int port, void (*callback)(int, void *, void *), void *data) {
 	struct sockaddr_in sin;
+	struct hostent *hp;
 	SOCKET_STRUCT *sock;
 
-	#ifdef _WIN32
-		WSADATA wsaData;
-		WORD version;
-		struct hostent *hp;
-		u_long iMode=1;
+	#ifndef _WIN32
+	int x;
 	#else
-		int x;
-		struct hostent *hp;
+	u_long iMode=1;
 	#endif
 
 	sock = malloc(sizeof(SOCKET_STRUCT));
 
-	#ifdef _WIN32
-		version = MAKEWORD(2, 0);
-		if (WSAStartup(version, &wsaData) != 0) {
-			free(sock);
-			return NULL;
-		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
-			WSACleanup();
-			free(sock);
-			return NULL;
-		}
-	#endif
 
 	sock->socket = socket(AF_INET, SOCK_STREAM, 0);
 	if ((hp = gethostbyname(host)) == NULL) {
@@ -94,8 +80,14 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 		return -1;
 	}
 
+	#ifndef _WIN32
 	if (errno == EWOULDBLOCK || errno == EAGAIN)
 		return 0;
+	#else
+	int error_n = WSAGetLastError();
+	if (error_n == WSAEWOULDBLOCK)
+		return 0;
+	#endif
 	return ret;
 }
 
@@ -114,8 +106,14 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 		return len;
 	if (ret > -1)
 		return 0;
+	#ifndef _WIN32
 	if (errno == EAGAIN || errno == EWOULDBLOCK)
 		return 0;
+	#else
+	int error_n = WSAGetLastError();
+	if (error_n == WSAEWOULDBLOCK)
+		return 0;
+	#endif
 
 	return -1;
 }
@@ -167,9 +165,15 @@ void socketConnectLoop() {
 	parent = &d->connect_list;
 	list = *parent;
 	while (list != NULL) {
-		if ((t = recv(list->socket->socket, &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+			#ifndef _WIN32
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
+			#else
+			int error_n = WSAGetLastError();
+			if (error_n == WSAEWOULDBLOCK || error_n == WSAEALREADY)
+				goto loop;
+			#endif
 		}
 
 		if (t == 1)
@@ -217,6 +221,18 @@ void socketLoopDisconnect(SOCKET_STRUCT *sock) {
 }
 
 int socketInit() {
+	#ifdef _WIN32
+		WSADATA wsaData;
+		WORD version;
+		version = MAKEWORD(2, 0);
+		
+		if (WSAStartup(version, &wsaData) != 0) {
+			return -1;
+		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
+			WSACleanup();
+			return -1;
+		}
+	#endif
 	d->connect_list = NULL;
 
 	return 0;

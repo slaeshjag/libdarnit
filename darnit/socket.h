@@ -20,6 +20,7 @@ typedef struct SOCKET_LIST {
 
 #ifdef _WIN32
 	#define		EWOULDBLOCK 	WSAEWOULDBLOCK
+	#define		MSG_NOSIGNAL	0
 #endif
 
 
