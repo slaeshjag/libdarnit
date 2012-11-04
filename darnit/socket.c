@@ -80,8 +80,14 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 		return -1;
 	}
 
+	#ifndef _WIN32
 	if (errno == EWOULDBLOCK || errno == EAGAIN)
 		return 0;
+	#else
+	int error_n = WSAGetLastError();
+	if (error_n == WSAEWOULDBLOCK)
+		return 0;
+	#endif
 	return ret;
 }
 
@@ -100,8 +106,14 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 		return len;
 	if (ret > -1)
 		return 0;
+	#ifndef _WIN32
 	if (errno == EAGAIN || errno == EWOULDBLOCK)
 		return 0;
+	#else
+	int error_n = WSAGetLastError();
+	if (error_n == WSAEWOULDBLOCK)
+		return 0;
+	#endif
 
 	return -1;
 }
@@ -153,9 +165,15 @@ void socketConnectLoop() {
 	parent = &d->connect_list;
 	list = *parent;
 	while (list != NULL) {
-		if ((t = recv(list->socket->socket, &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
+			#ifndef _WIN32
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
+			#else
+			int error_n = WSAGetLastError();
+			if (error_n == WSAEWOULDBLOCK || error_n == WSAEALREADY)
+				goto loop;
+			#endif
 		}
 
 		if (t == 1)
@@ -209,12 +227,10 @@ int socketInit() {
 		version = MAKEWORD(2, 0);
 		
 		if (WSAStartup(version, &wsaData) != 0) {
-			free(sock);
-			return NULL;
+			return -1;
 		} else if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 0) {
 			WSACleanup();
-			free(sock);
-			return NULL;
+			return -1;
 		}
 	#endif
 	d->connect_list = NULL;
