@@ -8,6 +8,7 @@ int fsInit(const char *dir_name) {
 		d->fs.data_dir = "./";
 		d->fs.write_dir = "./";
 	} else if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+		#ifndef _WIN32
 		data_dir = getenv("HOME");
 
 		if ((d->fs.write_dir = malloc(strlen(data_dir) + 3 + strlen(dir_name) + strlen(".darnit/"))) == NULL)
@@ -19,8 +20,9 @@ int fsInit(const char *dir_name) {
 		if ((d->fs.data_dir = malloc(strlen(DATA_PATH) + 2 + strlen(dir_name))) == NULL)
 			return -1;
 		sprintf(d->fs.data_dir, "%s/%s", DATA_PATH, dir_name);
+		#endif
 	} else if (d->platform.platform & DARNIT_PLATFORM_WIN32) { 
-		data_dir = getenv("%%APPDATA%%");
+		data_dir = getenv("APPDATA");
 
 		if ((d->fs.write_dir = malloc(strlen(data_dir) + 2 + strlen(dir_name))) == NULL)
 			return -1;
@@ -32,7 +34,7 @@ int fsInit(const char *dir_name) {
 			int sz;
 			sprintf(tmp, "software/libdarnit/%s", dir_name);
 		
-			if (RegGetValue(HKEY_LOCAL_MACHINE, tmp, "path", RRF_RT_ANY, NULL, val, &sz) != ERROR_SUCCESS)
+			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS)
 				d->fs.data_dir = "./";
 			else {
 				if ((d->fs.data_dir = malloc(strlen(val) + 1)) == NULL)
@@ -158,14 +160,22 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
 		}
 		free(path_new);
-	} else {
-		write = 1;
+	} 
+	
+	if (*name != '/') {
+		if (strstr(mode, "w") || strstr(mode, "a"))
+			write = 1;
 		/* Write-dir up next... */
 		sprintf(path, "%s/%s", d->fs.write_dir, name);
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
-		else
-			return fsFileNew(path_new, mode, fp, -1, 0);
+		else {
+			if (strstr(mode, "w"))
+				return fsFileNew(path_new, mode, fp, -1, 0);
+			if (strstr(mode, "a"))
+				return fsFileNew(path_new, mode, fp, -1, 0);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+		}
 		free(path_new);
 	}
 
@@ -391,6 +401,7 @@ void fsUnmount(const char *name) {
 			free(path);
 			return;
 		}
+		next = next->next;
 	}
 	
 	free(path);

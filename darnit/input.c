@@ -90,6 +90,8 @@ int inputInit() {
 	d->input.key = 0;
 	d->input.mouse.x = d->input.mouse.y = d->input.mouse.wheel = d->input.mouse.mb_l = d->input.mouse.mb_r = 0;
 
+	memset(&d->input.event, 0, sizeof(d->input.event));
+
 	inputKeymapReset();
 	inputInitJoystick();
 
