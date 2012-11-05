@@ -95,12 +95,9 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 	if (sock == NULL) return -1;
 	int ret;
-	void *buff_tmp;
 
-	buff_tmp = malloc(len);
-	if ((ret = recv(sock->socket, buff_tmp, len, MSG_PEEK | MSG_NOSIGNAL)) == len)
+	if ((ret = recv(sock->socket, buff, len, MSG_PEEK | MSG_NOSIGNAL)) == len)
 		recv(sock->socket, buff, len, MSG_NOSIGNAL);
-	free(buff_tmp);
 
 	if (ret == len)
 		return len;
