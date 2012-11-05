@@ -24,7 +24,7 @@
 #define DARNIT_KEYACTION_PRESS		1
 #define DARNIT_KEYACTION_RELEASE	2
 
-#define		RAW_BUFFER_LEN		8
+#define		RAW_BUFFER_LEN		4096
 
 typedef struct {
 	unsigned int			up;
