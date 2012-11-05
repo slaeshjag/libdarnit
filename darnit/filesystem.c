@@ -387,6 +387,7 @@ void fsUnmount(const char *name) {
 	if (strcmp(d->fs.mount->file->file, path) == 0) {
 		next = d->fs.mount->next;
 		fsFileClose(d->fs.mount->file);
+		free(d->fs.mount->dir);
 		free(d->fs.mount);
 		d->fs.mount = next;
 		free(path);
@@ -398,6 +399,7 @@ void fsUnmount(const char *name) {
 	while (next != NULL) {
 		if (strcmp(next->file->file, path) == 0) {
 			old->next = next->next;
+			free(next->dir);
 			fsFileClose(next->file);
 			free(next);
 			free(path);
