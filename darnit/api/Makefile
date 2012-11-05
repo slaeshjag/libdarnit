@@ -2,7 +2,7 @@
 
 MAKEFLAGS += --no-print-directory
 
-CFLAGS += -fPIC -shared -I../ -I../../deps -Wall -fvisibility=hidden
+CFLAGS += -fPIC -shared -I../ -I../../deps -Wall -fvisibility=hidden -g
 
 SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)

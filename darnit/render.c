@@ -412,8 +412,10 @@ void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 
 
 void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
-	float xf, yf, wf, hf, tw, th;
+	float xf, yf, wf, hf, tw, th, vw, vh;
 	
+	vw = d->video.swgran * w;
+	vh = d->video.shgran * h;
 	tw = 1.0f / ts->w;
 	th = 1.0f / ts->h;
 	xf = tw * x;
@@ -423,7 +425,9 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 	wf += xf;
 	hf += yf;
 
-	cache->u = xf;
+	renderSetTileCoordinates(cache, cache->x, cache->y - vh, cache->x + vw, cache->y, xf, yf, wf, hf);
+
+/*	cache->u = xf;
 	cache->v = yf;
 	cache->u2 = wf;
 	cache->v2 = yf;
@@ -434,7 +438,7 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 	cache->u5 = xf;
 	cache->v5 = hf;
 	cache->u6 = xf;
-	cache->v6 = yf;
+	cache->v6 = yf;*/
 	
 	return;
 }
