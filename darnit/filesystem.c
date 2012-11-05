@@ -326,7 +326,6 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return NULL;
-	free(file->name);
 	fclose(file->fp);
 	free(file->file);
 	free(file->mode);
