@@ -33,11 +33,23 @@ void darnit_init_common() {
 }
 
 
-void darnitSetPlatform() {
+void darnitSetPlatform(int partial) {
 	DARNIT_ENDIAN_CONVERT end;
 
-	d->platform.screen_w = d->video.w;
-	d->platform.screen_h = d->video.h;
+	if (!partial) {
+		d->platform.screen_w = d->video.w;
+		d->platform.screen_h = d->video.h;
+	} else {
+		#if defined PANDORA
+			d->platform.screen_w = 800;
+			d->platform.screen_h = 480;
+			d->platform.fullscreen = 1;
+		#else
+			d->platform.screen_w = 800;
+			d->platform.screen_h = 480;
+			d->platform.fullscreen = 1;
+		#endif
+	}
 
 	#if defined PANDORA
 		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_PANDORA;
@@ -87,7 +99,7 @@ int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int ful
 	d->fps.time = SDL_GetTicks() / 1000;
 
 	t = videoInit(wtitle, win_w, win_h, fullscreen);
-	darnitSetPlatform();
+	darnitSetPlatform(0);
 
 	return t;
 }
@@ -108,7 +120,7 @@ void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);
 	else {
-		darnitSetPlatform();
+		darnitSetPlatform(1);
 		if (fsInit(data_dir) < 0)
 			return NULL;
 		return d;

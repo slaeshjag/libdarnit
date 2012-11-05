@@ -33,6 +33,7 @@ typedef struct {
 	float				tint_b;
 	float				tint_a;
 	int				blend;
+	int				fullscreen;
 } VIDEO;
 
 unsigned int videoAddTextureRGBA4(void *data, unsigned int w, unsigned int h);
