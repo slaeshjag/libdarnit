@@ -65,6 +65,12 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 	} else
 		socketListAdd(sock, callback, data);
 
+
+	#ifdef __APPLE__
+	int set = 1;
+	setsockopt(sd, SOL_SOCKET, SO_NOSIGPIPE, (void *) &set, sizeof(int));
+	#endif
+
 	return sock;
 }
 
