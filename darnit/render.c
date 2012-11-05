@@ -425,7 +425,7 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 	wf += xf;
 	hf += yf;
 
-	renderSetTileCoordinates(cache, cache->x, cache->y, cache->x + vw, cache->y - vh, xf, yf, wf, hf);
+	renderSetTileCoordinates(cache, cache->x, cache->y - vh, cache->x + vw, cache->y, xf, yf, wf, hf);
 
 /*	cache->u = xf;
 	cache->v = yf;
