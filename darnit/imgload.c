@@ -41,6 +41,8 @@ IMGLOAD_DATA imgloadSTB(const char *fname) {
 	
 	img.w = img.h = 0;
 	img.img_data = (void *) stbi_load_from_callbacks(&callbacks, file, (int *) &img.w, (int *) &img.h, &t, 4);
+
+	fsFileClose(file);
 	
 	return img;
 }
