@@ -401,6 +401,7 @@ void fsUnmount(const char *name) {
 			free(path);
 			return;
 		}
+		next = next->next;
 	}
 	
 	free(path);
