@@ -482,3 +482,132 @@ FILE *fsContainerFileInternalGet(const char *name) {
 
 	return NULL;
 }
+
+
+void fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
+	DIR_LIST *tmp;
+
+	#ifdef _WIN32
+		WIN32_FIND_DATA ffd;
+		HANDLE hFind = INVALID_HANDLE_VALUE;
+		DWORD dError = 0;
+		char dir[MAX_PATH], *new_path;
+
+		if (strlen(path) > MAX_PATH - 3)
+			return;
+		new_path = utilPathTranslate(path);
+		
+		sprintf(dir, "%s\\*", new_path);
+		free(new_path);
+		
+		if ((hFind = FindFirstFile(dir, &ffd)) == INVALID_HANDLE_VALUE)
+			return;
+
+		do {
+			tmp = malloc(sizeof(DIR_LIST));
+			tmp->fname = malloc(strlen(ffd.cFileName) + 1);
+			strcpy(tmp->fname, ffd.cFileName);
+			tmp->next = *list;
+			tmp->writeable = rw;
+			tmp->in_file_image = 0;
+
+			if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+				tmp->directory = 1;
+				tmp->file = 0;
+			} else {
+				tmp->directory = 0;
+				tmp->file = 1;
+			}
+		} while (FindNextFile(hFind, &ffd) != 0);
+
+		FindClose(hFind);
+	#else
+		DIR *dir;
+		struct dirent *dir_ent;
+		struct stat stat_b;
+		char path_trans[DARNIT_PATH_MAX];
+
+		if (!(dir = opendir(path)))
+			return;
+		for (dir_ent = readdir(dir); dir_ent; dir_ent = readdir(dir)) {
+			if (dir_ent->d_name[0] == '.')
+				continue;
+			sprintf(path_trans, "%s/%s", path, tmp->fname);
+			stat(path_trans, &stat_b);
+			if (!S_ISDIR(stat_b.st_mode) && !S_ISREG(stat_b.st_mode))
+				continue;
+			tmp = malloc(sizeof(DIR_LIST));
+			tmp->fname = malloc(strlen(dir_ent->d_name) + 1);
+			strcpy(tmp->fname, dir_ent->d_name);
+
+			tmp->writeable = rw;
+			tmp->in_file_image = 0;
+			tmp->directory = S_ISDIR(stat_b.st_mode);
+			tmp->file = S_ISREG(stat_b.st_mode);
+			tmp->next = *list;
+			*list = tmp;
+		}
+
+		closedir(dir);
+	#endif
+
+	return;
+}
+			
+
+DIR_LIST *fsDirectoryList(const char *path, unsigned int type) {
+	FILESYSTEM_IMAGE *img;
+	DIR_LIST *dir, *end;
+	int i;
+	const char *name;
+
+	/* First; look in filesystem images... */
+	
+	dir = NULL;
+	img = d->fs.mount;
+	for (img = d->fs.mount; img != NULL; img = img->next)
+		for (i = 0; i < img->dir_ents; i++)
+			if (img->dir[i].name[strlen(path)] == '/') {	/* Yes, this is the directory we're looking for */
+				name = &img->dir[i].name[strlen(path)];
+				
+				end = malloc(sizeof(DIR_LIST));
+				end->fname = malloc(strlen(name) + 1);
+				sprintf(end->fname, name);
+				end->writeable = 0;
+				end->in_file_image = 1;
+
+				if (strstr(name, "/")) {
+					*strstr(end->fname, "/") = 0;
+					end->directory = 1;
+					end->file = 0;
+				} else {
+					end->directory = 0;
+					end->file = 1;
+				}
+				
+				end->next = dir;
+				dir = end;
+			}
+	
+	
+	/* Now, to look at data and write dirs... */
+	if (type & DARNIT_FS_READABLE)
+		fsScanRealDir(d->fs.data_dir, &dir, 0);
+	if (type & DARNIT_FS_WRITEABLE)
+		fsScanRealDir(d->fs.write_dir, &dir, 1);
+	
+	return dir;
+}
+
+
+DIR_LIST *fsDirectoryListFree(DIR_LIST *list) {
+	DIR_LIST *next;
+
+	for (; list; list = next) {
+		next = list->next;
+		free(list->fname);
+		free(list);
+	}
+
+	return NULL;
+}
