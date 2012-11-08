@@ -351,6 +351,17 @@ void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y) 
 }
 
 
+void renderTileSetSize(TILE_CACHE *cache, int w, int h) {
+	cache->x2 = cache->x + d->video.swgran * w;
+	cache->y3 = cache->y - d->video.shgran * h;
+	cache->x3 = cache->x4 = cache->x2;
+	cache->y4 = cache->y5 = cache->y3;
+
+	return;
+}
+
+
+
 void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2) {
 	*x = (cache->x1 + 1.0f) / d->video.swgran;
 	*y = (1.0f - cache->y1) / d->video.shgran;

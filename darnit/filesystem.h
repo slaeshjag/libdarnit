@@ -6,13 +6,31 @@
 #define	DARNIT_FS_IMG_MAGIC	0x83B3661B
 #define	DARNIT_FS_IMG_VERSION	0xBBA77ABC
 
+
+#define	DARNIT_FS_READABLE	1
+#define	DARNIT_FS_WRITEABLE	2
+
 #ifndef _WIN32
 	#include	<sys/stat.h>
 	#include	<sys/types.h>
+	#include	<sys/stat.h>
+	#include	<dirent.h>
 #else
 	#define		DATA_PATH
+	#define		size_t		unsigned long long
 	#include 	<shlwapi.h>
 #endif
+
+
+
+typedef struct DIR_LIST {
+	char				*fname;
+	unsigned int			directory	: 1;
+	unsigned int			file		: 1;
+	unsigned int			writeable	: 1;
+	unsigned int			in_file_image	: 1;
+	struct DIR_LIST			*next;
+} DIR_LIST;
 
 
 typedef struct {
@@ -40,7 +58,7 @@ typedef struct {
 } FILESYSTEM_IMAGE_FILE;
 
 
-struct FILESYSTEM_IMAGE {
+typedef struct FILESYSTEM_IMAGE {
 	struct FILESYSTEM_IMAGE		*next;
 
 	FILESYSTEM_FILE			*file;
@@ -78,6 +96,8 @@ int fsFileEOF(FILESYSTEM_FILE *file);
 int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode);
 FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
 
+DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries);
+DIR_LIST *fsDirectoryListFree(DIR_LIST *list);
 
 /* Internal stuff. Etc. */
 off_t fsContainerFILELength(FILE *fp, const char *name);
