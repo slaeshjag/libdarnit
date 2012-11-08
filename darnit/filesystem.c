@@ -484,24 +484,26 @@ FILE *fsContainerFileInternalGet(const char *name) {
 }
 
 
-void fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
+int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 	DIR_LIST *tmp;
+	int i;
 
 	#ifdef _WIN32
 		WIN32_FIND_DATA ffd;
 		HANDLE hFind = INVALID_HANDLE_VALUE;
 		DWORD dError = 0;
 		char dir[MAX_PATH], *new_path;
+		i = 0;
 
 		if (strlen(path) > MAX_PATH - 3)
-			return;
+			return 0;
 		new_path = utilPathTranslate(path);
 		
 		sprintf(dir, "%s\\*", new_path);
 		free(new_path);
 		
 		if ((hFind = FindFirstFile(dir, &ffd)) == INVALID_HANDLE_VALUE)
-			return;
+			return 0;
 
 		do {
 			tmp = malloc(sizeof(DIR_LIST));
@@ -518,6 +520,7 @@ void fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 				tmp->directory = 0;
 				tmp->file = 1;
 			}
+			i++;
 		} while (FindNextFile(hFind, &ffd) != 0);
 
 		FindClose(hFind);
@@ -528,7 +531,7 @@ void fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 		char path_trans[DARNIT_PATH_MAX];
 
 		if (!(dir = opendir(path)))
-			return;
+			return 0;
 		for (dir_ent = readdir(dir); dir_ent; dir_ent = readdir(dir)) {
 			if (dir_ent->d_name[0] == '.')
 				continue;
@@ -546,16 +549,17 @@ void fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 			tmp->file = S_ISREG(stat_b.st_mode);
 			tmp->next = *list;
 			*list = tmp;
+			i++;
 		}
 
 		closedir(dir);
 	#endif
 
-	return;
+	return i;
 }
 			
 
-DIR_LIST *fsDirectoryList(const char *path, unsigned int type) {
+DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries) {
 	FILESYSTEM_IMAGE *img;
 	DIR_LIST *dir, *end;
 	int i;
@@ -592,10 +596,12 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type) {
 	
 	/* Now, to look at data and write dirs... */
 	if (type & DARNIT_FS_READABLE)
-		fsScanRealDir(d->fs.data_dir, &dir, 0);
+		i += fsScanRealDir(d->fs.data_dir, &dir, 0);
 	if (type & DARNIT_FS_WRITEABLE)
-		fsScanRealDir(d->fs.write_dir, &dir, 1);
-	
+		i += fsScanRealDir(d->fs.write_dir, &dir, 1);
+
+	if (entries)
+		*entries = i;
 	return dir;
 }
 

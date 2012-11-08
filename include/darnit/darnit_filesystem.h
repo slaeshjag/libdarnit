@@ -40,7 +40,7 @@ size_t darnitFileWhitespaceSkip(DARNIT_FILE *file);
 off_t darnitFileTell(DARNIT_FILE *file);
 size_t darnitFileSeek(DARNIT_FILE *file, off_t offset, int mode);
 
-DARNIT_DIR_LIST *darnitFileList(const char *path, unsigned int type);
+DARNIT_DIR_LIST *darnitFileList(const char *path, unsigned int type, int *entries);
 DARNIT_DIR_LIST *darnitFileListFree(DARNIT_DIR_LIST *list);
 
 #endif
