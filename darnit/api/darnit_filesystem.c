@@ -82,4 +82,14 @@ void EXPORT_THIS darnitFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 }
 
 
+void EXPORT_THIS *darnitFileList(const char *path, unsigned int type, unsigned int *entries) {
+	return fsDirectoryList(path, type, entries);
+}
+
+
+void EXPORT_THIS *darnitFileListFree(DIR_LIST *list) {
+	return fsDirectoryListFree(list);
+}
+
+
 #endif

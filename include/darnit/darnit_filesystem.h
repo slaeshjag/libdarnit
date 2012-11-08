@@ -7,6 +7,20 @@
 	#define		off_t		long long int
 #endif
 
+
+#define	DARNIT_FILESYSTEM_TYPE_READ	0x1
+#define	DARNIT_FILESYSTEM_TYPE_WRITE	0x2
+
+typedef struct DARNIT_DIR_LIST {
+	const char			*fname;
+	unsigned int			directory	: 1;
+	unsigned int			file		: 1;
+	unsigned int			writeable	: 1;
+	unsigned int			in_file_image	: 1;
+	struct DARNIT_DIR_LIST		*next;
+} DARNIT_DIR_LIST;
+
+
 typedef void DARNIT_FILE;
 
 int darnitFSMount(const char *fname);
@@ -25,5 +39,8 @@ size_t darnitFileLineGet(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t darnitFileWhitespaceSkip(DARNIT_FILE *file);
 off_t darnitFileTell(DARNIT_FILE *file);
 size_t darnitFileSeek(DARNIT_FILE *file, off_t offset, int mode);
+
+DARNIT_DIR_LIST *darnitFileList(const char *path, unsigned int type, int *entries);
+DARNIT_DIR_LIST *darnitFileListFree(DARNIT_DIR_LIST *list);
 
 #endif
