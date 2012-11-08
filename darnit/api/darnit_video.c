@@ -94,6 +94,20 @@ void EXPORT_THIS darnitRenderTileSetTilesheetCoord(DARNIT_RENDER_BUFFER *buf, un
 }
 
 
+void EXPORT_THIS darnitRenderTileSizeSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, int w, int h) {
+	TILE_CACHE *cache;
+
+	if (buf == NULL)
+		return;
+	if (buf->tiles <= tile)
+		return;
+	cache = &buf->tc[tile];
+	renderTileSetSize(cache, w, h);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
 	float *ptr;
 	int i;
