@@ -39,6 +39,7 @@ size_t darnitFileLineGet(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t darnitFileWhitespaceSkip(DARNIT_FILE *file);
 off_t darnitFileTell(DARNIT_FILE *file);
 size_t darnitFileSeek(DARNIT_FILE *file, off_t offset, int mode);
+int darnitFileEOF(DARNIT_FILE *file);
 
 DARNIT_DIR_LIST *darnitFileList(const char *path, unsigned int type, int *entries);
 DARNIT_DIR_LIST *darnitFileListFree(DARNIT_DIR_LIST *list);
