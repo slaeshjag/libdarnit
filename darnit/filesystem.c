@@ -574,7 +574,7 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 				
 				end = malloc(sizeof(DIR_LIST));
 				end->fname = malloc(strlen(name) + 1);
-				sprintf(end->fname, name);
+				sprintf(end->fname, "%s", name);
 				end->writeable = 0;
 				end->in_file_image = 1;
 
