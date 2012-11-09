@@ -181,3 +181,9 @@ void EXPORT_THIS darnitQuit() {
 
 	return;
 }
+
+
+void EXPORT_THIS **darnitVideomodesGet() {
+	SDL_PixelFormat nnn;
+	return (void **) SDL_ListModes(&nnn, SDL_HWSURFACE | SDL_FULLSCREEN);
+}
