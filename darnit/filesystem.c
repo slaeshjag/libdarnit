@@ -142,8 +142,8 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		return NULL;
 	
 	if (*name == '/');				/* Path is absolute, skip all FS stuff */
-	else if (strstr(mode, "w") == NULL 
-	    && strstr(mode, "a") == NULL) {		/* Try read-only locations */
+	/* Try read-only locations */
+	else if (!strstr(mode, "w") && !strstr(mode, "a") && !strstr(mode, "+")) {		
 		/* Build data-dir path */
 		sprintf(path, "%s/%s", d->fs.data_dir, name);
 		path_new = utilPathTranslate(path);
@@ -163,16 +163,14 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 	} 
 	
 	if (*name != '/') {
-		if (strstr(mode, "w") || strstr(mode, "a"))
+		if (strstr(mode, "w") || strstr(mode, "a") || strstr(mode, "+"))
 			write = 1;
 		/* Write-dir up next... */
 		sprintf(path, "%s/%s", d->fs.write_dir, name);
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else {
-			if (strstr(mode, "w"))
-				return fsFileNew(path_new, mode, fp, -1, 0);
-			if (strstr(mode, "a"))
+			if (write)
 				return fsFileNew(path_new, mode, fp, -1, 0);
 			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
 		}
