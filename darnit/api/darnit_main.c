@@ -184,7 +184,7 @@ void EXPORT_THIS darnitQuit() {
 
 
 void EXPORT_THIS **darnitVideomodeGet() {
-	void **nnn = (void **) SDL_ListModes(NULL, SDL_HWSURFACE);
+	void **nnn = (void **) SDL_ListModes(NULL, SDL_HWSURFACE | SDL_FULLSCREEN);
 	if (nnn == (void **) -1)
 		return NULL;
 	return nnn;
