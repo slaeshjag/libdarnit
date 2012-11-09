@@ -92,4 +92,9 @@ void EXPORT_THIS *darnitFileListFree(DIR_LIST *list) {
 }
 
 
+int EXPORT_THIS darnitFileEOF(FILESYSTEM_FILE *file) {
+	return fsFileEOF(file);
+}
+
+
 #endif

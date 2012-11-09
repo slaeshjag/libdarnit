@@ -18,6 +18,15 @@ typedef struct {
 	unsigned int		fullscreen;
 } DARNIT_PLATFORM;
 
+
+typedef struct {
+	signed short		x	: 16;
+	signed  short		y	: 16;
+	unsigned short		w	: 16;
+	unsigned short		h	: 16;
+} DARNIT_VIDEOMODE;
+
+
 void *darnitInit(const char *wtitle, const char *data_dir);
 void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir);
 void darnitLoop();
@@ -35,4 +44,7 @@ void darnitQuit();
 void *darnitInitPartial(const char *data_dir);
 int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen);
 
+
+/* You need to call darnitInitPartial before calling this one */
+DARNIT_VIDEOMODE **darnitVideomodeGet();
 #endif
