@@ -96,7 +96,7 @@ int fsFileEOF(FILESYSTEM_FILE *file);
 int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode);
 FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
 
-DIR_LIST *fsDirectoryList(const char *path, unsigned int type);
+DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries);
 DIR_LIST *fsDirectoryListFree(DIR_LIST *list);
 
 /* Internal stuff. Etc. */
