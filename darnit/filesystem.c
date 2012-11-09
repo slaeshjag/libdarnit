@@ -141,6 +141,21 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 	if (strlen(d->fs.write_dir) + 2 + strlen(name) > DARNIT_PATH_MAX)
 		return NULL;
 	
+	if (*name != '/') {
+		if (strstr(mode, "w") || strstr(mode, "a") || strstr(mode, "+"))
+			write = 1;
+		/* Write-dir up next... */
+		sprintf(path, "%s/%s", d->fs.write_dir, name);
+		path_new = utilPathTranslate(path);
+		if ((fp = fopen(path_new, mode)) == NULL);
+		else {
+			if (write)
+				return fsFileNew(path_new, mode, fp, -1, 0);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+		}
+		free(path_new);
+	}
+
 	if (*name == '/');				/* Path is absolute, skip all FS stuff */
 	/* Try read-only locations */
 	else if (!strstr(mode, "w") && !strstr(mode, "a") && !strstr(mode, "+")) {		
@@ -162,21 +177,6 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		free(path_new);
 	} 
 	
-	if (*name != '/') {
-		if (strstr(mode, "w") || strstr(mode, "a") || strstr(mode, "+"))
-			write = 1;
-		/* Write-dir up next... */
-		sprintf(path, "%s/%s", d->fs.write_dir, name);
-		path_new = utilPathTranslate(path);
-		if ((fp = fopen(path_new, mode)) == NULL);
-		else {
-			if (write)
-				return fsFileNew(path_new, mode, fp, -1, 0);
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
-		}
-		free(path_new);
-	}
-
 	/* Mkay, that didn't work. I guess we'll try open it directly */
 	path_new = utilPathTranslate(name);
 	if ((fp = fopen(path_new, mode)) == NULL);
