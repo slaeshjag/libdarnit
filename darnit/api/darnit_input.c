@@ -52,7 +52,9 @@ void EXPORT_THIS darnitInputUngrab() {
 
 
 DARNIT_MOUSE EXPORT_THIS darnitMouseGet() {
-	return d->input.mouse;
+	DARNIT_MOUSE m = d->input.mouse;
+	d->input.mouse.wheel = 0;
+	return m;
 }
 
 
