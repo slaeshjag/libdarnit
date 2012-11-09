@@ -7,23 +7,24 @@
 
 
 int main(int argc, char **argv) {
+	int len;
 	SPRITE_ENTRY se;
 	FILE *in, *out;
 	unsigned int i, j;
 	char c, buf[512];
 
 	if (argc < 3) {
-		fprintf(stderr, "Usage: %s <input> <output>\n", argv[0]);
+		len = fprintf(stderr, "Usage: %s <input> <output>\n", argv[0]);
 		return -1;
 	}
 	
 	if ((in = fopen(argv[1], "r")) == NULL) {
-		fprintf(stderr, "Unable to open %s\n", argv[1]);
+		len = fprintf(stderr, "Unable to open %s\n", argv[1]);
 		return -1;
 	}
 
 	if ((out = fopen(argv[2], "w+")) == NULL) {
-		fprintf(stderr, "Unable to open %s\n", argv[5]);
+		len = fprintf(stderr, "Unable to open %s\n", argv[5]);
 		return -1;
 	}
 
@@ -35,7 +36,7 @@ int main(int argc, char **argv) {
 		se.spr[i].tiles = 0;
 	}
 
-	fscanf(in, "%s %i %i\n", se.tilesheet, &se.wsq, &se.hsq);
+	len = fscanf(in, "%s %i %i\n", se.tilesheet, &se.wsq, &se.hsq);
 	
 	se.header = 0x00FF10EF;
 	se.dir = 0;
@@ -51,28 +52,28 @@ int main(int argc, char **argv) {
 		c = fgetc(in);
 		switch (c) {
 			case 'D':
-				fgets(buf, 512, in);
+				len = (long long int) fgets(buf, 512, in);
 				j = 0;
 				break;
 			case 'T':
-				fscanf(in, "%i %i\n", &se.spr[i].tile[j].time, &se.spr[i].tile[j].tile);
+				len = fscanf(in, "%i %i\n", &se.spr[i].tile[j].time, &se.spr[i].tile[j].tile);
 				j++;
 				break;
 			case 'E':
 				se.spr[i].tiles = j;
-				fgets(buf, 512, in);
+				len = (long long int) fgets(buf, 512, in);
 				j = 0;
 				i++;
 				break;
 			case '\n':
 				break;
 			default:
-				fgets(buf, 512, in);
+				len = (long long int) fgets(buf, 512, in);
 				break;
 		}
 	}
 
-	fwrite(&se, sizeof(SPRITE_ENTRY), 1, out);
-
+	len = fwrite(&se, sizeof(SPRITE_ENTRY), 1, out);
+	len++;
 	return 0;
 }
