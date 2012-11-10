@@ -141,9 +141,24 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 	if (strlen(d->fs.write_dir) + 2 + strlen(name) > DARNIT_PATH_MAX)
 		return NULL;
 	
+	if (*name != '/') {
+		if (strstr(mode, "w") || strstr(mode, "a") || strstr(mode, "+"))
+			write = 1;
+		/* Write-dir up next... */
+		sprintf(path, "%s/%s", d->fs.write_dir, name);
+		path_new = utilPathTranslate(path);
+		if ((fp = fopen(path_new, mode)) == NULL);
+		else {
+			if (write)
+				return fsFileNew(path_new, mode, fp, -1, 0);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+		}
+		free(path_new);
+	}
+
 	if (*name == '/');				/* Path is absolute, skip all FS stuff */
-	else if (strstr(mode, "w") == NULL 
-	    && strstr(mode, "a") == NULL) {		/* Try read-only locations */
+	/* Try read-only locations */
+	else if (!strstr(mode, "w") && !strstr(mode, "a") && !strstr(mode, "+")) {		
 		/* Build data-dir path */
 		sprintf(path, "%s/%s", d->fs.data_dir, name);
 		path_new = utilPathTranslate(path);
@@ -162,23 +177,6 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		free(path_new);
 	} 
 	
-	if (*name != '/') {
-		if (strstr(mode, "w") || strstr(mode, "a"))
-			write = 1;
-		/* Write-dir up next... */
-		sprintf(path, "%s/%s", d->fs.write_dir, name);
-		path_new = utilPathTranslate(path);
-		if ((fp = fopen(path_new, mode)) == NULL);
-		else {
-			if (strstr(mode, "w"))
-				return fsFileNew(path_new, mode, fp, -1, 0);
-			if (strstr(mode, "a"))
-				return fsFileNew(path_new, mode, fp, -1, 0);
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
-		}
-		free(path_new);
-	}
-
 	/* Mkay, that didn't work. I guess we'll try open it directly */
 	path_new = utilPathTranslate(name);
 	if ((fp = fopen(path_new, mode)) == NULL);
@@ -576,7 +574,7 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 				
 				end = malloc(sizeof(DIR_LIST));
 				end->fname = malloc(strlen(name) + 1);
-				sprintf(end->fname, name);
+				sprintf(end->fname, "%s", name);
 				end->writeable = 0;
 				end->in_file_image = 1;
 
