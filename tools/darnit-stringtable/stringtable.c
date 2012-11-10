@@ -140,7 +140,8 @@ int scanDirectory(const char *directory, FILE *fp) {
 		return -1;
 	}
 
-	chdir(directory);
+	successful=chdir(directory);
+	successful=0;
 
 	do {
 		file = readdir(dir);
