@@ -8,6 +8,10 @@
 #define	DARNIT_RENDER_LOGIC_OP_NOR	4
 #define	DARNIT_RENDER_LOGIC_OP_XOR	5
 
+#define	DARNIT_SCALE_NEAREST		1
+#define	DARNIT_SCALE_LINEAR		2
+
+
 typedef void DARNIT_TILESHEET;
 typedef void DARNIT_TILE;
 typedef void DARNIT_LINE;
@@ -57,6 +61,7 @@ int darnitRenderTilesheetAnimationApply(DARNIT_TILESHEET *tilesheet, const char 
 void darnitRenderTilesheetAnimationAnimate(DARNIT_TILESHEET *tilesheet);
 
 void darnitRenderLogicOp(unsigned int logicop);
+void darnitRenderTilesheetScaleAlgorithm(DARNIT_TILESHEET *tilesheet, unsigned int scaling);
 
 
 

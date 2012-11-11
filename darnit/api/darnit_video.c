@@ -382,3 +382,10 @@ void EXPORT_THIS darnitRenderLogicOp(unsigned int logicop) {
 
 	return;
 }
+
+
+void EXPORT_THIS darnitRenderTilesheetScaleAlgorithm(void *tilesheet, unsigned int scaling) {
+	renderTilesheetScalingSet((TILESHEET *) tilesheet, scaling);
+
+	return;
+}
