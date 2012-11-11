@@ -8,6 +8,9 @@
 #define	LOGIC_OP_NOR	4
 #define	LOGIC_OP_XOR	5
 
+#define	DARNIT_SCALE_NEAREST	1
+#define	DARNIT_SCALE_LINEAR	2
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -172,6 +175,7 @@ void renderTilesheetAnimate(TILESHEET *ts);
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
 void renderSetLogicOp(unsigned int logicop);
+void renderTilesheetScalingSet(TILESHEET *ts, unsigned int scaling);
 
 
 #ifndef HAVE_GLES
