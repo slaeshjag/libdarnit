@@ -598,6 +598,24 @@ void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int 
 }
 
 
+void renderTilesheetScalingSet(TILESHEET *ts, unsigned int scaling) {
+	unsigned int flag;
+
+	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
+
+	if (scaling == DARNIT_SCALE_NEAREST) {
+		flag = GL_NEAREST;
+	} else if (scaling == DARNIT_SCALE_LINEAR) {
+		flag = GL_LINEAR;
+	}
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, flag);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, flag);
+
+	return;
+}
+
+
 void renderFadeLoop() {
 	int timediff;
 	float coords[] = { -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f };
