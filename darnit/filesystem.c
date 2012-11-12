@@ -484,14 +484,13 @@ FILE *fsContainerFileInternalGet(const char *name) {
 
 int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 	DIR_LIST *tmp;
-	int i;
+	int i = 0;
 
 	#ifdef _WIN32
 		WIN32_FIND_DATA ffd;
 		HANDLE hFind = INVALID_HANDLE_VALUE;
 		DWORD dError = 0;
 		char dir[MAX_PATH], *new_path;
-		i = 0;
 
 		if (strlen(path) > MAX_PATH - 3)
 			return 0;
