@@ -23,6 +23,7 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	SDL_SysWMinfo sysinfo;
 	unsigned int mode;
 
+	SDL_WM_SetCaption(wtitle, wtitle);
 	mode = SDL_SWSURFACE;
 	if (fullscreen) mode |= SDL_FULLSCREEN;
 	
@@ -86,7 +87,6 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 
 	d->video.offset_x = d->video.offset_y = 0;
 
-	SDL_WM_SetCaption(wtitle, NULL);
 	videoInitGL(screenw, screenh);
 
 	d->video.tint_r = d->video.tint_g = d->video.tint_b = d->video.tint_a = 1.0f;
