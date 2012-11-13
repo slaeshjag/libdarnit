@@ -1,7 +1,7 @@
 #include "darnit.h"
 
 void *darnitInitPartial(const char *data_dir);
-int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen);
+int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
 static void cleanup(void) {
@@ -67,14 +67,14 @@ void darnitSetPlatform(int partial) {
 }
 
 
-void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
+void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir, const char *icon) {
 	if (darnitInitPartial(data_dir) == NULL)
 		return NULL;
 	#ifdef PANDORA
-	if (darnitInitRest(wtitle, 800, 480, 1) < 0)
+	if (darnitInitRest(wtitle, 800, 480, 1, icon) < 0)
 		return NULL;
 	#else
-	if (darnitInitRest(wtitle, 800, 480, 0) < 0)
+	if (darnitInitRest(wtitle, 800, 480, 0, icon) < 0)
 		return NULL;
 	#endif
 
@@ -82,17 +82,19 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir) {
 }
 
 
-void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir) {
+void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir, const char *icon) {
 	if (darnitInitPartial(data_dir) == NULL)
 		return NULL;
-	if (darnitInitRest(wtitle, win_w, win_h, fullscreen) < 0)
+	if (darnitInitRest(wtitle, win_w, win_h, fullscreen, icon) < 0)
 		return NULL;
 	return d;
 }
 
 
-int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen) {
+int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon) {
 	int t;
+
+	videoSetIcon(icon);
 	renderInit();
 	SDL_ShowCursor(0);
 	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();

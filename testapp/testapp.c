@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	DARNIT_KEYS keys;
 	DARNIT_MAP *map;
 
-	handle = darnitInit("TESTAPP - libDarnit", "testapp");
+	handle = darnitInit("TESTAPP - libDarnit", "testapp", NULL);
 
 	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
 	darnitSoundPlaybackStart(music, 0, 127, 127, 0);
