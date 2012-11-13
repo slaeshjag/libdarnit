@@ -176,6 +176,7 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname);
 
 void renderSetLogicOp(unsigned int logicop);
 void renderTilesheetScalingSet(TILESHEET *ts, unsigned int scaling);
+int videoSetIcon(const char *icon);
 
 
 #ifndef HAVE_GLES

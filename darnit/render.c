@@ -732,3 +732,45 @@ void renderSetLogicOp(unsigned int logicop) {
 int videoInitPartial() {
 	return SDL_Init(SDL_INIT_EVERYTHING);
 }
+
+
+int videoSetIcon(const char *icon) {
+	SDL_Surface *surface = malloc(sizeof(SDL_Surface));
+	surface->format = malloc(sizeof(SDL_PixelFormat));
+	IMGLOAD_DATA img;
+
+	if (!icon)
+		return 0;
+	
+	if (!(img = imgloadLoad(icon)).img_data)
+		return -1;
+	
+	surface->flags = 0;
+	surface->format->palette = NULL;
+	surface->format->BitsPerPixel = 32;
+	surface->format->BytesPerPixel = 4;
+	surface->format->Rloss = 0;
+	surface->format->Gloss = 0;
+	surface->format->Bloss = 0;
+	surface->format->Aloss = 0;
+	surface->format->Rshift = 0;
+	surface->format->Gshift = 8;
+	surface->format->Bshift = 16;
+	surface->format->Ashift = 24;
+	surface->format->colorkey = 0;
+	surface->format->alpha = 255;
+	surface->w = img.w;
+	surface->h = img.h;
+	surface->pitch = img.w << 2;
+	surface->pixels = img.img_data;
+	surface->clip_rect.x = 0;
+	surface->clip_rect.y = 0;
+	surface->clip_rect.w = img.w;
+	surface->clip_rect.h = img.h;
+	surface->refcount = 0;
+
+	SDL_WM_SetIcon(surface, NULL);
+	
+	return 0;
+}
+		

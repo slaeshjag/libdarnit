@@ -27,8 +27,8 @@ typedef struct {
 } DARNIT_VIDEOMODE;
 
 
-void *darnitInit(const char *wtitle, const char *data_dir);
-void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir);
+void *darnitInit(const char *wtitle, const char *data_dir, const char *icon);
+void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir, const char *icon);
 void darnitLoop();
 unsigned int darnitTimeGet();
 int darnitFPSGet();
@@ -42,7 +42,7 @@ void darnitQuit();
 /* When you want to init video, call darnitInitRest() */
 
 void *darnitInitPartial(const char *data_dir);
-int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen);
+int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
 /* You need to call darnitInitPartial before calling this one */
