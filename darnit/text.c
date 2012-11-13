@@ -512,12 +512,18 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 	if (surface->len == surface->index) return 1;
 
+	if (cp == '\n') {
+		surface->cur_xf = surface->orig_xf;
+		surface->cur_yf += surface->yf_skip;
+		surface->pos = 0;
+		return 1;
+	}
+	
 	if ((glyph_e = textGetGlyphEntry(surface->font, glyph)) == NULL)
 		return 1;
 
 	wf = textGetGlyphWidthf(surface->font, glyph);
 	w = textGetGlyphWidth(surface->font, glyph);
-	surface->pos += w;
 	surface->cur_xf += textGetKern(surface, cp);
 
 	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelenf) {
@@ -528,14 +534,6 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		surface->pos += w;
 	x = surface->cur_xf;
 	surface->cur_xf += glyph_e->advf;
-
-	if (cp == '\n') {
-		surface->cur_xf = surface->orig_xf;
-		surface->cur_yf += surface->yf_skip;
-		surface->pos = 0;
-		return 1;
-	}
-
 
 	x += glyph_e->skipf;
 	x2 = x + d->video.swgran * glyph_e->cw;
@@ -567,12 +565,34 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 
 void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str) {
-	int i;
+	int i, next_word, t;
 
+	next_word = 1;
 	for (i = 0; str[i] != 0; ) {
 		if (surface->index >= surface->len)
 			break;
-		i += textSurfaceAppendChar(surface, &str[i]);
+		if (str[i] == ' ' || str[i] == '\n' || str[i] == '\n') {
+			i += textSurfaceAppendChar(surface, &str[i]);
+			next_word = 1;
+			continue;
+		}
+		if (surface->pos == 0 && !next_word) {
+			i += textSurfaceAppendChar(surface, &str[i]);
+			continue;
+		}
+
+		if (textStringWordLength(surface->font, &str[i], &t) + surface->pos <= surface->linelen && next_word) {
+			i += textSurfaceAppendChar(surface, &str[i]);
+			next_word = 0;
+		}
+
+		else if (textStringWordLength(surface->font, &str[i], &t) + surface->pos >= surface->linelen && next_word && surface->pos) {
+			next_word = 0;
+			textSurfaceAppendChar(surface, "\n");
+		} else {
+			i += textSurfaceAppendChar(surface, &str[i]);
+			next_word = 0;
+		}
 	}
 
 	return;

@@ -484,14 +484,13 @@ FILE *fsContainerFileInternalGet(const char *name) {
 
 int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 	DIR_LIST *tmp;
-	int i;
+	int i = 0;
 
 	#ifdef _WIN32
 		WIN32_FIND_DATA ffd;
 		HANDLE hFind = INVALID_HANDLE_VALUE;
 		DWORD dError = 0;
 		char dir[MAX_PATH], *new_path;
-		i = 0;
 
 		if (strlen(path) > MAX_PATH - 3)
 			return 0;
@@ -533,7 +532,7 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 		for (dir_ent = readdir(dir); dir_ent; dir_ent = readdir(dir)) {
 			if (dir_ent->d_name[0] == '.')
 				continue;
-			sprintf(path_trans, "%s/%s", path, tmp->fname);
+			sprintf(path_trans, "%s/%s", path, dir_ent->d_name);
 			stat(path_trans, &stat_b);
 			if (!S_ISDIR(stat_b.st_mode) && !S_ISREG(stat_b.st_mode))
 				continue;
@@ -562,6 +561,7 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 	DIR_LIST *dir, *end;
 	int i;
 	const char *name;
+	char full_path[256];
 
 	/* First; look in filesystem images... */
 	
@@ -593,10 +593,15 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 	
 	
 	/* Now, to look at data and write dirs... */
-	if (type & DARNIT_FS_READABLE)
-		i += fsScanRealDir(d->fs.data_dir, &dir, 0);
-	if (type & DARNIT_FS_WRITEABLE)
-		i += fsScanRealDir(d->fs.write_dir, &dir, 1);
+	if (type & DARNIT_FS_READABLE) {
+		sprintf(full_path, "%s/%s", d->fs.data_dir, path);
+		i += fsScanRealDir(full_path, &dir, 0);
+	}
+
+	if (type & DARNIT_FS_WRITEABLE) {
+		sprintf(full_path, "%s/%s", d->fs.write_dir, path);
+		i += fsScanRealDir(full_path, &dir, 1);
+	}
 
 	if (entries)
 		*entries = i;

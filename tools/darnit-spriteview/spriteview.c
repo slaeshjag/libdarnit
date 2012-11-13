@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	if (darnitInit("libDarnit spriteview", "spriteview") == NULL) {
+	if (darnitInit("libDarnit spriteview", "spriteview", NULL) == NULL) {
 		fprintf(stderr, "libDarnit failed to init\n");
 		return -1;
 	}
