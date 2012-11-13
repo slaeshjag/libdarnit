@@ -747,6 +747,7 @@ int videoSetIcon(const char *icon) {
 
 	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, img.w, img.h, 32, 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
 	surface->pixels = img.img_data;
+	d->icon = surface;
 
 	SDL_WM_SetIcon(surface, NULL);
 	

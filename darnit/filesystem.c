@@ -598,6 +598,10 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 		i += fsScanRealDir(full_path, &dir, 0);
 	}
 
+	if (type & DARNIT_FS_READABLE) {
+		i += fsScanRealDir(path, &dir, 0);
+	}
+	
 	if (type & DARNIT_FS_WRITEABLE) {
 		sprintf(full_path, "%s/%s", d->fs.write_dir, path);
 		i += fsScanRealDir(full_path, &dir, 1);
