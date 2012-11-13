@@ -735,8 +735,7 @@ int videoInitPartial() {
 
 
 int videoSetIcon(const char *icon) {
-	SDL_Surface *surface = malloc(sizeof(SDL_Surface));
-	surface->format = malloc(sizeof(SDL_PixelFormat));
+	SDL_Surface *surface;
 	IMGLOAD_DATA img;
 
 	if (!icon)
