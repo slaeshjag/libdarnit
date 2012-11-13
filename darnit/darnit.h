@@ -127,6 +127,7 @@ typedef struct {
 	TILESHEET_REF_CONT	tsr;
 	DARNIT_PLATFORM		platform;
 	SOCKET_LIST		*connect_list;
+	SDL_Surface		*icon;
 } DARNIT;
 
 
