@@ -585,6 +585,22 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 }
 
 
+void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq) {
+	if (!ts)
+		return;
+	if (w)
+		*w = ts->w;
+	if (h)
+		*h = ts->h;
+	if (wsq)
+		*wsq = ts->wsq;
+	if (hsq)
+		*hsq = ts->hsq;
+
+	return;
+}
+
+
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h) {
 	unsigned int format;
 
