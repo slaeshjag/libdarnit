@@ -1,0 +1,5 @@
+Building for targets without a pre-configured enviroment
+
+GCW Zero:
+	First, run . targets/gcwzero
+	To make libdarnit, run make gcwzero

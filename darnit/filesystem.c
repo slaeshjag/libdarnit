@@ -7,7 +7,7 @@ int fsInit(const char *dir_name) {
 	if (d->platform.platform & DARNIT_PLATFORM_PANDORA) {
 		d->fs.data_dir = "./";
 		d->fs.write_dir = "./";
-	} else if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+	} else if (d->platform.platform & (DARNIT_PLATFORM_LINUX | DARNIT_PLATFORM_GCWZERO)) {
 		#ifndef _WIN32
 		data_dir = getenv("HOME");
 

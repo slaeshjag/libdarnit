@@ -44,10 +44,14 @@ void darnitSetPlatform(int partial) {
 			d->platform.screen_w = 800;
 			d->platform.screen_h = 480;
 			d->platform.fullscreen = 1;
+		#elif defined GCW_ZERO
+			d->platform.screen_w = 320;
+			d->platform.screen_h = 240;
+			d->platform.fullscreen = 1;
 		#else
 			d->platform.screen_w = 800;
 			d->platform.screen_h = 480;
-			d->platform.fullscreen = 1;
+			d->platform.fullscreen = 0;
 		#endif
 	}
 
@@ -55,6 +59,8 @@ void darnitSetPlatform(int partial) {
 		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_PANDORA;
 	#elif defined _WIN32
 		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_WIN32;
+	#elif defined GCW_ZERO
+		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_GCWZERO;
 	#else
 		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_LINUX;
 	#endif
@@ -72,9 +78,13 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir, const cha
 		return NULL;
 	#ifdef PANDORA
 	if (darnitInitRest(wtitle, 800, 480, 1, icon) < 0)
-		return NULL;
+	#elif defined GCW_ZERO
+	if (darnitInitRest(wtitle, 320, 240, 1, icon) < 0)
 	#else
 	if (darnitInitRest(wtitle, 800, 480, 0, icon) < 0)
+
+		return NULL;
+	
 		return NULL;
 	#endif
 
