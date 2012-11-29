@@ -652,3 +652,19 @@ void textSurfaceSetPos(TEXT_SURFACE *surface, int x_pos) {
 	return;
 }
 
+
+void EXPORT_THIS textGlyphCoords(TEXT_FONT *font, char *ch, int *x, int *y, int *w, int *h, TILESHEET **ts) {
+	struct TEXT_FONT_GLYPH *glyph;
+	
+	if (!(glyph = textGetGlyphEntry(font, utf8GetChar(ch))))
+		return;
+	*x = glyph->u1 / glyph->tex_cache->sheet_pwf + 0.4f;
+	*w = (glyph->u2 - glyph->u2) / glyph->tex_cache->sheet_pwf + 0.4f;
+	*y = glyph->v1 / glyph->tex_cache->sheet_phf + 0.4f;
+	*x = (glyph->v2 - glyph->v1) / glyph->tex_cache->sheet_phf + 0.4f;
+	*ts = glyph->tex_cache->ts;
+
+	return;
+}
+
+
