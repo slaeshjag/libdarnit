@@ -2,6 +2,8 @@
 
 #ifndef HAVE_GLES
 	#include "render/render_ogl.c"
+#elif defined GCW_ZERO
+	#include "render/render_gcwzero.c"
 #else
 	#include "render/render_gles.c"	
 #endif

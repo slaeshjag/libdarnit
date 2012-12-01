@@ -1,0 +1,135 @@
+=====================================================
+== LDMz (libDarnit Mapfile compressed) internals   ==
+=====================================================
+
+All ints, compressed or not, are in correct endianess (big endian.)
+This includes all header information and tiledata. Strings are not.
+Compressed data is stored untouched, but the data compressed is big endian if
+	the data isn't strings.
+
+The format supports a bunch of features that no exporter yet does.
+
+I highly recommend that you make internal versions of these structs, with
+the data parsed and adjusted for use by your code.
+
+All data is written in the order as they appear in this document.
+
+"Compressed into one block" is just my way of saying that the data was
+compressed in one pass, and you must decompress all of it with one operation,
+you can't access induvidual elements inside.
+
+Compression is done with zlib. You need Zlib or compatible (stb_image for 
+example) to decompress the data.
+
+==============================
+== Main header ===============
+==============================
+
+Following entries are present in the main header, all entries are unsigned ints:
+
+Magic number		         (value: 	0xFF00E00E )
+Version			         (current:	0x55555555 )
+Stringtable size                 (Size in bytes)
+Stringtable compressed size      (Size of the compressed data in the file.)
+Stringtable refereces size       (size in bytes.)
+Stringtable ref. compressed size (Size of the compressed data in the file.)
+Layers                           (Number of layers in the file)
+Layer headers size compressed    (Compressed size in bytes.)
+Objects                          (Number of objects on the map)
+Object data compressed           (Size of the compressed object data in bytes)
+Stringtable references           (Number of stringtable entries)
+Main ref index                   (First stringtable entry for map properties)
+
+
+==============================
+== Stringtable data ==========
+==============================
+
+All strings are compressed together into one block.
+This is just a whole bunch of NULL-terminated strings. This data is used by
+the stringtable references (entres,) which points out which strings are which,
+and what they belong to.
+
+
+==============================
+== Stringtable references ====
+==============================
+
+A string table reference has the following entries, all of which are ints.
+All references are compressed together into one block.
+
+Key index                        (Bytes into the stringtable where the key name
+					starts)
+Value index			 (Bytes into the stringtable where the value
+					starts)
+
+If a value is -1, the pointer shall be set to NULL.
+NULL-pointers are used to figure out when to stop reading entries for an object
+etc.
+
+As indicated, all you need to do is allocate an array of structs with
+char-pointers, and point these to the index into the stringtable data, and
+they'll contain the strings that they should.
+
+All objects and map layers have ha property "NAME".
+If you set a type in Tiled, this type has the property "TYPE".
+
+
+==============================
+== Objects ===================
+==============================
+
+All objects are compressed together into one block.
+Objects are represented with the following struct. All entries are unsigned ints
+
+X				X coordinate in tiles
+Y				Y coordinate in tiles
+Layer				The layer that the object is placed on.
+Stringtable entry		Index of the stringtable entry that contains
+					additional properties.
+
+
+==============================
+== Map layers ================
+==============================
+
+NOTE FOR USERS OF THE TILED LDMZ EXPORTER:
+	To add collision data etc, create a layer called "collision" right above
+	the layer you want to apply it to. The tile ID is shifted up 16 bits and
+	then OR'ed in with the layer below. YOu will not find any layers called
+	"collision" when reading the file.
+	Also: You must also add the path to the tileset into the main map
+	properties. The property must be called "tileset". You can override this
+	per layer if you want to, but a default must be set for the entire map.
+
+The layer headers are compressed together into one block. 
+Each layer has a struct with the following members. All entries are unsigned
+ints.
+
+Layer width			Width in tiles of the layer
+Layer height			Height of the layer in tiles
+Layer offset X in pixels	Offset to add onto the "camera" when drawing
+					this layer. Tiled exp. sets this to 0.
+Layer offset Y in pixels	-||-
+Layer size compressed		Size of the compressed layer data in bytes
+Stringtable entry index		Index in the string table entry for layer prop.
+Tile width			Width in pixels of a tile
+Tile Height			Height in pixels of a tile
+
+==============================
+== Map layer data ============
+==============================
+
+Layer data is compressed into one block per layer.
+Each layer is just an array of unsigned ints. No distinction is made bewteen
+tile 0 and no tile. For this reason, tile 0 should never be rendered.
+
+Only the lower 16 bits of the int is the tile ID. The upper bits is the 
+collision data etc. Remember to AND out collision data before looking up the
+tile to render.
+
+The number of ints per layer is layer_w * layer_h.
+Each block of layer data is stored in the same order as they are in the layer
+headers.
+
+This should be enough information to write a loader for this format.
