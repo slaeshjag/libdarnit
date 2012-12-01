@@ -182,6 +182,8 @@ int videoSetIcon(const char *icon);
 
 #ifndef HAVE_GLES
 #include "render/render_ogl.h"
+#elif defined GCW_ZERO
+#include "render/render_gcwzero.h"
 #else
 #include "render/render_gles.h"
 #endif
