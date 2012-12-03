@@ -155,6 +155,7 @@ void EXPORT_THIS darnitLoop() {
 	d->fps.frames_counting++;
 	
 	renderFadeLoop(d);
+	renderTilesheetAnimateAll();
 	videoLoop(d);
 	inputPoll(d);
 

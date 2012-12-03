@@ -89,6 +89,20 @@ TILESHEET *renderGetTilesheetFromRef(const char *fname) {
 }
 
 
+void renderTilesheetAnimateAll() {
+	int i;
+
+	for (i = 0; i < d->tsr.cnt; i++) {
+		if (!d->tsr.tsr[i].fast_cmp)
+			continue;
+		if (d->tsr.tsr[i].ref->animation.tiles > 0)
+			renderTilesheetAnimate(d->tsr.tsr[i].ref);
+	}
+
+	return;
+}
+
+
 void renderTilesheetAnimate(TILESHEET *ts) {
 	int i, j, change;
 	TS_FRAME *frame;
@@ -123,7 +137,8 @@ void renderTilesheetAnimate(TILESHEET *ts) {
 
 
 int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
-	unsigned int i, j, tiles, frames, pos;
+	unsigned int i, j, k, tiles, frames, pos, a, b, cc, d, e;
+	unsigned int *newdata;
 	char c, buf[512];
 	FILESYSTEM_FILE *fp;
 	IMGLOAD_DATA img;
@@ -148,9 +163,30 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 	}
 
 	if (img.w != ts->wsq) {
-		fsFileClose(fp);
+		if (!(newdata = malloc(sizeof(unsigned int) * ts->wsq * ts->hsq * (img.w / ts->wsq * img.h / ts->hsq)))) {
+			fsFileClose(fp);
+			free(img.img_data);
+			return -1;
+		}
+
+		a = img.w / ts->wsq;
+		b = img.h / ts->hsq;
+		cc = ts->wsq * ts->hsq;
+		for (i = 0; i < a; i++) {
+			for (j = 0; j < b; j++)
+				for (k = 0; k < cc; k++) {
+					/* Skip all the lines before us */
+					d = (a * j * cc) + (k / ts->wsq * img.w);
+					/* Skip all the cols before us */
+					e = i * ts->wsq + k % ts->wsq;
+					newdata[(j*a + i) * cc + k] = img.img_data[d + e];
+				}
+		}
 		free(img.img_data);
-		return -1;
+		img.img_data = newdata;
+		img.w = ts->wsq;
+		img.h = ts->hsq * a * b;
+
 	}
 
 	ts->animation.animation_tiles = img.h / ts->hsq;
@@ -228,6 +264,8 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 				break;
 		}
 	}
+
+	ts->animation.tiles = i;
 
 	fsFileClose(fp);
 
