@@ -6,7 +6,7 @@ RM = rm -f
 
 LIB = ../bin/libdarnit.so
 CFLAGS += -Wall -I../deps -fPIC -shared -O0 -g -fvisibility=hidden -DDATA_PATH=\"/usr/share/games\"
-LDFLAGS += -Wl,-soname,libdarnit.so -lSDL -lmodplug -ldl
+LDFLAGS += -Wl,-soname,libdarnit.so -lSDL -lmodplug -ldl -lbz2
 DESKTOPFLAGS = -lGL
 PANDORAFLAGS = -lGLES_CM -lEGL -lX11
 GCWZEROFLAGS = -lGLES_CM -lEGL
