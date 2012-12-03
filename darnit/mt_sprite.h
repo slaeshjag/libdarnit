@@ -20,6 +20,7 @@ typedef struct {
 	int			time_left;
 	int			time_last;
 	int			animate;
+	unsigned int		repeat;
 } MTSPRITE_ENTRY;
 
 
@@ -31,6 +32,7 @@ void mtSpritePauseAnimation(MTSPRITE_ENTRY *spr);
 void mtSpriteSetAsFrame(MTSPRITE_ENTRY *spr, int time);
 void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, int ry);
 void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr);
+void mtSpriteSetRepeat(MTSPRITE_ENTRY *spr, int repeat);
 void *mtSpriteDelete(MTSPRITE_ENTRY *spr);
 
 
