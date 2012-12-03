@@ -31,6 +31,7 @@ typedef struct {
 	TILESHEET		*ts;
 	TILE_CACHE		cache;
 	unsigned int		y;
+	unsigned int		repeat;
 } SPRITE_ENTRY;
 
 
@@ -50,6 +51,7 @@ void spriteDisableAnimation(SPRITE_ENTRY *sprite);
 void spriteAnimate(SPRITE_ENTRY *sprite);
 void spriteSetFrame(SPRITE_ENTRY *sprite, int frame);
 void spriteActivate(SPRITE_ENTRY *sprite, int dir);
+void spriteSetRepeat(SPRITE_ENTRY *sprite, int repeat);
 void spriteDraw(SPRITE_ENTRY *sprite);
 void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir);
 void *spriteDelete(SPRITE_ENTRY *sprite);
