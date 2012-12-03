@@ -179,10 +179,17 @@ LDMZ_MAP *mapLoad(const char *fname) {
 				if ((map->layer[i].ts = renderTilesheetLoad(mapPropGet(map, "tileset"),
 				    map->layer[i].tile_w, map->layer[i].tile_h, PFORMAT_RGB5A1)) == NULL)
 					goto error;	/* Down at the bottom of the function */
-		} else
+
+			if (mapPropGet(map, "animation"))
+				renderTilesheetAnimationApply(map->layer[i].ts, mapPropGet(map, "animation"));
+		} else {
 			if ((map->layer[i].ts = renderTilesheetLoad(mapPropGet(map, "tileset"),
 			    map->layer[i].tile_w, map->layer[i].tile_h, PFORMAT_RGB5A1)) == NULL)
 				goto error;		/* Down at the bottom of the function */
+
+			if (mapLayerPropGet(map, i, "animation"))
+				renderTilesheetAnimationApply(map->layer[i].ts, mapLayerPropGet(map, i, "animation"));
+		}
 
 		if ((map->layer[i].tilemap = tilemapNew(TILEMAP_DEFAULT_INV_DIV, map->layer[i].ts, 
 		    TILEMAP_DEFAULT_INV_DIV, map_l[i].layer_w, map_l[i].layer_h)) == NULL)
