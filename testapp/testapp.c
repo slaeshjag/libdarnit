@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
 
 	handle = darnitInit("TESTAPP - libDarnit", "testapp", NULL);
 
-	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
+	//music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
+	music = darnitSoundLoadStreamed("test.ogg", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
 	darnitSoundPlaybackStart(music, 0, 127, 127, 0);
 
 	test_text = malloc(64);

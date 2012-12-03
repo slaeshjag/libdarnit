@@ -7,6 +7,8 @@
 #define			DARNIT_AUDIO_PRELOAD		0
 #define			DARNIT_AUDIO_STREAM		1
 
+#define			DARNIT_AUDIO_NOREPEAT		-1
+
 typedef void DARNIT_SOUND;
 
 DARNIT_SOUND *darnitSoundLoadTracked(const char *fname, int preload, int makemono);

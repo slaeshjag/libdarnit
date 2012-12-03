@@ -213,6 +213,7 @@ extern stb_vorbis * stb_vorbis_open_memory(unsigned char *data, int len,
 #ifndef STB_VORBIS_NO_STDIO
 extern stb_vorbis * stb_vorbis_open_filename(char *filename,
                                   int *error, stb_vorbis_alloc *alloc_buffer);
+extern stb_vorbis * stb_vorbis_open_filename_darnit(char *filename, int *error, stb_vorbis_alloc *alloc_buffer);
 // create an ogg vorbis decoder from a filename via fopen(). on failure,
 // returns NULL and sets *error (possibly to VORBIS_file_open_failure).
 
