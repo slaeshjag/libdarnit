@@ -1,6 +1,7 @@
 #include <darnit/darnit.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(int argc, char **argv) {
 	int i, sfx, j, js0_x, js0_y, js1_x, js1_y;
@@ -15,8 +16,30 @@ int main(int argc, char **argv) {
 
 	handle = darnitInit("TESTAPP - libDarnit", "testapp", NULL);
 
-	//music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
-	music = darnitSoundLoadStreamed("test.ogg", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
+
+	/* COmpressed writes test */
+	DARNIT_FILE *f;
+	char bzval[64];
+
+	f = darnitFileOpen("test.bz2", "wb+");
+	darnitFileCompressedWrite(f, "Fiskpinnar", strlen("Fiskpinnar") + 1);
+	darnitFileWrite("Fiskpinnar", strlen("Fiskpinnar") + 1, f);
+	darnitFileClose(f);
+	f = darnitFileOpen("test.bz2", "rb");
+	darnitFileCompressedRead(f, bzval, strlen("Fiskpinnar") + 1);
+	if (strcmp(bzval, "Fiskpinnar"))
+		fprintf(stderr, "COmpression test failed\n");
+	else {
+		darnitFileRead(bzval, strlen("Fiskpinnar") + 1, f);
+		if (strcmp(bzval, "Fiskpinnar"))
+			fprintf(stderr, "Post-compression test failed\n");
+		else
+			fprintf(stderr, "Compression test passed\n");
+	}
+
+
+
+	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
 	darnitSoundPlaybackStart(music, 0, 127, 127, 0);
 
 	test_text = malloc(64);

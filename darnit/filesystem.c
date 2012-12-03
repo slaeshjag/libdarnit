@@ -636,7 +636,7 @@ int fsWriteCompressed(FILESYSTEM_FILE *f, void *data, int len) {
 	if (!(bzf = BZ2_bzWriteOpen(&err, f->fp, 9, 0, 0)))
 		return -1;
 	BZ2_bzWrite(&err, bzf, data, len);
-	BZ2_bzWriteClose(&err, f->fp, 0, (unsigned int *) &err, (unsigned int *) &err);
+	BZ2_bzWriteClose(&err, bzf, 0, NULL, NULL);
 
 	f->pos = ftell(f->fp);
 

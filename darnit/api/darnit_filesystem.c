@@ -98,12 +98,12 @@ int EXPORT_THIS darnitFileEOF(FILESYSTEM_FILE *file) {
 
 
 int EXPORT_THIS darnitFileCompressedRead(FILESYSTEM_FILE *file, void *data, int len) {
-	return fsWriteCompressed(file, data, len);
+	return fsReadCompressed(file, data, len);
 }
 
 
 int EXPORT_THIS darnitFileCompressedWrite(FILESYSTEM_FILE *file, void *data, int len) {
-	return fsReadCompressed(file, data, len);
+	return fsWriteCompressed(file, data, len);
 }
 
 
