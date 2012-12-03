@@ -179,6 +179,8 @@ void renderSetLogicOp(unsigned int logicop);
 void renderTilesheetScalingSet(TILESHEET *ts, unsigned int scaling);
 int videoSetIcon(const char *icon);
 
+void renderTilesheetAnimateAll();
+
 
 #ifndef HAVE_GLES
 #include "render/render_ogl.h"
