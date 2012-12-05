@@ -1,7 +1,7 @@
 #include "darnit.h"
 
 
-int EXPORT_THIS darnitUtf8CharLenghtGet(const char *str) {
+int EXPORT_THIS darnitUtf8CharLengthGet(const char *str) {
 	return utf8GetValidatedCharLength(str);
 }
 

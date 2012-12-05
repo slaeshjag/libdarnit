@@ -7,7 +7,7 @@ int fsInit(const char *dir_name) {
 	if (d->platform.platform & DARNIT_PLATFORM_PANDORA) {
 		d->fs.data_dir = "./";
 		d->fs.write_dir = "./";
-	} else if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+	} else if (d->platform.platform & (DARNIT_PLATFORM_LINUX | DARNIT_PLATFORM_GCWZERO)) {
 		#ifndef _WIN32
 		data_dir = getenv("HOME");
 
@@ -624,3 +624,46 @@ DIR_LIST *fsDirectoryListFree(DIR_LIST *list) {
 
 	return NULL;
 }
+
+
+int fsWriteCompressed(FILESYSTEM_FILE *f, void *data, int len) {
+	BZFILE *bzf;
+	int err;
+
+	if (!f)
+		return -1;
+	
+	if (!(bzf = BZ2_bzWriteOpen(&err, f->fp, 9, 0, 0)))
+		return -1;
+	BZ2_bzWrite(&err, bzf, data, len);
+	BZ2_bzWriteClose(&err, bzf, 0, NULL, NULL);
+
+	f->pos = ftell(f->fp);
+
+	return 0;
+}
+
+
+int fsReadCompressed(FILESYSTEM_FILE *f, void *data, int len) {
+	BZFILE *bzf;
+	int err, back;
+	void *buf;
+
+	if (!f)
+		return -1;
+	if (!(bzf = BZ2_bzReadOpen(&err, f->fp, 0, 0, NULL, 0)))
+		return -1;
+	BZ2_bzRead(&err, bzf, data, len);
+	if (err != BZ_STREAM_END) {
+		BZ2_bzReadClose(&err, bzf);
+		return -1;
+	}
+
+	BZ2_bzReadGetUnused(&err, bzf, &buf, &back);
+	fseek(f->fp, back * -1, SEEK_CUR);
+	f->pos = ftell(f->fp) - f->offset;
+	BZ2_bzReadClose(&err, bzf);
+	
+	return 0;
+}
+
