@@ -29,7 +29,11 @@ typedef struct {
 	unsigned int			stream_data_size;
 	unsigned int			usage;
 	unsigned int			channels;
+	int				loop;
 	int				close_when_done;
+
+	/* Only used by stb_vorbis */
+	off_t				pos_loop;
 } AUDIO_HANDLE;
 
 

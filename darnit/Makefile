@@ -6,15 +6,16 @@ RM = rm -f
 
 LIB = ../bin/libdarnit.so
 CFLAGS += -Wall -I../deps -fPIC -shared -O0 -g -fvisibility=hidden -DDATA_PATH=\"/usr/share/games\"
-LDFLAGS += -Wl,-soname,libdarnit.so -lSDL -lmodplug -ldl
+LDFLAGS += -Wl,-soname,libdarnit.so -lSDL -lmodplug -ldl -lbz2
 DESKTOPFLAGS = -lGL
 PANDORAFLAGS = -lGLES_CM -lEGL -lX11
+GCWZEROFLAGS = -lGLES_CM -lEGL
 
 DEPFILES = ../deps/deps.a
 APIFILES = api/*.o
 SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
-.PHONY: all pandora clean
+.PHONY: all pandora gcwzero clean
 
 all: $(OBJFILES)
 	@echo " [ CD ] darnit/api/"
@@ -33,6 +34,16 @@ pandora: $(OBJFILES)
 	@$(STRIP) $(LIB)
 	@echo "Done."
 	@echo 
+
+gcwzero: $(OBJFILES)
+	@echo " [ CD ] darnit/api/"
+	@make -C api/
+	@echo " [ LD ] $(LIB)"
+	@$(CC) $(CFLAGS) $(SRCFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS) $(GCWZEROFLAGS)
+	@echo " [STRIP] $(LIB)"
+	@$(STRIP) $(LIB)
+	@echo "Done."
+	@echo
 
 clean:
 	@echo

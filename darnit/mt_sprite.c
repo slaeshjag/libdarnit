@@ -190,6 +190,7 @@ void *mtSpriteLoad(const char *fname) {
 
 	spr->frame[frames-1].tiles = loctiles;
 	spr->time_left = spr->frame->time;
+	spr->repeat = 1;
 
 	fsFileClose(fp);
 
@@ -213,7 +214,7 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 	while (spr->time_left <= 0) {
 		spr->cur_frame++;
 		if (spr->cur_frame >= spr->frames)
-			spr->cur_frame = 0;
+			spr->cur_frame = (spr->repeat) ? 0 : spr->cur_frame - 1;
 		spr->time_left += spr->frame[spr->cur_frame].time;
 	}
 
@@ -259,6 +260,15 @@ void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr) {
 	spr->animate = 0;
 	spr->cur_frame = 0;
 	spr->time_left = spr->frame[spr->cur_frame].time;
+	
+	return;
+}
+
+
+void mtSpriteSetRepeat(MTSPRITE_ENTRY *spr, int repeat) {
+	if (!spr)
+		return;
+	spr->repeat = (repeat) ? 1 : 0;
 	
 	return;
 }

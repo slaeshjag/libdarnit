@@ -65,6 +65,13 @@ void EXPORT_THIS darnitSpriteAnimationDisable(void *sprite) {
 }
 
 
+void EXPORT_THIS darnitSpriteAnimationRepeatSet(void *sprite, int repeat) {
+	spriteSetRepeat(sprite, repeat);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitSpriteDraw(void *sprite) {
 	spriteDraw(sprite);
 
