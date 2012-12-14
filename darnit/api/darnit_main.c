@@ -82,11 +82,8 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir, const cha
 	if (darnitInitRest(wtitle, 320, 240, 1, icon) < 0)
 	#else
 	if (darnitInitRest(wtitle, 800, 480, 0, icon) < 0)
-
-		return NULL;
-	
-		return NULL;
 	#endif
+		return NULL;
 
 	return d;
 }
