@@ -4,7 +4,7 @@ PREFIX = /usr/local
 MAKEFLAGS += --no-print-directory
 MKDIR = mkdir -p
 RM = rm -Rf
-.PHONY: all pandora install clean
+.PHONY: all pandora gcwzero install clean
 
 all:
 	@echo " [INIT] bin/"
@@ -25,6 +25,18 @@ pandora:
 	+@make -C deps/
 	@echo " [ CD ] darnit/"
 	+@make -C darnit/ pandora
+	@echo " [ CD ] tools/"
+	+@make -C tools/
+	@echo "Build complete."
+	@echo
+
+gcwzero:
+	@echo " [INIT]"
+	@$(MKDIR) bin/
+	@echo " [ CD ] deps/"
+	+@make -C deps/
+	@echo " [ CD ] darnit/"
+	+@make -C darnit/ gcwzero
 	@echo " [ CD ] tools/"
 	+@make -C tools/
 	@echo "Build complete."

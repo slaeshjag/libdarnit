@@ -39,6 +39,15 @@ void inputKeymapReset() {
 	d->input.map.select = SDLK_LCTRL;
 	d->input.map.l = SDLK_RSHIFT;
 	d->input.map.r = SDLK_RCTRL;
+	#elif defined(GCW_ZERO)
+	d->input.map_x = SDLK_LSHIFT;
+	d->input.map_y = SDLK_SPACE;
+	d->input.map_a = SDLK_LCTRL;
+	d->input.map_b = SDLK_LALT;
+	d->input.map_start = SDLK_ENTER;
+	d->input.map_select = SDLK_ESCAPE;
+	d->input.map_l = SDLK_TAB;
+	d->input.map_r = SDLK_BACKSPACE;
 	#else
 	d->input.map.x = SDLK_s;
 	d->input.map.y = SDLK_w;
@@ -57,19 +66,42 @@ void inputKeymapReset() {
 
 
 int inputInitJoystick() {
-	int i;
+	int i, any;
+	const char *js0;
+
+	any = 0;
+
+	if (d->platform.platform & DARNIT_PLATFORM_PANDORA)
+		js0 = "nub0";
+	else if (d->platform.platform & DARNIT_PLATFORM_GCWZERO)
+		js0 = "analog joystick";
+	else
+		any = 1;
 
 	d->input.js.nub0 = d->input.js.nub1 = NULL;
 	d->input.js.nub0i = d->input.js.nub1i = -1;
 	d->input.js.nub0_x = d->input.js.nub0_y = d->input.js.nub1_x = d->input.js.nub1_y = 0;
 
+	
 	for (i = 0; i < SDL_NumJoysticks(); i++) {
-		if (strcmp("nub0", SDL_JoystickName(i)) == 0) {
-			d->input.js.nub0 = SDL_JoystickOpen(i);
-			d->input.js.nub0i = i;
-		} else if (strcmp("nub1", SDL_JoystickName(i)) == 0) {
-			d->input.js.nub1 = SDL_JoystickOpen(i);
-			d->input.js.nub1i = i;
+		if (!any) {
+			if (strcmp(js0, SDL_JoystickName(i)) == 0) {
+				d->input.js.nub0 = SDL_JoystickOpen(i);
+				d->input.js.nub0i = i;
+			} else if (strcmp("nub1", SDL_JoystickName(i)) == 0) {
+				d->input.js.nub1 = SDL_JoystickOpen(i);
+				d->input.js.nub1i = i;
+			}
+		} else {
+			if (any == 1) {
+				d->input.js.nub0 = SDL_JoystickOpen(i);
+				d->input.js.nub0i = i;
+				any++;
+			} else if (any == 2) {
+				d->input.js.nub1 = SDL_JoystickOpen(i);
+				d->input.js.nub1i = i;
+				any++;
+			}
 		}
 	}
 

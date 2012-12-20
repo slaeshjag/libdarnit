@@ -4,9 +4,10 @@
 const char *mapPropSearch(LDMZ_REF *ref, const char *key) {
 	int i;
 
-	for (i = 0; ref[i].key != NULL; i++)
+	for (i = 0; ref[i].key != NULL; i++) 
 		if (strcmp(ref[i].key, key) == 0)
 			return ref[i].value;
+
 	return "NO SUCH KEY";
 }
 
@@ -172,17 +173,24 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		if ((tmp = realloc(buff, map_l[i].layer_zlen)) == NULL) 
 			goto error;		/* Down at the bottom of the function */
 		buff = tmp;
-		if (mapLayerPropGet(map, i, "tileset") == NULL) {
-			if (mapPropGet(map, "tileset") == NULL)
+		if (strcmp(mapLayerPropGet(map, i, "tileset"), "NO SUCH KEY") == 0) {
+			if (strcmp(mapPropGet(map, "tileset"), "NO SUCH KEY") == 0)
 				goto error;	/* Down at the bottom of the function */
 			else
 				if ((map->layer[i].ts = renderTilesheetLoad(mapPropGet(map, "tileset"),
 				    map->layer[i].tile_w, map->layer[i].tile_h, PFORMAT_RGB5A1)) == NULL)
 					goto error;	/* Down at the bottom of the function */
-		} else
+
+			if (strcmp(mapPropGet(map, "animation"), "NO SUCH KEY"))
+				renderTilesheetAnimationApply(map->layer[i].ts, mapPropGet(map, "animation"));
+		} else {
 			if ((map->layer[i].ts = renderTilesheetLoad(mapPropGet(map, "tileset"),
 			    map->layer[i].tile_w, map->layer[i].tile_h, PFORMAT_RGB5A1)) == NULL)
 				goto error;		/* Down at the bottom of the function */
+
+			if (strcmp(mapLayerPropGet(map, i, "animation"), "NO SUCH KEY"))
+				renderTilesheetAnimationApply(map->layer[i].ts, mapLayerPropGet(map, i, "animation"));
+		}
 
 		if ((map->layer[i].tilemap = tilemapNew(TILEMAP_DEFAULT_INV_DIV, map->layer[i].ts, 
 		    TILEMAP_DEFAULT_INV_DIV, map_l[i].layer_w, map_l[i].layer_h)) == NULL)

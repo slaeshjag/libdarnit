@@ -103,7 +103,17 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 
 	sprite->time = SDL_GetTicks();
 	sprite->dir = dir;
+	sprite->repeat = 1;
 	renderCalcTileCache(&sprite->cache, sprite->ts, sprite->spr[dir].tile[sprite->frame].tile);
+
+	return;
+}
+
+
+void spriteSetRepeat(SPRITE_ENTRY *sprite, int repeat) {
+	if (!sprite)
+		return;
+	sprite->repeat = (repeat) ? 0 : 1;
 
 	return;
 }
@@ -206,7 +216,7 @@ void spriteAnimate(SPRITE_ENTRY *sprite) {
 	while (sprite->tleft < 0) {
 		sprite->frame++;
 		if (sprite->frame >= sprite->spr[dir].tiles)
-			sprite->frame = 0;
+			sprite->frame = (sprite->repeat) ? 0 : sprite->frame - 1;
 		sprite->tleft += sprite->spr[dir].tile[sprite->frame].time;
 	}
 	

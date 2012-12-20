@@ -11,6 +11,13 @@ void EXPORT_THIS *darnitRenderTilesheetLoad(const char *fname, unsigned int wsq,
 }
 
 
+void EXPORT_THIS darnitRenderTilesheetGeometricsGet(void *tilesheet, int *w, int *h, int *tile_w, int *tile_h) {
+	renderTilesheetGeometrics(tilesheet, w, h, tile_w, tile_h);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitRenderTilesheetUpdate(void *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data) {
 	renderUpdateTilesheet(tilesheet, sheet_x, sheet_y, data, change_w, change_h);
 
