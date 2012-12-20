@@ -37,6 +37,10 @@ size_t darnitFileWrite(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t darnitFileGets(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t darnitFileLineGet(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t darnitFileWhitespaceSkip(DARNIT_FILE *file);
+
+int darnitFileCompressedRead(DARNIT_FILE *file, void *data, int len);
+int darnitFileCompressedWrite(DARNIT_FILE *file, void *data, int len);
+
 off_t darnitFileTell(DARNIT_FILE *file);
 size_t darnitFileSeek(DARNIT_FILE *file, off_t offset, int mode);
 int darnitFileEOF(DARNIT_FILE *file);

@@ -10,6 +10,8 @@
 #define	DARNIT_FS_READABLE	1
 #define	DARNIT_FS_WRITEABLE	2
 
+#include <bzlib.h>
+
 #ifndef _WIN32
 	#include	<sys/stat.h>
 	#include	<sys/types.h>
@@ -91,6 +93,10 @@ size_t fsFileWrite(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
 size_t fsFileGets(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
 size_t fsFileGetLine(char *buffer, size_t bytes, FILESYSTEM_FILE *file);
 void fsFileSkipWhitespace(FILESYSTEM_FILE *file);
+
+int fsWriteCompressed(FILESYSTEM_FILE *f, void *data, int len);
+int fsReadCompressed(FILESYSTEM_FILE *f, void *data, int len);
+
 off_t fsFileTell(FILESYSTEM_FILE *file);
 int fsFileEOF(FILESYSTEM_FILE *file);
 int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode);

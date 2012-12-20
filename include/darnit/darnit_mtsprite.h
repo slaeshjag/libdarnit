@@ -10,6 +10,7 @@ void darnitMTSpriteAnimationPause(DARNIT_MTSPRITE *mtsprite);
 void darnitMTSpriteTileAdd(DARNIT_MTSPRITE *sprite, int x, int y, int w, int h, int rx, int ry);
 void darnitMTSpriteFrameSet(DARNIT_MTSPRITE *sprite, int time);
 void darnitMTSpriteAnimationDisable(DARNIT_MTSPRITE *mtsprite);
+void darnitMTSpriteAnimationRepeatSet(DARNIT_MTSPRITE *mtsprite, int repeat);
 void darnitMTSpriteDraw(DARNIT_MTSPRITE *mtsprite);
 void *darnitMTSpriteDelete(DARNIT_MTSPRITE *mtsprite);
 

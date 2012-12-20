@@ -70,4 +70,3 @@ void *tilemapFree(TILEMAP_ENTRY *tm) {
 
 	return NULL;
 }
-

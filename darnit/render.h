@@ -163,6 +163,7 @@ void renderLineCache(LINE_CACHE *cache, int lines, int line_w);
 void renderRectCache(RECT_CACHE *cache, int rects);
 void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2);
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
+void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq);
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
 void renderFadeLoop();
@@ -178,9 +179,13 @@ void renderSetLogicOp(unsigned int logicop);
 void renderTilesheetScalingSet(TILESHEET *ts, unsigned int scaling);
 int videoSetIcon(const char *icon);
 
+void renderTilesheetAnimateAll();
+
 
 #ifndef HAVE_GLES
 #include "render/render_ogl.h"
+#elif defined GCW_ZERO
+#include "render/render_gcwzero.h"
 #else
 #include "render/render_gles.h"
 #endif

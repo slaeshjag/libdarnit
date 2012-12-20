@@ -152,6 +152,7 @@ void *audioStopStreamed(AUDIO_HANDLE *pb) {
 
 AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 	AUDIO_HANDLE *pb;
+	FILESYSTEM_FILE *f;
 	int error;
 
 	if (ah->data != NULL) {
@@ -159,10 +160,16 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 		return ah;
 	}
 
-	if ((pb = malloc(sizeof(AUDIO_HANDLE))) == NULL)
+	if ((f = fsFileOpen(ah->fname, "rb")) == NULL)
 		return NULL;
 
-	pb->codec_handle = stb_vorbis_open_filename(ah->fname, &error, NULL);
+	if ((pb = malloc(sizeof(AUDIO_HANDLE))) == NULL) {
+		fsFileClose(f);
+		return NULL;
+	}
+
+	/* Not pretty, but it should work */
+	pb->codec_handle = stb_vorbis_open_file_section(f->fp, 1, &error, NULL, f->size);
 
 	pb->data = NULL;
 	pb->fname = NULL;
@@ -170,6 +177,7 @@ AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels) {
 	pb->usage = 1;
 	pb->channels = ah->channels;
 	pb->type = AUDIO_TYPE_OGG;
+	pb->fp = f->fp;
 
 	return pb;
 }
@@ -188,12 +196,17 @@ int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 			i = stb_vorbis_get_samples_short_interleaved(pb->codec_handle, 2, buff + b, (buff_len - b) >> 1);
 			i <<= 2;
 			b += i;
-			if (b == buff_len) break;
+			if (b == buff_len)
+				break;
+
 		} while (i > 0);
 	else {
 		for (i = 0; i < buff_len >> 1; i++) {
 			b = stb_vorbis_get_samples_short_interleaved(pb->codec_handle, 2, t_buff, 2);
-			if (b == 0) break;
+			if (b == 0) {
+				break;
+			}
+
 			s_buff[i] = audioSampleMix(t_buff[0], t_buff[1]);
 		}
 		b = i << 1;
@@ -206,15 +219,14 @@ int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 
 AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	AUDIO_HANDLE *ah, *pb;
-	char *fname_n;
 
 	if (fname == NULL) return NULL;
-	fname_n = utilPathTranslate(fname);
 
 	if ((ah = malloc(sizeof(AUDIO_HANDLE))) == NULL)
 		return NULL;
 
-	ah->fname = fname_n;
+	ah->fname = malloc(strlen(fname) + 1);
+	strcpy(ah->fname, fname);
 
 	ah->data = NULL;
 	ah->size = 0;
@@ -226,7 +238,7 @@ AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels) {
 	if (mode == ALOAD_MODE_STR)
 		return ah;
 
-	if ((pb = audioPlayStreamed(ah, 0, channels)) == NULL) {
+	if ((pb = audioPlayStreamed(ah, -1, channels)) == NULL) {
 		free(ah->fname);
 		free(ah);
 		return NULL;
@@ -309,32 +321,29 @@ AUDIO_HANDLE *audioOpenTracked(const char *fname, int mode, int channels) {
 	AUDIO_HANDLE *ah, *pb;
 	unsigned int *abuff, sz;
 	unsigned int size, i;
-	char *fname_n;
-	FILE *fp;
+	FILESYSTEM_FILE *f;
 
-	fname_n = utilPathTranslate(fname);
-	if ((fp = fopen(fname_n, "rb")) == NULL)
+	if ((f = fsFileOpen(fname, "rb")) == NULL)
 		return NULL;
 
-	free(fname_n);
-	fseek(fp, 0, SEEK_END);
-	size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
+	fsFileSeek(f, 0, SEEK_END);
+	size = fsFileTell(f);
+	fsFileSeek(f, 0, SEEK_SET);
 	
 	if ((ah = malloc(sizeof(AUDIO_HANDLE))) == NULL) {
-		fclose(fp);
+		fsFileClose(f);
 		return NULL;
 	}
 	
 	if ((ah->stream_data = malloc(size)) == NULL) {
-		fclose(fp);
+		fsFileClose(f);
 		free(ah);
 		return NULL;
 	}
 
 	ah->stream_data_size = size;
-	fread(ah->stream_data, size, 1, fp);
-	fclose(fp);
+	fsFileRead(ah->stream_data, size, f);
+	fsFileClose(f);
 
 	ah->data = NULL;
 	ah->size = 0;

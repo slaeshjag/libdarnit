@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="32" tileheight="32">
  <properties>
+  <property name="animation" value="testmap.ani"/>
   <property name="tileset" value="mapsheet.png"/>
  </properties>
  <tileset firstgid="1" name="base" tilewidth="32" tileheight="32">

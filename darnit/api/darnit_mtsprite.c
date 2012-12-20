@@ -46,6 +46,13 @@ void EXPORT_THIS darnitMTSpriteAnimationDisable(void *mtsprite) {
 }
 
 
+void EXPORT_THIS darnitMTSpriteAnimationRepeatSet(void *mtsprite, int repeat) {
+	mtSpriteSetRepeat(mtsprite, repeat);
+
+	return;
+}
+
+
 void EXPORT_THIS darnitMTSpriteDraw(void *mtsprite) {
 	mtSpriteDraw(mtsprite);
 
