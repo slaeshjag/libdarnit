@@ -2,6 +2,11 @@
 #define	__TEXT_H__
 
 
+typedef enum FONT_TYPE {
+	NORMAL,
+	COLOR
+} FONT_TYPE;
+
 struct TEXT_FONT_GLYPH {
 	float			u1;
 	float			v1;
@@ -77,7 +82,14 @@ struct TEXT_GLYPH_CACHE {
 typedef struct {
 	struct TEXT_GLYPH_CACHE	*g_cache;
 	struct TEXT_GLYPH_CACHE	*l_cache;
-	TILE_CACHE		*cache;
+	union {
+		TILE_COLOR_CACHE *cache_c;
+		TILE_CACHE	*cache;
+	};
+
+	FONT_TYPE		type;
+	unsigned char		color[4];
+
 	TEXT_FONT		*font;
 	int			pos;
 	int			line;
@@ -109,10 +121,11 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 
 int textFontGetH(TEXT_FONT *font);
 int textFontGetHS(TEXT_FONT *font);
-void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y);
+void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y, FONT_TYPE type);
 void textResetSurface(TEXT_SURFACE *srf);
 int textSurfaceAppendChar(TEXT_SURFACE *surface, const char *ch);
 void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str);
+void textSurfaceColorNextSet(TEXT_SURFACE *surface, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 void *textSurfaceDestroy(TEXT_SURFACE *surface);
 void textRender(TEXT_SURFACE *surface);
 void textSurfaceSkip(TEXT_SURFACE *surface, int pixels);

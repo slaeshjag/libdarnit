@@ -186,7 +186,7 @@ void *menutkHorisontalCreate(const char *options, int x, int y, TEXT_FONT *font,
 		if (options[i] == '\n')
 			cnt++;
 	
-	menu->text = textMakeRenderSurface(len + 10, menu->font, ~0, x+4, y + 2);
+	menu->text = textMakeRenderSurface(len + 10, menu->font, ~0, x+4, y + 2, NORMAL);
 	menu->option_space = menu->text->font->font_height * 2;
 
 	for (i = 0; i < len;) {
@@ -292,7 +292,7 @@ void *menutkVerticalCreate(const char *options, int x, int y, TEXT_FONT *font, i
 		if (options[i] == '\n')
 			cnt++;
 	
-	menu->text = textMakeRenderSurface(len, menu->font, ~0, x + textskip_x, y);
+	menu->text = textMakeRenderSurface(len, menu->font, ~0, x + textskip_x, y, NORMAL);
 
 	menu->waiting = 1;
 	menu->selection = 0;
@@ -345,7 +345,7 @@ void *menutkSpinbuttonCreate(const char *comment_text, int x, int y, TEXT_FONT *
 	menu->change = 1;
 	menu->hidden = 0;
 
-	menu->text = textMakeRenderSurface(len + menu->skip_option + 5, font, ~0, x, y);
+	menu->text = textMakeRenderSurface(len + menu->skip_option + 5, font, ~0, x, y, NORMAL);
 	menutkSpinbuttonTextUpdate(menu);
 
 	return menu;
@@ -364,7 +364,7 @@ void *menutkTextinputCreate(int x, int y, TEXT_FONT *font, char *buf, int buf_le
 	menu->x = x*d->video.swgran-1.0f, menu->y = (y*d->video.shgran*-1.0f) + 1.0f;
 	menu->textinput_buf = buf;
 	menu->font = font;
-	menu->text = textMakeRenderSurface(field_len>>1, font, ~0, x, y);
+	menu->text = textMakeRenderSurface(field_len>>1, font, ~0, x, y, NORMAL);
 	menu->waiting = 1;
 	menu->top_sel = 0;
 	menu->selection = 0;
