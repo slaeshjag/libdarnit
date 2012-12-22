@@ -64,7 +64,7 @@ int writeSection(const char *fname, FILE *fp) {
 	for (i = strings = name = line = skip = 0; !feof(in); i++) {
 		c = fgetc(in);
 		if (c == '\t') {
-			if (name == 0) {
+			if (name == 0 && skip == 0) {
 				name = 1;
 				buff[i] = 1;
 			} else
@@ -79,7 +79,7 @@ int writeSection(const char *fname, FILE *fp) {
 				strings++;
 			}
 			line = 0;
-			skip = 1;
+			skip = 0;
 		} else if (c == '<') {
 			buff[i] = '\n';
 			line = 1;
