@@ -71,8 +71,10 @@ int textWillGlyphFit(struct TEXT_FONT_CACHE *cache, int w, int h) {
 	int pos_y;
 
 	pos_y = (cache->line_pos_x + w >= cache->sheet_w) ? cache->line_pos_y + cache->line_height : cache->line_pos_y;
-	if (pos_y + h >= cache->sheet_h)
+	if (pos_y + h >= cache->sheet_h) {
+		fprintf(stderr, "No, it will not fit\n");
 		return -1;
+	}
 	return 0;
 }
 
@@ -403,7 +405,7 @@ void textResetSurface(TEXT_SURFACE *srf) {
 }
 
 
-void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y) {
+void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, int x, int y, FONT_TYPE type) {
 	TEXT_SURFACE *surface;
 	int i;
 	float *arr;
@@ -413,20 +415,30 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 		return NULL;
 	}
 
-	if ((surface->cache = malloc(sizeof(TILE_CACHE)*chars)) == NULL) {
-		MALLOC_ERROR
-		return NULL;
+	if (type == NORMAL) {
+		if ((surface->cache = malloc(sizeof(TILE_CACHE)*chars)) == NULL) {
+			MALLOC_ERROR
+			return NULL;
+		}
+	} else if (type == COLOR) {
+		if (!(surface->cache_c = malloc(sizeof(TILE_COLOR_CACHE) * chars))) {
+			MALLOC_ERROR
+			return NULL;
+		}
 	}
 
+	surface->type = type;
 	arr = (float *) surface->cache;
 
-	for (i = 0; i < chars*24; i++)
+	for (i = 0; i < chars * ((type == NORMAL) ? 24 : 30); i++)
 		arr[i] = 0.0f;
 
 	surface->font = font;
 	surface->pos = 0;
 	surface->line = 0;
 	surface->index = 0;
+
+	surface->color[0] = surface->color[1] = surface->color[2] = surface->color[3] = 255;
 	
 	surface->len = chars;
 	surface->linelen = linelen;
@@ -542,14 +554,20 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 
 	if (cp != ' ') {						/* "Temporary" work-around that makes OpenGL|ES happier... */
-		renderSetTileCoordinates(&surface->cache[surface->index], x, y, x2, y2, glyph_e->u1, glyph_e->v1, glyph_e->u2, glyph_e->v2);
+		if (surface->type == NORMAL)
+			renderSetTileCoordinates(&surface->cache[surface->index], x, y, x2, y2, glyph_e->u1, glyph_e->v1, glyph_e->u2, glyph_e->v2);
+		else if (surface->type == COLOR)
+			renderSetTileCoordinatesColor(&surface->cache_c[surface->index], x, y, x2, y2, glyph_e->u1, glyph_e->v1, glyph_e->u2, glyph_e->v2, surface->color);
 
 		if (surface->l_cache == NULL || glyph_e->tex_cache != surface->l_cache->f_cache) {
 			if ((surface->l_cache = textGlyphCacheNew(surface->g_cache)) == NULL)
 				return 1;
 			if (surface->g_cache == NULL)
 				surface->g_cache = surface->l_cache;
-			surface->l_cache->t_cache = &surface->cache[surface->index];
+			if (surface->type == NORMAL)
+				surface->l_cache->t_cache = &surface->cache[surface->index];
+			else if (surface->type == COLOR)
+				surface->l_cache->t_cache = (TILE_CACHE *) &((TILE_COLOR_CACHE *) surface->cache)[surface->index];
 			surface->l_cache->f_cache = glyph_e->tex_cache;
 			surface->l_cache->glyphs = 0;
 		}
@@ -598,6 +616,19 @@ void textSurfaceAppendString(TEXT_SURFACE *surface, const char *str) {
 	return;
 }
 
+
+void textSurfaceColorNextSet(TEXT_SURFACE *surface, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+	if (!surface)
+		return;
+	surface->color[0] = r;
+	surface->color[1] = g;
+	surface->color[2] = b;
+	surface->color[3] = a;
+	
+	return;
+}
+
+
 void textRender(TEXT_SURFACE *surface) {
 	struct TEXT_GLYPH_CACHE *next;
 	
@@ -613,7 +644,12 @@ void textRender(TEXT_SURFACE *surface) {
 	
 	next = surface->g_cache;
 	while (next != NULL) {
-		renderCache(next->t_cache, next->f_cache->ts, next->glyphs);
+		if (surface->type == NORMAL)
+			renderCache(next->t_cache, next->f_cache->ts, next->glyphs);
+		else if (surface->type == COLOR)
+			/* This is actually a TILE_COLOR_CACHE, in the function above, it gets casted via union. Ugly, right? */
+			renderColCache((TILE_COLOR_CACHE *) next->t_cache, next->f_cache->ts, next->glyphs);
+			
 		next = next->next;
 	}
 

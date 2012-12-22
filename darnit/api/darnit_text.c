@@ -47,7 +47,12 @@ void EXPORT_THIS darnitTextSurfaceReset(void *surface) {
 
 
 void EXPORT_THIS *darnitTextSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y) {
-	return textMakeRenderSurface(glyphs, font, linelen, x, y);
+	return textMakeRenderSurface(glyphs, font, linelen, x, y, NORMAL);
+}
+
+
+void EXPORT_THIS *darnitTextColorSurfaceAlloc(void *font, unsigned int glyphs, unsigned int linelen, int x, int y) {
+	return textMakeRenderSurface(glyphs, font, linelen, x, y, COLOR);
 }
 
 
@@ -63,6 +68,13 @@ int EXPORT_THIS darnitTextSurfaceCharAppend(void *surface, char *c) {
 
 void EXPORT_THIS darnitTextSurfaceStringAppend(void *surface, const char *string) {
 	textSurfaceAppendString(surface, string);
+
+	return;
+}
+
+
+void EXPORT_THIS darnitTextSurfaceCharColorNext(void *surface, unsigned char r, unsigned char g, unsigned char b) {
+	textSurfaceColorNextSet(surface, r, g, b, 255);
 
 	return;
 }
