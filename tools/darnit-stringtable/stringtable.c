@@ -42,7 +42,7 @@ void *zCompress(void *indata, unsigned int len, unsigned int *outlen) {
 int writeSection(const char *fname, FILE *fp) {
 	FILE *in;
 	char *buff, *zdata;
-	int size, i, j, comp, name, strings;
+	int size, i, j, comp, name, strings, line, skip;
 	char c;
 	FILE_STRING_ENTRY *string;
 	FILE_SECTION_HEADER sh;
@@ -61,7 +61,7 @@ int writeSection(const char *fname, FILE *fp) {
 		return -1;
 	}
 
-	for (i = strings = name = 0; !feof(in); i++) {
+	for (i = strings = name = line = skip = 0; !feof(in); i++) {
 		c = fgetc(in);
 		if (c == '\t') {
 			if (name == 0) {
@@ -69,6 +69,7 @@ int writeSection(const char *fname, FILE *fp) {
 				buff[i] = 1;
 			} else
 				i--;
+			line = 1;
 		} else if (c == '\n') {
 			if (name == 0)
 				i--;
@@ -77,10 +78,20 @@ int writeSection(const char *fname, FILE *fp) {
 				buff[i] = 0;
 				strings++;
 			}
+			line = 0;
+			skip = 1;
 		} else if (c == '<') {
 			buff[i] = '\n';
-		} else
+			line = 1;
+		} else if (buff[i] == '#' && line == 0) {
+			skip = 1;
+			i--;
+		} else if (skip)
+			i--;
+		else {
+			line = 1;
 			buff[i] = c;
+		}
 	}
 	
 	fclose(in);
