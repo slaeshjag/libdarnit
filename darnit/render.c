@@ -537,6 +537,44 @@ void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, flo
 }
 
 
+void renderSetTileCoordinatesColor(TILE_COLOR_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color) {
+	cache->vertex[0].tex.u = u;
+	cache->vertex[0].tex.v = v;
+	cache->vertex[1].tex.u = u2;
+	cache->vertex[1].tex.v = v;
+	cache->vertex[2].tex.u = u2;
+	cache->vertex[2].tex.v = v2;
+	cache->vertex[3].tex.u = u2;
+	cache->vertex[3].tex.v = v2;
+	cache->vertex[4].tex.u = u;
+	cache->vertex[4].tex.v = v2;
+	cache->vertex[5].tex.u = u;
+	cache->vertex[6].tex.v = v;
+
+	cache->vertex[0].coord.x = x;
+	cache->vertex[0].coord.y = y2;
+	cache->vertex[1].coord.x = x2;
+	cache->vertex[1].coord.y = y2;
+	cache->vertex[2].coord.x = x2;
+	cache->vertex[2].coord.y = y;
+	cache->vertex[3].coord.x = x2;
+	cache->vertex[3].coord.y = y;
+	cache->vertex[4].coord.x = x;
+	cache->vertex[4].coord.y = y;
+	cache->vertex[5].coord.x = x;
+	cache->vertex[5].coord.y = y2;
+
+	((unsigned int *)cache->vertex[0].col.rgba)[0] = ((unsigned int *) color)[0];
+	cache->vertex[1].col = cache->vertex[0].col;
+	cache->vertex[2].col = cache->vertex[0].col;
+	cache->vertex[3].col = cache->vertex[0].col;
+	cache->vertex[4].col = cache->vertex[0].col;
+	cache->vertex[5].col = cache->vertex[0].col;
+
+	return;
+}
+
+
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 	if (cache == NULL) return;
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
@@ -548,6 +586,25 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 
 	return;
 }
+
+
+void renderColCache(TILE_COLOR_CACHE *cache, TILESHEET *ts, int tiles) {
+	if (!cache) return;
+
+	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
+	glEnableClientState(GL_COLOR_ARRAY);
+	
+	glVertexPointer(2, GL_FLOAT, 20, cache);
+	glTexCoordPointer(2, GL_FLOAT, 20, &cache[0].vertex[0].tex);
+	glColorPointer(3, GL_UNSIGNED_BYTE, 20, &cache->vertex->col);
+
+	glDrawArrays(GL_TRIANGLES, 0, tiles*6);
+
+	glDisableClientState(GL_COLOR_ARRAY);
+
+	return;
+}
+
 
 
 void renderRectCache(RECT_CACHE *cache, int rects) {

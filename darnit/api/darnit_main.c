@@ -123,13 +123,14 @@ void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 	#ifdef _WIN32
 	darnit_init_common();
 	#endif
+	
+	darnitSetPlatform(1);
 
 	if (videoInitPartial());
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);
 	else {
-		darnitSetPlatform(1);
 		if (fsInit(data_dir) < 0)
 			return NULL;
 		return d;
