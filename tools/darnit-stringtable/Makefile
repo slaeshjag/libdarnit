@@ -1,19 +1,24 @@
 #darnit-fsimage is used to create LDI image files
 
-CFLAGS += -O3 -Wall
+#CFLAGS += -O3 -Wall
+CFLAGS += -O0 -g -Wall
 LDFLAGS = -lz
 
 SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
 BIN = darnit-stringtable
 RM = rm -f
-.PHONY: all clean
+.PHONY: all windows clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
 	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
 	@echo 
 
+windows: $(OBJFILES)
+	@echo " [ LD ] tools/$(BIN)/$(BIN)"
+	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS) -lws2_32
+	@echo 
 
 clean:
 	@echo " [ RM ] $(OBJFILES)"

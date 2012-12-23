@@ -19,7 +19,6 @@
 	#include	<dirent.h>
 #else
 	#define		DATA_PATH
-	#define		size_t		unsigned long long
 	#include 	<shlwapi.h>
 #endif
 

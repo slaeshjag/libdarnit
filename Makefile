@@ -18,6 +18,18 @@ all:
 	@echo "Build complete."
 	@echo 
 
+windows:
+	@echo " [INIT] bin/"
+	@$(MKDIR) bin/
+	@echo " [ CD ] deps/"
+	+@make -C deps/
+	@echo " [ CD ] darnit/"
+	+@make -C darnit/ windows
+	@echo " [ CD ] tools/"
+	+@make -C tools/ windows
+	@echo "Build complete."
+	@echo 
+
 pandora:
 	@echo " [INIT]"
 	@$(MKDIR) bin/
@@ -54,6 +66,18 @@ clean:
 	@echo
 	@echo "Source tree cleaned."
 	@echo
+	
+install-windows: 
+	@echo " [INST] include/darnit"
+	@$(MKDIR) /mingw/include/darnit
+	@install -m 0755 include/darnit/* /mingw/include/darnit
+	@echo " [INST] bin/libdarnit.dll"
+	@install -m 0755 bin/libdarnit.dll /mingw/lib
+	@echo " [INST] tools"
+	@install -m 0755 bin/darnit-* /mingw/bin
+	@echo
+	@echo "libDarnit installed."
+	@echo 
 
 install: 
 	@echo " [INST] include/darnit"
