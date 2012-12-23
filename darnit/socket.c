@@ -79,7 +79,7 @@ int socketRecv(SOCKET_STRUCT *sock, char *buff, int len) {
 	int ret;
 	if (sock == NULL) return -1;
 
-	ret = recv(sock->socket, buff, len, 0);
+	ret = recv(sock->socket, buff, len, MSG_NOSIGNAL);
 	if (ret < 0 && errno != EAGAIN && errno != EWOULDBLOCK) {
 		fprintf(stderr, "Socket error; connection died\n");
 		socketClose(sock);
@@ -102,8 +102,8 @@ int socketRecvTry(SOCKET_STRUCT *sock, char *buff, int len) {
 	if (sock == NULL) return -1;
 	int ret;
 
-	if ((ret = recv(sock->socket, buff, len, MSG_PEEK)) == len)
-		recv(sock->socket, buff, len, 0);
+	if ((ret = recv(sock->socket, buff, len, MSG_PEEK | MSG_NOSIGNAL)) == len)
+		recv(sock->socket, buff, len, MSG_NOSIGNAL);
 
 	if (ret == len)
 		return len;
@@ -168,7 +168,7 @@ void socketConnectLoop() {
 	parent = &d->connect_list;
 	list = *parent;
 	while (list != NULL) {
-		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK) < 0)) {
+		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
 			#ifndef _WIN32
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
