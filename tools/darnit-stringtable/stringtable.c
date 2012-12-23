@@ -83,7 +83,7 @@ int writeSection(const char *fname, FILE *fp) {
 		} else if (c == '<') {
 			buff[i] = '\n';
 			line = 1;
-		} else if (buff[i] == '#' && line == 0) {
+		} else if (c == '#' && line == 0) {
 			skip = 1;
 			i--;
 		} else if (skip)
@@ -93,6 +93,8 @@ int writeSection(const char *fname, FILE *fp) {
 			buff[i] = c;
 		}
 	}
+	if(c != '\n')
+		strings++;
 	
 	fclose(in);
 	zdata = malloc(i);
