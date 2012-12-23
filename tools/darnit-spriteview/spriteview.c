@@ -1,6 +1,6 @@
-#include <darnit/darnit.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <darnit/darnit.h>
 
 int main(int argc, char **argv) {
 	DARNIT_SPRITE *sprite;

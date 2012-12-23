@@ -7,13 +7,17 @@ SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
 BIN = darnit-fsimage
 RM = rm -f
-.PHONY: all clean
+.PHONY: all windows clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
 	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
 	@echo 
 
+windows: $(OBJFILES)
+	@echo " [ LD ] tools/$(BIN)/$(BIN)"
+	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS) -lws2_32
+	@echo 
 
 clean:
 	@echo " [ RM ] $(OBJFILES)"
