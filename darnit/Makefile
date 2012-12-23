@@ -8,7 +8,7 @@ LIB = ../bin/libdarnit.so
 CFLAGS += -Wall -I../deps -fPIC -shared -O0 -g -fvisibility=hidden -DDATA_PATH=\"/usr/share/games\"
 LDFLAGS += -Wl,-soname,libdarnit.so -lSDL -lmodplug -ldl -lbz2
 DESKTOPFLAGS = -lGL
-WINDOWSFLAGS = -lopengl32 -ws32_2 -lshlwapi
+WINDOWSFLAGS = -lopengl32 -lws32_2 -lshlwapi
 PANDORAFLAGS = -lGLES_CM -lEGL -lX11
 GCWZEROFLAGS = -lGLES_CM -lEGL
 
