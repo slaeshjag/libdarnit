@@ -125,7 +125,7 @@ void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 	#endif
 	
 	darnitSetPlatform(1);
-	unitInit();
+	utilInit();
 
 	if (videoInitPartial());
 	else if (inputInit() < 0);
