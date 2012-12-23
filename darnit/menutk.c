@@ -1,5 +1,6 @@
 #include "darnit.h"
 
+#ifndef DARNIT_HEADLESS
 
 void menutkHighlightRecalculate(MENUTK_ENTRY *menu, int w, int h) {
 	menu->hl.box.x1 = menu->hl.box.x3 = 0.0f;
@@ -790,3 +791,7 @@ void menutkMenuUnhide(MENUTK_ENTRY *menu) {
 	
 	return;
 }
+
+
+// DARNIT_HEADLESS
+#endif

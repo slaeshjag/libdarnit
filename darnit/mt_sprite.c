@@ -1,5 +1,6 @@
 #include "darnit.h"
 
+#ifndef DARNIT_HEADLESS
 
 void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w, int h, int rx, int ry) {
 	float x1, x2, y1, y2, u1, u2, v1, v2, twg, thg;
@@ -284,3 +285,6 @@ void *mtSpriteDelete(MTSPRITE_ENTRY *spr) {
 
 	return NULL;
 }
+
+// DARNIT_HEADLESS
+#endif

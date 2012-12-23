@@ -86,6 +86,7 @@ typedef struct {
 #include "util.h"
 #include "stringtable.h"
 #include "ldmz.h"
+#include "particle.h"
 
 int darnitTimeLastFrameTook();
 
@@ -127,6 +128,7 @@ typedef struct {
 	TILESHEET_REF_CONT	tsr;
 	DARNIT_PLATFORM		platform;
 	SOCKET_LIST		*connect_list;
+	UTIL			util;
 	SDL_Surface		*icon;
 } DARNIT;
 

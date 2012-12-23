@@ -1,6 +1,6 @@
 #include "darnit.h"
 
-
+#ifndef DARNIT_HEADLESS
 void audioSoundStop(int key) {
 	int i;
 	
@@ -206,3 +206,6 @@ int audioInit() {
 
 	return 0;
 }
+
+// DARNIT_HEADLESS
+#endif

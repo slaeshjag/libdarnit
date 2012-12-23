@@ -1,6 +1,5 @@
 #include "darnit.h"
 
-
 SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 	unsigned int i, j;
 	SPRITE_ENTRY *se;
@@ -97,6 +96,7 @@ void spriteSetFrameEntry(SPRITE_ENTRY *sprite, int dir, int frame, int tile, int
 }
 
 
+#ifndef DARNIT_HEADLESS
 void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 	if (sprite == NULL)
 		return;
@@ -108,6 +108,7 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 
 	return;
 }
+#endif
 
 
 void spriteSetRepeat(SPRITE_ENTRY *sprite, int repeat) {
@@ -142,12 +143,16 @@ void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format
 		fsFileRead(sprite_e, sizeof(SPRITE_ENTRY), fp);
 
 	fsFileClose(fp);
+	#ifndef DARNIT_HEADLESS
 	if ((sprite_e->ts = renderTilesheetLoad(sprite_e->tilesheet, sprite_e->wsq, sprite_e->hsq, target_format)) == NULL) {
 		free(sprite_e);
 		return NULL;
 	}
+	#endif
 
+	#ifndef DARNIT_HEADLESS
 	spriteActivate(sprite_e, dir);
+	#endif
 
 	return sprite_e;
 }
@@ -157,12 +162,15 @@ void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format
 void spriteTeleport(SPRITE_ENTRY *sprite, int x, int y) {
 	if (sprite == NULL) return;
 
+	#ifndef DARNIT_HEADLESS
 	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);
+	#endif
 
 	return;
 }
 
 
+#ifndef DARNIT_HEADLESS
 void spriteEnableAnimation(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return;
 	int dir;
@@ -249,12 +257,16 @@ void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
 	return;
 }
 
+// DARNIT_HEADLESS
+#endif
 
 void *spriteDelete(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return NULL;
 
+	#ifndef DARNIT_HEADLESS
 	if (*sprite->tilesheet != 0)
 		sprite->ts = renderTilesheetFree(sprite->ts);
+	#endif
 	free(sprite);
 
 	return NULL;

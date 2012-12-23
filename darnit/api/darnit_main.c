@@ -126,6 +126,8 @@ void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 	#ifdef _WIN32
 	darnit_init_common();
 	#endif
+	
+	utilInit();
 
 	if (videoInitPartial());
 	else if (inputInit() < 0);

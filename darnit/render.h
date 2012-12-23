@@ -182,6 +182,8 @@ int videoSetIcon(const char *icon);
 void renderTilesheetAnimateAll();
 
 
+#ifndef DARNIT_HEADLESS
+
 #ifndef HAVE_GLES
 #include "render/render_ogl.h"
 #elif defined GCW_ZERO
@@ -190,5 +192,7 @@ void renderTilesheetAnimateAll();
 #include "render/render_gles.h"
 #endif
 
+// DARNIT_HEADLESS
+#endif
 
 #endif
