@@ -1,5 +1,7 @@
 #include "darnit.h"
 
+#ifndef DARNIT_HEADLESS
+
 #ifndef HAVE_GLES
 	#include "render/render_ogl.c"
 #elif defined GCW_ZERO
@@ -809,4 +811,6 @@ int videoSetIcon(const char *icon) {
 	
 	return 0;
 }
-		
+
+// DARNIT_HEADLESS
+#endif

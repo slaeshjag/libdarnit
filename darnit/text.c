@@ -1,5 +1,6 @@
 #include "darnit.h"
 
+#ifndef DARNIT_HEADLESS
 
 int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned int width) {
 	int i, k;
@@ -667,4 +668,5 @@ void EXPORT_THIS textGlyphCoords(TEXT_FONT *font, char *ch, int *x, int *y, int 
 	return;
 }
 
-
+//DARNIT_HEADLESS
+#endif

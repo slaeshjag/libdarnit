@@ -14,12 +14,14 @@ TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int 
 	
 	for (i = 0; i < w * h; i++)
 		tilemap->data[i] = 0;
-	
+
+	#ifndef DARNIT_HEADLESS
 	if ((tilemap->render = renderTilemapCreate(w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
 		free(tilemap->data);
 		free(tilemap);
 		return NULL;
 	}
+	#endif
 
 	tilemap->w = w;
 	tilemap->h = h;
@@ -55,7 +57,9 @@ TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, uns
 		tilemap->data[i] = tmp;
 	}
 
+	#ifndef DARNIT_HEADLESS
 	tilemap->render = renderTilemapCreate(tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask);
+	#endif
 
 	return tilemap;
 }
@@ -65,7 +69,11 @@ TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, uns
 void *tilemapFree(TILEMAP_ENTRY *tm) {
 	if (tm == NULL) return NULL;
 	free(tm->data);
+
+	#ifndef DARNIT_HEADLESS
 	renderTilemapFree(tm->render);
+	#endif
+
 	free(tm);
 
 	return NULL;

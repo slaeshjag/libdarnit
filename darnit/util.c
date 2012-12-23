@@ -81,3 +81,21 @@ unsigned int utilStringSum(const char *str) {
 		sum += str_u[i];
 	return sum;
 }
+
+
+void utilInit() {
+	int i;
+
+	srandom(time(NULL));
+
+	for (i = 0; i < 3600; i++)
+		d->util.sine[i] = sinf(M_PI / 2 * i / 10) * 65536;
+	return;
+}
+
+
+int utilSine(int angle) {
+	angle = (angle < 0) ? (3600 + (angle % 3600)) : angle % 3600;
+
+	return d->util.sine[angle];
+}

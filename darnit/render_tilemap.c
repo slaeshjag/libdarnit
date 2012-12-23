@@ -1,5 +1,7 @@
 #include "darnit.h"
 
+#ifndef DARNIT_HEADLESS
+
 void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, int h) {
 	float x_start, y_start;
 	float *x_adv_buf, *y_adv_buf;
@@ -201,3 +203,7 @@ void renderTilemapForceRecalc(RENDER_TILEMAP *tm) {
 
 	return;
 }
+
+
+// DARNIT_HEADLESS
+#endif

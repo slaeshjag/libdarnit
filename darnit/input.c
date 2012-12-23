@@ -2,6 +2,7 @@
 
 void darnitQuit();
 
+#ifndef DARNIT_HEADLESS
 
 void inputRawPush(int sym, int action) {
 	if (d->input.raw.use == RAW_BUFFER_LEN)
@@ -278,3 +279,6 @@ unsigned int inputASCIIPop() {
 
 	return key;
 }
+
+// DARNIT_HEADLESS
+#endif
