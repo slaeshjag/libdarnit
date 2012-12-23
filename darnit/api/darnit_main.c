@@ -82,11 +82,8 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir, const cha
 	if (darnitInitRest(wtitle, 320, 240, 1, icon) < 0)
 	#else
 	if (darnitInitRest(wtitle, 800, 480, 0, icon) < 0)
-
-		return NULL;
-	
-		return NULL;
 	#endif
+		return NULL;
 
 	return d;
 }
@@ -127,14 +124,14 @@ void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 	darnit_init_common();
 	#endif
 	
-	utilInit();
+	darnitSetPlatform(1);
+	unitInit();
 
 	if (videoInitPartial());
 	else if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);
 	else {
-		darnitSetPlatform(1);
 		if (fsInit(data_dir) < 0)
 			return NULL;
 		return d;

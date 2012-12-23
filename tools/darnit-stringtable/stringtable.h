@@ -8,7 +8,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
+#ifdef _WIN32
+#include <winsock2.h>
+#else
 #include <arpa/inet.h>
+#endif
 
 #define					MAGIC		0x3411BF00
 

@@ -2,10 +2,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
+
+void colorTest(DARNIT_TEXT_SURFACE *surface) {
+	int i;
+	char tmp[2];
+	darnitTextSurfaceReset(surface);
+	srand(time(NULL));
+	
+	for (i = 0; i < 16; i++) {
+		darnitTextSurfaceCharColorNext(surface, rand()&0xFF, rand()&0xFF, rand()&0xFF);
+		sprintf(tmp, "%c", 'A' + i);
+		darnitTextSurfaceCharAppend(surface, tmp);
+	}
+
+	return;
+}
+	
+
 
 int main(int argc, char **argv) {
 	int i, sfx, j, js0_x, js0_y, js1_x, js1_y;
-	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf;
+	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf, *fancy_text;
 	void *music;
 	char test[256], fps[16];
 	char *test_text;
@@ -28,7 +47,7 @@ int main(int argc, char **argv) {
 	f = darnitFileOpen("test.bz2", "rb");
 	darnitFileCompressedRead(f, bzval, strlen("Fiskpinnar") + 1);
 	if (strcmp(bzval, "Fiskpinnar"))
-		fprintf(stderr, "COmpression test failed\n");
+		fprintf(stderr, "Compression test failed\n");
 	else {
 		darnitFileRead(bzval, strlen("Fiskpinnar") + 1, f);
 		if (strcmp(bzval, "Fiskpinnar"))
@@ -49,6 +68,8 @@ int main(int argc, char **argv) {
 	sprite = darnitSpriteLoad("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	darnitSpriteMove(sprite, 50, 50);
 	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 460);
+	fancy_text = darnitTextColorSurfaceAlloc(font, 16, 800, 0, 420);
+	colorTest(fancy_text);
 
 	mapsheet = darnitRenderTilesheetLoad("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	if ((map = darnitMapLoad("testmap.ldmz")) == NULL)
@@ -111,6 +132,7 @@ int main(int argc, char **argv) {
 		darnitMenuHandle(textinput); 
 		darnitSpriteDraw(sprite);
 		darnitTextSurfaceDraw(text);
+		darnitTextSurfaceDraw(fancy_text);
 		darnitTextSurfaceDraw(fps_text);
 
 		darnitRenderOffset(-200, -200);

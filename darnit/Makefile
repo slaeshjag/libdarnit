@@ -8,6 +8,7 @@ LIB = ../bin/libdarnit.so
 CFLAGS += -Wall -I../deps -fPIC -shared -O0 -g -fvisibility=hidden -DDATA_PATH=\"/usr/share/games\"
 LDFLAGS += -Wl,-soname,libdarnit.so -lSDL -lmodplug -ldl -lbz2
 DESKTOPFLAGS = -lGL
+WINDOWSFLAGS = -lopengl32 -lws2_32 -lshlwapi
 PANDORAFLAGS = -lGLES_CM -lEGL -lX11
 GCWZEROFLAGS = -lGLES_CM -lEGL
 
@@ -15,13 +16,21 @@ DEPFILES = ../deps/deps.a
 APIFILES = api/*.o
 SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
-.PHONY: all pandora gcwzero clean
+.PHONY: all windows pandora gcwzero clean
 
 all: $(OBJFILES)
 	@echo " [ CD ] darnit/api/"
 	+@make -C api/
 	@echo " [ LD ] $(LIB)"
 	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS) $(DESKTOPFLAGS)
+	@echo "Done."
+	@echo
+	
+windows: $(OBJFILES)
+	@echo " [ CD ] darnit/api/"
+	+@make -C api/
+	@echo " [ LD ] $(LIB)"
+	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o ../bin/libdarnit.dll $(LDFLAGS) $(WINDOWSFLAGS)
 	@echo "Done."
 	@echo
 

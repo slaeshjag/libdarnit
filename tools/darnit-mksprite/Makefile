@@ -7,13 +7,14 @@ SRCFILES=$(wildcard *.c)
 OBJFILES=$(SRCFILES:.c=.o)
 BIN = darnit-mksprite
 RM = rm -f
-.PHONY: all clean
+.PHONY: all windows clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
 	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
 	@echo 
 
+windows: all
 
 clean:
 	@echo " [ RM ] $(OBJFILES)"
