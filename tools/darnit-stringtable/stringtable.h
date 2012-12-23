@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #ifdef _WIN32
-#include <winsock2.dll>
+#include <winsock2.h>
 #else
 #include <arpa/inet.h>
 #endif
