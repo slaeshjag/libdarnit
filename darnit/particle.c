@@ -104,7 +104,7 @@ PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
 	return pe;
 }
 
-
+#if 0
 void particleEmitterRender(PARTICLE_EMITTER *pe) {
 	int i, spawn;
 
@@ -133,6 +133,8 @@ int particleEmitterMode(PARTICLE_EMITTER *pe, unsigned int mode, void *data) {
 		return -1;
 	switch (mode) {
 		case 
+
+#endif
 
 // DARNIT_HEADLESS
 #endif
