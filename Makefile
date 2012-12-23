@@ -73,7 +73,6 @@ install-windows:
 	@install -m 0755 include/darnit/* /mingw/include/darnit
 	@echo " [INST] bin/libdarnit.dll"
 	@install -m 0755 bin/libdarnit.dll /mingw/lib
-	@ldconfig
 	@echo " [INST] tools"
 	@install -m 0755 bin/darnit-* /mingw/bin
 	@echo
