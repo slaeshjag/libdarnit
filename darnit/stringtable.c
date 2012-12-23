@@ -36,7 +36,7 @@ const char *stringtableGetEntry(STRINGTABLE *st, const char *key) {
 	int i, j;
 	unsigned int comp = utilStringSum(key);
 	if (st == NULL)
-		return "STRINGTABLE NOT LOADED";
+		return key;
 
 	for (i = 0; i < st->sections; i++)
 		for (j = 0; j < st->section[i].strings; j++) 
@@ -44,7 +44,7 @@ const char *stringtableGetEntry(STRINGTABLE *st, const char *key) {
 				if (strcmp(st->section[i].string[j].name, key) == 0)
 					return st->section[i].string[j].value;
 			
-	return "NOT IN STRINGTABLE";
+	return key;
 }
 
 

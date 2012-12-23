@@ -1,6 +1,6 @@
 
 MAKEFLAGS += --no-print-directory
-.PHONY: all clean
+.PHONY: all windows clean
 
 all:
 	@echo " [ CD ] tools/darnit-fsimage"
@@ -13,6 +13,19 @@ all:
 	+@make -C darnit-stringtable
 	@echo "Done."
 	@echo 
+	
+windows:
+	@echo " [ CD ] tools/darnit-fsimage"
+	+@make -C darnit-fsimage windows
+	@echo " [ CD ] tools/darnit-mksprite"
+	+@make -C darnit-mksprite windows
+	@echo " [ CD ] tools/darnit-spriteview"
+	+@make -C darnit-spriteview windows
+	@echo " [ CD ] tools/darnit-stringtable"
+	+@make -C darnit-stringtable windows
+	@echo "Done."
+	@echo 
+
 clean:
 	@echo " [ CD ] tools/darnit-fsimage"
 	+@make -C darnit-fsimage clean
