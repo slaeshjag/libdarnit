@@ -11,6 +11,11 @@ int EXPORT_THIS darnitStringtableSectionLoad(void *stringtable, const char *sect
 }
 
 
+const STRINGTABLE_SEC_LIST EXPORT_THIS *darnitStringtableSectionList(void *stringtable) {
+	return stringtableSectionList(stringtable);
+}
+
+
 const char EXPORT_THIS *darnitStringtableEntryGet(void *stringtable, const char *entry) {
 	return stringtableGetEntry(stringtable, entry);
 }
