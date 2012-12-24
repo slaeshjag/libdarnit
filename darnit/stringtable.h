@@ -43,14 +43,22 @@ typedef struct {
 
 
 typedef struct {
+	const char			**name;
+	unsigned int			names;
+} STRINGTABLE_SEC_LIST;
+
+
+typedef struct {
 	STRINGTABLE_SECTION	*section;
 	unsigned int		sections;
 	FILESYSTEM_FILE		*fp;
+	STRINGTABLE_SEC_LIST	sec_list;
 } STRINGTABLE;
 
 
 void *stringtableOpen(const char *fname);
 int stringtableLoadSection(STRINGTABLE *st, const char *section);
+const STRINGTABLE_SEC_LIST *stringtableSectionList(STRINGTABLE *st);
 const char *stringtableGetEntry(STRINGTABLE *st, const char *key);
 int stringtableUnloadSection(STRINGTABLE *st, const char *section);
 void *stringtableClose(STRINGTABLE *st);
