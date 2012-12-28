@@ -103,6 +103,12 @@ int stringtableLoadSection(STRINGTABLE *st, const char *section) {
 }
 
 
+const STRINGTABLE_SEC_LIST *stringtableSectionList(STRINGTABLE *st) {
+	if (!st)
+		return NULL;
+	return &st->sec_list;
+}
+
 
 void *stringtableOpen(const char *fname) {
 	FILESYSTEM_FILE *fp;
@@ -129,11 +135,17 @@ void *stringtableOpen(const char *fname) {
 	st->sections = ntohl(stfm.sections);
 	st->fp = fp;
 
-	if ((st->section = malloc(sizeof(STRINGTABLE_SECTION) * st->sections)) == NULL) {
+	st->sec_list.name = malloc(sizeof(char *) * st->sections);
+	st->section = malloc(sizeof(STRINGTABLE_SECTION) * st->sections);
+	if (!st->section || !st->sec_list.name) {
+		free(st->section);
+		free(st->sec_list.name);
 		fsFileClose(fp);
 		free(st);
 		return NULL;
 	}
+
+	st->sec_list.names = st->sections;
 
 	for (i = 0; i < st->sections; i++) {
 		fsFileRead(&st->section[i].sec, sizeof(STRINGTABLE_FILE_SECTION), fp);
@@ -147,6 +159,7 @@ void *stringtableOpen(const char *fname) {
 		st->section[i].strings = 0;
 		st->section[i].string_data = NULL;
 		st->section[i].name_comp = utilStringSum(st->section[i].sec.name);
+		st->sec_list.name[i] = st->section[i].sec.name;
 		fsFileSeek(fp, st->section[i].sec.zlen + st->section[i].sec.stringz, SEEK_CUR);
 	}
 
@@ -163,6 +176,7 @@ void *stringtableClose(STRINGTABLE *st) {
 	for (i = 0; i < st->sections; i++)
 		stringtableUnloadSection(st, st->section[i].sec.name);
 	free(st->section);
+	free(st->sec_list.name);
 	fsFileClose(st->fp);
 	free(st);
 

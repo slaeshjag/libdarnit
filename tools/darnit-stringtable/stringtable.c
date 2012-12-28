@@ -53,7 +53,7 @@ int writeSection(const char *fname, FILE *fp) {
 	}
 
 	fseek(in, 0, SEEK_END);
-	size = ftell(in);
+	size = ftell(in) + 1;
 	rewind(in);
 
 	if ((buff = malloc(size)) == NULL) {
@@ -99,6 +99,7 @@ int writeSection(const char *fname, FILE *fp) {
 	fclose(in);
 	zdata = malloc(i);
 	size = i;
+	buff[size-1] = 0;
 	sh.len = size;
 	sh.strings = strings;
 	
