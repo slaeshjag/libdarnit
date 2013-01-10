@@ -337,7 +337,6 @@ int fsMount(const char *name) {
 	struct FILESYSTEM_IMAGE *img;
 	FILESYSTEM_IMG_HEADER header;
 	int i = 0;
-	off_t offset = 0;
 
 	if ((img = malloc(sizeof(struct FILESYSTEM_IMAGE))) == NULL)
 		return -1;
@@ -356,7 +355,7 @@ int fsMount(const char *name) {
 		if (i == DARNIT_FS_IMG_MAGIC && !i) {
 			fsFileSeek(img->file, -8, SEEK_END);
 			fsFileReadInts((unsigned int *) &i, 1, img->file);
-			img->offset = i;
+			img->offset = fsFileTell(img->file) - i - 4;
 			goto read_header;
 		}
 		fsFileClose(img->file);
