@@ -358,6 +358,12 @@ int fsMount(const char *name) {
 			fsFileSeek(img->file, -8, SEEK_END);
 			fsFileReadInts((unsigned int *) &i, 1, img->file);
 			img->offset = fsFileTell(img->file) - i - 4;
+			if (img->offset <= 0) {
+				fsFileClose(img->file);
+				free(img);
+				return -1;
+			}
+
 			fsFileSeek(img->file, img->offset, SEEK_SET);
 			goto read_header;
 		}
