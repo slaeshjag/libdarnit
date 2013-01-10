@@ -345,6 +345,8 @@ int fsMount(const char *name) {
 		return -1;
 	}
 	
+	img->offset = 0;
+
 	read_header:
 
 	fsFileReadInts((unsigned int *) &header, sizeof(header) >> 2, img->file);
