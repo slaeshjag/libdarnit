@@ -82,7 +82,7 @@ int scanDirectory(const char *directory, FILE *fp, int prep) {
 
 int main(int argc, char **argv) {
 	FILE *fp;
-	int sec;
+	int sec, file_len;
 	FILE_MAIN m;
 
 	if (argc <3) {
@@ -111,6 +111,11 @@ int main(int argc, char **argv) {
 	fseek(fp, 0, SEEK_SET);
 	m.files = htonl(sec);
 	fwrite(&m, sizeof(FILE_MAIN), 1, fp);
+	fseek(fp, 0, SEEK_END);
+	file_len = htonl(ftell(fp));
+	fwrite(&file_len, 4, 1, fp);
+	fwrite(&m.magic, 4, 1, fp);
+
 	fclose(fp);
 
 	return 0;
