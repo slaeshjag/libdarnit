@@ -308,11 +308,11 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 			return 0;
 		}
 	} else if (mode == SEEK_END) {
-		if ((file->pos + offset > file->size && file->size > 0) || file->size + offset < 0)
+		if ((file->size + offset > file->size && file->size > 0) || file->size + offset < 0)
 			return -1;
 		else {
-			file->pos = file->size;
-			fseek(file->fp, file->pos + offset, SEEK_SET);
+			file->pos = file->size + offset;
+			fseek(file->fp, file->pos + file->offset, SEEK_SET);
 			return 0;
 		}
 	}
@@ -354,10 +354,11 @@ int fsMount(const char *name) {
 	if (header.magic != DARNIT_FS_IMG_MAGIC || header.version != DARNIT_FS_IMG_VERSION) {
 		fsFileSeek(img->file, -4, SEEK_END);
 		fsFileReadInts((unsigned int *) &i, 1, img->file);
-		if (i == DARNIT_FS_IMG_MAGIC && !i) {
+		if (i == DARNIT_FS_IMG_MAGIC && !img->offset) {
 			fsFileSeek(img->file, -8, SEEK_END);
 			fsFileReadInts((unsigned int *) &i, 1, img->file);
 			img->offset = fsFileTell(img->file) - i - 4;
+			fsFileSeek(img->file, img->offset, SEEK_SET);
 			goto read_header;
 		}
 		fsFileClose(img->file);
