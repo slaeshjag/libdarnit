@@ -336,7 +336,8 @@ FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file) {
 int fsMount(const char *name) {
 	struct FILESYSTEM_IMAGE *img;
 	FILESYSTEM_IMG_HEADER header;
-	int i;
+	int i = 0;
+	off_t offset = 0;
 
 	if ((img = malloc(sizeof(struct FILESYSTEM_IMAGE))) == NULL)
 		return -1;
@@ -345,9 +346,19 @@ int fsMount(const char *name) {
 		return -1;
 	}
 	
+	read_header:
+
 	fsFileReadInts((unsigned int *) &header, sizeof(header) >> 2, img->file);
 
 	if (header.magic != DARNIT_FS_IMG_MAGIC || header.version != DARNIT_FS_IMG_VERSION) {
+		fsFileSeek(img->file, -4, SEEK_END);
+		fsFileReadInts((unsigned int *) &i, 1, img->file);
+		if (i == DARNIT_FS_IMG_MAGIC && !i) {
+			fsFileSeek(img->file, -8, SEEK_END);
+			fsFileReadInts((unsigned int *) &i, 1, img->file);
+			img->offset = i;
+			goto read_header;
+		}
 		fsFileClose(img->file);
 		free(img);
 		return -1;
@@ -365,7 +376,7 @@ int fsMount(const char *name) {
 		fsFileRead(img->dir[i].name, 128, img->file);
 		fsFileReadInts(&img->dir[i].pos, 3, img->file);
 		img->dir[i].comp = utilStringSum(img->dir[i].name);
-		img->dir[i].pos += (12 + 140 * img->dir_ents);
+		img->dir[i].pos += (12 + 140 * img->dir_ents) + img->offset;
 	}
 
 	img->next = d->fs.mount;

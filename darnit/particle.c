@@ -97,6 +97,11 @@ PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
 					for (k = 0; k < 3; k++)
 						particleColoredInit(&pe->quad[i].tri[j].vert[k]);
 			break;
+		case PARTICLE_MODE_LINE:
+			for (i = 0; i < pe->particle_max; i++)
+				for (j = 0; j < 2; j++)
+					particleColoredInit(&pe->line[i].vert[j]);
+			break;
 		default:
 			fprintf(stderr, "Fixme: Unhandled mode\n");
 	}

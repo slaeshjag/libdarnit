@@ -64,6 +64,7 @@ typedef struct FILESYSTEM_IMAGE {
 
 	FILESYSTEM_FILE			*file;
 	FILESYSTEM_IMAGE_FILE		*dir;
+	off_t				offset;
 	unsigned int			dir_ents;
 } FILESYSTEM_IMAGE;
 

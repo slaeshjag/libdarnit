@@ -9,6 +9,7 @@
 #define	PARTICLE_MODE_TEXTURED		1
 #define	PARTICLE_MODE_TRIANGLE		2
 #define	PARTICLE_MODE_QUAD		3
+#define	PARTICLE_MODE_LINE		4
 
 #define	PARTICLE_MODE_PULSAR		0x100
 
@@ -43,6 +44,11 @@ typedef struct {
 
 
 typedef struct {
+	PARTICLE_VERTEX			vert[2];
+} PARTICLE_LINE;
+
+
+typedef struct {
 	PARTICLE_VERTEX			vert[3];
 } PARTICLE_TRIANGLE;
 
@@ -73,6 +79,7 @@ typedef struct {
 
 	/* Only used by pulsars */
 	int				pulse_interval;
+	
 
 	float				tint_r;
 	float				tint_g;
@@ -90,6 +97,7 @@ typedef struct {
 	float				spawn_vel_max;
 	float				spawn_vel_min;
 
+
 	/* Some members for textured particles */
 	TILESHEET			*ts;
 	float				ts_u1;
@@ -103,6 +111,7 @@ typedef struct {
 		PARTICLE_TEXTURE	*tex;
 		PARTICLE_TRIANGLE	*tri;
 		PARTICLE_QUAD		*quad;
+		PARTICLE_LINE		*line;
 		void			*buffer;
 	};
 } PARTICLE_EMITTER;
