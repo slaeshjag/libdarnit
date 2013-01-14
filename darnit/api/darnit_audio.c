@@ -1,41 +1,41 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitSoundLoadTracked(const char *fname, int preload, int makemono) {
+void EXPORT_THIS *d_sound_tracked_load(const char *fname, int preload, int makemono) {
 	return audioOpenTracked(fname, preload, makemono);
 }
 
 
-void EXPORT_THIS *darnitSoundLoadStreamed(const char *fname, int preload, int makemono) {
+void EXPORT_THIS *d_sound_streamed_load(const char *fname, int preload, int makemono) {
 	return audioOpenStreamed(fname, preload, makemono);
 }
 
 
-void EXPORT_THIS *darnitSoundUnload(void *sound_resource) {
+void EXPORT_THIS *d_sound_unload(void *sound_resource) {
 	return audioUnload(sound_resource);
 }
 
 
-void EXPORT_THIS darnitSoundPlaybackStopAll() {
+void EXPORT_THIS d_sound_stop_all() {
 	audioSoundClear();
 
 	return;
 }
 
 
-void EXPORT_THIS darnitSoundPlaybackStop(int playback_key) {
+void EXPORT_THIS d_sound_stop(int playback_key) {
 	audioSoundStop(playback_key);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitSoundPlaybackStart(void *sound_resource, int loop, int vol_l, int vol_r, int jmpto) {
+int EXPORT_THIS d_sound_play(void *sound_resource, int loop, int vol_l, int vol_r, int jmpto) {
 	return audioSoundStart(sound_resource, 0, loop, vol_l, vol_r, jmpto);
 }
 
 
-int EXPORT_THIS darnitSoundPlaybackCheck(int playback_key) {
+int EXPORT_THIS d_sound_playback_status(int playback_key) {
 	int i;
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
@@ -45,7 +45,7 @@ int EXPORT_THIS darnitSoundPlaybackCheck(int playback_key) {
 }
 
 
-void EXPORT_THIS darnitSoundPlaybackVolumeSet(unsigned int playback_key, int vol_l, int vol_r) {
+void EXPORT_THIS d_sound_playback_volume_set(unsigned int playback_key, int vol_l, int vol_r) {
 	int i;
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)

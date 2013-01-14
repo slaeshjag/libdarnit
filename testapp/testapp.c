@@ -58,8 +58,8 @@ int main(int argc, char **argv) {
 
 
 
-	music = darnitSoundLoadTracked("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
-	darnitSoundPlaybackStart(music, 0, 127, 127, 0);
+	music = d_sound_tracked_load("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
+	d_sound_play(music, 0, 127, 127, 0);
 
 	test_text = malloc(64);
 	font = darnitFontLoad("dejavu_sans.ttf", 28, 512, 512);

@@ -11,13 +11,13 @@
 
 typedef void DARNIT_SOUND;
 
-DARNIT_SOUND *darnitSoundLoadTracked(const char *fname, int preload, int makemono);
-DARNIT_SOUND *darnitSoundLoadStreamed(const char *fname, int preload, int makemono);
-DARNIT_SOUND *darnitSoundUnload(DARNIT_SOUND *sound_resource);
-void darnitSoundPlaybackStopAll();
-void darnitSoundPlaybackStop(int playback_key);
-int darnitSoundPlaybackStart(DARNIT_SOUND *sound_resource, int loop, int vol_l, int vol_r, int jmpto);
-int darnitSoundPlaybackCheck(int playback_key);
-void darnitSoundPlaybackVolumeSet(unsigned int playback_key, int vol_l, int vol_r);
+DARNIT_SOUND *d_sound_tracked_load(const char *fname, int preload, int makemono);
+DARNIT_SOUND *d_sound_streamed_load(const char *fname, int preload, int makemono);
+DARNIT_SOUND *d_sound_unload(DARNIT_SOUND *sound_resource);
+void d_sound_stop_all();
+void d_sound_stop(int playback_key);
+int d_sound_play(DARNIT_SOUND *sound_resource, int loop, int vol_l, int vol_r, int jmpto);
+int d_sound_playback_status(int playback_key);
+void d_sound_playback_volume_set(unsigned int playback_key, int vol_l, int vol_r);
 
 #endif
