@@ -27,24 +27,24 @@ typedef struct {
 } DARNIT_VIDEOMODE;
 
 
-void *darnitInit(const char *wtitle, const char *data_dir, const char *icon);
-void *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir, const char *icon);
-void darnitLoop();
-unsigned int darnitTimeGet();
-int darnitFPSGet();
-int darnitTimeLastFrameTook();
-DARNIT_PLATFORM darnitPlatformGet();
-void darnitQuit();
+void *d_init(const char *wtitle, const char *data_dir, const char *icon);
+void *d_init_custom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir, const char *icon);
+void d_loop();
+unsigned int d_time_get();
+int d_fps();
+int d_last_frame_time();
+DARNIT_PLATFORM d_platform_get();
+void d_quit();
 
 
 /* Special init funcs, in case you need to parse a config file or something before you init video */
-/* If you call initPartial, you must not call darnitInit nor darnitInitCustom. You must not call any rendering or timing function either, as these are undefined before video inits */
-/* When you want to init video, call darnitInitRest() */
+/* If you call initPartial, you must not call d_init nor d_init_custom. You must not call any rendering or timing function either, as these are undefined before video inits */
+/* When you want to init video, call d_init_rest() */
 
-void *darnitInitPartial(const char *data_dir);
-int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
+void *d_init_partial(const char *data_dir);
+int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
-/* You need to call darnitInitPartial before calling this one */
-DARNIT_VIDEOMODE **darnitVideomodeGet();
+/* You need to call d_init_partial before calling this one */
+DARNIT_VIDEOMODE **d_videomode_get();
 #endif

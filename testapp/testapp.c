@@ -8,13 +8,13 @@
 void colorTest(DARNIT_TEXT_SURFACE *surface) {
 	int i;
 	char tmp[2];
-	darnitTextSurfaceReset(surface);
+	d_text_surface_reset(surface);
 	srand(time(NULL));
 	
 	for (i = 0; i < 16; i++) {
-		darnitTextSurfaceCharColorNext(surface, rand()&0xFF, rand()&0xFF, rand()&0xFF);
+		d_text_surface_color_next(surface, rand()&0xFF, rand()&0xFF, rand()&0xFF);
 		sprintf(tmp, "%c", 'A' + i);
-		darnitTextSurfaceCharAppend(surface, tmp);
+		d_text_surface_char_append(surface, tmp);
 	}
 
 	return;
@@ -23,33 +23,33 @@ void colorTest(DARNIT_TEXT_SURFACE *surface) {
 
 
 int main(int argc, char **argv) {
-	int i, sfx, j, js0_x, js0_y, js1_x, js1_y;
-	void *font, *surface, *handle, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf, *fancy_text;
+	int i, j, js0_x, js0_y, js1_x, js1_y;
+	void *font, *surface, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf, *fancy_text;
 	void *music;
 	char test[256], fps[16];
 	char *test_text;
 	DARNIT_MOUSE mouse;
-	DARNIT_TILEMAP *tilemap;
 	DARNIT_KEYS keys;
 	DARNIT_MAP *map;
 
-	handle = darnitInit("TESTAPP - libDarnit", "testapp", NULL);
+	if (!d_init("TESTAPP - libDarnit", "testapp", NULL))
+		return -1;
 
 
 	/* COmpressed writes test */
 	DARNIT_FILE *f;
 	char bzval[64];
 
-	f = darnitFileOpen("test.bz2", "wb+");
-	darnitFileCompressedWrite(f, "Fiskpinnar", strlen("Fiskpinnar") + 1);
-	darnitFileWrite("Fiskpinnar", strlen("Fiskpinnar") + 1, f);
-	darnitFileClose(f);
-	f = darnitFileOpen("test.bz2", "rb");
-	darnitFileCompressedRead(f, bzval, strlen("Fiskpinnar") + 1);
+	f = d_file_open("test.bz2", "wb+");
+	d_file_write_compressed(f, "Fiskpinnar", strlen("Fiskpinnar") + 1);
+	d_file_write("Fiskpinnar", strlen("Fiskpinnar") + 1, f);
+	d_file_close(f);
+	f = d_file_open("test.bz2", "rb");
+	d_file_read_compressed(f, bzval, strlen("Fiskpinnar") + 1);
 	if (strcmp(bzval, "Fiskpinnar"))
 		fprintf(stderr, "Compression test failed\n");
 	else {
-		darnitFileRead(bzval, strlen("Fiskpinnar") + 1, f);
+		d_file_read(bzval, strlen("Fiskpinnar") + 1, f);
 		if (strcmp(bzval, "Fiskpinnar"))
 			fprintf(stderr, "Post-compression test failed\n");
 		else
@@ -62,46 +62,46 @@ int main(int argc, char **argv) {
 	d_sound_play(music, 0, 127, 127, 0);
 
 	test_text = malloc(64);
-	font = darnitFontLoad("dejavu_sans.ttf", 28, 512, 512);
-	surface = darnitMenuVerticalCreate("Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 3);
+	font = d_font_load("dejavu_sans.ttf", 28, 512, 512);
+	surface = d_menu_vertical_new("Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 3);
 
-	sprite = darnitSpriteLoad("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
-	darnitSpriteMove(sprite, 50, 50);
-	text = darnitTextSurfaceAlloc(font, 80, 800, 0, 460);
-	fancy_text = darnitTextColorSurfaceAlloc(font, 16, 800, 0, 420);
+	sprite = d_sprite_load("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
+	d_sprite_move(sprite, 50, 50);
+	text = d_text_surface_new(font, 80, 800, 0, 460);
+	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 420);
 	colorTest(fancy_text);
 
 	mapsheet = darnitRenderTilesheetLoad("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
-	if ((map = darnitMapLoad("testmap.ldmz")) == NULL)
+	if ((map = d_map_load("testmap.ldmz")) == NULL)
 		fprintf(stderr, "Map load failed\n");
 //	tilemap = darnitRenderTilemapCreate("map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
-	darnitSpriteAnimationEnable(sprite);
+	d_sprite_animate_start(sprite);
 	sprintf(test_text, "Héllo, world. Modify m€! Test of offsets");
-	textinput = darnitMenuTextinputCreate(0, 0, font, test_text, 64, 200);
+	textinput = d_menu_textinput_new(0, 0, font, test_text, 64, 200);
 
-	mtsprite = darnitMTSpriteLoad("testspr.mts");
-	darnitMTSpriteAnimationEnable(mtsprite);
+	mtsprite = d_mtsprite_load("testspr.mts");
+	d_mtsprite_animate_start(mtsprite);
 
-	fps_text = darnitTextSurfaceAlloc(font, 16, 200, 0, 40);
+	fps_text = d_text_surface_new(font, 16, 200, 0, 40);
 
 	tilebuf = darnitRenderTileAlloc(1);
 	darnitRenderTileMove(tilebuf, 0, mapsheet, 64, 64);
 	darnitRenderTileSetTilesheetCoord(tilebuf, 0, mapsheet, 16, 16, 32, 32);
-	fprintf(stderr, "String lenght: %i\n", darnitFontGetStringWidthPixels(font, "ASDFÅÄÖ,,"));
+	fprintf(stderr, "String lenght: %i\n", d_font_string_w(font, "ASDFÅÄÖ,,"));
 
 //	for (i = 0; i < 10; i++) 
 //		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
 	for (i = j = 0;;) {
-		keys = darnitButtonGet();
-		darnitTextSurfaceReset(text); darnitTextSurfaceReset(fps_text);
-		mouse = darnitMouseGet();
-		darnitJoystickGet(&js0_x, &js0_y, &js1_x, &js1_y);
+		keys = d_keys_get();
+		d_text_surface_reset(text); d_text_surface_reset(fps_text);
+		mouse = d_mouse_get();
+		d_joystick_get(&js0_x, &js0_y, &js1_x, &js1_y);
 		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; nub0 (%i,%i) ;; nub1(%i,%i)", mouse.x, mouse.y, mouse.wheel, i*4, j*4, js0_x, js0_y, js1_x, js1_y);
-		sprintf(fps, "%i", darnitTimeLastFrameTook());
-		darnitTextSurfaceStringAppend(text, test);
-		darnitTextSurfaceStringAppend(fps_text, "ASDFÅÄÖ,,");
+		sprintf(fps, "%i", d_last_frame_time());
+		d_text_surface_string_append(text, test);
+		d_text_surface_string_append(fps_text, "ASDFÅÄÖ,,");
 
 		if (keys.lmb)
 			darnitRenderFadeIn(1000, 1.0f, 0.0f, 0.0f);
@@ -127,22 +127,22 @@ int main(int argc, char **argv) {
 		darnitRenderTilemap(map->layer->tilemap);
 		darnitRenderBlendingEnable();
 		if (keys.l == 1)
-			if (darnitMenuHandle(surface) != -1)
+			if (d_menu_loop(surface) != -1)
 				return 0;
-		darnitMenuHandle(textinput); 
-		darnitSpriteDraw(sprite);
-		darnitTextSurfaceDraw(text);
-		darnitTextSurfaceDraw(fancy_text);
-		darnitTextSurfaceDraw(fps_text);
+		d_menu_loop(textinput); 
+		d_sprite_draw(sprite);
+		d_text_surface_draw(text);
+		d_text_surface_draw(fancy_text);
+		d_text_surface_draw(fps_text);
 
 		darnitRenderOffset(-200, -200);
-		darnitMTSpriteDraw(mtsprite);
+		d_mtsprite_draw(mtsprite);
 		darnitRenderOffset(0, 0);
 
 		darnitRenderBlendingDisable();
 		darnitRenderTileDraw(tilebuf, mapsheet, 1);
 		darnitRenderEnd();
-		darnitLoop();
+		d_loop();
 	}
 
 

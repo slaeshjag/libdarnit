@@ -1,64 +1,64 @@
 #include "darnit.h"
 
 
-unsigned int EXPORT_THIS darnitButtonGet() {
+unsigned int EXPORT_THIS d_keys_get() {
 	return (d->input.key ^ d->input.keypending);
 }
 
 
-unsigned int EXPORT_THIS darnitButtonZero() {
+unsigned int EXPORT_THIS d_gets_zero() {
 	return 0;
 }
 
 
-void EXPORT_THIS darnitButtonSet(unsigned int button) {
+void EXPORT_THIS d_keys_set(unsigned int button) {
 	d->input.keypending |= button;
 
 	return;
 }
 
 
-void EXPORT_THIS darnitButtonMappingReset() {
+void EXPORT_THIS d_keymapping_reset() {
 	inputKeymapReset();
 
 	return;
 }
 
 
-void EXPORT_THIS darnitButtonMappingSet(INPUT_MAP map) {
+void EXPORT_THIS d_keymapping_set(INPUT_MAP map) {
 	d->input.map = map;
 
 	return;
 }
 
 
-INPUT_MAP EXPORT_THIS darnitButtonMappingGet() {
+INPUT_MAP EXPORT_THIS d_keymapping_get() {
 	return d->input.map;
 }
 
 
-void EXPORT_THIS darnitInputGrab() {
+void EXPORT_THIS d_input_grab() {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitInputUngrab() {
+void EXPORT_THIS d_input_release() {
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 
 	return;
 }
 
 
-DARNIT_MOUSE EXPORT_THIS darnitMouseGet() {
+DARNIT_MOUSE EXPORT_THIS d_mouse_get() {
 	DARNIT_MOUSE m = d->input.mouse;
 	d->input.mouse.wheel = 0;
 	return m;
 }
 
 
-void EXPORT_THIS darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_y) {
+void EXPORT_THIS d_joystick_get(int *js0_x, int *js0_y, int *js1_x, int *js1_y) {
 	if (js0_x != NULL)
 		*js0_x = d->input.js.nub0_x;
 	if (js0_y != NULL)
@@ -72,24 +72,24 @@ void EXPORT_THIS darnitJoystickGet(int *js0_x, int *js0_y, int *js1_x, int *js1_
 }
 
 
-void EXPORT_THIS darnitKeyboardRawPush(int sym, int action) {
+void EXPORT_THIS d_key_raw_push(int sym, int action) {
 	inputRawPush(sym, action);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitKeyboardRawPop(int *action) {
+int EXPORT_THIS d_key_raw_pop(int *action) {
 	return inputRawPop(action);
 }
 
 
-void EXPORT_THIS darnitKeyboardRawClear() {
+void EXPORT_THIS d_key_raw_clear() {
 	d->input.raw.use = 0;
 	return;
 }
 
 
-const char EXPORT_THIS *darnitKeyboardSymNameGet(int sym) {
+const char EXPORT_THIS *d_key_name_get(int sym) {
 	return SDL_GetKeyName(sym);
 }

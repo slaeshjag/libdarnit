@@ -1,13 +1,13 @@
 #ifndef __DARNIT_UTF8_H__
 #define	__DARNIT_UTF8_H__
 
-int darnitUtf8CharLengthGet(const char *str);
-unsigned int darnitUtf8UnicodeDecode(const char *str);
-int darnitUtf8UnicodeEncode(unsigned int ch, char *str, int buf_len);
-int darnitUtf8UnicodeEncodedLength(unsigned int ch);
-int darnitUtf8UnicodeCharactersInString(const char *str);
-int darnitUtf8UnicodeCharactersInStringCounted(const char *str, int buf_len);
-int darnitUtf8UnicodeCharacterStart(const char *str, unsigned int unicode_pos);
+int d_utf8_char_length(const char *str);
+unsigned int d_utf8_decode(const char *str);
+int d_utf8_encode(unsigned int ch, char *str, int buf_len);
+int d_utf8_encoded_length(unsigned int ch);
+int d_utf8_chars_in_string(const char *str);
+int d_utf8_chars_in_string_limited(const char *str, int buf_len);
+int d_utf8_char_pos(const char *str, unsigned int unicode_pos);
 
 
 #endif

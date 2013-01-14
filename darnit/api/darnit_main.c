@@ -1,7 +1,7 @@
 #include "darnit.h"
 
-void *darnitInitPartial(const char *data_dir);
-int darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
+void *d_init_partial(const char *data_dir);
+int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
 static void cleanup(void) {
@@ -73,15 +73,15 @@ void darnitSetPlatform(int partial) {
 }
 
 
-void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir, const char *icon) {
-	if (darnitInitPartial(data_dir) == NULL)
+void EXPORT_THIS *d_init(const char *wtitle, const char *data_dir, const char *icon) {
+	if (d_init_partial(data_dir) == NULL)
 		return NULL;
 	#ifdef PANDORA
-	if (darnitInitRest(wtitle, 800, 480, 1, icon) < 0)
+	if (d_init_rest(wtitle, 800, 480, 1, icon) < 0)
 	#elif defined GCW_ZERO
-	if (darnitInitRest(wtitle, 320, 240, 1, icon) < 0)
+	if (d_init_rest(wtitle, 320, 240, 1, icon) < 0)
 	#else
-	if (darnitInitRest(wtitle, 800, 480, 0, icon) < 0)
+	if (d_init_rest(wtitle, 800, 480, 0, icon) < 0)
 	#endif
 		return NULL;
 
@@ -89,16 +89,16 @@ void EXPORT_THIS *darnitInit(const char *wtitle, const char *data_dir, const cha
 }
 
 
-void EXPORT_THIS *darnitInitCustom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir, const char *icon) {
-	if (darnitInitPartial(data_dir) == NULL)
+void EXPORT_THIS *d_init_custom(const char *wtitle, int win_w, int win_h, int fullscreen, const char *data_dir, const char *icon) {
+	if (d_init_partial(data_dir) == NULL)
 		return NULL;
-	if (darnitInitRest(wtitle, win_w, win_h, fullscreen, icon) < 0)
+	if (d_init_rest(wtitle, win_w, win_h, fullscreen, icon) < 0)
 		return NULL;
 	return d;
 }
 
 
-int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon) {
+int EXPORT_THIS d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon) {
 	int t;
 
 	videoSetIcon(icon);
@@ -114,7 +114,7 @@ int EXPORT_THIS darnitInitRest(const char *wtitle, int win_w, int win_h, int ful
 }
 
 
-void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
+void EXPORT_THIS *d_init_partial(const char *data_dir) {
 	if ((d = malloc(sizeof(DARNIT))) == NULL) {
 		fprintf(stderr, "libDarnit: Error: Unable to malloc(%i)\n", (int) sizeof(DARNIT));
 		return d;
@@ -142,7 +142,7 @@ void EXPORT_THIS *darnitInitPartial(const char *data_dir) {
 }
 
 
-void EXPORT_THIS darnitLoop() {
+void EXPORT_THIS d_loop() {
 	int time = SDL_GetTicks();
 	
 	if (time / 1000 != d->fps.time) {
@@ -166,27 +166,32 @@ void EXPORT_THIS darnitLoop() {
 }
 
 
-unsigned int EXPORT_THIS darnitTimeGet() {
+unsigned int EXPORT_THIS d_time_get() {
 	return SDL_GetTicks();
 }
 
 
-int EXPORT_THIS darnitFPSGet() {
+int EXPORT_THIS d_fps() {
 	return d->fps.frames_last;
 }
 
 
-int EXPORT_THIS darnitTimeLastFrameTook() {
+int EXPORT_THIS d_last_frame_time() {
 	return d->fps.time_at_flip - d->fps.time_at_last_frame;
 }
 
 
-DARNIT_PLATFORM EXPORT_THIS darnitPlatformGet() {
+int darnitTimeLastFrameTook() {
+	return d_last_frame_time();
+}
+
+
+DARNIT_PLATFORM EXPORT_THIS d_platform() {
 	return d->platform;
 }
 
 
-void EXPORT_THIS darnitQuit() {
+void EXPORT_THIS d_quit() {
 	videoDestroy();
 
 	exit(0);
@@ -195,7 +200,7 @@ void EXPORT_THIS darnitQuit() {
 }
 
 
-void EXPORT_THIS **darnitVideomodeGet() {
+void EXPORT_THIS **d_videomode_get() {
 	void **nnn = (void **) SDL_ListModes(NULL, SDL_HWSURFACE | SDL_FULLSCREEN);
 	if (nnn == (void **) -1)
 		return NULL;

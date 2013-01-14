@@ -1,69 +1,69 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitRenderTilesheetNew(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
+void EXPORT_THIS *d_render_tilesheet_new(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
 	return renderNewTilesheet(tiles_w, tiles_h, tile_w, tile_h, format);
 }
 
 
-void EXPORT_THIS *darnitRenderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
+void EXPORT_THIS *d_render_tilesheet_load(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
 	return renderTilesheetLoad(fname, wsq, hsq, target_format);
 }
 
 
-void EXPORT_THIS darnitRenderTilesheetGeometricsGet(void *tilesheet, int *w, int *h, int *tile_w, int *tile_h) {
+void EXPORT_THIS d_render_tilesheet_geometrics(void *tilesheet, int *w, int *h, int *tile_w, int *tile_h) {
 	renderTilesheetGeometrics(tilesheet, w, h, tile_w, tile_h);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderTilesheetUpdate(void *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data) {
+void EXPORT_THIS d_render_tilesheet_update(void *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data) {
 	renderUpdateTilesheet(tilesheet, sheet_x, sheet_y, data, change_w, change_h);
 
 	return;
 }
 
 
-void EXPORT_THIS *darnitRenderTilesheetFree(void *tilesheet) {
+void EXPORT_THIS *d_render_tilesheet_free(void *tilesheet) {
 	return renderTilesheetFree(tilesheet);
 }
 
 
-void EXPORT_THIS darnitRenderTileBlit(void *tilesheet, unsigned int tile, int x, int y) {
+void EXPORT_THIS d_render_tile_blit(void *tilesheet, unsigned int tile, int x, int y) {
 	renderBlitTile(tilesheet, tile, x, y);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderTileMove(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y) {
+void EXPORT_THIS d_render_tile_move(DARNIT_RENDER_BUFFER *buf, unsigned int tile, unsigned int x, unsigned int y) {
 	TILE_CACHE *cache;
 
 	if (buf->tiles <= tile)
 		return;
 	
 	cache = &buf->tc[tile];
-	renderCalcTilePosCache(cache, tilesheet, x, y);
+	renderCalcTilePosCache(cache, buf->ts, x, y);
 
 	return;
 }
 
 
 /* tile_ts is the tile index in the tilesheet */
-void EXPORT_THIS darnitRenderTileSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, unsigned int tile_ts) {
+void EXPORT_THIS d_render_tile_set(DARNIT_RENDER_BUFFER *buf, unsigned int tile, unsigned int tile_ts) {
 	TILE_CACHE *cache;
 
 	if (buf->tiles <= tile)
 		return;
 	cache = &buf->tc[tile];
-	renderCalcTileCache(cache, tilesheet, tile_ts);
+	renderCalcTileCache(cache, buf->ts, tile_ts);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderLineMove(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int x1, int y1, int x2, int y2) {
+void EXPORT_THIS d_render_line_move(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int x1, int y1, int x2, int y2) {
 	LINE_CACHE *cache;
 
 	if (buf->lines <= line)
@@ -75,7 +75,7 @@ void EXPORT_THIS darnitRenderLineMove(DARNIT_RENDER_LINE_BUFFER *buf, unsigned i
 }
 
 
-void EXPORT_THIS darnitRenderRectSet(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int x1, int y1, int x2, int y2) {
+void EXPORT_THIS d_render_rect_set(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int x1, int y1, int x2, int y2) {
 	RECT_CACHE *cache;
 
 	if (buf->rects <= rect)
@@ -87,21 +87,20 @@ void EXPORT_THIS darnitRenderRectSet(DARNIT_RENDER_RECT_BUFFER *buf, unsigned in
 }
 
 
-void EXPORT_THIS darnitRenderTileSetTilesheetCoord(DARNIT_RENDER_BUFFER *buf, unsigned int tile, void *tilesheet, 
-							unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+void EXPORT_THIS d_render_tile_tilesheet_coord_set(DARNIT_RENDER_BUFFER *buf, unsigned int tile, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
 	TILE_CACHE *cache;
 
 	if (buf == NULL) return;
 	if (buf->tiles <= tile)
 		return;
 	cache = &buf->tc[tile];
-	renderSetTileCoord(cache, tilesheet, x, y, w, h);
+	renderSetTileCoord(cache, buf->ts, x, y, w, h);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderTileSizeSet(DARNIT_RENDER_BUFFER *buf, unsigned int tile, int w, int h) {
+void EXPORT_THIS d_render_tile_size_set(DARNIT_RENDER_BUFFER *buf, unsigned int tile, int w, int h) {
 	TILE_CACHE *cache;
 
 	if (buf == NULL)
@@ -115,7 +114,7 @@ void EXPORT_THIS darnitRenderTileSizeSet(DARNIT_RENDER_BUFFER *buf, unsigned int
 }
 
 
-void EXPORT_THIS darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
+void EXPORT_THIS d_render_tile_clear(DARNIT_RENDER_BUFFER *buf, unsigned int tile) {
 	float *ptr;
 	int i;
 
@@ -130,17 +129,17 @@ void EXPORT_THIS darnitRenderTileClear(DARNIT_RENDER_BUFFER *buf, unsigned int t
 }
 
 
-void EXPORT_THIS darnitRenderTileDraw(DARNIT_RENDER_BUFFER *buf, void *tilesheet, unsigned int tiles) {
+void EXPORT_THIS d_render_tile_draw(DARNIT_RENDER_BUFFER *buf, unsigned int tiles) {
 	if (buf == NULL) return;
 	if (buf->tiles <= tiles)
 		tiles = buf->tiles;
-	renderCache(buf->tc, tilesheet, tiles);
+	renderCache(buf->tc, buf->ts, tiles);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderLineDraw(DARNIT_RENDER_LINE_BUFFER *buf, int lines) {
+void EXPORT_THIS d_render_line_draw(DARNIT_RENDER_LINE_BUFFER *buf, int lines) {
 	if (buf == NULL)
 		return;
 	if (buf->lines < lines)
@@ -151,7 +150,7 @@ void EXPORT_THIS darnitRenderLineDraw(DARNIT_RENDER_LINE_BUFFER *buf, int lines)
 }
 
 
-void EXPORT_THIS darnitRenderRectDraw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
+void EXPORT_THIS d_render_rect_draw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
 	if (buf == NULL)
 		return;
 	if (buf->rects < rects)
@@ -162,7 +161,7 @@ void EXPORT_THIS darnitRenderRectDraw(DARNIT_RENDER_RECT_BUFFER *buf, int rects)
 }
 
 
-void EXPORT_THIS *darnitRenderTileAlloc(unsigned int tiles) {
+void EXPORT_THIS *d_render_tile_new(unsigned int tiles, void *tilesheet) {
 	DARNIT_RENDER_BUFFER *buf;
 	int i, j;
 	float *arr;
@@ -184,7 +183,7 @@ void EXPORT_THIS *darnitRenderTileAlloc(unsigned int tiles) {
 
 
 
-void EXPORT_THIS *darnitRenderRectAlloc(unsigned int rects) {
+void EXPORT_THIS *d_render_rect_new(unsigned int rects) {
 	DARNIT_RENDER_RECT_BUFFER *buf;
 	int i, j;
 	float *arr;
@@ -204,7 +203,7 @@ void EXPORT_THIS *darnitRenderRectAlloc(unsigned int rects) {
 }
 
 
-void EXPORT_THIS *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w) {
+void EXPORT_THIS *d_render_line_new(unsigned int lines, unsigned int line_w) {
 	DARNIT_RENDER_LINE_BUFFER *buf;
 	int i, j;
 	float *arr;
@@ -225,7 +224,7 @@ void EXPORT_THIS *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w)
 }
 
 
-void EXPORT_THIS *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
+void EXPORT_THIS *d_render_tile_free(DARNIT_RENDER_BUFFER *buf) {
 	if (buf == NULL) return NULL;
 	free(buf->tc);
 	free(buf);
@@ -234,7 +233,7 @@ void EXPORT_THIS *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
 }
 
 
-void EXPORT_THIS *darnitRenderLineFree(DARNIT_RENDER_LINE_BUFFER *buf) {
+void EXPORT_THIS *d_render_line_free(DARNIT_RENDER_LINE_BUFFER *buf) {
 	if (buf == NULL)
 		return NULL;
 	free(buf->lc);
@@ -245,7 +244,7 @@ void EXPORT_THIS *darnitRenderLineFree(DARNIT_RENDER_LINE_BUFFER *buf) {
 
 
 
-void EXPORT_THIS *darnitRenderRectFree(DARNIT_RENDER_RECT_BUFFER *buf) {
+void EXPORT_THIS *d_render_rect_free(DARNIT_RENDER_RECT_BUFFER *buf) {
 	if (buf == NULL)
 		return NULL;
 	free(buf->rc);
@@ -255,7 +254,7 @@ void EXPORT_THIS *darnitRenderRectFree(DARNIT_RENDER_RECT_BUFFER *buf) {
 }
 
 
-void EXPORT_THIS darnitRenderLineGet(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int *x, int *y, int *x2, int *y2) {
+void EXPORT_THIS d_render_line_get(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int *x, int *y, int *x2, int *y2) {
 	if (line >= buf->lines)
 		return;
 	renderLineGet(&buf->lc[line], x, y, x2, y2);
@@ -264,7 +263,7 @@ void EXPORT_THIS darnitRenderLineGet(DARNIT_RENDER_LINE_BUFFER *buf, unsigned in
 }
 
 
-void EXPORT_THIS darnitRenderBegin() {
+void EXPORT_THIS d_render_begin() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -272,7 +271,7 @@ void EXPORT_THIS darnitRenderBegin() {
 }
 
 
-void EXPORT_THIS darnitRenderEnd() {
+void EXPORT_THIS d_render_end() {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -280,33 +279,33 @@ void EXPORT_THIS darnitRenderEnd() {
 }
 
 
-void EXPORT_THIS darnitRenderBlendingEnable() {
+void EXPORT_THIS d_render_blend_enable() {
 	d->video.blend = 1;
 	glEnable(GL_BLEND);
 }
 
 
-void EXPORT_THIS darnitRenderBlendingDisable() {
+void EXPORT_THIS d_render_blend_disable() {
 	d->video.blend = 0;
 	glDisable(GL_BLEND);
 }
 
 
-void EXPORT_THIS darnitRenderTintGet(float *r, float *g, float *b, float *a) {
+void EXPORT_THIS d_render_tint_get(unsigned char *r, unsigned char *g, unsigned char *b, unsigned char *a) {
 	if (r)
-		*r = d->video.tint_r;
+		*r = d->video.tint_r * 255;
 	if (g)
-		*g = d->video.tint_g;
+		*g = d->video.tint_g * 255;
 	if (b)
-		*b = d->video.tint_b;
+		*b = d->video.tint_b * 255;
 	if (a)
-		*a = d->video.tint_a;
+		*a = d->video.tint_a * 255;
 	return;
 }
 
 
 
-void EXPORT_THIS darnitRenderTint(float r, float g, float b, float a) {
+void EXPORT_THIS d_render_tint(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
 	glColor4f(r, g, b, a);
 	d->video.tint_r = r;
 	d->video.tint_g = g;
@@ -318,7 +317,7 @@ void EXPORT_THIS darnitRenderTint(float r, float g, float b, float a) {
 }
 
 
-void EXPORT_THIS darnitRenderClearColorSet(unsigned char r, unsigned char g, unsigned char b) {
+void EXPORT_THIS d_render_clearcolor_set(unsigned char r, unsigned char g, unsigned char b) {
 	float rf, gf, bf;
 
 	rf = 1.0f/255 * r;
@@ -331,7 +330,7 @@ void EXPORT_THIS darnitRenderClearColorSet(unsigned char r, unsigned char g, uns
 }
 
 
-void EXPORT_THIS darnitRenderOffset(int x, int y) {
+void EXPORT_THIS d_render_offset(int x, int y) {
 	glLoadIdentity();
 	glTranslatef(d->video.swgran * x * -1, d->video.shgran * y, 0.0f);
 	d->video.offset_x = x * -1;
@@ -341,57 +340,58 @@ void EXPORT_THIS darnitRenderOffset(int x, int y) {
 }
 
 
-void EXPORT_THIS darnitRenderFadeIn(unsigned int time, float r, float g, float b) {
-	renderFadeFade(time, r, g, b);
+void EXPORT_THIS d_render_fade_in(unsigned int time, unsigned char r, unsigned char g, unsigned char b) {
+	renderFadeFade(time, 1.0f/(256-r), 1.0f/(256-g), 1.0f/(256-b));
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderFadeOut(unsigned int time) {
+void EXPORT_THIS d_render_fade_out(unsigned int time) {
 	renderFadeUnfade(time);
 
 	return;
 }
 
 
-int EXPORT_THIS darnitRenderFadeChanging() {
+int EXPORT_THIS d_render_fade_status() {
 	return d->video.fade.fading;
 }
 
 
-void EXPORT_THIS darnitRenderStateRestore() {
-	darnitRenderOffset(d->video.offset_x, d->video.offset_y);
-	darnitRenderTint(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
+void EXPORT_THIS d_render_state_restore() {
+	d_render_offset(d->video.offset_x, d->video.offset_y);
+//	FIXME: Implement
+//	darnitRenderTint(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
 	glEnable(GL_TEXTURE_2D);
 	if (d->video.blend)
-		darnitRenderBlendingEnable();
+		d_render_blend_enable();
 	else
-		darnitRenderBlendingDisable();
+		d_render_blend_disable();
 	return;
 }
 
 
-int EXPORT_THIS darnitRenderTilesheetAnimationApply(void *tilesheet, const char *fname) {
+int EXPORT_THIS d_render_tilesheet_animation_apply(void *tilesheet, const char *fname) {
 	return renderTilesheetAnimationApply(tilesheet, fname);
 }
 
 
-void EXPORT_THIS darnitRenderTilesheetAnimationAnimate(void *tilesheet) {
+void EXPORT_THIS d_render_tilesheet_animate(void *tilesheet) {
 	renderTilesheetAnimate(tilesheet);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderLogicOp(unsigned int logicop) {
+void EXPORT_THIS d_render_logic_op(unsigned int logicop) {
 	renderSetLogicOp(logicop);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitRenderTilesheetScaleAlgorithm(void *tilesheet, unsigned int scaling) {
+void EXPORT_THIS d_render_tilesheet_scale_algorithm(void *tilesheet, unsigned int scaling) {
 	renderTilesheetScalingSet((TILESHEET *) tilesheet, scaling);
 
 	return;

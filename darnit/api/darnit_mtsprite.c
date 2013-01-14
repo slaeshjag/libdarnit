@@ -1,65 +1,65 @@
 #include "darnit.h"
 
 
-void EXPORT_THIS *darnitMTSpriteNew(void *tilesheet) {
+void EXPORT_THIS *d_mtsprite_new(void *tilesheet) {
 	return mtSpriteNew(0, 0, tilesheet);
 }
 
 
-void EXPORT_THIS *darnitMTSpriteLoad(const char *fname) {
+void EXPORT_THIS *d_mtsprite_load(const char *fname) {
 	return mtSpriteLoad(fname);
 }
 
 
-void EXPORT_THIS darnitMTSpriteAnimationEnable(void *mtsprite) {
+void EXPORT_THIS d_mtsprite_animate_start(void *mtsprite) {
 	mtSpriteEnableAnimation(mtsprite);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMTSpriteAnimationPause(void *mtsprite) {
+void EXPORT_THIS d_mtsprite_animate_pause(void *mtsprite) {
 	mtSpritePauseAnimation(mtsprite);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMTSpriteTileAdd(void *sprite, int x, int y, int w, int h, int rx, int ry) {
+void EXPORT_THIS d_mtsprite_tile_add(void *sprite, int x, int y, int w, int h, int rx, int ry) {
 	mtSpriteAddTile(sprite, x, y, w, h, rx, ry);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMTSpriteFrameSet(void *sprite, int time) {
+void EXPORT_THIS d_mtsprite_frame_set(void *sprite, int time) {
 	mtSpriteSetAsFrame(sprite, time);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMTSpriteAnimationDisable(void *mtsprite) {
+void EXPORT_THIS d_mtsprite_animate_stop(void *mtsprite) {
 	mtSpriteDisableAnimation(mtsprite);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMTSpriteAnimationRepeatSet(void *mtsprite, int repeat) {
+void EXPORT_THIS d_mtsprite_animate_repeat(void *mtsprite, int repeat) {
 	mtSpriteSetRepeat(mtsprite, repeat);
 
 	return;
 }
 
 
-void EXPORT_THIS darnitMTSpriteDraw(void *mtsprite) {
+void EXPORT_THIS d_mtsprite_draw(void *mtsprite) {
 	mtSpriteDraw(mtsprite);
 
 	return;
 }
 
 
-void EXPORT_THIS *darnitMTSpriteDelete(void *mtsprite) {
+void EXPORT_THIS *d_mtsprite_delete(void *mtsprite) {
 	return mtSpriteDelete(mtsprite);
 }

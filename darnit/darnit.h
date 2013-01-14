@@ -94,6 +94,7 @@ int darnitTimeLastFrameTook();
 typedef struct {
 	TILE_CACHE		*tc;
 	unsigned int		tiles;
+	TILESHEET		*ts;
 } DARNIT_RENDER_BUFFER;
 
 
