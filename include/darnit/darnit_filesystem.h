@@ -35,7 +35,7 @@ size_t d_file_read(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t d_file_write_ints(void *buffer, size_t ints, DARNIT_FILE *file);
 size_t d_file_write(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t d_file_gets(void *buffer, size_t bytes, DARNIT_FILE *file);
-size_t d_file_line_get(void *buffer, size_t bytes, DARNIT_FILE *file);
+size_t d_file_getln(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t d_file_whitespace_skip(DARNIT_FILE *file);
 
 int d_file_read_compressed(DARNIT_FILE *file, void *data, int len);

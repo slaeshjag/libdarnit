@@ -51,7 +51,7 @@ void d_render_blend_disable();
 void d_render_tint(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 void d_render_tint_get(unsigned char *r, unsigned char *g, unsigned char *b, unsigned char *a);
 void d_render_clearcolor_set(unsigned char r, unsigned char g, unsigned char b);
-void d_render_offsett(int x, int y);
+void d_render_offset(int x, int y);
 
 void d_render_fade_in(unsigned int time, unsigned char r, unsigned char g, unsigned char b);
 void d_render_fade_out(unsigned int time);

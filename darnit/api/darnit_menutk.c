@@ -91,7 +91,7 @@ void EXPORT_THIS d_menu_show(void *menu) {
 }
 
 
-void EXPORT_THIS *d_menu_destroy(void *menu) {
+void EXPORT_THIS *d_menu_free(void *menu) {
 	return menutkDestroy(menu);
 }
 

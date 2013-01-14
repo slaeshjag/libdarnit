@@ -60,6 +60,6 @@ void EXPORT_THIS d_mtsprite_draw(void *mtsprite) {
 }
 
 
-void EXPORT_THIS *d_mtsprite_delete(void *mtsprite) {
+void EXPORT_THIS *d_mtsprite_free(void *mtsprite) {
 	return mtSpriteDelete(mtsprite);
 }

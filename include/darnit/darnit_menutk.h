@@ -17,6 +17,6 @@ int d_menu_peek(DARNIT_MENU *menu, int *top_sel);
 int d_menu_changed(DARNIT_MENU *menu);
 void d_menu_hide(DARNIT_MENU *menu);
 void d_menu_show(DARNIT_MENU *menu);
-void *d_menu_destroy(DARNIT_MENU *menu);
+void *d_menu_free(DARNIT_MENU *menu);
 
 #endif
