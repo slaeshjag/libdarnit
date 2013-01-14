@@ -116,7 +116,7 @@ void bboxClear(BBOX *bbox) {
 }
 
 
-int bboxCollBoxTest(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
+int bboxCollBoxTest(BBOX *bbox, int x, int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
 	if (bbox == NULL) return 0;
 	int i, test, no;
 
