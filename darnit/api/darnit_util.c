@@ -19,3 +19,10 @@ char EXPORT_THIS *d_util_path_translate(const char *path) {
 int EXPORT_THIS d_util_string_to_int_array(const char *str, const char *delimiter, int *dest, int max_tokens) {
 	return utilStringToIntArray(str, delimiter, dest, max_tokens);
 }
+
+
+void EXPORT_THIS d_util_endian_convert(unsigned int *block, int elements) {
+	utilBlockToHostEndian(block, elements);
+
+	return;
+}
