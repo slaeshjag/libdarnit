@@ -18,51 +18,51 @@ typedef void DARNIT_LINE;
 typedef void DARNIT_RECT;
 
 
-DARNIT_TILESHEET *darnitRenderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format);
-DARNIT_TILESHEET *darnitRenderTilesheetNew(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
-void darnitRenderTilesheetUpdate(DARNIT_TILESHEET *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data);
-void darnitRenderTilesheetGeometricsGet(DARNIT_TILESHEET *tilesheet, int *w, int *h, int *tile_w, int *tile_h);
-DARNIT_TILESHEET *darnitRenderTilesheetFree(DARNIT_TILESHEET *tilesheet);
+DARNIT_TILESHEET *d_render_tilesheet_load(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format);
+DARNIT_TILESHEET *d_render_tilesheet_new(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
+void d_render_tilesheet_update(DARNIT_TILESHEET *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data);
+void d_render_tilesheet_geometrics(DARNIT_TILESHEET *tilesheet, int *w, int *h, int *tile_w, int *tile_h);
+DARNIT_TILESHEET *d_render_tilesheet_free(DARNIT_TILESHEET *tilesheet);
 
-void darnitRenderTileMove(DARNIT_TILE *tile_p, unsigned int tile, void *tilesheet, unsigned int x, unsigned int y);
-void darnitRenderTileSetTilesheetCoord(DARNIT_TILE *tile_p, unsigned int tile, DARNIT_TILESHEET *tilesheet, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
-void darnitRenderTileSizeSet(DARNIT_TILE *buf, unsigned int tile, int w, int h);
-void darnitRenderTileSet(DARNIT_TILE *tile_p, unsigned int tile, DARNIT_TILESHEET *tilesheet, unsigned int tile_ts);
-void darnitRenderTileClear(DARNIT_TILE *tile_p, unsigned int tile);
-void darnitRenderTileDraw(DARNIT_TILE *tile_p, void *tilesheet, unsigned int tiles);
-DARNIT_TILE *darnitRenderTileAlloc(unsigned int tiles);
-DARNIT_TILE *darnitRenderTileFree(DARNIT_TILE *tile_p);
+void d_render_tile_move(DARNIT_TILE *tile_p, unsigned int tile, unsigned int x, unsigned int y);
+void d_render_tile_tilesheet_coord_set(DARNIT_TILE *tile_p, unsigned int tile, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
+void d_render_tile_size_set(DARNIT_TILE *buf, unsigned int tile, int w, int h);
+void d_render_tile_set(DARNIT_TILE *tile_p, unsigned int tile, unsigned int tile_ts);
+void d_render_tile_clear(DARNIT_TILE *tile_p, unsigned int tile);
+void d_render_tile_draw(DARNIT_TILE *tile_p, unsigned int tiles);
+DARNIT_TILE *d_render_tile_new(unsigned int tiles, DARNIT_TILESHEET *tilesheet);
+DARNIT_TILE *d_render_tile_free(DARNIT_TILE *tile_p);
 
-DARNIT_LINE *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w);
-void darnitRenderLineMove(DARNIT_LINE *line_p, unsigned int line, int x1, int y1, int x2, int y2);
-void darnitRenderLineDraw(DARNIT_LINE *line_p, int lines);
-DARNIT_LINE *darnitRenderLineFree(DARNIT_LINE *line_p);
+DARNIT_LINE *d_render_line_new(unsigned int lines, unsigned int line_w);
+void d_render_line_move(DARNIT_LINE *line_p, unsigned int line, int x1, int y1, int x2, int y2);
+void d_render_line_draw(DARNIT_LINE *line_p, int lines);
+DARNIT_LINE *d_render_line_free(DARNIT_LINE *line_p);
 
-DARNIT_RECT *darnitRenderRectAlloc(unsigned int rects);
-void darnitRenderRectSet(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
-void darnitRenderRectDraw(DARNIT_RECT *rect_p, int rects);
-DARNIT_RECT *darnitRenderRectFree(DARNIT_RECT *rect_p);
+DARNIT_RECT *d_render_rect_new(unsigned int rects);
+void d_render_rect_set(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
+void d_render_rect_draw(DARNIT_RECT *rect_p, int rects);
+DARNIT_RECT *d_render_rect_free(DARNIT_RECT *rect_p);
 
-void darnitRenderLineGet(DARNIT_LINE *buf, unsigned int line, int *x, int *y, int *x2, int *y2);
-void darnitRenderBegin();
-void darnitRenderEnd();
-void darnitRenderBlendingEnable();
-void darnitRenderBlendingDisable();
-void darnitRenderTint(float r, float g, float b, float a);
-void darnitRenderTintGet(float *r, float *g, float *b, float *a);
-void darnitRenderClearColorSet(unsigned char r, unsigned char g, unsigned char b);
-void darnitRenderOffset(int x, int y);
+void d_render_line_get(DARNIT_LINE *buf, unsigned int line, int *x, int *y, int *x2, int *y2);
+void d_render_begin();
+void d_render_end();
+void d_render_blend_enable();
+void d_render_blend_disable();
+void d_render_tint(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+void d_render_tint_get(unsigned char *r, unsigned char *g, unsigned char *b, unsigned char *a);
+void d_render_clearcolor_set(unsigned char r, unsigned char g, unsigned char b);
+void d_render_offsett(int x, int y);
 
-void darnitRenderFadeIn(unsigned int time, float r, float g, float b);
-void darnitRenderFadeOut(unsigned int time);
-int darnitRenderFadeChanging();
-void darnitRenderStateRestore();
+void d_render_fade_in(unsigned int time, unsigned char r, unsigned char g, unsigned char b);
+void d_render_fade_out(unsigned int time);
+int d_render_fade_status();
+void d_render_state_restore();
 
-int darnitRenderTilesheetAnimationApply(DARNIT_TILESHEET *tilesheet, const char *fname);
-void darnitRenderTilesheetAnimationAnimate(DARNIT_TILESHEET *tilesheet);
+int d_render_tilesheet_animation_apply(DARNIT_TILESHEET *tilesheet, const char *fname);
+void d_render_tilesheet_animate(DARNIT_TILESHEET *tilesheet);
 
-void darnitRenderLogicOp(unsigned int logicop);
-void darnitRenderTilesheetScaleAlgorithm(DARNIT_TILESHEET *tilesheet, unsigned int scaling);
+void d_render_logic_op(unsigned int logicop);
+void d_render_tilesheet_scale_algorithm(DARNIT_TILESHEET *tilesheet, unsigned int scaling);
 
 
 
@@ -74,7 +74,7 @@ void darnitRenderTilesheetScaleAlgorithm(DARNIT_TILESHEET *tilesheet, unsigned i
 
 
 /* Please don't use this function. I hate it <.< */
-void darnitRenderTileBlit(void *tilesheet, unsigned int tile, int x, int y);
+void d_render_tile_blit(void *tilesheet, unsigned int tile, int x, int y);
 
 
 #endif
