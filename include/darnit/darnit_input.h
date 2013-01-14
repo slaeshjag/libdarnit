@@ -67,7 +67,7 @@ typedef struct {
 DARNIT_KEYS d_keys_get();
 void d_keys_set(DARNIT_KEYS keys);
 DARNIT_KEYS d_keys_zero();
-void d_input_grap();
+void d_input_grab();
 void d_input_release();
 DARNIT_MOUSE d_mouse_get();
 void d_keymapping_reset();

@@ -58,7 +58,7 @@ size_t EXPORT_THIS d_file_gets(void *buffer, size_t bytes, FILESYSTEM_FILE *file
 }
 
 
-size_t EXPORT_THIS d_file_line_get(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
+size_t EXPORT_THIS d_file_getln(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
 	return fsFileGetLine(buffer, bytes, file);
 }
 

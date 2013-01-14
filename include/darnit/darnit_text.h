@@ -8,7 +8,7 @@ DARNIT_FONT *d_font_load(const char *fname, unsigned int size, unsigned int shee
 unsigned int d_font_glyph_w(DARNIT_FONT *font, const char *s);
 unsigned int d_font_string_w(DARNIT_FONT *font, const char *string);
 unsigned int d_font_word_w(DARNIT_FONT *font, const char *string, unsigned int *bytes);
-unsigned int d_font_string_geometric(DARNIT_FONT *font, const char *string, int linelen, int *string_w);
+unsigned int d_font_string_geometrics(DARNIT_FONT *font, const char *string, int linelen, int *string_w);
 unsigned int d_font_glyph_h(DARNIT_FONT *font);
 unsigned int d_font_glyph_hs(DARNIT_FONT *font);
 void d_text_surface_reset(DARNIT_TEXT_SURFACE *surface);

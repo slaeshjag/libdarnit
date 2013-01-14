@@ -11,7 +11,7 @@ void EXPORT_THIS *d_sprite_load(const char *fname, int dir, unsigned int target_
 }
 
 
-void EXPORT_THIS *d_sprite_delete(void *sprite) {
+void EXPORT_THIS *d_sprite_free(void *sprite) {
 	return spriteDelete(sprite);
 }
 
