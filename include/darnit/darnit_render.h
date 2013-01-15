@@ -29,6 +29,7 @@ void d_render_tile_move(DARNIT_TILE *tile_p, unsigned int tile, unsigned int x, 
 void d_render_tile_tilesheet_coord_set(DARNIT_TILE *tile_p, unsigned int tile, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void d_render_tile_size_set(DARNIT_TILE *buf, unsigned int tile, int w, int h);
 void d_render_tile_set(DARNIT_TILE *tile_p, unsigned int tile, unsigned int tile_ts);
+void d_render_tile_tilesheet(DARNIT_TILE *tile_p, DARNIT_TILESHEET *tilesheet);
 void d_render_tile_clear(DARNIT_TILE *tile_p, unsigned int tile);
 void d_render_tile_draw(DARNIT_TILE *tile_p, unsigned int tiles);
 DARNIT_TILE *d_render_tile_new(unsigned int tiles, DARNIT_TILESHEET *tilesheet);

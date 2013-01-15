@@ -145,6 +145,15 @@ void EXPORT_THIS d_render_tile_draw(DARNIT_RENDER_BUFFER *buf, unsigned int tile
 }
 
 
+void EXPORT_THIS d_render_tile_tilesheet(DARNIT_RENDER_BUFFER *buf, void *texture) {
+	if (!buf)
+		return;
+	buf->ts = texture;
+
+	return;
+}
+
+
 void EXPORT_THIS d_render_line_draw(DARNIT_RENDER_LINE_BUFFER *buf, int lines) {
 	if (buf == NULL)
 		return;
