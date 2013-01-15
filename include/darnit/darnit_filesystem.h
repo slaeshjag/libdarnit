@@ -26,6 +26,9 @@ typedef void DARNIT_FILE;
 int d_fs_mount(const char *fname);
 void d_fs_unmount(const char *fname);
 
+int d_fs_mount_self();
+void d_fs_unmount_self();
+
 DARNIT_FILE *d_file_open(const char *fname, const char *mode);
 DARNIT_FILE *d_file_close(DARNIT_FILE *file);
 

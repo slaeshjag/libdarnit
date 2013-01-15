@@ -63,6 +63,50 @@ int fsInit(const char *dir_name) {
 }
 
 
+int fsMountSelf() {
+	int i;
+	char *path = fsFindBinaryPath();
+	i = fsMount(path);
+
+	free(path);
+	return i;
+}
+
+
+void fsUnmountSelf() {
+	char *path = fsFindBinaryPath();
+	fsUnmount(path);
+	free(path);
+
+	return;
+}
+
+
+char *fsFindBinaryPath() {
+	char *path;
+
+	if (!(path = malloc(DARNIT_PATH_MAX)))
+		return path;
+	
+	if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+		#ifndef _WIN32
+		path[readlink("/proc/self/exe", path, DARNIT_PATH_MAX-1)] = 0;
+		#endif
+		return path;
+	}
+
+	if (d->platform.platform & DARNIT_PLATFORM_WIN32) {
+		*path = 0;
+		#ifdef _WIN32
+		GetModuleFileName(NULL, path, DARNIT_PATH_MAX);
+		#endif
+		return path;
+	}
+
+	return NULL;
+}
+
+
 void fsDirectoryCreate(const char *dir_name) {
 	char tmp[256];
 	if (strlen(dir_name) + 2 + strlen(d->fs.write_dir) > 256)
