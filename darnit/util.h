@@ -24,6 +24,8 @@ typedef struct {
 
 void utilInit();
 int utilSine(int angle);
+#define utilCos(x) utilSine(900+(x))
+#define UTIL_PI 31
 
 
 #endif
