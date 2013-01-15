@@ -77,9 +77,10 @@ void EXPORT_THIS d_render_line_move(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int
 void EXPORT_THIS darnitRenderCircleMove(DARNIT_RENDER_LINE_BUFFER *buf, int x, int y, int radius) {
 	int a, i, step=3600/(buf->lines - 1);
 	for(a = 0, i = 0; a <= 3600; a += step, i++) {
-		d_render_line_move(buf, i, x + ((radius*utilCos(a)) >> 16), y+((radius*utilSine(a)) >> 16), x + ((radius*utilCos(a+step)) >> 16), y + ((radius*utilSine(a+step)) >> 16));
+		darnitRenderLineMove(buf, i, x + ((radius*utilCos(a)) >> 16), y+((radius*utilSine(a)) >> 16), x + ((radius*utilCos(a+step)) >> 16), y + ((radius*utilSine(a+step)) >> 16));
 	}
 }
+
 
 void EXPORT_THIS d_render_rect_set(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int x1, int y1, int x2, int y2) {
 	RECT_CACHE *cache;
@@ -156,12 +157,16 @@ void EXPORT_THIS d_render_line_draw(DARNIT_RENDER_LINE_BUFFER *buf, int lines) {
 }
 
 
+<<<<<<< HEAD
+void EXPORT_THIS d_render_rect_draw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
+=======
 void EXPORT_THIS darnitRenderCircleDraw(DARNIT_RENDER_LINE_BUFFER *buf) {
-	d_render_line_draw(buf, buf->lines);
+	darnitRenderLineDraw(buf, buf->lines);
 }
 
 
 void EXPORT_THIS darnitRenderRectDraw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
+>>>>>>> FETCH_HEAD
 	if (buf == NULL)
 		return;
 	if (buf->rects < rects)
@@ -235,8 +240,9 @@ void EXPORT_THIS *d_render_line_new(unsigned int lines, unsigned int line_w) {
 }
 
 void EXPORT_THIS *darnitRenderCircleAlloc(unsigned int lines, unsigned int line_w) {
-	return d_render_line_new(lines+1, line_w);
+	return darnitRenderLineAlloc(lines+1, line_w);
 }
+
 
 void EXPORT_THIS *d_render_tile_free(DARNIT_RENDER_BUFFER *buf) {
 	if (buf == NULL) return NULL;
@@ -258,8 +264,9 @@ void EXPORT_THIS *d_render_line_free(DARNIT_RENDER_LINE_BUFFER *buf) {
 
 
 void EXPORT_THIS *darnitRenderCircleFree(DARNIT_RENDER_LINE_BUFFER *buf) {
-	return d_render_line_free(buf);
+	return darnitRenderLineFree(buf);
 }
+
 
 void EXPORT_THIS *d_render_rect_free(DARNIT_RENDER_RECT_BUFFER *buf) {
 	if (buf == NULL)

@@ -89,7 +89,7 @@ void utilInit() {
 	srandom(time(NULL));
 
 	for (i = 0; i < 3600; i++)
-		d->util.sine[i] = sinf(M_PI / 2 * i / 10) * 65536;
+		d->util.sine[i] = sinf(M_PI / 1800 * i) * 65536;
 	return;
 }
 
