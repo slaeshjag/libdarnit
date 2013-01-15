@@ -203,6 +203,13 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 	if (*name == '/');				/* Path is absolute, skip all FS stuff */
 	/* Try read-only locations */
 	else if (!strstr(mode, "w") && !strstr(mode, "a") && !strstr(mode, "+")) {		
+		/* Mkay, that didn't work. I guess we'll try open it directly */
+		path_new = utilPathTranslate(name);
+		if ((fp = fopen(path_new, mode)) == NULL);
+		else						/* W00t! */
+			return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0);
+		free(path_new);
+		
 		/* Build data-dir path */
 		sprintf(path, "%s/%s", d->fs.data_dir, name);
 		path_new = utilPathTranslate(path);
@@ -221,12 +228,6 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		free(path_new);
 	} 
 	
-	/* Mkay, that didn't work. I guess we'll try open it directly */
-	path_new = utilPathTranslate(name);
-	if ((fp = fopen(path_new, mode)) == NULL);
-	else						/* W00t! */
-		return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0);
-	free(path_new);
 	return NULL;
 }
 
