@@ -15,6 +15,7 @@
 typedef void DARNIT_TILESHEET;
 typedef void DARNIT_TILE;
 typedef void DARNIT_LINE;
+typedef void DARNIT_CIRCLE;
 typedef void DARNIT_RECT;
 
 
@@ -37,6 +38,11 @@ DARNIT_LINE *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w);
 void darnitRenderLineMove(DARNIT_LINE *line_p, unsigned int line, int x1, int y1, int x2, int y2);
 void darnitRenderLineDraw(DARNIT_LINE *line_p, int lines);
 DARNIT_LINE *darnitRenderLineFree(DARNIT_LINE *line_p);
+
+DARNIT_CIRCLE *darnitRenderCircleAlloc(unsigned int lines, unsigned int line_w);
+void darnitRenderCircleMove(DARNIT_CIRCLE *circle_p, int x, int y, int radius);
+void darnitRenderCircleDraw(DARNIT_CIRCLE *circle_p);
+DARNIT_CIRCLE *darnitRenderCircleFree(DARNIT_CIRCLE *circle_p);
 
 DARNIT_RECT *darnitRenderRectAlloc(unsigned int rects);
 void darnitRenderRectSet(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
