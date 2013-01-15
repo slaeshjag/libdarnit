@@ -74,6 +74,13 @@ void EXPORT_THIS darnitRenderLineMove(DARNIT_RENDER_LINE_BUFFER *buf, unsigned i
 	return;
 }
 
+void EXPORT_THIS darnitRenderCircleMove(DARNIT_RENDER_LINE_BUFFER *buf, int x, int y, int radius) {
+	int a, i, step=3600/(buf->lines - 1);
+	for(a = 0, i = 0; a <= 3600; a += step, i++) {
+		darnitRenderLineMove(buf, i, x + ((radius*utilCos(a)) >> 16), y+((radius*utilSine(a)) >> 16), x + ((radius*utilCos(a+step)) >> 16), y + ((radius*utilSine(a+step)) >> 16));
+	}
+}
+
 
 void EXPORT_THIS darnitRenderRectSet(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int x1, int y1, int x2, int y2) {
 	RECT_CACHE *cache;
@@ -151,6 +158,11 @@ void EXPORT_THIS darnitRenderLineDraw(DARNIT_RENDER_LINE_BUFFER *buf, int lines)
 }
 
 
+void EXPORT_THIS darnitRenderCircleDraw(DARNIT_RENDER_LINE_BUFFER *buf) {
+	darnitRenderLineDraw(buf, buf->lines);
+}
+
+
 void EXPORT_THIS darnitRenderRectDraw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
 	if (buf == NULL)
 		return;
@@ -224,6 +236,10 @@ void EXPORT_THIS *darnitRenderLineAlloc(unsigned int lines, unsigned int line_w)
 	return buf;
 }
 
+void EXPORT_THIS *darnitRenderCircleAlloc(unsigned int lines, unsigned int line_w) {
+	return darnitRenderLineAlloc(lines+1, line_w);
+}
+
 
 void EXPORT_THIS *darnitRenderTileFree(DARNIT_RENDER_BUFFER *buf) {
 	if (buf == NULL) return NULL;
@@ -243,6 +259,10 @@ void EXPORT_THIS *darnitRenderLineFree(DARNIT_RENDER_LINE_BUFFER *buf) {
 	return NULL;
 }
 
+
+void EXPORT_THIS *darnitRenderCircleFree(DARNIT_RENDER_LINE_BUFFER *buf) {
+	return darnitRenderLineFree(buf);
+}
 
 
 void EXPORT_THIS *darnitRenderRectFree(DARNIT_RENDER_RECT_BUFFER *buf) {
