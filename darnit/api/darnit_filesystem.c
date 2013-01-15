@@ -16,6 +16,18 @@ void EXPORT_THIS d_fs_unmount(const char *fname) {
 }
 
 
+int EXPORT_THIS d_fs_mount_self() {
+	return fsMountSelf();
+}
+
+
+void EXPORT_THIS d_fs_unmount_self() {
+	fsUnmountSelf();
+
+	return;
+}
+
+
 FILESYSTEM_FILE EXPORT_THIS *d_file_open(const char *fname, const char *mode) {
 	return fsFileOpen(fname, mode);
 }
