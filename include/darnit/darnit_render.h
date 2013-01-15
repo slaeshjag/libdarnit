@@ -44,10 +44,10 @@ void d_render_rect_set(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, i
 void d_render_rect_draw(DARNIT_RECT *rect_p, int rects);
 DARNIT_RECT *d_render_rect_free(DARNIT_RECT *rect_p);
 
-DARNIT_CIRCLE *darnitRenderCircleAlloc(unsigned int lines, unsigned int line_w);
-void darnitRenderCircleMove(DARNIT_CIRCLE *circle_p, int x, int y, int radius);
-void darnitRenderCircleDraw(DARNIT_CIRCLE *circle_p);
-DARNIT_CIRCLE *darnitRenderCircleFree(DARNIT_CIRCLE *circle_p);
+DARNIT_CIRCLE *d_render_circle_new(unsigned int lines, unsigned int line_w);
+void d_render_circle_move(DARNIT_CIRCLE *circle_p, int x, int y, int radius);
+void d_render_circle_draw(DARNIT_CIRCLE *circle_p);
+DARNIT_CIRCLE *d_render_circle_free(DARNIT_CIRCLE *circle_p);
 
 void d_render_line_get(DARNIT_LINE *buf, unsigned int line, int *x, int *y, int *x2, int *y2);
 void d_render_begin();
