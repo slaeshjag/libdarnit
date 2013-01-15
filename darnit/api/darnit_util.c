@@ -26,3 +26,8 @@ void EXPORT_THIS d_util_endian_convert(unsigned int *block, int elements) {
 
 	return;
 }
+
+
+int EXPORT_THIS d_util_sin(int angle) {
+	return utilSine(angle);
+}
