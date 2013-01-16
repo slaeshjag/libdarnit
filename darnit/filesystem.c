@@ -209,14 +209,6 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		else						/* W00t! */
 			return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0);
 		free(path_new);
-		
-		/* Build data-dir path */
-		sprintf(path, "%s/%s", d->fs.data_dir, name);
-		path_new = utilPathTranslate(path);
-		if ((fp = fopen(path_new, mode)) == NULL);
-		else
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
-		free(path_new);
 
 		/* Look in data containers */
 		path_new = malloc(strlen(name) + 1);
@@ -225,6 +217,14 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		else {
 			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
 		}
+		free(path_new);
+		
+		/* Build data-dir path */
+		sprintf(path, "%s/%s", d->fs.data_dir, name);
+		path_new = utilPathTranslate(path);
+		if ((fp = fopen(path_new, mode)) == NULL);
+		else
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
 		free(path_new);
 	} 
 	
