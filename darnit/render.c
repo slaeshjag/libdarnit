@@ -65,6 +65,8 @@ void renderDelTSRef(int ref) {
 		return;
 	
 	d->tsr.tsr[ref].fast_cmp = 0;
+	free(d->tsr.tsr[ref].fname);
+	d->tsr.tsr[ref].fname = NULL;
 
 	return;
 }
