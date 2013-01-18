@@ -197,6 +197,7 @@ void EXPORT_THIS *d_render_tile_new(unsigned int tiles, void *tilesheet) {
 	}
 
 	buf->tiles = tiles;
+	buf->ts = tilesheet;
 
 	return buf;
 }
