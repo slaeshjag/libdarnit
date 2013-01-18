@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
 	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 420);
 	colorTest(fancy_text);
 
-	mapsheet = darnitRenderTilesheetLoad("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
+	mapsheet = d_render_tilesheet_load("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	if ((map = d_map_load("testmap.ldmz")) == NULL)
 		fprintf(stderr, "Map load failed\n");
 //	tilemap = darnitRenderTilemapCreate("map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
@@ -85,9 +85,9 @@ int main(int argc, char **argv) {
 
 	fps_text = d_text_surface_new(font, 16, 200, 0, 40);
 
-	tilebuf = darnitRenderTileAlloc(1);
-	darnitRenderTileMove(tilebuf, 0, mapsheet, 64, 64);
-	darnitRenderTileSetTilesheetCoord(tilebuf, 0, mapsheet, 16, 16, 32, 32);
+	tilebuf = d_render_tile_new(1, mapsheet);
+	d_render_tile_move(tilebuf, 0, 64, 64);
+	d_render_tile_tilesheet_coord_set(tilebuf, 0, 16, 16, 32, 32);
 	fprintf(stderr, "String lenght: %i\n", d_font_string_w(font, "ASDFÅÄÖ,,"));
 
 //	for (i = 0; i < 10; i++) 
@@ -104,11 +104,11 @@ int main(int argc, char **argv) {
 		d_text_surface_string_append(fps_text, "ASDFÅÄÖ,,");
 
 		if (keys.lmb)
-			darnitRenderFadeIn(1000, 1.0f, 0.0f, 0.0f);
+			d_render_fade_in(1000, 1.0f, 0.0f, 0.0f);
 		if (keys.rmb)
-			darnitRenderFadeOut(1000);
+			d_render_fade_out(1000);
 
-		darnitRenderBegin();
+		d_render_begin();
 
 		if (keys.left == 1)
 			i--;
@@ -122,10 +122,10 @@ int main(int argc, char **argv) {
 			fprintf(stderr, "Blololol\n");
 
 		if (keys.r == 1)
-			darnitRenderTilemapCameraMove(map->layer->tilemap, i*4, j*4);
+			d_tilemap_camera_move(map->layer->tilemap, i*4, j*4);
 //		darnitRenderTint(handle, 1.0f, 1.0f, 1.0f, 1.0f);
-		darnitRenderTilemap(map->layer->tilemap);
-		darnitRenderBlendingEnable();
+		d_tilemap_draw(map->layer->tilemap);
+		d_render_blend_enable();
 		if (keys.l == 1)
 			if (d_menu_loop(surface) != -1)
 				return 0;
@@ -135,13 +135,13 @@ int main(int argc, char **argv) {
 		d_text_surface_draw(fancy_text);
 		d_text_surface_draw(fps_text);
 
-		darnitRenderOffset(-200, -200);
+		d_render_offset(-200, -200);
 		d_mtsprite_draw(mtsprite);
-		darnitRenderOffset(0, 0);
+		d_render_offset(0, 0);
 
-		darnitRenderBlendingDisable();
-		darnitRenderTileDraw(tilebuf, mapsheet, 1);
-		darnitRenderEnd();
+		d_render_blend_disable();
+		d_render_tile_draw(tilebuf, 1);
+		d_render_end();
 		d_loop();
 	}
 
