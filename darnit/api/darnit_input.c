@@ -79,8 +79,8 @@ void EXPORT_THIS d_key_raw_push(int sym, int action, int unicode) {
 }
 
 
-INPUT_RAW_KEY EXPORT_THIS d_key_raw_pop(int *action) {
-	return inputRawPop(action);
+INPUT_RAW_KEY EXPORT_THIS d_key_raw_pop() {
+	return inputRawPop();
 }
 
 
