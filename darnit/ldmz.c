@@ -74,6 +74,8 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	char *stringdata;
 	int i;
 
+	map_h.magic = map_h.version = 0;
+
 	if ((file = fsFileOpen(fname, "rb")) == NULL)
 		return NULL;
 	

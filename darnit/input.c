@@ -4,23 +4,25 @@ void darnitQuit();
 
 #ifndef DARNIT_HEADLESS
 
-void inputRawPush(int sym, int action) {
+void inputRawPush(int sym, int action, int unicode) {
 	if (d->input.raw.use == RAW_BUFFER_LEN)
 		return;
-	d->input.raw.raw[d->input.raw.use] = sym;
-	d->input.raw.action[d->input.raw.use] = action;
+	d->input.raw.raw[d->input.raw.use].keysym = sym;
+	d->input.raw.raw[d->input.raw.use].action = action;
+	d->input.raw.raw[d->input.raw.use].unicode = unicode;
 	d->input.raw.use++;
 
 	return;
 }
 
 
-int inputRawPop(int *action) {
+INPUT_RAW_KEY inputRawPop() {
+	INPUT_RAW_KEY key;
+
+	key.keysym = key.action = key.unicode = 0;
 	if (d->input.raw.use == 0)
-		return 0;
+		return key;
 	d->input.raw.use--;
-	if(action)
-		*action=d->input.raw.action[d->input.raw.use];
 
 	return d->input.raw.raw[d->input.raw.use];
 }
@@ -170,7 +172,7 @@ void inputPoll() {
 				d->input.upper |= 1;
 			if (d->input.event.key.keysym.sym < 0x80)	/* ASCII */
 				d->input.lastkey = d->input.event.key.keysym.sym;
-			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_PRESS);
+			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_PRESS, d->input.event.key.keysym.unicode);
 
 		} else if (d->input.event.type == SDL_KEYUP) {
 			if (d->input.event.key.keysym.sym == d->input.map.up) {
@@ -218,7 +220,7 @@ void inputPoll() {
 				d->input.upper |= 1;
 				d->input.upper ^= 1;
 			}
-			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_RELEASE);
+			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_RELEASE, d->input.event.key.keysym.unicode);
 			
 		} else if (d->input.event.type == SDL_MOUSEMOTION) {
 			d->input.mouse.x = d->input.event.motion.x;

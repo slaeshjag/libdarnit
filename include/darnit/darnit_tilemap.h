@@ -11,12 +11,12 @@ typedef struct {
 } DARNIT_TILEMAP;
 
 
-DARNIT_TILEMAP *darnitRenderTilemapNew(unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask, int w, int h);
-DARNIT_TILEMAP *darnitRenderTilemapCreate(const char *fname, unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask);
-void darnitRenderTilemapTileSet(DARNIT_TILEMAP *tilemap, int x, int y, int tile);
-void darnitRenderTilemapRecalculate(DARNIT_TILEMAP *tilemap);
-void darnitRenderTilemapCameraMove(DARNIT_TILEMAP *tilemap, int cam_x, int cam_y);
-void darnitRenderTilemap(DARNIT_TILEMAP *tilemap);
-DARNIT_TILEMAP *darnitRenderTilemapDelete(DARNIT_TILEMAP *tilemap);
+DARNIT_TILEMAP *d_tilemap_new(unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask, int w, int h);
+DARNIT_TILEMAP *d_tilemap_load(const char *fname, unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask);
+void d_tilemap_tile_set(DARNIT_TILEMAP *tilemap, int x, int y, int tile);
+void d_tilemap_recalc(DARNIT_TILEMAP *tilemap);
+void d_tilemap_camera_move(DARNIT_TILEMAP *tilemap, int cam_x, int cam_y);
+void d_tilemap_draw(DARNIT_TILEMAP *tilemap);
+DARNIT_TILEMAP *d_tilemap_free(DARNIT_TILEMAP *tilemap);
 
 #endif

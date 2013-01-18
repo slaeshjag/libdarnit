@@ -63,6 +63,50 @@ int fsInit(const char *dir_name) {
 }
 
 
+int fsMountSelf() {
+	int i;
+	char *path = fsFindBinaryPath();
+	i = fsMount(path);
+
+	free(path);
+	return i;
+}
+
+
+void fsUnmountSelf() {
+	char *path = fsFindBinaryPath();
+	fsUnmount(path);
+	free(path);
+
+	return;
+}
+
+
+char *fsFindBinaryPath() {
+	char *path;
+
+	if (!(path = malloc(DARNIT_PATH_MAX)))
+		return path;
+	
+	if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+		#ifndef _WIN32
+		path[readlink("/proc/self/exe", path, DARNIT_PATH_MAX-1)] = 0;
+		#endif
+		return path;
+	}
+
+	if (d->platform.platform & DARNIT_PLATFORM_WIN32) {
+		*path = 0;
+		#ifdef _WIN32
+		GetModuleFileName(NULL, path, DARNIT_PATH_MAX);
+		#endif
+		return path;
+	}
+
+	return NULL;
+}
+
+
 void fsDirectoryCreate(const char *dir_name) {
 	char tmp[256];
 	if (strlen(dir_name) + 2 + strlen(d->fs.write_dir) > 256)
@@ -165,14 +209,6 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		else						/* W00t! */
 			return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0);
 		free(path_new);
-		
-		/* Build data-dir path */
-		sprintf(path, "%s/%s", d->fs.data_dir, name);
-		path_new = utilPathTranslate(path);
-		if ((fp = fopen(path_new, mode)) == NULL);
-		else
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
-		free(path_new);
 
 		/* Look in data containers */
 		path_new = malloc(strlen(name) + 1);
@@ -181,6 +217,14 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		else {
 			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
 		}
+		free(path_new);
+		
+		/* Build data-dir path */
+		sprintf(path, "%s/%s", d->fs.data_dir, name);
+		path_new = utilPathTranslate(path);
+		if ((fp = fopen(path_new, mode)) == NULL);
+		else
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
 		free(path_new);
 	} 
 	

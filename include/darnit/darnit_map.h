@@ -37,10 +37,10 @@ typedef struct {
 } DARNIT_MAP;
 
 
-DARNIT_MAP *darnitMapLoad(const char *fname);
-DARNIT_MAP *darnitMapUnload(DARNIT_MAP *map);
-const char *darnitMapPropGet(DARNIT_MAP_REF *prop, const char *key);
-const char *darnitMapLayerPropGet(DARNIT_MAP *map, int layer, const char *key);
-void darnitMapCameraMove(DARNIT_MAP *map, int x, int y);
+DARNIT_MAP *d_map_load(const char *fname);
+DARNIT_MAP *d_map_unload(DARNIT_MAP *map);
+const char *d_map_prop(DARNIT_MAP_REF *prop, const char *key);
+const char *d_map_layer_prop(DARNIT_MAP *map, int layer, const char *key);
+void d_map_camera_move(DARNIT_MAP *map, int x, int y);
 
 #endif
