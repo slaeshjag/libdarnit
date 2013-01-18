@@ -41,6 +41,8 @@ int utf8Validate(const unsigned char *str) {
 	int i, j;
 
 	j = utf8GetCharLength(str);
+	if (j == 0)
+		return -1;
 	
 	for (i = 1; i < j; i++)
 		if (((str[i] & 0xC0) ^ 0x80))
