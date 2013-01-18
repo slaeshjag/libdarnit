@@ -1,6 +1,13 @@
 #include "darnit.h"
 
 
+int EXPORT_THIS d_utf8_start_char(unsigned char c) {
+	if (!(c & 0x80) || (c & 0xC0) == 0xC0)
+		return 0;
+	return -1;
+}
+
+
 int EXPORT_THIS d_utf8_valid(const unsigned char *str) {
 	return utf8Validate(str);
 }
