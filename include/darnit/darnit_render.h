@@ -41,7 +41,7 @@ void d_render_line_draw(DARNIT_LINE *line_p, int lines);
 DARNIT_LINE *d_render_line_free(DARNIT_LINE *line_p);
 
 DARNIT_RECT *d_render_rect_new(unsigned int rects);
-void d_render_rect_set(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
+void d_render_rect_move(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
 void d_render_rect_draw(DARNIT_RECT *rect_p, int rects);
 DARNIT_RECT *d_render_rect_free(DARNIT_RECT *rect_p);
 
