@@ -1,6 +1,11 @@
 #include "darnit.h"
 
 
+int EXPORT_THIS d_utf8_valid(const char *str) {
+	return utf8Validate(str);
+}
+
+
 int EXPORT_THIS d_utf8_char_length(const char *str) {
 	return utf8GetValidatedCharLength(str);
 }
