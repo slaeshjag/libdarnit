@@ -55,8 +55,14 @@ typedef struct {
 
 
 typedef struct {
-	int				raw[RAW_BUFFER_LEN];
-	int				action[RAW_BUFFER_LEN];
+	int				keysym;
+	int				unicode;
+	int				action;
+} INPUT_RAW_KEY;
+
+
+typedef struct {
+	INPUT_RAW_KEY			raw[RAW_BUFFER_LEN];
 	unsigned int			use;
 } INPUT_RAW;
 
@@ -74,8 +80,8 @@ typedef struct {
 } INPUT_STRUCT;
 
 
-void inputRawPush(int sym, int action);
-int inputRawPop(int *action);
+void inputRawPush(int sym, int action, int unicode);
+INPUT_RAW_KEY inputRawPop();
 void inputPoll();
 int inputInit();
 unsigned int inputASCIIPop();
