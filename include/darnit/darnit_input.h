@@ -82,7 +82,7 @@ void d_keymapping_set(DARNIT_INPUT_MAP map);
 DARNIT_INPUT_MAP d_keymapping_get();
 void d_joystick_get(int *js0_x, int *js0_y, int *js1_x, int *js1_y);
 void d_key_raw_push(int sym, int action, int unicode);
-DARNIT_KEY_RAW d_key_raw_pop(int *action);
+DARNIT_KEY_RAW d_key_raw_pop();
 void d_key_raw_clear();
 
 /* The returned pointer is only valid until you call this function again */
