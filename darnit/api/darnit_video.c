@@ -333,11 +333,11 @@ void EXPORT_THIS d_render_tint_get(unsigned char *r, unsigned char *g, unsigned 
 
 
 void EXPORT_THIS d_render_tint(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
-	glColor4f(r, g, b, a);
-	d->video.tint_r = r;
-	d->video.tint_g = g;
-	d->video.tint_b = b;
-	d->video.tint_a = a;
+	d->video.tint_r = (float) r/255;
+	d->video.tint_g = (float) g/255;
+	d->video.tint_b = (float) b/255;
+	d->video.tint_a = (float) a/255;
+	glColor4f(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
 	
 
 	return;
