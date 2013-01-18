@@ -95,7 +95,7 @@ const char EXPORT_THIS *d_key_name_get(int sym) {
 }
 
 
-void EXPORT_THIS d_key_unicode_set(int enable) {
+void EXPORT_THIS d_input_unicode(int enable) {
 	SDL_EnableUNICODE(enable);
 
 	return;
