@@ -84,6 +84,7 @@ void d_joystick_get(int *js0_x, int *js0_y, int *js1_x, int *js1_y);
 void d_key_raw_push(int sym, int action, int unicode);
 DARNIT_KEY_RAW d_key_raw_pop();
 void d_key_raw_clear();
+void d_input_unicode(int enable);
 
 /* The returned pointer is only valid until you call this function again */
 const char *d_key_name_get(int sym);
