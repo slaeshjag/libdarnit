@@ -56,8 +56,8 @@ typedef struct {
 
 typedef struct {
 	int				keysym;
-	int				unicode;
 	int				action;
+	int				unicode;
 } INPUT_RAW_KEY;
 
 
