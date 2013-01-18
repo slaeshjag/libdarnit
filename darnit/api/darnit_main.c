@@ -186,7 +186,7 @@ int darnitTimeLastFrameTook() {
 }
 
 
-DARNIT_PLATFORM EXPORT_THIS d_platform() {
+DARNIT_PLATFORM EXPORT_THIS d_platform_get() {
 	return d->platform;
 }
 
