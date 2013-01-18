@@ -23,29 +23,32 @@ typedef struct DARNIT_DIR_LIST {
 
 typedef void DARNIT_FILE;
 
-int darnitFSMount(const char *fname);
-void darnitFSUnmount(const char *fname);
+int d_fs_mount(const char *fname);
+void d_fs_unmount(const char *fname);
 
-DARNIT_FILE *darnitFileOpen(const char *fname, const char *mode);
-DARNIT_FILE *darnitFileClose(DARNIT_FILE *file);
+int d_fs_mount_self();
+void d_fs_unmount_self();
 
-void darnitDirectoryCreate(void *dir_name);
-size_t darnitFileIntsRead(void *buffer, size_t ints, DARNIT_FILE *file);
-size_t darnitFileRead(void *buffer, size_t bytes, DARNIT_FILE *file);
-size_t darnitFileIntsWrite(void *buffer, size_t ints, DARNIT_FILE *file);
-size_t darnitFileWrite(void *buffer, size_t bytes, DARNIT_FILE *file);
-size_t darnitFileGets(void *buffer, size_t bytes, DARNIT_FILE *file);
-size_t darnitFileLineGet(void *buffer, size_t bytes, DARNIT_FILE *file);
-size_t darnitFileWhitespaceSkip(DARNIT_FILE *file);
+DARNIT_FILE *d_file_open(const char *fname, const char *mode);
+DARNIT_FILE *d_file_close(DARNIT_FILE *file);
 
-int darnitFileCompressedRead(DARNIT_FILE *file, void *data, int len);
-int darnitFileCompressedWrite(DARNIT_FILE *file, void *data, int len);
+void d_directory_create(void *dir_name);
+size_t d_file_read_ints(void *buffer, size_t ints, DARNIT_FILE *file);
+size_t d_file_read(void *buffer, size_t bytes, DARNIT_FILE *file);
+size_t d_file_write_ints(void *buffer, size_t ints, DARNIT_FILE *file);
+size_t d_file_write(void *buffer, size_t bytes, DARNIT_FILE *file);
+size_t d_file_gets(void *buffer, size_t bytes, DARNIT_FILE *file);
+size_t d_file_getln(void *buffer, size_t bytes, DARNIT_FILE *file);
+size_t d_file_whitespace_skip(DARNIT_FILE *file);
 
-off_t darnitFileTell(DARNIT_FILE *file);
-size_t darnitFileSeek(DARNIT_FILE *file, off_t offset, int mode);
-int darnitFileEOF(DARNIT_FILE *file);
+int d_file_read_compressed(DARNIT_FILE *file, void *data, int len);
+int d_file_write_compressed(DARNIT_FILE *file, void *data, int len);
 
-DARNIT_DIR_LIST *darnitFileList(const char *path, unsigned int type, int *entries);
-DARNIT_DIR_LIST *darnitFileListFree(DARNIT_DIR_LIST *list);
+off_t d_file_tell(DARNIT_FILE *file);
+size_t d_file_seek(DARNIT_FILE *file, off_t offset, int mode);
+int d_file_eof(DARNIT_FILE *file);
+
+DARNIT_DIR_LIST *d_file_list(const char *path, unsigned int type, int *entries);
+DARNIT_DIR_LIST *d_file_list_free(DARNIT_DIR_LIST *list);
 
 #endif

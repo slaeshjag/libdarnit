@@ -9,12 +9,12 @@ typedef struct DARNIT_STRINGTABLE_SECTIONS {
 } DARNIT_STRINGTABLE_SECTIONS;
 
 
-DARNIT_STRINGTABLE *darnitStringtableOpen(const char *fname);
-int darnitStringtableSectionLoad(DARNIT_STRINGTABLE *stringtable, const char *section);
-const DARNIT_STRINGTABLE_SECTIONS *darnitStringtableSectionList(DARNIT_STRINGTABLE *stringtable);
-const char *darnitStringtableEntryGet(DARNIT_STRINGTABLE *stringtable, const char *entry);
-int darnitStringtableSectionUnload(DARNIT_STRINGTABLE *stringtable, const char *section);
-DARNIT_STRINGTABLE *darnitStringtableClose(DARNIT_STRINGTABLE *stringtable);
+DARNIT_STRINGTABLE *d_stringtable_open(const char *fname);
+int d_stringtable_section_load(DARNIT_STRINGTABLE *stringtable, const char *section);
+const DARNIT_STRINGTABLE_SECTIONS *d_stringtable_section_list(DARNIT_STRINGTABLE *stringtable);
+const char *d_stringtable_entry(DARNIT_STRINGTABLE *stringtable, const char *entry);
+int d_stringtable_section_unload(DARNIT_STRINGTABLE *stringtable, const char *section);
+DARNIT_STRINGTABLE *d_stringtable_close(DARNIT_STRINGTABLE *stringtable);
 
 
 #endif

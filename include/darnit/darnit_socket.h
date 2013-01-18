@@ -3,10 +3,10 @@
 
 typedef void DARNIT_SOCKET;
 
-DARNIT_SOCKET *darnitSocketConnect(const char *host, int port, void (*callback)(int ret, void *data, void *socket), void *data);
-int darnitSocketRecv(DARNIT_SOCKET *sock, void *buff, int len);
-int darnitSocketRecvTry(DARNIT_SOCKET *sock, void *buff, int len);
-int darnitSocketSend(DARNIT_SOCKET *sock, void *buff, int len);
-DARNIT_SOCKET *darnitSocketClose(DARNIT_SOCKET *sock);
+DARNIT_SOCKET *d_socket_connect(const char *host, int port, void (*callback)(int ret, void *data, void *socket), void *data);
+int d_socket_recv(DARNIT_SOCKET *sock, void *buff, int len);
+int d_socket_recv_try(DARNIT_SOCKET *sock, void *buff, int len);
+int d_socket_send(DARNIT_SOCKET *sock, void *buff, int len);
+DARNIT_SOCKET *d_socket_close(DARNIT_SOCKET *sock);
 
 #endif

@@ -30,6 +30,8 @@
 #define         DARNIT_PLATFORM_PANDORA         0x4
 #define         DARNIT_PLATFORM_GCWZERO         0x8
 #define         DARNIT_PLATFORM_GPHCAANOO       0x10
+#define		DARNIT_PLATFORM_MACOSX		0x20
+#define		DARNIT_PLATFORM_FREEBSD		0x40
 #define		DARNIT_PLATFORM_BIGENDIAN	0x80000000
 
 
@@ -94,6 +96,7 @@ int darnitTimeLastFrameTook();
 typedef struct {
 	TILE_CACHE		*tc;
 	unsigned int		tiles;
+	TILESHEET		*ts;
 } DARNIT_RENDER_BUFFER;
 
 

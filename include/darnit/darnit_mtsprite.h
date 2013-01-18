@@ -3,15 +3,15 @@
 
 typedef void DARNIT_MTSPRITE;
 
-DARNIT_MTSPRITE *darnitMTSpriteNew(void *tilesheet);
-DARNIT_MTSPRITE *darnitMTSpriteLoad(const char *fname);
-void darnitMTSpriteAnimationEnable(DARNIT_MTSPRITE *mtsprite);
-void darnitMTSpriteAnimationPause(DARNIT_MTSPRITE *mtsprite);
-void darnitMTSpriteTileAdd(DARNIT_MTSPRITE *sprite, int x, int y, int w, int h, int rx, int ry);
-void darnitMTSpriteFrameSet(DARNIT_MTSPRITE *sprite, int time);
-void darnitMTSpriteAnimationDisable(DARNIT_MTSPRITE *mtsprite);
-void darnitMTSpriteAnimationRepeatSet(DARNIT_MTSPRITE *mtsprite, int repeat);
-void darnitMTSpriteDraw(DARNIT_MTSPRITE *mtsprite);
-void *darnitMTSpriteDelete(DARNIT_MTSPRITE *mtsprite);
+DARNIT_MTSPRITE *d_mtsprite_new(void *tilesheet);
+DARNIT_MTSPRITE *d_mtsprite_load(const char *fname);
+DARNIT_MTSPRITE *d_mtsprite_free(DARNIT_MTSPRITE *mtsprite);
+void d_mtsprite_animate_start(DARNIT_MTSPRITE *mtsprite);
+void d_mtsprite_animate_pause(DARNIT_MTSPRITE *mtsprite);
+void d_mtsprite_animate_stop(DARNIT_MTSPRITE *mtsprite);
+void d_mtsprite_animate_repeat(DARNIT_MTSPRITE *mtsprite, int repeat);
+void d_mtsprite_tile_add(DARNIT_MTSPRITE *sprite, int x, int y, int w, int h, int rx, int ry);
+void d_mtsprite_frame_set(DARNIT_MTSPRITE *sprite, int time);
+void d_mtsprite_draw(DARNIT_MTSPRITE *mtsprite);
 
 #endif
