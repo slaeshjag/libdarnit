@@ -86,7 +86,7 @@ unsigned int utilStringSum(const char *str) {
 void utilInit() {
 	int i;
 
-	srandom(time(NULL));
+	srand(time(NULL));
 
 	for (i = 0; i < 3600; i++)
 		d->util.sine[i] = sinf(M_PI / 1800 * i) * 65536;

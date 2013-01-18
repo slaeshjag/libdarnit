@@ -72,14 +72,14 @@ void EXPORT_THIS d_joystick_get(int *js0_x, int *js0_y, int *js1_x, int *js1_y) 
 }
 
 
-void EXPORT_THIS d_key_raw_push(int sym, int action) {
-	inputRawPush(sym, action);
+void EXPORT_THIS d_key_raw_push(int sym, int action, int unicode) {
+	inputRawPush(sym, action, unicode);
 
 	return;
 }
 
 
-int EXPORT_THIS d_key_raw_pop(int *action) {
+INPUT_RAW_KEY EXPORT_THIS d_key_raw_pop(int *action) {
 	return inputRawPop(action);
 }
 
@@ -92,4 +92,11 @@ void EXPORT_THIS d_key_raw_clear() {
 
 const char EXPORT_THIS *d_key_name_get(int sym) {
 	return SDL_GetKeyName(sym);
+}
+
+
+void EXPORT_THIS d_key_unicode_set(int enable) {
+	SDL_EnableUNICODE(enable);
+
+	return;
 }
