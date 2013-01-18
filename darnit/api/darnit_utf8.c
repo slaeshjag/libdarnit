@@ -1,7 +1,7 @@
 #include "darnit.h"
 
 
-int EXPORT_THIS d_utf8_valid(const char *str) {
+int EXPORT_THIS d_utf8_valid(const unsigned char *str) {
 	return utf8Validate(str);
 }
 
