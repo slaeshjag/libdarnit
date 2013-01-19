@@ -1,6 +1,14 @@
 #include "darnit.h"
 
 
+void fsPathMakeNative(char *path) {
+	for (; *path; path++)
+		if (*path == '\\')
+			*path = '/';
+	return;
+}
+
+
 int fsInit(const char *dir_name) {
 	const char *data_dir;
 	
@@ -570,6 +578,7 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 			tmp = malloc(sizeof(DIR_LIST));
 			tmp->fname = malloc(strlen(ffd.cFileName) + 1);
 			strcpy(tmp->fname, ffd.cFileName);
+			fsPathMakeNative(tmp->fname);
 			tmp->next = *list;
 			tmp->writeable = rw;
 			tmp->in_file_image = 0;
