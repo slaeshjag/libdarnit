@@ -669,6 +669,7 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 	ts->h = tilesheet_h;
 	ts->format = format;
 
+	#ifndef _WIN32
 	if (format == PFORMAT_RGBA8)
 		ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
 	else if (format == PFORMAT_RGBA4)
@@ -677,6 +678,13 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 		ts->texhandle = videoAddTextureRGB5A1(NULL, ts->w, ts->h);
 	else if (format == PFORMAT_A8)
 		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
+	#else
+	if (format == PFORMAT_A8)
+		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
+	else
+		ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
+	ts->format = (format == PFORMAT_A8) ? PFORMAT_A8 : PFORMAT_RGBA8;
+	#endif
 	
 	if ((ts->tile = malloc(sizeof(TILE) * tiles_w * tiles_h)) == NULL) {
 		glDeleteTextures(1, &texture);
