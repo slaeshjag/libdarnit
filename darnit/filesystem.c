@@ -39,8 +39,8 @@ int fsInit(const char *dir_name) {
 		/* Ugh... WinAPI... */
 		#ifdef _WIN32
 			char tmp[256], val[256];
-			int sz;
-			sprintf(tmp, "software/libdarnit/%s", dir_name);
+			int sz=256;
+			sprintf(tmp, "SOFTWARE\\libdarnit\\%s", dir_name);
 		
 			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS)
 				d->fs.data_dir = ".";
