@@ -3,3 +3,4 @@ bin/
 *.o
 *.a
 testapp/testapp
+*.res
