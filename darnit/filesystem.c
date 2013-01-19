@@ -580,6 +580,7 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 			strcpy(tmp->fname, ffd.cFileName);
 			fsPathMakeNative(tmp->fname);
 			tmp->next = *list;
+			*list = tmp;
 			tmp->writeable = rw;
 			tmp->in_file_image = 0;
 
