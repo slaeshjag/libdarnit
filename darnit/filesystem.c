@@ -5,8 +5,8 @@ int fsInit(const char *dir_name) {
 	const char *data_dir;
 	
 	if (d->platform.platform & DARNIT_PLATFORM_PANDORA) {
-		d->fs.data_dir = "./";
-		d->fs.write_dir = "./";
+		d->fs.data_dir = ".";
+		d->fs.write_dir = ".";
 	} else if (d->platform.platform & (DARNIT_PLATFORM_LINUX | DARNIT_PLATFORM_GCWZERO)) {
 		#ifndef _WIN32
 		data_dir = getenv("HOME");
@@ -35,20 +35,20 @@ int fsInit(const char *dir_name) {
 			sprintf(tmp, "software/libdarnit/%s", dir_name);
 		
 			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS)
-				d->fs.data_dir = "./";
+				d->fs.data_dir = ".";
 			else {
 				if ((d->fs.data_dir = malloc(strlen(val) + 1)) == NULL)
-					d->fs.data_dir = "./";
+					d->fs.data_dir = ".";
 				else
 					sprintf(d->fs.data_dir, "%s", val);
 			}
 		#else
-			d->fs.data_dir = "./";
+			d->fs.data_dir = ".";
 		#endif
 	} else {
 		/* TODO: Add more platforms */
-		d->fs.data_dir = (char *) "./";
-		d->fs.write_dir = (char *) "./";
+		d->fs.data_dir = (char *) ".";
+		d->fs.write_dir = (char *) ".";
 	}
 
 	#ifdef _WIN32
