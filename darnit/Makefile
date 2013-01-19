@@ -30,7 +30,8 @@ windows: $(OBJFILES)
 	@echo " [ CD ] darnit/api/"
 	+@make -C api/
 	@echo " [ LD ] $(LIB)"
-	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o ../bin/libdarnit.dll $(LDFLAGS) $(WINDOWSFLAGS)
+	@windres darnit.rc -O coff -o darnit.res
+	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) darnit.res -o ../bin/libdarnit.dll $(LDFLAGS) $(WINDOWSFLAGS)
 	@echo "Done."
 	@echo
 
@@ -60,6 +61,7 @@ clean:
 	@make -C api/ clean
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)
+	@$(RM) darnit.res
 	@echo "Done."
 	@echo 
 
