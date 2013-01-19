@@ -302,7 +302,8 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	ts->animation.frame_data = NULL;
 	ts->animation.tile = NULL;
 	ts->animation.data = NULL;
-	
+
+	#ifndef _WIN32
 	imgloadDownsample(&data, convert_to);
 	data_t = data.img_data;
 	if (convert_to == PFORMAT_RGBA8)
@@ -311,6 +312,11 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 		ts->texhandle = videoAddTextureRGBA4(data_t, ts->w, ts->h);
 	else if (convert_to == PFORMAT_RGB5A1)
 		ts->texhandle = videoAddTextureRGB5A1(data_t, ts->w, ts->h);
+	#else
+		/* Fucking stupid windows drivers... */
+		imgloadDownsample(&data, PFORMAT_RGBA8);
+		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
+	#endif
 	
 	free(data_t);
 
@@ -605,6 +611,9 @@ void renderColCache(TILE_COLOR_CACHE *cache, TILESHEET *ts, int tiles) {
 	glDrawArrays(GL_TRIANGLES, 0, tiles*6);
 
 	glDisableClientState(GL_COLOR_ARRAY);
+
+	/* For some reason, this value gets overwritten on windows when color arrays are used */
+	glColor4f(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
 
 	return;
 }
