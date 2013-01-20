@@ -1,6 +1,7 @@
 #Project: libDarnit
 
 PREFIX = /usr/local
+PREFIX_PANDORA = /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
 MAKEFLAGS += --no-print-directory
 MKDIR = mkdir -p
 RM = rm -Rf
@@ -41,6 +42,14 @@ pandora:
 	+@make -C tools/
 	@echo "Build complete."
 	@echo
+
+install-pandora:
+	@echo " [INST] include/darnit"
+	@$(MKDIR) $(PREFIX_PANDORA)/include/darnit
+	@install -m 0755 include/darnit/* $(PREFIX_PANDORA)/include/darnit
+	@echo " [INST] bin/libdarnit.so"
+	@install -m 0755 bin/libdarnit.so $(PREFIX_PANDORA)/lib
+
 
 gcwzero:
 	@echo " [INIT]"
