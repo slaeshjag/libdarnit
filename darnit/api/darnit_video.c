@@ -37,7 +37,7 @@ void EXPORT_THIS d_render_tile_blit(void *tilesheet, unsigned int tile, int x, i
 }
 
 
-void EXPORT_THIS d_render_tile_move(DARNIT_RENDER_BUFFER *buf, unsigned int tile, unsigned int x, unsigned int y) {
+void EXPORT_THIS d_render_tile_move(DARNIT_RENDER_BUFFER *buf, unsigned int tile, int x, int y) {
 	TILE_CACHE *cache;
 
 	if (buf->tiles <= tile)

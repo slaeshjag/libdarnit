@@ -176,7 +176,7 @@ int videoInitPartial();
 TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
 void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h);
 void *renderTilesheetFree(TILESHEET *ts);
-void renderMapCacheSetTile(unsigned int layer, unsigned int k, unsigned int t, unsigned int x, unsigned int y);
+void renderMapCacheSetTile(unsigned int layer, unsigned int k, unsigned int t, int x, int y);
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);
 void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2);
 void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2);
