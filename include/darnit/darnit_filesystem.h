@@ -1,6 +1,7 @@
 #ifndef __DARNIT_FILESYSTEM_H__
 #define	__DARNIT_FILESYSTEM_H__
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #ifdef _WIN32

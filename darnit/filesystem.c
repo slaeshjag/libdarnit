@@ -1,12 +1,20 @@
 #include "darnit.h"
 
 
+void fsPathMakeNative(char *path) {
+	for (; *path; path++)
+		if (*path == '\\')
+			*path = '/';
+	return;
+}
+
+
 int fsInit(const char *dir_name) {
 	const char *data_dir;
 	
 	if (d->platform.platform & DARNIT_PLATFORM_PANDORA) {
-		d->fs.data_dir = "./";
-		d->fs.write_dir = "./";
+		d->fs.data_dir = ".";
+		d->fs.write_dir = ".";
 	} else if (d->platform.platform & (DARNIT_PLATFORM_LINUX | DARNIT_PLATFORM_GCWZERO)) {
 		#ifndef _WIN32
 		data_dir = getenv("HOME");
@@ -31,24 +39,24 @@ int fsInit(const char *dir_name) {
 		/* Ugh... WinAPI... */
 		#ifdef _WIN32
 			char tmp[256], val[256];
-			int sz;
-			sprintf(tmp, "software/libdarnit/%s", dir_name);
+			int sz=256;
+			sprintf(tmp, "SOFTWARE\\libdarnit\\%s", dir_name);
 		
 			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS)
-				d->fs.data_dir = "./";
+				d->fs.data_dir = ".";
 			else {
 				if ((d->fs.data_dir = malloc(strlen(val) + 1)) == NULL)
-					d->fs.data_dir = "./";
+					d->fs.data_dir = ".";
 				else
 					sprintf(d->fs.data_dir, "%s", val);
 			}
 		#else
-			d->fs.data_dir = "./";
+			d->fs.data_dir = ".";
 		#endif
 	} else {
 		/* TODO: Add more platforms */
-		d->fs.data_dir = (char *) "./";
-		d->fs.write_dir = (char *) "./";
+		d->fs.data_dir = (char *) ".";
+		d->fs.write_dir = (char *) ".";
 	}
 
 	#ifdef _WIN32
@@ -570,7 +578,9 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 			tmp = malloc(sizeof(DIR_LIST));
 			tmp->fname = malloc(strlen(ffd.cFileName) + 1);
 			strcpy(tmp->fname, ffd.cFileName);
+			fsPathMakeNative(tmp->fname);
 			tmp->next = *list;
+			*list = tmp;
 			tmp->writeable = rw;
 			tmp->in_file_image = 0;
 
