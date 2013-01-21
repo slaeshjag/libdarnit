@@ -25,6 +25,7 @@ void d_render_tilesheet_update(DARNIT_TILESHEET *tilesheet, int sheet_x, int she
 void d_render_tilesheet_geometrics(DARNIT_TILESHEET *tilesheet, int *w, int *h, int *tile_w, int *tile_h);
 DARNIT_TILESHEET *d_render_tilesheet_free(DARNIT_TILESHEET *tilesheet);
 
+void d_render_tile_init(DARNIT_TILE *buf, unsigned int tile, unsigned int tile_ts, int x, int y); 
 void d_render_tile_move(DARNIT_TILE *tile_p, unsigned int tile, int x, int y);
 void d_render_tile_tilesheet_coord_set(DARNIT_TILE *tile_p, unsigned int tile, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void d_render_tile_size_set(DARNIT_TILE *buf, unsigned int tile, int w, int h);

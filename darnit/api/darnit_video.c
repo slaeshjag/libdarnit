@@ -63,6 +63,14 @@ void EXPORT_THIS d_render_tile_set(DARNIT_RENDER_BUFFER *buf, unsigned int tile,
 }
 
 
+void EXPORT_THIS d_render_tile_init(DARNIT_RENDER_BUFFER *buf, unsigned int tile, unsigned int tile_ts, int x, int y) {
+	d_render_tile_set(buf, tile, tile_ts);
+	d_render_tile_move(buf, tile, x, y);
+
+	return;
+}
+
+
 void EXPORT_THIS d_render_line_move(DARNIT_RENDER_LINE_BUFFER *buf, unsigned int line, int x1, int y1, int x2, int y2) {
 	LINE_CACHE *cache;
 
