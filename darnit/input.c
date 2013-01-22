@@ -1,7 +1,5 @@
 #include "darnit.h"
 
-void darnitQuit();
-
 #ifndef DARNIT_HEADLESS
 
 void inputRawPush(int sym, int action, int unicode) {
@@ -164,7 +162,7 @@ void inputPoll() {
 			/* I'm sorry Sara... */
 			#ifdef PANDORA
 			else if (d->input.event.key.keysym.sym == SDLK_ESCAPE)
-				darnitQuit();
+				d_quit();
 			#endif
 			if (d->input.event.key.keysym.sym == SDLK_LSHIFT)
 				d->input.upper |= 2;
