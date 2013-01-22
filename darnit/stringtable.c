@@ -37,6 +37,8 @@ const char *stringtableGetEntry(STRINGTABLE *st, const char *key) {
 	unsigned int comp = utilStringSum(key);
 	if (st == NULL)
 		return key;
+	if (!key)
+		return "(NULL)";
 
 	for (i = 0; i < st->sections; i++)
 		for (j = 0; j < st->section[i].strings; j++) 
