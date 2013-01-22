@@ -44,7 +44,7 @@ DARNIT_LINE *d_render_line_free(DARNIT_LINE *line_p);
 DARNIT_RECT *d_render_rect_new(unsigned int rects);
 void d_render_rect_move(DARNIT_RECT *rect_p, unsigned int rect, int x1, int y1, int x2, int y2);
 void d_render_rect_draw(DARNIT_RECT *rect_p, int rects);
-void d_render_rect_get(DARNIT_RECT *buf, unsigned int rect, int *x1, int *x2, int *y1, int *y2);
+void d_render_rect_get(DARNIT_RECT *buf, unsigned int rect, int *x1, int *y1, int *x2, int *y2);
 DARNIT_RECT *d_render_rect_free(DARNIT_RECT *rect_p);
 
 DARNIT_CIRCLE *d_render_circle_new(unsigned int lines, unsigned int line_w);
