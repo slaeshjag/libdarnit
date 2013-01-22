@@ -112,9 +112,9 @@ void EXPORT_THIS d_render_rect_get(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int 
 	if (x2)
 		*x2 = (cache->coord[1].x + 1.0f) / d->video.swgran;
 	if (y1)
-		*y1 = (cache->coord->y + 1.0f) / d->video.shgran;
+		*y1 = (1.0f - cache->coord->y) / d->video.shgran;
 	if (y2)
-		*y2 = (cache->coord[2].y + 1.0f) / d->video.shgran;
+		*y2 = (1.0f - cache->coord[2].y) / d->video.shgran;
 	
 	return;
 }
