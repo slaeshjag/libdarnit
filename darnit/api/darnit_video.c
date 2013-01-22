@@ -101,7 +101,7 @@ void EXPORT_THIS d_render_rect_move(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int
 }
 
 
-void EXPORT_THIS d_render_rect_get(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int *x1, int *x2, int *y1, int *y2) {
+void EXPORT_THIS d_render_rect_get(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int *x1, int *y1, int *x2, int *y2) {
 	RECT_CACHE *cache;
 	
 	if (buf->rects <= rect)
