@@ -101,6 +101,25 @@ void EXPORT_THIS d_render_rect_move(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int
 }
 
 
+void EXPORT_THIS d_render_rect_get(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int *x1, int *x2, int *y1, int *y2) {
+	RECT_CACHE *cache;
+	
+	if (buf->rects <= rect)
+		return;
+	cache = &buf->rc[rect];
+	if (x1)
+		*x1 = (cache->coord->x + 1.0f) / d->video.swgran;
+	if (x2)
+		*x2 = (cache->coord[1].x + 1.0f) / d->video.swgran;
+	if (y1)
+		*y1 = (cache->coord->y + 1.0f) / d->video.shgran;
+	if (y2)
+		*y2 = (cache->coord[2].y + 1.0f) / d->video.shgran;
+	
+	return;
+}
+
+
 void EXPORT_THIS d_render_tile_tilesheet_coord_set(DARNIT_RENDER_BUFFER *buf, unsigned int tile, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
 	TILE_CACHE *cache;
 
