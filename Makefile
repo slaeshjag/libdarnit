@@ -1,11 +1,11 @@
-#Project: libDarnit
+# Project: libDarnit
+include config.mk
+MAKEFLAGS	+=	--no-print-directory
 
-PREFIX = /usr/local
-PREFIX_PANDORA = /usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
-MAKEFLAGS += --no-print-directory
-MKDIR = mkdir -p
-RM = rm -Rf
-.PHONY: all pandora gcwzero install clean
+TOPDIR		=	$(shell pwd)
+export TOPDIR
+
+.PHONY: all tools lib install clean
 
 all:
 	@echo " [INIT] bin/"
@@ -16,53 +16,22 @@ all:
 	+@make -C darnit/
 	@echo " [ CD ] tools/"
 	+@make -C tools/
+	
 	@echo "Build complete."
 	@echo 
 
-windows:
-	@echo " [INIT] bin/"
+lib:
 	@$(MKDIR) bin/
 	@echo " [ CD ] deps/"
 	+@make -C deps/
 	@echo " [ CD ] darnit/"
-	+@make -C darnit/ windows
-	@echo " [ CD ] tools/"
-	+@make -C tools/ windows
-	@echo "Build complete."
-	@echo 
-
-pandora:
-	@echo " [INIT]"
+	+@make -C darnit/
+	
+tools:
 	@$(MKDIR) bin/
-	@echo " [ CD ] deps/"
-	+@make -C deps/
-	@echo " [ CD ] darnit/"
-	+@make -C darnit/ pandora
 	@echo " [ CD ] tools/"
 	+@make -C tools/
-	@echo "Build complete."
-	@echo
-
-install-pandora:
-	@echo " [INST] include/darnit"
-	@$(MKDIR) $(PREFIX_PANDORA)/include/darnit
-	@install -m 0755 include/darnit/* $(PREFIX_PANDORA)/include/darnit
-	@echo " [INST] bin/libdarnit.so"
-	@install -m 0755 bin/libdarnit.so $(PREFIX_PANDORA)/lib
-
-
-gcwzero:
-	@echo " [INIT]"
-	@$(MKDIR) bin/
-	@echo " [ CD ] deps/"
-	+@make -C deps/
-	@echo " [ CD ] darnit/"
-	+@make -C darnit/ gcwzero
-	@echo " [ CD ] tools/"
-	+@make -C tools/
-	@echo "Build complete."
-	@echo
-
+	
 clean:
 	@echo " [ RM ] bin/"
 	+@$(RM) bin/
@@ -76,27 +45,17 @@ clean:
 	@echo "Source tree cleaned."
 	@echo
 	
-install-windows: 
-	@echo " [INST] include/darnit"
-	@$(MKDIR) /mingw/include/darnit
-	@install -m 0755 include/darnit/* /mingw/include/darnit
-	@echo " [INST] bin/libdarnit.dll"
-	@install -m 0755 bin/libdarnit.dll /mingw/lib
-	@echo " [INST] tools"
-	@install -m 0755 bin/darnit-* /mingw/bin
-	@echo
-	@echo "libDarnit installed."
-	@echo 
-
 install: 
 	@echo " [INST] include/darnit"
 	@$(MKDIR) $(PREFIX)/include/darnit
-	@install -m 0755 include/darnit/* $(PREFIX)/include/darnit
-	@echo " [INST] bin/libdarnit.so"
-	@install -m 0755 bin/libdarnit.so $(PREFIX)/lib
-	@ldconfig
+	@$(MKDIR) $(PREFIX)/lib
+	@$(MKDIR) $(PREFIX)/bin
+	@install -D -m 0755 include/darnit/* $(PREFIX)/include/darnit
+	@echo " [INST] libdarnit.so"
+	@install -D -m 0755 $(LIB) $(PREFIX)/lib
+	-@ldconfig
 	@echo " [INST] tools"
-	@install -m 0755 bin/darnit-* $(PREFIX)/bin
+	@install -D -m 0755 bin/darnit-* $(PREFIX)/bin
 	@echo
 	@echo "libDarnit installed."
 	@echo 
