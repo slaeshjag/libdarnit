@@ -5,7 +5,7 @@ MAKEFLAGS	+=	--no-print-directory
 TOPDIR		=	$(shell pwd)
 export TOPDIR
 
-.PHONY: all install clean
+.PHONY: all tools lib install clean
 
 all:
 	@echo " [INIT] bin/"
@@ -16,8 +16,21 @@ all:
 	+@make -C darnit/
 	@echo " [ CD ] tools/"
 	+@make -C tools/
+	
 	@echo "Build complete."
 	@echo 
+
+lib:
+	@$(MKDIR) bin/
+	@echo " [ CD ] deps/"
+	+@make -C deps/
+	@echo " [ CD ] darnit/"
+	+@make -C darnit/
+	
+tools:
+	@$(MKDIR) bin/
+	@echo " [ CD ] tools/"
+	+@make -C tools/
 	
 clean:
 	@echo " [ RM ] bin/"
