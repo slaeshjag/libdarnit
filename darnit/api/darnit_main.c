@@ -106,7 +106,7 @@ int EXPORT_THIS d_init_rest(const char *wtitle, int win_w, int win_h, int fullsc
 
 	t = videoInit(wtitle, win_w, win_h, fullscreen);
 	darnitSetPlatform(0);
-	renderLineTest();
+	//renderLineTest();
 
 	return t;
 }
