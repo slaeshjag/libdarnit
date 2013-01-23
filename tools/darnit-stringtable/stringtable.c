@@ -43,7 +43,7 @@ int writeSection(const char *fname, FILE *fp) {
 	FILE *in;
 	char *buff, *zdata;
 	int size, i, j, comp, name, strings, line, skip;
-	char c;
+	char c=0;
 	FILE_STRING_ENTRY *string;
 	FILE_SECTION_HEADER sh;
 

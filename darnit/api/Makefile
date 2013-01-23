@@ -1,11 +1,10 @@
-#libDarnit API
+# Project: libDarnit
+include $(TOPDIR)/config.mk
 
-MAKEFLAGS += --no-print-directory
+CFLAGS		+=	-I../ -I../../deps
 
-CFLAGS += -fPIC -shared -I../ -I../../deps -Wall -fvisibility=hidden -g
-
-SRCFILES=$(wildcard *.c)
-OBJFILES=$(SRCFILES:.c=.o)
+SRCFILES	=	$(wildcard *.c)
+OBJFILES	=	$(SRCFILES:.c=.o)
 .PHONY: all clean
 
 all: $(OBJFILES)
