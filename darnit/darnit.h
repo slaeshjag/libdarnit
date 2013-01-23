@@ -58,13 +58,6 @@ typedef struct {
 } DARNIT_MOUSE;
 
 
-typedef struct {
-	unsigned int		platform;
-	unsigned int		screen_w;
-	unsigned int		screen_h;
-	unsigned int		fullscreen;
-} DARNIT_PLATFORM;
-
 
 #include "../deps/stb_truetype.h"
 #include "filesystem.h"
@@ -91,6 +84,14 @@ typedef struct {
 #include "particle.h"
 
 int darnitTimeLastFrameTook();
+
+
+typedef struct {
+	unsigned int		platform;
+	unsigned int		screen_w;
+	unsigned int		screen_h;
+	unsigned int		fullscreen;
+} DARNIT_PLATFORM;
 
 
 typedef struct {
@@ -133,6 +134,7 @@ typedef struct {
 	SOCKET_LIST		*connect_list;
 	UTIL			util;
 	SDL_Surface		*icon;
+	RENDER_PARAMS		render_params;
 } DARNIT;
 
 

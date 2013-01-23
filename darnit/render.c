@@ -10,6 +10,74 @@
 	#include "render/render_gles.c"	
 #endif
 
+void *d_render_line_new(unsigned int lines, unsigned int line_w);
+void d_render_line_move(void *buf, unsigned int line, int x1, int y1, int x2, int y2);
+void d_render_line_draw(void *buf, int lines);
+void *d_render_line_free(void *buf);
+void d_render_begin();
+void d_render_end();
+void d_loop();
+
+
+int renderLineTest() {
+	void *line;
+	unsigned int buff[2][25];
+	int i;
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	//d_loop();
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	d->render_params.line_x1 = 0;
+	d->render_params.line_x2 = 0;
+	d->render_params.line_y1 = 0;
+	d->render_params.line_y2 = 0;
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	line = d_render_line_new(1, 1);
+	d_render_line_move(line, 0, 5, 5, 20, 5);
+
+	d_render_begin();
+	d_render_line_draw(line, 1);
+	d_render_end();
+	videoSwapBuffers();
+
+	glReadPixels(3, d->video.h - 7, 5, 5, GL_RGBA, GL_UNSIGNED_BYTE, buff[0]);
+	glReadPixels(18, d->video.h - 7, 5, 5, GL_RGBA, GL_UNSIGNED_BYTE, buff[1]);
+
+	for (i = 0; i < 25; i++) {
+		if (!(buff[0][i] & 0xFFFFFF))
+			continue;
+		break;
+	}
+
+	if (i == 25) {
+		fprintf(stderr, "Line test failed. Assuming 0,0 offset, although this is clearly wrong.\n");
+		return 0;
+	}
+
+	d->render_params.line_x1 = i % 5 - 2;
+	d->render_params.line_y1 = (i / 5 - 2) * -1;
+
+	for (i = 25; i > 0; i--) {
+		if (!(buff[1][i-1] & 0xFFFFFF))
+			continue;
+		break;
+	}
+
+
+	line = d_render_line_free(line);
+	if (i == 0) {
+		fprintf(stderr, "Line test 2 failed. Assuming 0,0 offset, although this is clearly wrong\n");
+		return 0;
+	}
+
+	d->render_params.line_x2 = (i - 1) % 5 - 2;
+	d->render_params.line_y2 = ((i - 1) / 5 - 2) * -1;
+
+	return 0;
+}
+
 
 int renderInit() {
 	d->tsr.cnt = 0;
@@ -418,11 +486,21 @@ void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2) {
 	*x2 = (cache->x2 + 1.0f) / d->video.swgran;
 	*y2 = (1.0f - cache->y2) / d->video.shgran;
 
+	(*x) += d->render_params.line_x1;
+	(*y) += d->render_params.line_y1;
+	(*x2) += d->render_params.line_x2;
+	(*y2) += d->render_params.line_y2;
+
 	return;
 }
 
 
 void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2) {
+	x -= d->render_params.line_x1;
+	y -= d->render_params.line_y1;
+	x2 -= d->render_params.line_x2;
+	y2 -= d->render_params.line_y2;
+
 	cache->x1 = ((d->video.swgran * x) - 1.0f);
 	cache->y1 = (1.0f - (d->video.shgran * y));
 	cache->x2 = ((d->video.swgran * x2) - 1.0f);

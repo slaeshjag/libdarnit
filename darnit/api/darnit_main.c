@@ -46,9 +46,6 @@ void darnitSetPlatform(int partial) {
 			d->platform.fullscreen = 1;
 		#elif defined GCW_ZERO
 			d->platform.screen_w = 320;
-			d->platform.screen_h = 240;
-			d->platform.fullscreen = 1;
-		#else
 			d->platform.screen_w = 800;
 			d->platform.screen_h = 480;
 			d->platform.fullscreen = 0;
@@ -109,6 +106,7 @@ int EXPORT_THIS d_init_rest(const char *wtitle, int win_w, int win_h, int fullsc
 
 	t = videoInit(wtitle, win_w, win_h, fullscreen);
 	darnitSetPlatform(0);
+	renderLineTest();
 
 	return t;
 }
@@ -123,7 +121,8 @@ void EXPORT_THIS *d_init_partial(const char *data_dir) {
 	#ifdef _WIN32
 	darnit_init_common();
 	#endif
-	
+
+	d->platform.platform = 0;
 	darnitSetPlatform(1);
 	utilInit();
 
