@@ -5,8 +5,8 @@ LIB		=	$(TOPDIR)/bin/libdarnit.so
 
 DBGFLAGS	=	-O0 -g -D__DEBUG__
 #Flags specific for tools
-LDTOOLS		=	$(LDFLAGS)
-CTOOLS		=	$(CFLAGS) -Wall -O3
+LDTOOLS		:=	$(LDFLAGS)
+CTOOLS		:=	$(CFLAGS) -Wall -O3
 #General flags
 CFLAGS		+=	-Wall -I../deps -shared -fvisibility=hidden $(DBGFLAGS)
 LDFLAGS		+=	-Wl,-soname,libdarnit.so -lmodplug -ldl -lbz2
