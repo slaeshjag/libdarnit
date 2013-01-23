@@ -9,7 +9,7 @@ CFLAGS		+=	-DDATA_PATH=$(DATA_PATH)
 DEPENDS		=
 
 ifeq ($(strip $(OS)), Windows_NT)
-	DEPENDS	+=	muon.res
+	DEPENDS	+=	darnit.res
 endif
 
 SRCFILES	=	$(wildcard *.c)
