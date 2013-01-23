@@ -24,4 +24,4 @@ clean:
 
 %.o: %.c %.h
 	@echo " [ CC ] deps/$<"
-	@$(CC) $(CFLAGS) -o $@ $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
