@@ -19,7 +19,7 @@ ifeq ($(strip $(OS)), Windows_NT)
 	#Windows specifics
 	LIB	=	$(TOPDIR)/bin/libdarnit.dll
 	PREFIX	=	/mingw
-	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi
+	LDFLAGS	+=	-lSDL -lopengl32 -lws2_32 -lshlwapi
 	LDTOOLS	+=	-lws2_32
 else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
