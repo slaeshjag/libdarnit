@@ -1,15 +1,10 @@
-# dependencies for libDarnit
+# Project: libDarnit
+include $(TOPDIR)/config.mk
 
-MAKEFLAGS += --no-print-directory
+LIBOUT		=	deps.a
 
-RM = rm -f
-CFLAGS = -c -Wall -fPIC -fvisibility=hidden
-DEBUG = -g -O0
-RELEASE = -O3
-LIBOUT = deps.a
-
-SRCFILES=$(wildcard *.c)
-OBJFILES=$(SRCFILES:.c=.o)
+SRCFILES	=	$(wildcard *.c)
+OBJFILES	=	$(SRCFILES:.c=.o)
 .PHONY: all clean
 
 all: $(OBJFILES)

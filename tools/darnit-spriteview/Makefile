@@ -1,21 +1,20 @@
-#darnit-fsimage is used to create LDI image files
+# Project: libDarnit
+#darnit-spriteview is used to view sprites
+include $(TOPDIR)/config.mk
 
-CFLAGS += -O3 -Wall
-LDFLAGS += -L../../bin -ldarnit 
-CFLAGS += -I../../include
+LDTOOLS		+=	-L$(TOPDIR)/bin -ldarnit 
+CTOOLS		+=	-I$(TOPDIR)/include
 
-SRCFILES=$(wildcard *.c)
-OBJFILES=$(SRCFILES:.c=.o)
-BIN = darnit-spriteview
-RM = rm -f
-.PHONY: all windows clean
+BIN		=	darnit-spriteview
+
+SRCFILES	=	$(wildcard *.c)
+OBJFILES	=	$(SRCFILES:.c=.o)
+.PHONY: all clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
+	@$(CC) $(CTOOLS) $(OBJFILES) -o $(TOPDIR)/bin/$(BIN) $(LDTOOLS)
 	@echo 
-
-windows: all
 
 clean:
 	@echo " [ RM ] $(OBJFILES)"
@@ -23,7 +22,6 @@ clean:
 	@echo 
 
 
-%.o: %.c
+%.o: %.c %.h
 	@echo " [ CC ] tools/$(BIN)/$<"
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
+	@$(CC) $(CTOOLS) -c -o $@ $<
