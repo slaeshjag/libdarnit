@@ -17,7 +17,7 @@ MKDIR		=	mkdir -p
 
 ifeq ($(strip $(OS)), Windows_NT)
 	#Windows specifics
-	LIB	=	$(TOPDIR)/libdarnit.dll
+	LIB	=	$(TOPDIR)/bin/libdarnit.dll
 	PREFIX	=	/mingw
 	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi
 	LDTOOLS	+=	-lws2_32
