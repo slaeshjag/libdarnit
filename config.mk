@@ -27,7 +27,7 @@ ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	PREFIX	=	/opt
 	DATA_PATH=	\"/opt/usr/games\"
 	CFLAGS	+=	-fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
-	LDFLAGS	+=	`sdl-config --libs`
+	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11
 else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
