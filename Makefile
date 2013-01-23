@@ -35,6 +35,7 @@ clean:
 install: 
 	@echo " [INST] include/darnit"
 	@$(MKDIR) $(PREFIX)/include/darnit
+	@$(MKDIR) $(PREFIX)/bin
 	@install -D -m 0755 include/darnit/* $(PREFIX)/include/darnit
 	@echo " [INST] libdarnit.so"
 	@install -D -m 0755 $(LIB) $(PREFIX)/lib
