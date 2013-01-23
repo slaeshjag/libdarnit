@@ -561,7 +561,7 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 	#ifdef _WIN32
 		WIN32_FIND_DATA ffd;
 		HANDLE hFind = INVALID_HANDLE_VALUE;
-		DWORD dError = 0;
+		//DWORD dError = 0;
 		char dir[MAX_PATH], *new_path;
 
 		if (strlen(path) > MAX_PATH - 3)
