@@ -46,6 +46,14 @@ typedef struct {
 
 
 typedef struct {
+	int		line_x1;
+	int		line_y1;
+	int		line_x2;
+	int		line_y2;
+} RENDER_PARAMS;
+
+
+typedef struct {
 	float		x1;
 	float		y1;
 	float		x2;
@@ -172,6 +180,8 @@ typedef struct {
 
 int renderInit();
 int videoInitPartial();
+
+int renderLineTest();
 
 TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
 void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h);
