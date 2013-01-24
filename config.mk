@@ -12,6 +12,9 @@ CFLAGS		+=	-Wall -I../deps -shared -fvisibility=hidden $(DBGFLAGS)
 LDFLAGS		+=	-Wl,-soname,libdarnit.so -lmodplug -ldl -lbz2
 PREFIX		=	/usr/local
 
+#Extra install targets
+INSTARG		=	
+
 RM		=	rm -Rf
 MKDIR		=	mkdir -p
 
@@ -28,17 +31,20 @@ ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	DATA_PATH=	\"/opt/usr/games\"
 	CFLAGS	+=	-fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
 	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11
+	INSTARG	+=	strip
 else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
 	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
 	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11
+	INSTARG	+=	strip
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
 	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL
+	INSTARG	+=	strip
 else
 	#Linux defaults
 	DATA_PATH=	\"/usr/share/games\"
