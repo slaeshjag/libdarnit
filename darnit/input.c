@@ -173,7 +173,7 @@ void inputPoll() {
 			else if (d->input.event.key.keysym.sym == SDLK_ESCAPE)
 				d_quit();
 			#elif defined(MAEMO)
-			else if (d->input.event.key.keysym.sym == SDLK_BACKSPACE && (d->input.event.key.mod&KMOD_CTRL))
+			else if (d->input.event.key.keysym.sym == SDLK_BACKSPACE && (d->input.event.key.keysym.mod&KMOD_CTRL))
 				SDL_WM_GrabInput(SDL_GRAB_OFF);
 			#endif
 			if (d->input.event.key.keysym.sym == SDLK_LSHIFT)
