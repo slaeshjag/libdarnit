@@ -97,6 +97,10 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	#else
 		d->video.fbdev = -1;
 	#endif
+	
+	#ifdef MAEMO
+		SDL_WM_GrabInput(SDL_GRAB_ON);
+	#endif
 
 	return 0;
 }

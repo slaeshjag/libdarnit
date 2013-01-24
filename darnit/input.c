@@ -40,6 +40,15 @@ void inputKeymapReset() {
 	d->input.map.select = SDLK_LCTRL;
 	d->input.map.l = SDLK_RSHIFT;
 	d->input.map.r = SDLK_RCTRL;
+	#elif defined(MAEMO)
+	d->input.map_x = SDLK_s;
+	d->input.map_y = SDLK_w;
+	d->input.map_a = SDLK_a;
+	d->input.map_b = SDLK_d;
+	d->input.map_start = SDLK_KP_ENTER;
+	d->input.map_select = SDLK_BACKSPACE;
+	d->input.map_l = SDLK_q;
+	d->input.map_r = SDLK_e;
 	#elif defined(GCW_ZERO)
 	d->input.map_x = SDLK_LSHIFT;
 	d->input.map_y = SDLK_SPACE;
@@ -163,6 +172,9 @@ void inputPoll() {
 			#ifdef PANDORA
 			else if (d->input.event.key.keysym.sym == SDLK_ESCAPE)
 				d_quit();
+			#elif defined(MAEMO)
+			else if (d->input.event.key.keysym.sym == SDLK_BACKSPACE && (d->input.event.key.mod&KMOD_CTRL))
+				SDL_WM_GrabInput(SDL_GRAB_OFF);
 			#endif
 			if (d->input.event.key.keysym.sym == SDLK_LSHIFT)
 				d->input.upper |= 2;
@@ -256,6 +268,10 @@ void inputPoll() {
 				else
 					d->input.js.nub1_y = d->input.event.jaxis.value;
 			}
+		#ifdef MAEMO
+		} else if (d->input.event.type == SDL_ACTIVEEVENT && d->input.event.active.state == 1) {
+			SDL_WM_GrabInput(SDL_GRAB_ON);
+		#endif
 		}  else if (d->input.event.type == SDL_QUIT)
 			exit(0);
 	}
