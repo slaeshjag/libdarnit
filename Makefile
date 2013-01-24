@@ -5,7 +5,7 @@ MAKEFLAGS	+=	--no-print-directory
 TOPDIR		=	$(shell pwd)
 export TOPDIR
 
-.PHONY: all tools lib install clean
+.PHONY: all tools lib install strip clean
 
 all:
 	@echo " [INIT] bin/"
@@ -44,8 +44,13 @@ clean:
 	@echo
 	@echo "Source tree cleaned."
 	@echo
+
+strip:
+	@echo " [STRP] bin/"
+	@strip $(LIB)
+	@strip bin/darnit-*
 	
-install: 
+install: $(INSTARG)
 	@echo " [INST] include/darnit"
 	@$(MKDIR) $(PREFIX)/include/darnit
 	@$(MKDIR) $(PREFIX)/lib
