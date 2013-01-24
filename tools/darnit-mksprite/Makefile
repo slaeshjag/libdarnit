@@ -1,20 +1,17 @@
-#darnit-fsimage is used to create LDI image files
+# Project: libDarnit
+#darnit-mksprite is used to create sprites
+include $(TOPDIR)/config.mk
 
-CFLAGS += -O3 -Wall
-LDFLAGS = 
+BIN		=	darnit-mksprite
 
-SRCFILES=$(wildcard *.c)
-OBJFILES=$(SRCFILES:.c=.o)
-BIN = darnit-mksprite
-RM = rm -f
-.PHONY: all windows clean
+SRCFILES	=	$(wildcard *.c)
+OBJFILES	=	$(SRCFILES:.c=.o)
+.PHONY: all clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
+	@$(CC) $(CTOOLS) $(OBJFILES) -o $(TOPDIR)/bin/$(BIN) $(LDTOOLS)
 	@echo 
-
-windows: all
 
 clean:
 	@echo " [ RM ] $(OBJFILES)"
@@ -24,5 +21,4 @@ clean:
 
 %.o: %.c %.h
 	@echo " [ CC ] tools/$(BIN)/$<"
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
+	@$(CC) $(CTOOLS) -c -o $@ $<

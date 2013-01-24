@@ -1,6 +1,7 @@
+# Project: libDarnit
+include $(TOPDIR)/config.mk
 
-MAKEFLAGS += --no-print-directory
-.PHONY: all windows clean
+.PHONY: all clean
 
 all:
 	@echo " [ CD ] tools/darnit-fsimage"
@@ -11,18 +12,6 @@ all:
 	+@make -C darnit-spriteview
 	@echo " [ CD ] tools/darnit-stringtable"
 	+@make -C darnit-stringtable
-	@echo "Done."
-	@echo 
-	
-windows:
-	@echo " [ CD ] tools/darnit-fsimage"
-	+@make -C darnit-fsimage windows
-	@echo " [ CD ] tools/darnit-mksprite"
-	+@make -C darnit-mksprite windows
-	@echo " [ CD ] tools/darnit-spriteview"
-	+@make -C darnit-spriteview windows
-	@echo " [ CD ] tools/darnit-stringtable"
-	+@make -C darnit-stringtable windows
 	@echo "Done."
 	@echo 
 

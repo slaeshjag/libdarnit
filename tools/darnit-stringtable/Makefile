@@ -1,23 +1,18 @@
-#darnit-fsimage is used to create LDI image files
+# Project: libDarnit
+#darnit-stringtable is used to compile string tables
+include $(TOPDIR)/config.mk
 
-#CFLAGS += -O3 -Wall
-CFLAGS += -O0 -g -Wall
-LDFLAGS = -lz
+LDTOOLS		+=	-lz
 
-SRCFILES=$(wildcard *.c)
-OBJFILES=$(SRCFILES:.c=.o)
-BIN = darnit-stringtable
-RM = rm -f
-.PHONY: all windows clean
+BIN		=	darnit-stringtable
+
+SRCFILES	=	$(wildcard *.c)
+OBJFILES	=	$(SRCFILES:.c=.o)
+.PHONY: all clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
-	@echo 
-
-windows: $(OBJFILES)
-	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS) -lws2_32
+	@$(CC) $(CTOOLS) $(OBJFILES) -o $(TOPDIR)/bin/$(BIN) $(LDTOOLS)
 	@echo 
 
 clean:
@@ -28,5 +23,4 @@ clean:
 
 %.o: %.c %.h
 	@echo " [ CC ] tools/$(BIN)/$<"
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
+	@$(CC) $(CTOOLS) -c -o $@ $<
