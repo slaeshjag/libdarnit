@@ -269,7 +269,7 @@ void inputPoll() {
 					d->input.js.nub1_y = d->input.event.jaxis.value;
 			}
 		#ifdef MAEMO
-		} else if (d->input.event.type == SDL_ACTIVEEVENT && d->input.event.active.gain == 1) {
+		} else if (d->input.event.type == SDL_ACTIVEEVENT && d->input.event.active.gain == 1 && d->input.event.active.type == SDL_APPACTIVE) {
 			SDL_WM_GrabInput(SDL_GRAB_ON);
 		#endif
 		}  else if (d->input.event.type == SDL_QUIT)
