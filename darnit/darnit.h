@@ -20,18 +20,19 @@
 	#include <fcntl.h>
 #endif
 
-#define					DARNIT_UNUSED(x) (void)x
+#define		DARNIT_UNUSED(x) (void)x
 
-#define         DARNIT_PLATFORM_DESKTOP         0x100000
-#define         DARNIT_PLATFORM_HANDHELD        0x200000
+#define		DARNIT_PLATFORM_DESKTOP		0x100000
+#define		DARNIT_PLATFORM_HANDHELD	0x200000
 
-#define         DARNIT_PLATFORM_LINUX           0x1
-#define         DARNIT_PLATFORM_WIN32           0x2
-#define         DARNIT_PLATFORM_PANDORA         0x4
-#define         DARNIT_PLATFORM_GCWZERO         0x8
-#define         DARNIT_PLATFORM_GPHCAANOO       0x10
+#define		DARNIT_PLATFORM_LINUX		0x1
+#define		DARNIT_PLATFORM_WIN32		0x2
+#define		DARNIT_PLATFORM_PANDORA		0x4
+#define		DARNIT_PLATFORM_GCWZERO		0x8
+#define		DARNIT_PLATFORM_GPHCAANOO	0x10
 #define		DARNIT_PLATFORM_MACOSX		0x20
 #define		DARNIT_PLATFORM_FREEBSD		0x40
+#define		DARNIT_PLATFORM_MAEMO		0x80
 #define		DARNIT_PLATFORM_BIGENDIAN	0x80000000
 
 
