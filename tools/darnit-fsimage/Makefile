@@ -1,22 +1,16 @@
+# Project: libDarnit
 #darnit-fsimage is used to create LDI image files
+include $(TOPDIR)/config.mk
 
-CFLAGS += -O3 -Wall
-LDFLAGS = 
+BIN		=	darnit-fsimage
 
-SRCFILES=$(wildcard *.c)
-OBJFILES=$(SRCFILES:.c=.o)
-BIN = darnit-fsimage
-RM = rm -f
-.PHONY: all windows clean
+SRCFILES	=	$(wildcard *.c)
+OBJFILES	=	$(SRCFILES:.c=.o)
+.PHONY: all clean
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS)
-	@echo 
-
-windows: $(OBJFILES)
-	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CFLAGS) $(OBJFILES) -o ../../bin/$(BIN) $(LDFLAGS) -lws2_32
+	@$(CC) $(CTOOLS) $(OBJFILES) -o $(TOPDIR)/bin/$(BIN) $(LDTOOLS)
 	@echo 
 
 clean:
@@ -27,5 +21,4 @@ clean:
 
 %.o: %.c %.h
 	@echo " [ CC ] tools/$(BIN)/$<"
-	@$(CC) $(CFLAGS) -c -o $@ $<
-
+	@$(CC) $(CTOOLS) -c -o $@ $<
