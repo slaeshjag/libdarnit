@@ -41,23 +41,23 @@ void inputKeymapReset() {
 	d->input.map.l = SDLK_RSHIFT;
 	d->input.map.r = SDLK_RCTRL;
 	#elif defined(MAEMO)
-	d->input.map_x = SDLK_s;
-	d->input.map_y = SDLK_w;
-	d->input.map_a = SDLK_a;
-	d->input.map_b = SDLK_d;
-	d->input.map_start = SDLK_KP_ENTER;
-	d->input.map_select = SDLK_BACKSPACE;
-	d->input.map_l = SDLK_q;
-	d->input.map_r = SDLK_e;
+	d->input.map.x = SDLK_s;
+	d->input.map.y = SDLK_w;
+	d->input.map.a = SDLK_a;
+	d->input.map.b = SDLK_d;
+	d->input.map.start = SDLK_KP_ENTER;
+	d->input.map.select = SDLK_BACKSPACE;
+	d->input.map.l = SDLK_q;
+	d->input.map.r = SDLK_e;
 	#elif defined(GCW_ZERO)
-	d->input.map_x = SDLK_LSHIFT;
-	d->input.map_y = SDLK_SPACE;
-	d->input.map_a = SDLK_LCTRL;
-	d->input.map_b = SDLK_LALT;
-	d->input.map_start = SDLK_ENTER;
-	d->input.map_select = SDLK_ESCAPE;
-	d->input.map_l = SDLK_TAB;
-	d->input.map_r = SDLK_BACKSPACE;
+	d->input.map.x = SDLK_LSHIFT;
+	d->input.map.y = SDLK_SPACE;
+	d->input.map.a = SDLK_LCTRL;
+	d->input.map.b = SDLK_LALT;
+	d->input.map.start = SDLK_ENTER;
+	d->input.map.select = SDLK_ESCAPE;
+	d->input.map.l = SDLK_TAB;
+	d->input.map.r = SDLK_BACKSPACE;
 	#else
 	d->input.map.x = SDLK_s;
 	d->input.map.y = SDLK_w;
