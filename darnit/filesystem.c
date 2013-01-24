@@ -633,7 +633,7 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries) {
 	FILESYSTEM_IMAGE *img;
 	DIR_LIST *dir, *end;
-	int i;
+	int i=0;
 	const char *name;
 	char full_path[256];
 
