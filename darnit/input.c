@@ -77,7 +77,7 @@ void inputKeymapReset() {
 
 int inputInitJoystick() {
 	int i, any;
-	const char *js0;
+	const char *js0="";
 
 	any = 0;
 
