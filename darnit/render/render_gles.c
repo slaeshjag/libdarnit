@@ -1,5 +1,6 @@
 /* DO NOT FEED THIS FILE TO YOUR COMPILER MANUALLY, THAT IS HANDLED BY render.c */
 
+#include <sys/ioctl.h>
 
 int videoInitGL(int w, int h) {
 	glEnable(GL_TEXTURE_2D);
@@ -96,6 +97,10 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 		fprintf(stderr, "WARNING: Unable to open fbdev for Vsync\n");
 	#else
 		d->video.fbdev = -1;
+	#endif
+	
+	#ifdef MAEMO
+		SDL_WM_GrabInput(SDL_GRAB_ON);
 	#endif
 
 	return 0;

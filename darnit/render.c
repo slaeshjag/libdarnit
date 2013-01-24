@@ -813,7 +813,7 @@ void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int 
 
 
 void renderTilesheetScalingSet(TILESHEET *ts, unsigned int scaling) {
-	unsigned int flag;
+	unsigned int flag=GL_NEAREST;
 
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
 

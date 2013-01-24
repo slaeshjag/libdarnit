@@ -45,7 +45,9 @@ void EXPORT_THIS d_input_grab() {
 
 
 void EXPORT_THIS d_input_release() {
+	#ifndef MAEMO
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
+	#endif
 
 	return;
 }
