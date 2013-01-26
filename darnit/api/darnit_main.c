@@ -194,7 +194,7 @@ DARNIT_PLATFORM EXPORT_THIS d_platform_get() {
 void EXPORT_THIS d_quit() {
 	videoDestroy();
 
-	exit(0);
+	SDL_Quit();
 
 	return;
 }
