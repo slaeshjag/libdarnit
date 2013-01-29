@@ -164,20 +164,28 @@ void socketConnectLoop() {
 	SOCKET_LIST *list, **parent, *tmp_p;
 	void *tmp_sock;
 	int tmp, t;
+	
+	#ifdef _WIN32
+	fd_set fd_win_use;
+	struct timeval time_delay;
+	#endif
 
 	parent = &d->connect_list;
 	list = *parent;
 	while (list != NULL) {
+		#ifdef _WIN32
+		time_delay.tv_sec = 0;
+		time_delay.tv_usec = 0;
+		FD_ZERO(fd_win_use);
+		FD_SET(list->socket->socket, &fd_win_use);
+		if (select(0, NULL, &fd_win_use, NULL, &time_delay) == 0)
+			goto loop;
+		#else
 		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
-			#ifndef _WIN32
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
 				goto loop;
-			#else
-			int error_n = WSAGetLastError();
-			if (error_n == WSAEWOULDBLOCK || error_n == WSAEALREADY)
-				goto loop;
-			#endif
 		}
+		#endif
 
 		if (t == 1)
 			t *= -1;
