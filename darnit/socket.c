@@ -176,7 +176,7 @@ void socketConnectLoop() {
 		#ifdef _WIN32
 		time_delay.tv_sec = 0;
 		time_delay.tv_usec = 0;
-		FD_ZERO(fd_win_use);
+		FD_ZERO(&fd_win_use);
 		FD_SET(list->socket->socket, &fd_win_use);
 		if (select(0, NULL, &fd_win_use, NULL, &time_delay) == 0)
 			goto loop;
