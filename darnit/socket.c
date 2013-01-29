@@ -163,11 +163,13 @@ void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void *, void *), v
 void socketConnectLoop() {
 	SOCKET_LIST *list, **parent, *tmp_p;
 	void *tmp_sock;
-	int tmp, t;
+	int t;
 	
 	#ifdef _WIN32
 	fd_set fd_win_use;
 	struct timeval time_delay;
+	#else
+	int tmp;
 	#endif
 
 	parent = &d->connect_list;
