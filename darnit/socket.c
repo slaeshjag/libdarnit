@@ -179,9 +179,10 @@ void socketConnectLoop() {
 		FD_ZERO(&fd_win_use);
 		FD_ZERO(&fd_win_error);
 		FD_SET(list->socket->socket, &fd_win_use);
-		if ((tmp = select(0, NULL, &fd_win_use, &fd_win_error, &time_delay) == 0))
+		tmp = select(0, NULL, &fd_win_use, &fd_win_error, &time_delay);
+		if (!FD_ISSET(list->socket->socket, &fd_win_use))
 			goto loop;
-		if (FD_ISSET(list->socket->socket, &fd_win_use))
+		if (!FD_ISSET(list->socket->socket, &fd_win_error))
 			goto loop;
 		
 		#else
