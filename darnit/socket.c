@@ -163,14 +163,11 @@ void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void *, void *), v
 void socketConnectLoop() {
 	SOCKET_LIST *list, **parent, *tmp_p;
 	void *tmp_sock;
-	int t;
+	int t, tmp;
 	
 	#ifdef _WIN32
 	fd_set fd_win_use;
 	struct timeval time_delay;
-	#else
-	int tmp;
-	#endif
 
 	parent = &d->connect_list;
 	list = *parent;
@@ -180,8 +177,12 @@ void socketConnectLoop() {
 		time_delay.tv_usec = 0;
 		FD_ZERO(&fd_win_use);
 		FD_SET(list->socket->socket, &fd_win_use);
-		if (select(0, NULL, &fd_win_use, NULL, &time_delay) == 0)
+		if ((tmp = select(0, NULL, &fd_win_use, NULL, &time_delay) == 0))
 			goto loop;
+		if (tmp == SOCKET_ERROR)
+			if (WSAGetLastError() == WSAEINPROGRESS)
+				goto loop;
+		
 		#else
 		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
