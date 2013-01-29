@@ -168,6 +168,7 @@ void socketConnectLoop() {
 	#ifdef _WIN32
 	fd_set fd_win_use;
 	struct timeval time_delay;
+	#endif
 
 	parent = &d->connect_list;
 	list = *parent;
