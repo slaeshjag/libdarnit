@@ -166,7 +166,7 @@ void socketConnectLoop() {
 	int t, tmp;
 	
 	#ifdef _WIN32
-	fd_set fd_win_use;
+	fd_set fd_win_use, fd_win_error;
 	struct timeval time_delay;
 	#endif
 
@@ -177,12 +177,12 @@ void socketConnectLoop() {
 		time_delay.tv_sec = 0;
 		time_delay.tv_usec = 0;
 		FD_ZERO(&fd_win_use);
+		FD_ZERO(&fd_win_error);
 		FD_SET(list->socket->socket, &fd_win_use);
-		if ((tmp = select(0, NULL, &fd_win_use, NULL, &time_delay) == 0))
+		if ((tmp = select(0, NULL, &fd_win_use, &fd_win_error, &time_delay) == 0))
 			goto loop;
-		if (tmp == SOCKET_ERROR)
-			if (WSAGetLastError() == WSAEINPROGRESS)
-				goto loop;
+		if (FD_ISSET(list->socket->socket, &fd_win_use)
+			goto loop;
 		
 		#else
 		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
