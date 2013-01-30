@@ -183,6 +183,8 @@ void socketConnectLoop() {
 		FD_SET(list->socket->socket, &fd_win_use);
 		FD_SET(list->socket->socket, &fd_win_error);
 		tmp = select(0, NULL, &fd_win_use, &fd_win_error, &time_delay);
+		if (tmp <= 0)
+			goto loop;		/* I am typing this really hard, because I'm mad! >:o */
 		if (!FD_ISSET(list->socket->socket, &fd_win_use)) {
 			if (!FD_ISSET(list->socket->socket, &fd_win_error))
 				goto loop;
