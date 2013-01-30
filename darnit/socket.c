@@ -177,21 +177,21 @@ void socketConnectLoop() {
 	while (list != NULL) {
 		#ifdef _WIN32
 		time_delay.tv_sec = 0;
-		time_delay.tv_usec = 1;
+		time_delay.tv_usec = 10;
 		FD_ZERO(&fd_win_use);
 		FD_ZERO(&fd_win_error);
 		FD_SET(list->socket->socket, &fd_win_use);
 		FD_SET(list->socket->socket, &fd_win_error);
-		tmp = select(list->socket->socket + 1, NULL, &fd_win_use, &fd_win_error, &time_delay);
-		if (tmp <= 0)
-			goto loop;		/* I am typing this really hard, because I'm mad! >:o */
-		if (!FD_ISSET(list->socket->socket, &fd_win_use)) {
-			if (!FD_ISSET(list->socket->socket, &fd_win_error))
-				goto loop;
-			else
-				fprintf(connect_error, "Connect did not succeed\n");
-		}
-		fprintf(connect_error, "Apparently, the connect has happenedi\n");
+		select(list->socket->socket + 1, NULL, &fd_win_use, &fd_win_error, &time_delay);
+		
+		if (FD_ISSET(list->socket->socket, &fd_win_use)) {
+			fprintf(connect_error, "Apparently, the connect has happenedi\n");
+			t=0;
+		} else if (FD_ISSET(list->socket->socket, &fd_win_error)) {
+			fprintf(connect_error, "Connect did not succeed\n");
+			t=1;
+		} else
+			goto loop;
 
 		#else
 		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
