@@ -188,6 +188,7 @@ void socketConnectLoop() {
 				goto loop;
 			else
 				fprintf(connect_error, "Connect did not succeed\n");
+		}
 		fprintf(connect_error, "Apparently, the connect has happenedi\n");
 
 		#else
