@@ -168,6 +168,8 @@ void socketConnectLoop() {
 	#ifdef _WIN32
 	fd_set fd_win_use, fd_win_error;
 	struct timeval time_delay;
+	FILE *connect_error;
+	connect_error = fopen("socket_error.txt", "a");
 	#endif
 
 	parent = &d->connect_list;
@@ -175,16 +177,22 @@ void socketConnectLoop() {
 	while (list != NULL) {
 		#ifdef _WIN32
 		time_delay.tv_sec = 0;
-		time_delay.tv_usec = 0;
+		time_delay.tv_usec = 10;
 		FD_ZERO(&fd_win_use);
 		FD_ZERO(&fd_win_error);
 		FD_SET(list->socket->socket, &fd_win_use);
-		tmp = select(0, NULL, &fd_win_use, &fd_win_error, &time_delay);
-		if (!FD_ISSET(list->socket->socket, &fd_win_use))
-			goto loop;
-		if (!FD_ISSET(list->socket->socket, &fd_win_error))
-			goto loop;
+		FD_SET(list->socket->socket, &fd_win_error);
+		select(list->socket->socket + 1, NULL, &fd_win_use, &fd_win_error, &time_delay);
 		
+		if (FD_ISSET(list->socket->socket, &fd_win_use)) {
+			fprintf(connect_error, "Apparently, the connect has happenedi\n");
+			t=0;
+		} else if (FD_ISSET(list->socket->socket, &fd_win_error)) {
+			fprintf(connect_error, "Connect did not succeed\n");
+			t=1;
+		} else
+			goto loop;
+
 		#else
 		if ((t = recv(list->socket->socket, (void *) &tmp, 4, MSG_PEEK | MSG_NOSIGNAL) < 0)) {
 			if (errno == EWOULDBLOCK || errno == EAGAIN)
@@ -208,6 +216,10 @@ void socketConnectLoop() {
 			parent = &list->next;
 			list = *parent;
 	}
+
+	#ifdef _WIN32
+	fclose(connect_error);
+	#endif
 
 	return;
 }
