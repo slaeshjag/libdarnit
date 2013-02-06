@@ -30,6 +30,8 @@ void d_fs_unmount(const char *fname);
 int d_fs_mount_self();
 void d_fs_unmount_self();
 
+char *d_fs_exec_path();
+
 DARNIT_FILE *d_file_open(const char *fname, const char *mode);
 DARNIT_FILE *d_file_close(DARNIT_FILE *file);
 
