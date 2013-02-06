@@ -16,6 +16,11 @@ void EXPORT_THIS d_fs_unmount(const char *fname) {
 }
 
 
+char EXPORT_THIS *d_fs_exec_path() {
+	return fsFindBinaryPath();
+}
+
+
 int EXPORT_THIS d_fs_mount_self() {
 	return fsMountSelf();
 }
