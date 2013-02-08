@@ -48,6 +48,10 @@ void darnitSetPlatform(int partial) {
 			d->platform.screen_w = 320;
 			d->platform.screen_h = 240;
 			d->platform.fullscreen = 1;
+		#else
+			d->platform.screen_w = 800;
+			d->platform.screen_h = 480;
+			d->platform.fullscreen = 0;
 		#endif
 	}
 
@@ -74,13 +78,8 @@ void darnitSetPlatform(int partial) {
 void EXPORT_THIS *d_init(const char *wtitle, const char *data_dir, const char *icon) {
 	if (d_init_partial(data_dir) == NULL)
 		return NULL;
-	#ifdef PANDORA
-	if (d_init_rest(wtitle, 800, 480, 1, icon) < 0)
-	#elif defined GCW_ZERO
-	if (d_init_rest(wtitle, 320, 240, 1, icon) < 0)
-	#else
-	if (d_init_rest(wtitle, 800, 480, 0, icon) < 0)
-	#endif
+	darnitSetPlatform(1);
+	if (d_init_rest(wtitle, d->platform.screen_w, d->platform.screen_h, d->platform.fullscreen, icon) < 0)
 		return NULL;
 
 	return d;
