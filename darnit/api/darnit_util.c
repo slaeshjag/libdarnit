@@ -36,7 +36,7 @@ int EXPORT_THIS d_util_sin(int angle) {
 const char EXPORT_THIS *d_str_null(const char *str) {
 	if (!str)
 		return NULL;
-	if (!strstr("NULL", str))
+	if (!strcmp("NULL", str))
 		return NULL;
 	return str;
 }
