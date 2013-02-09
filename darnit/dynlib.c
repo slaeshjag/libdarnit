@@ -3,10 +3,31 @@
 
 void *dynlibOpen(const char *fname) {
 	char *fname_n;
+	char path[DARNIT_PATH_MAX];
+	FILESYSTEM_FILE *f;
 	if (fname == NULL) return NULL;
 	
+	/* Find a file that matches the path */
+	if (strlen(d->fs.data_dir) + 2 + strlen(fname) > DARNIT_PATH_MAX)
+		return NULL;
+	if (strlen(d->fs.write_dir) + 2 + strlen(fname) > DARNIT_PATH_MAX)
+		return NULL;
+	
+	/* First, look in write-dir */
+	sprintf(path, "%s/%s", d->fs.write_dir, fname);
+	if (!(f = fsFileOpen(path, "r"))) {
+		/* Nope. Look in data dir instead */
+		sprintf(path, "%s/%s", d->fs.data_dir, fname);
+		if (!(f = fsFileOpen(path, "r")))
+			/* File doesn't seem to exist */
+			return NULL;
+	}
+
+	fsFileClose(f);
+
+
 	#ifdef _WIN32
-		fname_n = utilPathTranslate(fname);
+		fname_n = utilPathTranslate(path);
 		HINSTANCE *lib;
 
 		lib = malloc(sizeof(HINSTANCE));
@@ -14,8 +35,8 @@ void *dynlibOpen(const char *fname) {
 	#else
 		void *lib;
 
-		fname_n = malloc(strlen(fname) + 3);
-		sprintf(fname_n, "./%s", fname);
+		fname_n = malloc(strlen(path) + 1);
+		sprintf(fname_n, "%s", path);
 		lib = dlopen(fname_n, RTLD_NOW | RTLD_GLOBAL);
 	#endif
 	free(fname_n);
