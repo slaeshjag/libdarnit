@@ -654,7 +654,10 @@ void renderSetTileCoordinatesColor(TILE_COLOR_CACHE *cache, float x, float y, fl
 	cache->vertex[5].coord.x = x;
 	cache->vertex[5].coord.y = y2;
 
-	((unsigned int *)cache->vertex[0].col.rgba)[0] = ((unsigned int *) color)[0];
+	(cache->vertex[0].col.rgba)[0] = (color)[0];
+	(cache->vertex[0].col.rgba)[1] = (color)[1];
+	(cache->vertex[0].col.rgba)[2] = (color)[2];
+	(cache->vertex[0].col.rgba)[3] = (color)[3];
 	cache->vertex[1].col = cache->vertex[0].col;
 	cache->vertex[2].col = cache->vertex[0].col;
 	cache->vertex[3].col = cache->vertex[0].col;
