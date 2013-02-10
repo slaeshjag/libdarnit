@@ -342,8 +342,11 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 			w += t;
 
 			if (*string == ' ') {
-				if (textGetGlyphWidth(font, ' ') + w >= linelen)
+				if (textGetGlyphWidth(font, ' ') + w >= linelen) {
+					string++;
 					break;
+				}
+
 				w += textGetGlyphWidth(font, ' ');
 				string++;
 			}
@@ -542,6 +545,10 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelenf) {
 		surface->cur_xf = surface->orig_xf;
 		surface->cur_yf += surface->yf_skip;
+		surface->pos = 0;
+
+		if (cp == ' ')
+			return 1;
 		surface->pos = w;
 	} else
 		surface->pos += w;
