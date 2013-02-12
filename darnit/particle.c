@@ -28,6 +28,17 @@ freely, subject to the following restrictions:
 #ifndef DARNIT_HEADLESS
 
 
+#if 0
+void particleRenderColorTri(PARTICLE_EMITTER *pe) {
+	int i;
+
+	for (i = 0; i < pe->particle_max; i++) {
+		if (pe->com[i].age == -1)
+			continue;
+		pe->tri[i].
+#endif
+
+
 void particleTexturedInit(PARTICLE_VERTEX_TEX *tex) {
 	tex->x = 0.0f;
 	tex->y = 0.0f;
@@ -135,6 +146,15 @@ PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
 }
 
 #if 0
+void particleMove(PARTICLE_EMITTER *pei) {
+	int i;
+
+	for (i = 0; i < pe->particle_max; i++) {
+		if (pe->com[i].age == -1)
+			continue;
+	f
+
+
 void particleEmitterRender(PARTICLE_EMITTER *pe) {
 	int i, spawn;
 
@@ -142,9 +162,13 @@ void particleEmitterRender(PARTICLE_EMITTER *pe) {
 		return;
 	
 	for (i = 0; i < pe->particle_max; i++) {
+		if (pe->com[i].age == -1)
+			continue;
 		pe->com[i].x_vel += pe->gravity_x * (d->fps.time_at_flip - d->fps.time_at_last_frame);
 		pe->com[i].y_vel += pe->gravity_y * (d->fps.time_at_flip - d->fps.time_at_last_frame);
 	}
+	
+	particleMove(pe, i);
 
 	spawn = pe->spawnrate * (d->fps.time_at_flip - d->fps.time_at_last_frame);
 
@@ -156,7 +180,7 @@ void particleEmitterRender(PARTICLE_EMITTER *pe) {
 			break;
 		case PARTICLE_MODE_QUAD:
 			for (i = 0; i < pe->particles_max; i++) {
-
+#if 0
 
 int particleEmitterMode(PARTICLE_EMITTER *pe, unsigned int mode, void *data) {
 	if (!pe)
@@ -164,6 +188,7 @@ int particleEmitterMode(PARTICLE_EMITTER *pe, unsigned int mode, void *data) {
 	switch (mode) {
 		case 
 
+#endif
 #endif
 
 // DARNIT_HEADLESS

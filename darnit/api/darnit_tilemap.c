@@ -36,14 +36,6 @@ TILEMAP_ENTRY EXPORT_THIS *d_tilemap_load(const char *fname, unsigned int invisi
 }
 
 
-void EXPORT_THIS d_tilemap_tile_set(TILEMAP_ENTRY *tilemap, int x, int y, int tile) {
-	if (tilemap == NULL) return;
-	renderTilemapTileSet(tilemap->render, x, y, tile);
-
-	return;
-}
-
-
 void EXPORT_THIS d_tilemap_recalc(TILEMAP_ENTRY *tilemap) {
 	renderTilemapForceRecalc(tilemap->render);
 	

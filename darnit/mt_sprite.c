@@ -28,46 +28,8 @@ freely, subject to the following restrictions:
 #ifndef DARNIT_HEADLESS
 
 void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w, int h, int rx, int ry) {
-	float x1, x2, y1, y2, u1, u2, v1, v2, twg, thg;
-
-	twg = 1.0f / ts->w;
-	thg = 1.0f / ts->h;
-
-	x1 = ts->swgran * rx - 1.0f;
-	x2 = x1 + ts->swgran * w;
-	y1 = 1.0f - ts->shgran * ry;
-	y2 = y1 - ts->shgran * h;
-
-	u1 = twg * x;
-	u2 = u1 + twg * w;
-	v1 = thg * y;
-	v2 = v1 + thg * h;
-
-	cache->x = x1;
-	cache->x2 = x2;
-	cache->x3 = x2;
-	cache->x4 = x2;
-	cache->x5 = x1;
-	cache->x6 = x1;
-	cache->y = y1;
-	cache->y2 = y1;
-	cache->y3 = y2;
-	cache->y4 = y2;
-	cache->y5 = y2;
-	cache->y6 = y1;
-
-	cache->u = u1;
-	cache->u2 = u2;
-	cache->u3 = u2;
-	cache->u4 = u2;
-	cache->u5 = u1;
-	cache->u6 = u1;
-	cache->v = v1;
-	cache->v2 = v1;
-	cache->v3 = v2;
-	cache->v4 = v2;
-	cache->v5 = v2;
-	cache->v6 = v1;
+	renderCalcTilePosCache(cache, ts, rx, ry);
+	renderSetTileCoord(cache, ts, x, y, w, h);
 
 	return;
 }

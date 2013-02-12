@@ -108,7 +108,7 @@ typedef struct {
 	struct TEXT_GLYPH_CACHE	*g_cache;
 	struct TEXT_GLYPH_CACHE	*l_cache;
 	union {
-		TILE_COLOR_CACHE *cache_c;
+		TILE_COLOR_TEX_CACHE *cache_c;
 		TILE_CACHE	*cache;
 	};
 

@@ -41,7 +41,7 @@ freely, subject to the following restrictions:
 #include <stdlib.h>
 #include <string.h>
 
-
+#if 0
 typedef struct {
 	float		x;
 	float		y;
@@ -68,7 +68,7 @@ typedef struct {
 	float		u6;
 	float		v6;
 } TILE_CACHE;
-
+#endif
 
 typedef struct {
 	int		line_x1;
@@ -100,9 +100,6 @@ typedef struct {
 
 typedef struct {
 	unsigned char	rgba[4];
-/*	float		r;
-	float		g;
-	float		b;*/
 } COL_COORDINATE;
 
 
@@ -110,17 +107,34 @@ typedef struct {
 	COORDINATE	coord;
 	TEX_COORDINATE	tex;
 	COL_COORDINATE	col;
+} COLOR_TEX_VERTEX;
+
+
+typedef struct {
+	COORDINATE	coord;
+	TEX_COORDINATE	tex;
+} TEX_VERTEX;
+
+
+typedef struct {
+	COORDINATE	coord;
+	COL_COORDINATE	col;
 } COLOR_VERTEX;
 
 
 typedef struct {
-	COLOR_VERTEX	vertex[6];
-} TILE_COLOR_CACHE;
+	COLOR_TEX_VERTEX vertex[6];
+} TILE_COLOR_TEX_CACHE;
 
 
 typedef struct {
 	COORDINATE	coord[6];
 } RECT_CACHE;
+
+
+typedef struct {
+	TEX_VERTEX	vertex[6];
+} TILE_CACHE;
 
 
 typedef struct {
@@ -220,7 +234,7 @@ void renderTileSetSize(TILE_CACHE *cache, int w, int h);
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
-void renderColCache(TILE_COLOR_CACHE *cache, TILESHEET *ts, int tiles);
+void renderColCache(TILE_COLOR_TEX_CACHE *cache, TILESHEET *ts, int tiles);
 void renderLineCache(LINE_CACHE *cache, int lines, int line_w);
 void renderRectCache(RECT_CACHE *cache, int rects);
 void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2);
@@ -228,7 +242,7 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq);
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h);
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
-void renderSetTileCoordinatesColor(TILE_COLOR_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color);
+void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color);
 void renderFadeLoop();
 void renderFadeFade(unsigned int time, float r, float g, float b);
 void renderFadeUnfade(unsigned int time);
