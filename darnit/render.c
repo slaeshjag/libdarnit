@@ -479,28 +479,28 @@ void *renderTilesheetFree(TILESHEET *ts) {
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y) {
 	x /= ts->wsq;
 	y /= ts->hsq;
-	cache->x = (x*ts->sw) - 1.0f;
-	cache->y = 1.0f-(y*ts->sh);
-	cache->x2 = (ts->sw + x*ts->sw) - 1.0f;
-	cache->y2 = 1.0f-(y*ts->sh);
-	cache->x3 = (ts->sw + x*ts->sw-1.0f);
-	cache->y3 = (1.0f-y*ts->sh - ts->sh);
-	cache->x4 = (ts->sw + x*ts->sw-1.0f);
-	cache->y4 = (1.0f-y*ts->sh - ts->sh);
-	cache->x5 = (x*ts->sw-1.0f);
-	cache->y5 = (1.0f-y*ts->sh - ts->sh);
-	cache->x6 = (x*ts->sw-1.0f);
-	cache->y6 = (1.0f-y*ts->sh);
+	cache->vertex[0].coord.x = (x*ts->sw) - 1.0f;
+	cache->vertex[0].coord.y = 1.0f-(y*ts->sh);
+	cache->vertex[1].coord.x = (ts->sw + x*ts->sw) - 1.0f;
+	cache->vertex[1].coord.y = 1.0f-(y*ts->sh);
+	cache->vertex[2].coord.x = (ts->sw + x*ts->sw-1.0f);
+	cache->vertex[2].coord.y = (1.0f-y*ts->sh - ts->sh);
+	cache->vertex[3].coord.x = (ts->sw + x*ts->sw-1.0f);
+	cache->vertex[3].coord.y = (1.0f-y*ts->sh - ts->sh);
+	cache->vertex[4].coord.x = (x*ts->sw-1.0f);
+	cache->vertex[4].coord.y = (1.0f-y*ts->sh - ts->sh);
+	cache->vertex[5].coord.x = (x*ts->sw-1.0f);
+	cache->vertex[5].coord.y = (1.0f-y*ts->sh);
 
 	return;
 }
 
 
 void renderTileSetSize(TILE_CACHE *cache, int w, int h) {
-	cache->x2 = cache->x + d->video.swgran * w;
-	cache->y3 = cache->y - d->video.shgran * h;
-	cache->x3 = cache->x4 = cache->x2;
-	cache->y4 = cache->y5 = cache->y3;
+	cache->vertex[1].coord.x = cache->vertex[0].coord.x + d->video.swgran * w;
+	cache->vertex[2].coord.y = cache->vertex[0].coord.y - d->video.shgran * h;
+	cache->vertex[2].coord.x = cache->vertex[3].coord.x = cache->vertex[1].coord.x;
+	cache->vertex[3].coord.y = cache->vertex[4].coord.y = cache->vertex[2].coord.y;
 
 	return;
 }
@@ -560,18 +560,18 @@ void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile) {
 	if (t >= ts->tiles)
 		return;
 
-	cache->u = ts->tile[t].r;
-	cache->v = ts->tile[t].s;
-	cache->u2 = ts->tile[t].u;
-	cache->v2 = ts->tile[t].s;
-	cache->u3 = ts->tile[t].u;
-	cache->v3 = ts->tile[t].v;
-	cache->u4 = ts->tile[t].u;
-	cache->v4 = ts->tile[t].v;
-	cache->u5 = ts->tile[t].r;
-	cache->v5 = ts->tile[t].v;
-	cache->u6 = ts->tile[t].r;
-	cache->v6 = ts->tile[t].s;
+	cache->vertex[0].tex.u = ts->tile[t].r;
+	cache->vertex[0].tex.v = ts->tile[t].s;
+	cache->vertex[1].tex.u = ts->tile[t].u;
+	cache->vertex[1].tex.v = ts->tile[t].s;
+	cache->vertex[2].tex.u = ts->tile[t].u;
+	cache->vertex[2].tex.v = ts->tile[t].v;
+	cache->vertex[3].tex.u = ts->tile[t].u;
+	cache->vertex[3].tex.v = ts->tile[t].v;
+	cache->vertex[4].tex.u = ts->tile[t].r;
+	cache->vertex[4].tex.v = ts->tile[t].v;
+	cache->vertex[5].tex.u = ts->tile[t].r;
+	cache->vertex[5].tex.v = ts->tile[t].s;
 
 	return;
 }
@@ -591,21 +591,8 @@ void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsign
 	wf += xf;
 	hf += yf;
 
-	renderSetTileCoordinates(cache, cache->x, cache->y - vh, cache->x + vw, cache->y, xf, yf, wf, hf);
+	renderSetTileCoordinates(cache, cache->vertex[0].coord.x, cache->vertex[0].coord.y - vh, cache->vertex[0].coord.x + vw, cache->vertex[0].coord.y, xf, yf, wf, hf);
 
-/*	cache->u = xf;
-	cache->v = yf;
-	cache->u2 = wf;
-	cache->v2 = yf;
-	cache->u3 = wf;
-	cache->v3 = hf;
-	cache->u4 = wf;
-	cache->v4 = hf;
-	cache->u5 = xf;
-	cache->v5 = hf;
-	cache->u6 = xf;
-	cache->v6 = yf;*/
-	
 	return;
 }
 
@@ -622,37 +609,37 @@ void renderBlitTile(TILESHEET *ts, unsigned int tile, int x, int y) {
 
 
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2) {
-	cache->u = u;
-	cache->v = v;
-	cache->u2 = u2;
-	cache->v2 = v;
-	cache->u3 = u2;
-	cache->v3 = v2;
-	cache->u4 = u2;
-	cache->v4 = v2;
-	cache->u5 = u;
-	cache->v5 = v2;
-	cache->u6 = u;
-	cache->v6 = v;
+	cache->vertex[0].tex.u = u;
+	cache->vertex[0].tex.v = v;
+	cache->vertex[1].tex.u = u2;
+	cache->vertex[1].tex.v = v;
+	cache->vertex[2].tex.u = u2;
+	cache->vertex[2].tex.v = v2;
+	cache->vertex[3].tex.u = u2;
+	cache->vertex[3].tex.v = v2;
+	cache->vertex[4].tex.u = u;
+	cache->vertex[4].tex.v = v2;
+	cache->vertex[5].tex.u = u;
+	cache->vertex[5].tex.v = v;
 
-	cache->x = x;
-	cache->y = y2;
-	cache->x2 = x2;
-	cache->y2 = y2;
-	cache->x3 = x2;
-	cache->y3 = y;
-	cache->x4 = x2;
-	cache->y4 = y;
-	cache->x5 = x;
-	cache->y5 = y;
-	cache->x6 = x;
-	cache->y6 = y2;
+	cache->vertex[0].coord.x = x;
+	cache->vertex[0].coord.y = y2;
+	cache->vertex[1].coord.x = x2;
+	cache->vertex[1].coord.y = y2;
+	cache->vertex[2].coord.x = x2;
+	cache->vertex[2].coord.y = y;
+	cache->vertex[3].coord.x = x2;
+	cache->vertex[3].coord.y = y;
+	cache->vertex[4].coord.x = x;
+	cache->vertex[4].coord.y = y;
+	cache->vertex[5].coord.x = x;
+	cache->vertex[5].coord.y = y2;
 
 	return;
 }
 
 
-void renderSetTileCoordinatesColor(TILE_COLOR_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color) {
+void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color) {
 	cache->vertex[0].tex.u = u;
 	cache->vertex[0].tex.v = v;
 	cache->vertex[1].tex.u = u2;
@@ -698,7 +685,7 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
 
 	glVertexPointer(2, GL_FLOAT, 16, cache);
-	glTexCoordPointer(2, GL_FLOAT, 16, &cache->u);
+	glTexCoordPointer(2, GL_FLOAT, 16, &cache->vertex[0].tex.u);
 
 	glDrawArrays(GL_TRIANGLES, 0, tiles*6);
 
@@ -706,7 +693,7 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 }
 
 
-void renderColCache(TILE_COLOR_CACHE *cache, TILESHEET *ts, int tiles) {
+void renderColCache(TILE_COLOR_TEX_CACHE *cache, TILESHEET *ts, int tiles) {
 	if (!cache) return;
 
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);

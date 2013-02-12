@@ -155,6 +155,7 @@ typedef struct {
 	int				ts_x;
 	int				ts_y;
 
+	/* For all particles */
 	unsigned char			start_r;
 	unsigned char			start_g;
 	unsigned char			start_b;

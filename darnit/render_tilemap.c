@@ -53,18 +53,19 @@ void renderTilemapCalcPosMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int
 	
 	for (i = k = 0; i < w; i++) {
 		for (j = 0; j < h; j++, k++) {
-			cache[k].x = x_adv_buf[i];
-			cache[k].y = y_adv_buf[j];
-			cache[k].x2 = x_adv_buf[i+1];
-			cache[k].y2 = y_adv_buf[j];
-			cache[k].x3 = x_adv_buf[i+1];
-			cache[k].y3 = y_adv_buf[j+1];
-			cache[k].x4 = x_adv_buf[i+1];
-			cache[k].y4 = y_adv_buf[j+1];
-			cache[k].x5 = x_adv_buf[i];
-			cache[k].y5 = y_adv_buf[j+1];
-			cache[k].x6 = x_adv_buf[i];
-			cache[k].y6 = y_adv_buf[j];
+			/* I'll keep it like this for now. I need to re-do this later anyway. FIXME */
+			cache[k].vertex[0].coord.x = x_adv_buf[i];
+			cache[k].vertex[0].coord.y = y_adv_buf[j];
+			cache[k].vertex[1].coord.x = x_adv_buf[i+1];
+			cache[k].vertex[1].coord.y = y_adv_buf[j];
+			cache[k].vertex[2].coord.x = x_adv_buf[i+1];
+			cache[k].vertex[2].coord.y = y_adv_buf[j+1];
+			cache[k].vertex[3].coord.x = x_adv_buf[i+1];
+			cache[k].vertex[3].coord.y = y_adv_buf[j+1];
+			cache[k].vertex[4].coord.x = x_adv_buf[i];
+			cache[k].vertex[4].coord.y = y_adv_buf[j+1];
+			cache[k].vertex[5].coord.x = x_adv_buf[i];
+			cache[k].vertex[5].coord.y = y_adv_buf[j];
 		}
 	}
 
@@ -104,19 +105,20 @@ void renderTilemapCalcMap(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w,
 				nullbuf = (float *) &cache[k];
 				for (l = 0; l < 24; l++)
 					nullbuf[l] = -1.0f;
-			} else { 
-				cache[k].u = ts->tile[t].r;
-				cache[k].v = ts->tile[t].s;
-				cache[k].u2 = ts->tile[t].u;
-				cache[k].v2 = ts->tile[t].s;
-				cache[k].u3 = ts->tile[t].u;
-				cache[k].v3 = ts->tile[t].v;
-				cache[k].u4 = ts->tile[t].u;
-				cache[k].v4 = ts->tile[t].v;
-				cache[k].u5 = ts->tile[t].r;
-				cache[k].v5 = ts->tile[t].v;
-				cache[k].u6 = ts->tile[t].r;
-				cache[k].v6 = ts->tile[t].s;
+			} else {
+				/* Ugh. I need to re-do this too I think. Maybe. */
+				cache[k].vertex[0].tex.u = ts->tile[t].r;
+				cache[k].vertex[0].tex.v = ts->tile[t].s;
+				cache[k].vertex[1].tex.u = ts->tile[t].u;
+				cache[k].vertex[1].tex.v = ts->tile[t].s;
+				cache[k].vertex[2].tex.u = ts->tile[t].u;
+				cache[k].vertex[2].tex.v = ts->tile[t].v;
+				cache[k].vertex[3].tex.u = ts->tile[t].u;
+				cache[k].vertex[3].tex.v = ts->tile[t].v;
+				cache[k].vertex[4].tex.u = ts->tile[t].r;
+				cache[k].vertex[4].tex.v = ts->tile[t].v;
+				cache[k].vertex[5].tex.u = ts->tile[t].r;
+				cache[k].vertex[5].tex.v = ts->tile[t].s;
 			}
 		}
 	}

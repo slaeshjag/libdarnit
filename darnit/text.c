@@ -450,7 +450,7 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 			return NULL;
 		}
 	} else if (type == COLOR) {
-		if (!(surface->cache_c = malloc(sizeof(TILE_COLOR_CACHE) * chars))) {
+		if (!(surface->cache_c = malloc(sizeof(TILE_COLOR_TEX_CACHE) * chars))) {
 			MALLOC_ERROR
 			return NULL;
 		}
@@ -600,7 +600,7 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 			if (surface->type == NORMAL)
 				surface->l_cache->t_cache = &surface->cache[surface->index];
 			else if (surface->type == COLOR)
-				surface->l_cache->t_cache = (TILE_CACHE *) &((TILE_COLOR_CACHE *) surface->cache)[surface->index];
+				surface->l_cache->t_cache = (TILE_CACHE *) &((TILE_COLOR_TEX_CACHE *) surface->cache)[surface->index];
 			surface->l_cache->f_cache = glyph_e->tex_cache;
 			surface->l_cache->glyphs = 0;
 		}
@@ -681,7 +681,7 @@ void textRender(TEXT_SURFACE *surface) {
 			renderCache(next->t_cache, next->f_cache->ts, next->glyphs);
 		else if (surface->type == COLOR)
 			/* This is actually a TILE_COLOR_CACHE, in the function above, it gets casted via union. Ugly, right? */
-			renderColCache((TILE_COLOR_CACHE *) next->t_cache, next->f_cache->ts, next->glyphs);
+			renderColCache((TILE_COLOR_TEX_CACHE *) next->t_cache, next->f_cache->ts, next->glyphs);
 			
 		next = next->next;
 	}
