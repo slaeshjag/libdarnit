@@ -41,35 +41,6 @@ freely, subject to the following restrictions:
 #include <stdlib.h>
 #include <string.h>
 
-#if 0
-typedef struct {
-	float		x;
-	float		y;
-	float		u;
-	float		v;
-	float		x2;
-	float		y2;
-	float		u2;
-	float		v2;
-	float		x3;
-	float		y3;
-	float		u3;
-	float		v3;
-	float		x4;
-	float		y4;
-	float		u4;
-	float		v4;
-	float		x5;
-	float		y5;
-	float		u5;
-	float		v5;
-	float		x6;
-	float		y6;
-	float		u6;
-	float		v6;
-} TILE_CACHE;
-#endif
-
 typedef struct {
 	int		line_x1;
 	int		line_y1;
@@ -123,6 +94,16 @@ typedef struct {
 
 
 typedef struct {
+	COLOR_VERTEX	vertex[3];
+} TRI_COLOR_CACHE;
+
+
+typedef struct {
+	COLOR_VERTEX	vertex[2];
+} LINE_COLOR_CACHE;
+
+
+typedef struct {
 	COLOR_TEX_VERTEX vertex[6];
 } TILE_COLOR_TEX_CACHE;
 
@@ -130,6 +111,11 @@ typedef struct {
 typedef struct {
 	COORDINATE	coord[6];
 } RECT_CACHE;
+
+typedef struct {
+	COLOR_VERTEX	vertex[6];
+
+} TILE_COLOR_CACHE;
 
 
 typedef struct {

@@ -46,52 +46,6 @@ typedef struct {
 } PARTICLE_COMMON;
 
 
-typedef struct {
-	float				x;
-	float				y;
-	float				r;
-	float				g;
-	float				b;
-	float				a;
-} PARTICLE_VERTEX;
-
-
-typedef struct {
-	float				x;
-	float				y;
-	float				r;
-	float				g;
-	float				b;
-	float				a;
-	float				u;
-	float				v;
-} PARTICLE_VERTEX_TEX;
-
-
-typedef struct {
-	PARTICLE_VERTEX			vert[2];
-} PARTICLE_LINE;
-
-
-typedef struct {
-	PARTICLE_VERTEX			vert[3];
-} PARTICLE_TRIANGLE;
-
-
-typedef struct {
-	PARTICLE_TRIANGLE		tri[2];
-} PARTICLE_QUAD;
-
-
-typedef struct {
-	PARTICLE_VERTEX_TEX		vert[3];
-} PARTICLE_TRI_TEX;
-
-
-typedef struct {
-	PARTICLE_TRI_TEX		tri[2];
-} PARTICLE_TEXTURE;
-
 
 typedef struct {
 	unsigned int			particle_max;
@@ -133,10 +87,10 @@ typedef struct {
 	PARTICLE_COMMON			*com;
 
 	union {
-		PARTICLE_TEXTURE	*tex;
-		PARTICLE_TRIANGLE	*tri;
-		PARTICLE_QUAD		*quad;
-		PARTICLE_LINE		*line;
+		TILE_COLOR_TEX_CACHE	*tex;
+		TRI_COLOR_CACHE		*tri;
+		TILE_COLOR_CACHE	*quad;
+		LINE_COLOR_CACHE	*line;
 		void			*buffer;
 	};
 } PARTICLE_EMITTER;
