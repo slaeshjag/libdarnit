@@ -36,7 +36,7 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
 	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
 	CFLAGS	+=	-fPIC
-	LDFLAGS	+=	-lGLES_CM -lEGL -lX11
+	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL
 	INSTARG	+=	strip
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
