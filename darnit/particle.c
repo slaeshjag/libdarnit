@@ -39,27 +39,27 @@ void particleRenderColorTri(PARTICLE_EMITTER *pe) {
 #endif
 
 
-void particleTexturedInit(PARTICLE_VERTEX_TEX *tex) {
-	tex->x = 0.0f;
-	tex->y = 0.0f;
-	tex->r = 0.0f;
-	tex->g = 0.0f;
-	tex->b = 0.0f;
-	tex->a = 0.0f;
-	tex->u = 0.0f;
-	tex->v = 0.0f;
+void particleTexturedInit(COLOR_TEX_VERTEX *tex) {
+	tex->coord.x = 0.0f;
+	tex->coord.y = 0.0f;
+	tex->col.rgba[0] = 0.0f;
+	tex->col.rgba[1] = 0.0f;
+	tex->col.rgba[2] = 0.0f;
+	tex->col.rgba[3] = 0.0f;
+	tex->tex.u = 0.0f;
+	tex->tex.v = 0.0f;
 
 	return;
 }
 
 
-void particleColoredInit(PARTICLE_VERTEX *vert) {
-	vert->x = 0.0f;
-	vert->y = 0.0f;
-	vert->r = 0.0f;
-	vert->g = 0.0f;
-	vert->b = 0.0f;
-	vert->a = 0.0f;
+void particleColoredInit(COLOR_VERTEX *vert) {
+	vert->coord.x = 0.0f;
+	vert->coord.y = 0.0f;
+	vert->col.rgba[0] = 0.0f;
+	vert->col.rgba[1] = 0.0f;
+	vert->col.rgba[2] = 0.0f;
+	vert->col.rgba[3] = 0.0f;
 
 	return;
 }
@@ -67,7 +67,7 @@ void particleColoredInit(PARTICLE_VERTEX *vert) {
 
 PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
 	PARTICLE_EMITTER *pe;
-	int i, j, k;
+	int i, j;
 
 	if (!(pe = malloc(sizeof(PARTICLE_EMITTER))))
 		return NULL;
@@ -111,11 +111,10 @@ PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
 	
 	switch (pe->mode & 0xF) {
 		case PARTICLE_MODE_TEXTURED:
-			pe->tex = malloc(sizeof(PARTICLE_TEXTURE) * pe->particle_max);
+			pe->tex = malloc(sizeof(TILE_CACHE) * pe->particle_max);
 			for (i = 0; i < pe->particle_max; i++)
-				for (j = 0; j < 2; j++)
-					for (k = 0; k < 3; k++)
-						particleTexturedInit(&pe->tex[i].tri[j].vert[k]);
+				for (j = 0; j < 6; j++)
+					particleTexturedInit(&pe->tex[i].vertex[j]);
 			pe->ts_u1 = 1.0f / conf->ts->w * conf->ts_x;
 			pe->ts_v1 = 1.0f / conf->ts->h * conf->ts_y;
 			pe->ts_u2 = pe->ts_u1 + 1.0f / conf->ts->w * conf->size;
@@ -125,18 +124,17 @@ PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
 		case PARTICLE_MODE_TRIANGLE:
 			for (i = 0; i < pe->particle_max; i++)
 				for (j = 0; j < 3; j++)
-					particleColoredInit(&pe->tri[i].vert[j]);
+					particleColoredInit(&pe->tri[i].vertex[j]);
 			break;
 		case PARTICLE_MODE_QUAD:
 			for (i = 0; i < pe->particle_max; i++)
-				for (j = 0; j < 2; j++)
-					for (k = 0; k < 3; k++)
-						particleColoredInit(&pe->quad[i].tri[j].vert[k]);
+				for (j = 0; j < 6; j++)
+					particleColoredInit(&pe->quad[i].vertex[j]);
 			break;
 		case PARTICLE_MODE_LINE:
 			for (i = 0; i < pe->particle_max; i++)
 				for (j = 0; j < 2; j++)
-					particleColoredInit(&pe->line[i].vert[j]);
+					particleColoredInit(&pe->line[i].vertex[j]);
 			break;
 		default:
 			fprintf(stderr, "Fixme: Unhandled mode\n");
