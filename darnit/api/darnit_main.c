@@ -212,6 +212,8 @@ void EXPORT_THIS d_quit() {
 	SDL_Quit();
 	#endif
 
+	exit(0);
+
 	return;
 }
 
