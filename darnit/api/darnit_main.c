@@ -29,13 +29,6 @@ void *d_init_partial(const char *data_dir);
 int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
-static void cleanup(void) {
-	#ifdef _WIN32
-//	SDL_Quit();
-	#endif
-}
-
-
 void darnit_init_common() {
 	#ifdef _WIN32
 	void *libtmp;
@@ -45,9 +38,6 @@ void darnit_init_common() {
 	if (libtmp != NULL)
 		FreeLibrary(libtmp);
 	#endif
-
-
-	atexit(cleanup);
 
 	#ifdef _WIN32
 	SDL_SetModuleHandle(GetModuleHandle(NULL));
@@ -217,8 +207,10 @@ DARNIT_PLATFORM EXPORT_THIS d_platform_get() {
 
 void EXPORT_THIS d_quit() {
 	videoDestroy();
-
+	
+	#ifndef PANDORA
 	SDL_Quit();
+	#endif
 
 	return;
 }

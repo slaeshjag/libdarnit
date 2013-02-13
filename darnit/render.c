@@ -381,53 +381,19 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 		return ts;
 	}
 
-	if ((ts = malloc(sizeof(TILESHEET))) == NULL) {
-		MALLOC_ERROR
-		return NULL;
-	}
-	
 	data = imgloadLoad(fname);
+	data_t = data.img_data;
+
 	if (data.img_data == NULL) {
-		free(ts);
 		return NULL;
 	}
 
-	ts->w = data.w, ts->h = data.h, data_t = data.img_data;
-	ts->animation.tiles = 0;
-	ts->animation.frame_data = NULL;
-	ts->animation.tile = NULL;
-	ts->animation.data = NULL;
+	ts = renderNewTilesheet(data.w / wsq, data.h / hsq, wsq, hsq, convert_to);
 
-	#ifndef _WIN32
-	imgloadDownsample(&data, convert_to);
-	data_t = data.img_data;
-	if (convert_to == PFORMAT_RGBA8)
-		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
-	else if (convert_to == PFORMAT_RGBA4)
-		ts->texhandle = videoAddTextureRGBA4(data_t, ts->w, ts->h);
-	else if (convert_to == PFORMAT_RGB5A1)
-		ts->texhandle = videoAddTextureRGB5A1(data_t, ts->w, ts->h);
-	#else
-		/* Fucking stupid windows drivers... */
-		imgloadDownsample(&data, PFORMAT_RGBA8);
-		ts->texhandle = videoAddTexture(data_t, ts->w, ts->h);
-	#endif
+	renderUpdateTilesheet(ts, 0, 0, data_t, data.w, data.h);
+	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
 	
 	free(data_t);
-
-	ts->wsq = wsq;
-	ts->hsq = hsq;
-	ts->format = convert_to;
-	ts->tiles = (ts->w / wsq) * (ts->h / hsq);
-	
-	if ((ts->tile = malloc(ts->tiles * sizeof(TILE))) == NULL) {
-		MALLOC_ERROR
-		videoRemoveTexture(ts->texhandle);
-		free(ts);
-		return NULL;
-	}
-
-	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
 	ts->ref = renderAddTSRef(fname, ts);
 
 	return ts;
