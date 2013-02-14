@@ -3,7 +3,8 @@
 
 LIB		=	$(TOPDIR)/bin/libdarnit.so
 
-DBGFLAGS	=	-O0 -g -D__DEBUG__
+#DBGFLAGS	=	-O0 -g -D__DEBUG__
+DBGFLAGS	=	-O3 -g
 #Flags specific for tools
 LDTOOLS		:=	$(LDFLAGS)
 CTOOLS		:=	$(CFLAGS) -Wall -O3
