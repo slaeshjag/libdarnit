@@ -217,10 +217,10 @@ void socketConnectLoop() {
 		if (/*FD_ISSET(list->socket->socket, &fd_win_use)*/d_time_get()-list->socket->retarded_wait>RETARDED_WAIT_TIMEOUT) {
 			fprintf(connect_error, "Apparently, the connect has happenedi\n");
 			t=0;
-		} else if (FD_ISSET(list->socket->socket, &fd_win_error)) {
+		/*} else if (FD_ISSET(list->socket->socket, &fd_win_error)) {
 			fprintf(connect_error, "Connect did not succeed\n");
 			t=1;
-		} else
+		*/} else
 			goto loop;
 
 		#else
