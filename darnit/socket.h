@@ -27,8 +27,10 @@ freely, subject to the following restrictions:
 #define	__SOCKET_H__
 
 typedef struct {
-	#ifdef _WIN32
+	#ifdef TARGET_IS_RETARDED
 		SOCKET socket;
+		/*srsly winsuck*/
+		unsigned int retarded_wait;
 	#else
 		int socket;
 	#endif
@@ -44,6 +46,7 @@ typedef struct SOCKET_LIST {
 
 
 #ifdef _WIN32
+	#define		RETARDED_WAIT_TIMEOUT	5000
 	#define		EWOULDBLOCK 	WSAEWOULDBLOCK
 	#define		MSG_NOSIGNAL	0
 #elif defined __APPLE__
