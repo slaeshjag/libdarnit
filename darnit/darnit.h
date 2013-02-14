@@ -35,6 +35,7 @@ freely, subject to the following restrictions:
 
 
 #ifdef _WIN32
+	#define TARGET_IS_RETARDED
 	#include <windows.h>
 	#include <winsock2.h>
 #else
