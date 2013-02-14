@@ -87,8 +87,12 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 			x = fcntl(sock->socket, F_GETFL, 0);
 			fcntl(sock->socket, F_SETFL, x | O_NONBLOCK);
 		#endif
-	} else
+	} else {
+		#ifdef TARGET_IS_RETARDED
+			sock->retarded_wait=d_time();
+		#endif
 		socketListAdd(sock, callback, data);
+	}
 
 
 	#ifdef __APPLE__
@@ -207,9 +211,10 @@ void socketConnectLoop() {
 		FD_ZERO(&fd_win_error);
 		FD_SET(list->socket->socket, &fd_win_use);
 		FD_SET(list->socket->socket, &fd_win_error);
-		select(list->socket->socket + 1, NULL, &fd_win_use, &fd_win_error, &time_delay);
+		select(list->socket->socket + 1, NULL, /*&fd_win_use*/NULL, &fd_win_error, &time_delay);
 		
-		if (FD_ISSET(list->socket->socket, &fd_win_use)) {
+		/*lol.*/
+		if (/*FD_ISSET(list->socket->socket, &fd_win_use)*/d_time()-socket->retarded_wait>RETARDED_WAIT_TIMEOUT) {
 			fprintf(connect_error, "Apparently, the connect has happenedi\n");
 			t=0;
 		} else if (FD_ISSET(list->socket->socket, &fd_win_error)) {
