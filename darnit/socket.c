@@ -89,7 +89,7 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 		#endif
 	} else {
 		#ifdef TARGET_IS_RETARDED
-			sock->retarded_wait=d_time();
+			sock->retarded_wait=d_time_get();
 		#endif
 		socketListAdd(sock, callback, data);
 	}
@@ -204,7 +204,7 @@ void socketConnectLoop() {
 	parent = &d->connect_list;
 	list = *parent;
 	while (list != NULL) {
-		#ifdef _WIN32
+		#ifdef TARGET_IS_RETARDED
 		time_delay.tv_sec = 0;
 		time_delay.tv_usec = 10;
 		FD_ZERO(&fd_win_use);
@@ -214,7 +214,7 @@ void socketConnectLoop() {
 		select(list->socket->socket + 1, NULL, /*&fd_win_use*/NULL, &fd_win_error, &time_delay);
 		
 		/*lol.*/
-		if (/*FD_ISSET(list->socket->socket, &fd_win_use)*/d_time()-list->socket->retarded_wait>RETARDED_WAIT_TIMEOUT) {
+		if (/*FD_ISSET(list->socket->socket, &fd_win_use)*/d_time_get()-list->socket->retarded_wait>RETARDED_WAIT_TIMEOUT) {
 			fprintf(connect_error, "Apparently, the connect has happenedi\n");
 			t=0;
 		} else if (FD_ISSET(list->socket->socket, &fd_win_error)) {
