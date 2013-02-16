@@ -123,7 +123,7 @@ char *fsFindBinaryPath() {
 	if (!(path = malloc(DARNIT_PATH_MAX)))
 		return path;
 	
-	if (d->platform.platform & DARNIT_PLATFORM_LINUX) {
+	if (d->platform.platform & (DARNIT_PLATFORM_LINUX | DARNIT_PLATFORM_PANDORA)) {
 		#ifndef _WIN32
 		path[readlink("/proc/self/exe", path, DARNIT_PATH_MAX-1)] = 0;
 		#endif
