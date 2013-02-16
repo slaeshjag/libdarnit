@@ -136,12 +136,12 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 void videoSwapBuffers() {
 	int n;
 	
+	eglSwapBuffers(d->video.eglDisplay, d->video.eglSurface);
+	
 	if (d->video.fbdev >= 0) {
 		n = 0;
 		ioctl(d->video.fbdev, FBIO_WAITFORVSYNC, &n);
 	}
-
-	eglSwapBuffers(d->video.eglDisplay, d->video.eglSurface);
 
 	return;
 }
@@ -226,6 +226,10 @@ void videoRemoveTexture(unsigned int texture) {
 
 
 void videoDestroy() {
+	#ifdef PANDORA
+	close(d->video.fbdev);
+	#endif
+
 	if (d->video.eglSurface || d->video.eglContext || d->video.eglDisplay) {
 		eglMakeCurrent(d->video.eglDisplay, NULL, NULL, EGL_NO_CONTEXT);
 		eglDestroyContext(d->video.eglDisplay, d->video.eglContext);
