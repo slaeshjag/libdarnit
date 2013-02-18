@@ -712,6 +712,22 @@ void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
 }
 
 
+void renderTriCache(TRI_COLOR_CACHE *cache, int triangles) {
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+	glEnableClientState(GL_COLOR_ARRAY);
+	
+	glVertexPointer(2, GL_FLOAT, 12, cache);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 12, &cache->vertex->col);
+	glDrawArrays(GL_TRIANGLES, 0, triangles * 3);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glEnable(GL_TEXTURE_2D);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	return;
+}
+
+
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
 	unsigned int tilesheet_w, tilesheet_h, texture;
 	TILESHEET *ts;

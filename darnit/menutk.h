@@ -57,6 +57,8 @@ typedef struct {
 	MENUTK_BOX		box;
 	float			x, y;
 	int			entryh;
+	TILE_CACHE		*tile_cache;
+	TILESHEET		*ts;
 } MENUTK_HIGHLIGHT;
 
 
