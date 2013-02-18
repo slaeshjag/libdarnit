@@ -75,7 +75,7 @@ void darnitSetPlatform(int partial) {
 	#elif defined _WIN32
 		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_WIN32;
 	#elif defined MAEMO
-		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_MAEMO;
+		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_MAEMO | DARNIT_PLATFORM_LINUX;
 	#elif defined GCW_ZERO
 		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_GCWZERO;
 	#else
