@@ -223,6 +223,7 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles);
 void renderColCache(TILE_COLOR_TEX_CACHE *cache, TILESHEET *ts, int tiles);
 void renderLineCache(LINE_CACHE *cache, int lines, int line_w);
 void renderRectCache(RECT_CACHE *cache, int rects);
+void renderTriCache(TRI_COLOR_CACHE *cache, int triangles);
 void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2);
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
 void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq);
