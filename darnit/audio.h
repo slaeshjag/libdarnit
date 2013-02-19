@@ -88,8 +88,9 @@ typedef struct {
 
 
 typedef struct {
-	short				*samplebuf;
+//	short				*samplebuf;
 	short				*scratchbuf;
+	int				*samplebuf;
 	SDL_mutex			*lock;
 	AUDIO_PLAYBACK_CHANNEL		playback_chan[AUDIO_PLAYBACK_CHANNELS];
 	unsigned int			cnt;

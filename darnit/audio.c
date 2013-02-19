@@ -117,7 +117,7 @@ void audioFrameMix(short *target, short *source1, short *source2, int frames) {
 	return;
 }
 
-
+#if 0
 void audioMixDecoded(int channel, int frames, void *mixdata) {
 	int i, sample, decoded, loop;
 
@@ -178,6 +178,38 @@ void audioDecodeAndMix(int frames, void *mixdata) {
 
 	return;
 }
+#endif
+
+void audioDecodeMixNew(int frames, void *mixdata) {
+	int i, j, decoded, samples;
+	short *mixbuf = mixdata;
+	samples = frames << 1;
+
+	for (i = 0; i < samples; i++)
+		d->audio.samplebuf[i] = 0;
+	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++) {
+		if (d->audio.playback_chan[i].key == -1)
+			continue;
+		if (d->audio.playback_chan[i].res->channels == 1) {
+			decoded = audioDecode(d->audio.playback_chan[i].res, d->audio.scratchbuf, frames<<1, d->audio.playback_chan[i].pos);
+			for (j = 0; j < (decoded >> 1); j++) {
+				d->audio.samplebuf[j<<1] += (((int)d->audio.scratchbuf[j] * d->audio.playback_chan[i].lvol) >> 7);
+				d->audio.samplebuf[(j<<1)+1] += (((int)d->audio.scratchbuf[j] * d->audio.playback_chan[i].rvol) >> 7);
+			}
+		} else {
+			decoded = audioDecode(d->audio.playback_chan[i].res, d->audio.scratchbuf, frames<<2, d->audio.playback_chan[i].pos);
+			for (j = 0; j < (decoded >> 2); j++) {
+				d->audio.samplebuf[j<<1] += (((int)d->audio.scratchbuf[j<<1] * d->audio.playback_chan[i].lvol) >> 7);
+				d->audio.samplebuf[(j<<1)+1] += (((int)d->audio.scratchbuf[(j<<1)+1] * d->audio.playback_chan[i].rvol) >> 7);
+			}
+		}
+	}
+
+	for (i = 0; i < samples; i++)
+		mixbuf[i] = d->audio.samplebuf[i];
+	
+	return;
+}
 
 
 void audioMix(void *data, Uint8 *mixdata, int bytes) {
@@ -186,7 +218,7 @@ void audioMix(void *data, Uint8 *mixdata, int bytes) {
 	frames = bytes >>2;
 	SDL_mutexP(d->audio.lock);
 	
-	audioDecodeAndMix(frames, mixdata);
+	audioDecodeMixNew(frames, mixdata);
 	
 	SDL_mutexV(d->audio.lock);
 
@@ -207,7 +239,7 @@ int audioInit() {
 
 	d->audio.lock = SDL_CreateMutex();
 
-	if ((d->audio.samplebuf = malloc(1024*4*4)) == NULL) {
+	if ((d->audio.samplebuf = malloc(1024*4*4*2)) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
 		return -1;
 	}
