@@ -94,6 +94,7 @@ typedef struct {
 	SDL_mutex			*lock;
 	AUDIO_PLAYBACK_CHANNEL		playback_chan[AUDIO_PLAYBACK_CHANNELS];
 	unsigned int			cnt;
+	int				compression;
 } AUDIO;
 
 

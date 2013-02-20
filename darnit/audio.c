@@ -181,7 +181,7 @@ void audioDecodeAndMix(int frames, void *mixdata) {
 #endif
 
 void audioDecodeMixNew(int frames, void *mixdata) {
-	int i, j, decoded, samples;
+	int i, j, decoded, samples, deflection;
 	short *mixbuf = mixdata;
 	samples = frames << 1;
 
@@ -205,9 +205,26 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 		}
 	}
 
+	deflection = 0;
+
 	for (i = 0; i < samples; i++)
-		mixbuf[i] = d->audio.samplebuf[i];
+		deflection = (abs(d->audio.samplebuf[i]) > deflection) ? abs(d->audio.samplebuf[i]) : deflection;
+
+	deflection = (deflection > 0x7fff) ? (deflection >> 8): 1;
+	deflection += (deflection >> 1);
+	if (d->audio.compression != deflection)
+		d->audio.compression += (d->audio.compression > deflection) ? ((deflection - d->audio.compression) >> 6) - 1: deflection - d->audio.compression;	
+
+	if (d->audio.compression < 128)
+		d->audio.compression = 1;
+
+	if (d->audio.compression > 1)
+		for (i = 0; i < samples; i++)
+			mixbuf[i] = (d->audio.samplebuf[i] << 7) / d->audio.compression;
 	
+	if (d->audio.compression == 1)
+		for (i = 0; i < samples; i++)
+			mixbuf[i] = d->audio.samplebuf[i];
 	return;
 }
 
@@ -258,6 +275,7 @@ int audioInit() {
 	}
 
 	d->audio.cnt = 0;
+	d->audio.compression = 1;
 
 	SDL_PauseAudio(0);
 
