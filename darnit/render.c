@@ -617,7 +617,7 @@ void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y
 	cache->vertex[4].tex.u = u;
 	cache->vertex[4].tex.v = v2;
 	cache->vertex[5].tex.u = u;
-	cache->vertex[6].tex.v = v;
+	cache->vertex[5].tex.v = v;
 
 	cache->vertex[0].coord.x = x;
 	cache->vertex[0].coord.y = y2;
