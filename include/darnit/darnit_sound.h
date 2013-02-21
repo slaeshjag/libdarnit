@@ -45,4 +45,7 @@ int d_sound_play(DARNIT_SOUND *sound_resource, int loop, int vol_l, int vol_r, i
 int d_sound_playback_status(int playback_key);
 void d_sound_playback_volume_set(unsigned int playback_key, int vol_l, int vol_r);
 
+void d_sound_compression_enable();
+void d_sound_compression_disable();
+
 #endif
