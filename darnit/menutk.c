@@ -684,11 +684,11 @@ void menutkTextinputInput(MENUTK_ENTRY *menu) {
 
 	}
 
-	if (key != 0)			/* Text buffer actually changed! */
+	if (key != 0) {			/* Text buffer actually changed! */
 		for (i = tmp = 0; i < menu->codepoint_use; i++)
 			tmp += utf8Encode(menu->codepoint[i], &menu->textinput_buf[tmp], menu->options - tmp);
-
-	menu->textinput_buf[tmp] = 0;
+		menu->textinput_buf[tmp] = 0;
+	}
 
 	menu->change = 1;
 

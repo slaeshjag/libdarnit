@@ -117,68 +117,6 @@ void audioFrameMix(short *target, short *source1, short *source2, int frames) {
 	return;
 }
 
-#if 0
-void audioMixDecoded(int channel, int frames, void *mixdata) {
-	int i, sample, decoded, loop;
-
-
-	if (d->audio.playback_chan[channel].res->channels == 1) {
-		decoded = audioDecode(d->audio.playback_chan[channel].res, d->audio.scratchbuf, frames<<1, d->audio.playback_chan[channel].pos);
-		loop = decoded >> 1;
-
-		for (i = 0; i < decoded >> 1; i++) {
-			d->audio.samplebuf[i<<1] = d->audio.scratchbuf[i];
-			d->audio.samplebuf[(i<<1)+1] = d->audio.scratchbuf[i];
-		}
-	} else {
-		decoded = audioDecode(d->audio.playback_chan[channel].res, d->audio.samplebuf, frames<<2, d->audio.playback_chan[channel].pos);
-		loop = decoded >> 2;
-	}
-	
-	i = loop << 1;
-
-	for (; i < frames<<1; i++)
-		d->audio.samplebuf[i] = 0;
-	for (i = 0; i < loop; i++) {
-		sample = d->audio.samplebuf[i<<1];
-		sample *= d->audio.playback_chan[channel].lvol;
-		sample >>= 7;
-		d->audio.samplebuf[i<<1] = sample;
-		
-		sample = d->audio.samplebuf[(i<<1)+1];
-		sample *= d->audio.playback_chan[channel].rvol;
-		sample >>= 7;
-		d->audio.samplebuf[(i<<1)+1] = sample;
-	}
-
-	d->audio.playback_chan[channel].pos += decoded;
-	
-	if (decoded == 0)
-		d->audio.playback_chan[channel].key = -1;
-
-	audioFrameMix(mixdata, d->audio.samplebuf, mixdata, frames);
-
-	return;
-}
-
-
-void audioDecodeAndMix(int frames, void *mixdata) {
-	int i, samples;
-	short *mixbuf = mixdata;
-
-	samples = frames << 1;
-	for (i = 0; i < samples; i++)
-		mixbuf[i] = 0;
-	
-	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++) {
-		if (d->audio.playback_chan[i].key == -1)
-			continue;
-		audioMixDecoded(i, frames, mixdata);
-	}
-
-	return;
-}
-#endif
 
 void audioDecodeMixNew(int frames, void *mixdata) {
 	int i, j, decoded, samples, deflection;
