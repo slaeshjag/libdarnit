@@ -143,17 +143,20 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 		}
 	}
 
-	deflection = 0;
-
-	for (i = 0; i < samples; i++)
-		deflection = (abs(d->audio.samplebuf[i]) > deflection) ? abs(d->audio.samplebuf[i]) : deflection;
-
-	deflection = (deflection > 0x7fff) ? (deflection >> 8) + 1: 1;
-	if (d->audio.compression != deflection) {
-		d->audio.compression += (d->audio.compression > deflection) ? ((deflection - d->audio.compression) >> 6) - 1: deflection - d->audio.compression;
-		if (deflection > d->audio.compression)
-			d->audio.compression = deflection;
-	}
+	if (d->audio.compression_enabled) {
+		deflection = 0;
+	
+		for (i = 0; i < samples; i++)
+			deflection = (abs(d->audio.samplebuf[i]) > deflection) ? abs(d->audio.samplebuf[i]) : deflection;
+	
+		deflection = (deflection > 0x7fff) ? (deflection >> 8) + 1: 1;
+		if (d->audio.compression != deflection) {
+			d->audio.compression += (d->audio.compression > deflection) ? ((deflection - d->audio.compression) >> 6) - 1: deflection - d->audio.compression;
+			if (deflection > d->audio.compression)
+				d->audio.compression = deflection;
+		}
+	} else
+		d->audio.compression = 1;
 
 	if (d->audio.compression < 128)
 		d->audio.compression = 1;
@@ -216,6 +219,7 @@ int audioInit() {
 
 	d->audio.cnt = 0;
 	d->audio.compression = 1;
+	d->audio.compression_enabled = 1;
 
 	SDL_PauseAudio(0);
 
