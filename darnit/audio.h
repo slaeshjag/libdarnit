@@ -95,6 +95,7 @@ typedef struct {
 	AUDIO_PLAYBACK_CHANNEL		playback_chan[AUDIO_PLAYBACK_CHANNELS];
 	unsigned int			cnt;
 	int				compression;
+	int				compression_enabled;
 } AUDIO;
 
 

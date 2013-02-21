@@ -82,3 +82,17 @@ void EXPORT_THIS d_sound_playback_volume_set(unsigned int playback_key, int vol_
 	
 	return;
 }
+
+
+void EXPORT_THIS d_sound_compression_enable() {
+	d->audio.compression_enabled = 1;
+	
+	return;
+}
+
+
+void EXPORT_THIS d_sound_compression_disable() {
+	d->audio.compression_enabled = 0;
+
+	return;
+}

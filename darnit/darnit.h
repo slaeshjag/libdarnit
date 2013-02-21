@@ -89,6 +89,7 @@ typedef struct {
 #include "../deps/stb_truetype.h"
 #include "filesystem.h"
 #include "bitwise.h"
+#include "tilesheet.h"
 #include "render.h"
 #include "input.h"
 #include "error.h"
