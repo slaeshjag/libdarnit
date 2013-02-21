@@ -332,6 +332,45 @@ void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h) {
 }
 
 
+int renderDetectTileHeight(int x, int y, int w, int max_h, unsigned int *data) {
+	int i, j;
+
+	for (i = 0; i < max_h; i++)
+		for (j = 0; j < w; j++)
+			if ((data[j + i * w] & 0xFF000000))
+				return max_h - i;
+	return 0;
+}
+
+
+void renderPopulateIsometricTilesheet(TILESHEET *ts, int tiles_w, int tiles_h, unsigned int *data) {
+	float twgran, phgran;
+	int i, j, p, x, y, skip;
+
+	twgran = 1.0f / ts->w * ts->wsq;
+	phgran = 1.0f / ts->h;
+
+	ts->sw = d->video.swgran * ts->wsq;
+	ts->sh = d->video.shgran * ts->hsq;
+	ts->swgran = d->video.swgran;
+	ts->shgran = d->video.shgran;
+	ts->ref_count = 1;
+	
+	for (i = 0; i < tiles_h; i++)
+		for (j = 0; j < tiles_w; j++) {
+			x = j * ts->wsq;
+			y = j * ts->hsq;
+			skip = renderDetectTileHeight(x, y, ts->wsq, ts->hsq, data);
+			p = i * tiles_w + j;
+			ts->tile[p].r = twgran * j;
+			ts->tile[p].s = phgran * (i * ts->hsq - skip + ts->hsq);
+			ts->tile[p].u = ts->tile[p].r + twgran;
+			ts->tile[p].v = ts->tile[p].s + skip * phgran;
+		}
+	return;
+}
+
+
 void *renderTilesheetFree(TILESHEET *ts) {
 	if (ts == NULL) return NULL;
 
