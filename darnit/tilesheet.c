@@ -318,6 +318,7 @@ void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h) {
 	ts->sh = d->video.shgran * ts->hsq;
 	ts->swgran = d->video.swgran;
 	ts->shgran = d->video.shgran;
+	ts->tiles = tiles_w * tiles_h;
 	ts->ref_count = 1;
 	
 	for (i = 0; i < tiles_h; i++)

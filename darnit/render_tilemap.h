@@ -34,6 +34,7 @@ typedef struct {
 	int				h;
 	TILESHEET			*ts;
 	TILE_CACHE			*cache;
+	int				cache_used;
 	unsigned int			inv_div;
 	unsigned int			*map;
 	float				cam_x;
