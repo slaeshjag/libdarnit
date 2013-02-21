@@ -210,10 +210,12 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 	for (i = 0; i < samples; i++)
 		deflection = (abs(d->audio.samplebuf[i]) > deflection) ? abs(d->audio.samplebuf[i]) : deflection;
 
-	deflection = (deflection > 0x7fff) ? (deflection >> 8): 1;
-	deflection += (deflection >> 1);
-	if (d->audio.compression != deflection)
-		d->audio.compression += (d->audio.compression > deflection) ? ((deflection - d->audio.compression) >> 6) - 1: deflection - d->audio.compression;	
+	deflection = (deflection > 0x7fff) ? (deflection >> 8) + 1: 1;
+	if (d->audio.compression != deflection) {
+		d->audio.compression += (d->audio.compression > deflection) ? ((deflection - d->audio.compression) >> 6) - 1: deflection - d->audio.compression;
+		if (deflection > d->audio.compression)
+			d->audio.compression = deflection;
+	}
 
 	if (d->audio.compression < 128)
 		d->audio.compression = 1;
