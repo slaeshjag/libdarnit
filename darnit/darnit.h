@@ -110,6 +110,7 @@ typedef struct {
 #include "stringtable.h"
 #include "ldmz.h"
 #include "particle.h"
+#include "isometric.h"
 
 int darnitTimeLastFrameTook();
 

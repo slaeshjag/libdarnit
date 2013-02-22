@@ -28,7 +28,8 @@ example) to decompress the data.
 Following entries are present in the main header, all entries are unsigned ints:
 
 Magic number		         (value: 	0xFF00E00E )
-Version			         (current:	0x55555555 )
+Version			         (current:	0x55555555 for ortho maps,
+					0x55555566 for isometric maps.)
 Stringtable size                 (Size in bytes)
 Stringtable compressed size      (Size of the compressed data in the file.)
 Stringtable refereces size       (size in bytes.)
@@ -106,6 +107,8 @@ The layer headers are compressed together into one block.
 Each layer has a struct with the following members. All entries are unsigned
 ints.
 
+::: Othogonal maps :::
+
 Layer width			Width in tiles of the layer
 Layer height			Height of the layer in tiles
 Layer offset X in pixels	Offset to add onto the "camera" when drawing
@@ -115,6 +118,18 @@ Layer size compressed		Size of the compressed layer data in bytes
 Stringtable entry index		Index in the string table entry for layer prop.
 Tile width			Width in pixels of a tile
 Tile Height			Height in pixels of a tile
+
+::: Isometric maps :::
+
+Layer width			Width in tiles of the layer
+Layer height			Height of the layer in tiles
+Tilesheet tile height		The height of the tile, not the maps tile size
+Reserved			Do not use
+Layer size compressed		Size of the compressed layer data in bytes
+Stringtable entry index		Index in the string table entry for layer prop.
+Tile width			Width in pixels of a tile
+Tile Height			Height in pixels of a tile
+
 
 ==============================
 == Map layer data ============
