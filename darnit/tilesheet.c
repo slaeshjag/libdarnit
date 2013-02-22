@@ -298,7 +298,7 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	ts = renderNewTilesheet(data.w / wsq, data.h / hsq, wsq, hsq, convert_to);
 
 	renderUpdateTilesheet(ts, 0, 0, data_t, data.w, data.h);
-	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
+	renderPopulateIsometricTilesheet(ts, ts->w / wsq, ts->h / hsq, data_t);
 	
 	free(data_t);
 	ts->ref = renderAddTSRef(fname, ts);
@@ -306,6 +306,33 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	return ts;
 }
 
+
+TILESHEET *renderTilesheetLoadIsometric(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
+	TILESHEET *ts;
+	IMGLOAD_DATA data;
+	void *data_t;
+
+	if ((ts = renderGetTilesheetFromRef(fname)) != NULL) {
+		return ts;
+	}
+
+	data = imgloadLoad(fname);
+	data_t = data.img_data;
+
+	if (data.img_data == NULL) {
+		return NULL;
+	}
+
+	ts = renderNewTilesheet(data.w / wsq, data.h / hsq, wsq, hsq, convert_to);
+
+	renderUpdateTilesheet(ts, 0, 0, data_t, data.w, data.h);
+	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
+	
+	free(data_t);
+	ts->ref = renderAddTSRef(fname, ts);
+
+	return ts;
+}
 
 void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h) {
 	float twgran, thgran;
@@ -367,6 +394,7 @@ void renderPopulateIsometricTilesheet(TILESHEET *ts, int tiles_w, int tiles_h, u
 			ts->tile[p].s = phgran * (i * ts->hsq - skip + ts->hsq);
 			ts->tile[p].u = ts->tile[p].r + twgran;
 			ts->tile[p].v = ts->tile[p].s + skip * phgran;
+			ts->tile[p].h_p = (ts->hsq - skip) * d->video.shgran;
 		}
 	return;
 }

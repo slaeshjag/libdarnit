@@ -28,6 +28,7 @@ freely, subject to the following restrictions:
 
 #define	LDMZ_MAGIC		0xFF00E00E
 #define	LDMZ_VERSION		0x55555555
+#define	LDMZ_VERSION_ISOM	0x55555566
 
 typedef struct {
 	unsigned int		magic;
@@ -107,6 +108,7 @@ typedef struct {
 
 	int			cam_x;
 	int			cam_y;
+	int			isometric;
 } LDMZ_MAP;
 
 

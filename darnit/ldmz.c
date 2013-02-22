@@ -105,7 +105,12 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		return NULL;
 	
 	fsFileReadInts((unsigned int *) &map_h, sizeof(LDMZ_FILE_MAP) >> 2, file);
-	if (map_h.magic != LDMZ_MAGIC || map_h.version != LDMZ_VERSION) {
+	if (map_h.magic != LDMZ_MAGIC) { 
+		fsFileClose(file);
+		return NULL;
+	}
+
+	if (map_h.version != LDMZ_VERSION && map_h.version != LDMZ_VERSION_ISOM) {
 		fsFileClose(file);
 		return NULL;
 	}
@@ -124,6 +129,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	map->object = malloc(sizeof(LDMZ_OBJECT) * (map_h.objects));
 	map->layer = malloc(sizeof(LDMZ_LAYER) * map_h.layers);
 
+	map->isometric = !(map_h.version == LDMZ_VERSION);
 	map->stringdata = stringdata;
 	map->cam_x = map->cam_y = 0;
 	map->layers = map_h.layers;

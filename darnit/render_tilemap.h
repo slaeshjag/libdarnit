@@ -42,6 +42,8 @@ typedef struct {
 	int				cam_xi;
 	int				cam_yi;
 	unsigned int			mask;
+	unsigned int			isometric;
+	int				r_h;
 } RENDER_TILEMAP;
 
 
