@@ -50,5 +50,12 @@ void isometricFromScreen(int s_x, int s_y, int o_x, int o_y, int w, int h, int *
 }
 
 
-//void isometricToScreen(int x, int y, int o_x, int o_y, int w, int h, int *res_x, int *res_y) {
-	
+void isometricToScreen(int x, int y, int o_x, int o_y, int w, int h, int *res_x, int *res_y) {
+	w >>= 1;
+	h >>= 1;
+
+	(*res_x) = x * w + y * (-w) + o_x;
+	(*res_y) = x * h + y * h + o_y;
+
+	return;
+}

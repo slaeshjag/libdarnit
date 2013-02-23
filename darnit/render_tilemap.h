@@ -41,6 +41,8 @@ typedef struct {
 	float				cam_y;
 	int				cam_xi;
 	int				cam_yi;
+	int				cam_xp;
+	int				cam_yp;
 	unsigned int			mask;
 	unsigned int			isometric;
 	int				r_h;

@@ -28,5 +28,6 @@ freely, subject to the following restrictions:
 
 
 void isometricFromScreen(int s_x, int s_y, int o_x, int o_y, int w, int h, int *iso_x, int *iso_y);
+void isometricToScreen(int x, int y, int o_x, int o_y, int w, int h, int *res_x, int *res_y);
 
 #endif

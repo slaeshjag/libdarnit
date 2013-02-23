@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
 	d_tilemap_recalc(tm);
 //	d_tilemap_camera_move(tm, -500, -500);
 	
-	for (;;) {
+	for (i = 0;; i++) {
+		d_tilemap_camera_move(tm, 0, 200 - i);
 		d_render_begin();
 		d_render_blend_enable();
 		d_tilemap_draw(tm);
