@@ -37,33 +37,47 @@ void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int
 }
 
 
+void renderTilemapToISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y) {
+	int origin = tm->ts->wsq * tm->w / 2;
+
+	isometricToScreen(x, y, origin, 0, tm->ts->wsq, tm->r_h, r_x, r_y);
+
+	return;
+}
+
+
 int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	float x_start, y_start, x_pos, y_pos;
-	float x_step, y_step;
-	int i, j, k, t, x_cur, y_cur, origin_x, origin_y;
+	float x_step, y_step, d_y;
+	int i, j, k, t, x_cur, y_cur, origin_x, origin_y, r, s;
 
 
 	x_start = -1.0f;
 	y_start = 1.0f;
 	x_step = d->video.swgran * tm->ts->wsq / 2;
 	y_step = d->video.shgran * tm->r_h / 2;
-	y_cur = tm->cam_yi - (tm->map_w - 1);
-	renderTilemapISOCoordinates(tm, tm->cam_xi, tm->cam_yi, &origin_x, &origin_y);
-	origin_y--;
+	renderTilemapISOCoordinates(tm, tm->cam_xp, tm->cam_yp, &origin_x, &origin_y);
+	origin_y -= 2;
 	x_cur = origin_x;
 	fprintf(stderr, "recalc starts at map(%i,%i),, %i,%i\n", origin_x, origin_y, tm->cam_xi, tm->cam_yi);
 
-	for (i = k = 0; i < tm->w; i++, x_cur++, origin_y--) {
+	for (i = k = 0; i < tm->w * 2; i++, x_cur++, origin_y--) {
 		y_cur = origin_y;
-		x_start = x_step * i - 1.0f + x_step * 2;
-		y_start = 1.0f;
-		if (y_cur & 0x1)
-			y_start += y_step;
+		x_start = x_step * i * 2 - 1.0f;
+		y_start = 1.0f + y_step * 2;
+		d_y = y_step;
+//		if (y_cur & 0x1)
+//			y_start += y_step;
+
+
+		renderTilemapToISOCoordinates(tm, x_cur, y_cur, &r, &s);
+		fprintf(stderr, "New line at %i,%i (%i,%i)\n", x_cur, y_cur, r, s);
 
 		if (x_cur < 0)
 			continue;
 		if (x_cur >= tm->map_w)
 			break;
+
 		for (j = 0; j < tm->h; j++, y_cur++, y_start -= y_step, x_start -= x_step) {
 			if (y_cur < 0)
 				continue;
@@ -79,6 +93,8 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 			x_pos = x_start - x_step;
 			
 			/* Rurgh... */
+			if (k == 0 && x_pos == -0.2)
+				fprintf(stderr, "Jump!\n");
 			tm->cache[k].vertex[0].coord.x = x_pos;
 			tm->cache[k].vertex[0].coord.y = y_pos;
 			tm->cache[k].vertex[1].coord.x = x_pos + x_step * 2;
@@ -184,10 +200,11 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	int x, y, w, h, map_w, map_h;
 	
 	tm->cam_x = tm->ts->swgran * (cam_x % tm->ts->wsq) * -1;
-	tm->cam_y = tm->ts->shgran * (cam_y % tm->ts->hsq);
+	tm->cam_y = tm->ts->shgran * (cam_y % tm->r_h);
 
-	x = floorf((float) cam_x / tm->ts->wsq);
-	y = floorf((float) cam_y / tm->ts->hsq);
+	x = ((float) cam_x / tm->ts->wsq);
+	y = ((float) cam_y / tm->r_h);
+	fprintf(stderr, "Camera offset at %f\n", tm->cam_y);
 	
 	if (x == tm->cam_xi && y == tm->cam_yi)
 		return;
@@ -198,13 +215,14 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	map_h = tm->map_h;
 	tm->cam_xi = x;
 	tm->cam_yi = y;
+	tm->cam_xp = cam_x;
+	tm->cam_yp = cam_y;
 
 
 	if (tm->isometric)
 		tm->cache_used = renderTilemapRecalcISO(tm);
 	else
 		tm->cache_used = renderTilemapRecalc(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div, tm->mask);
-	fprintf(stderr, "Got %i tiles to render\n", tm->cache_used);
 
 	return;
 }
@@ -229,6 +247,8 @@ void *renderTilemapCreateISO(unsigned int w, unsigned int h, unsigned int *map, 
 	tm->mask = mask;
 	tm->isometric = 1;
 	tm->r_h = r_h;
+	tm->cam_xp = 0;
+	tm->cam_yp = 0;
 
 	tm->cache = malloc(sizeof(TILE_CACHE) * tm->w * tm->h);
 	renderTilemapCameraMove(tm, camera_x, camera_y);
@@ -255,6 +275,7 @@ void *renderTilemapCreate(unsigned int w, unsigned int h, unsigned int *map, int
 	tm->h = d->video.h / ts->hsq + 2;
 	tm->mask = mask;
 	tm->isometric = 0;
+	tm->r_h = ts->hsq;
 
 	tm->cache = malloc(sizeof(TILE_CACHE) * tm->w * tm->h);
 	renderTilemapCameraMove(tm, camera_x, camera_y);
