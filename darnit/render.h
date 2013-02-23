@@ -42,6 +42,13 @@ freely, subject to the following restrictions:
 #include <string.h>
 
 typedef struct {
+	float		r;
+	float		s;
+	float		u;
+	float		v;
+} TILE;
+
+typedef struct {
 	int		line_x1;
 	int		line_y1;
 	int		line_x2;

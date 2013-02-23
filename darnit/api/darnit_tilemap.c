@@ -27,12 +27,22 @@ freely, subject to the following restrictions:
 
 
 TILEMAP_ENTRY EXPORT_THIS *d_tilemap_new(unsigned int invisibility_divider, void *tilesheet, unsigned int mask, int w, int h) {
-	return tilemapNew(invisibility_divider, tilesheet, mask, w, h);
+	return tilemapNew(invisibility_divider, tilesheet, mask, w, h, 0);
+}
+
+
+TILEMAP_ENTRY EXPORT_THIS *d_tilemap_isom_new(unsigned int invisibility_divider, void *tilesheet, unsigned int mask, int w, int h, int tile_h) {
+	return tilemapNew(invisibility_divider, tilesheet, mask, w, h, tile_h);
 }
 
 
 TILEMAP_ENTRY EXPORT_THIS *d_tilemap_load(const char *fname, unsigned int invisibility_divider, void *tilesheet, unsigned int mask) {
-	return tilemapLoad(fname, invisibility_divider, tilesheet, mask);
+	return tilemapLoad(fname, invisibility_divider, tilesheet, mask, 0);
+}
+
+
+TILEMAP_ENTRY EXPORT_THIS *d_tilemap_isom_load(const char *fname, unsigned int invisibility_divider, void *tilesheet, unsigned int mask, int tile_h) {
+	return tilemapLoad(fname, invisibility_divider, tilesheet, mask, tile_h);
 }
 
 

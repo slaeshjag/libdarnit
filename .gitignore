@@ -2,5 +2,6 @@
 bin/
 *.o
 *.a
-testapp/testapp
+testapp/testapp_old/testapp
+isotest
 *.res

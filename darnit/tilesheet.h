@@ -32,7 +32,8 @@ typedef struct {
 	float		s;
 	float		u;
 	float		v;
-} TILE;
+	float		h_p;
+} TILESHEET_TILE;
 
 
 typedef struct {
@@ -63,7 +64,7 @@ typedef struct {
 typedef struct {
 	unsigned int	w;
 	unsigned int	h;
-	TILE		*tile;
+	TILESHEET_TILE	*tile;
 	unsigned int	tiles;
 	float		sw;
 	float		sh;
@@ -95,7 +96,9 @@ typedef struct {
 
 
 TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
+TILESHEET *renderTilesheetLoadIsometric(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to);
 void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h);
+void renderPopulateIsometricTilesheet(TILESHEET *ts, int tiles_w, int tiles_h, unsigned int *data);
 void *renderTilesheetFree(TILESHEET *ts);
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
 void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq);

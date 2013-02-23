@@ -37,7 +37,9 @@ typedef struct {
 
 
 DARNIT_TILEMAP *d_tilemap_new(unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask, int w, int h);
+DARNIT_TILEMAP *d_tilemap_isom_new(unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask, int w, int h, int tile_h);
 DARNIT_TILEMAP *d_tilemap_load(const char *fname, unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask);
+DARNIT_TILEMAP *d_tilemap_isom_load(const char *fname, unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask, int tile_h);
 void d_tilemap_recalc(DARNIT_TILEMAP *tilemap);
 void d_tilemap_camera_move(DARNIT_TILEMAP *tilemap, int cam_x, int cam_y);
 void d_tilemap_draw(DARNIT_TILEMAP *tilemap);
