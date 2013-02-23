@@ -35,6 +35,10 @@ void EXPORT_THIS *d_render_tilesheet_load(const char *fname, unsigned int wsq, u
 	return renderTilesheetLoad(fname, wsq, hsq, target_format);
 }
 
+void EXPORT_THIS *d_render_tilesheet_isom_load(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format) {
+	return renderTilesheetLoadIsometric(fname, wsq, hsq, target_format);
+}
+
 
 void EXPORT_THIS d_render_tilesheet_geometrics(void *tilesheet, int *w, int *h, int *tile_w, int *tile_h) {
 	renderTilesheetGeometrics(tilesheet, w, h, tile_w, tile_h);

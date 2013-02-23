@@ -298,7 +298,7 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	ts = renderNewTilesheet(data.w / wsq, data.h / hsq, wsq, hsq, convert_to);
 
 	renderUpdateTilesheet(ts, 0, 0, data_t, data.w, data.h);
-	renderPopulateTilesheet(ts, ts->w / wsq, ts->h / hsq);
+	renderPopulateIsometricTilesheet(ts, data.w / wsq, data.h / hsq, data_t);
 	
 	free(data_t);
 	ts->ref = renderAddTSRef(fname, ts);
@@ -306,6 +306,33 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	return ts;
 }
 
+
+TILESHEET *renderTilesheetLoadIsometric(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int convert_to) {
+	TILESHEET *ts;
+	IMGLOAD_DATA data;
+	void *data_t;
+
+	if ((ts = renderGetTilesheetFromRef(fname)) != NULL) {
+		return ts;
+	}
+
+	data = imgloadLoad(fname);
+	data_t = data.img_data;
+
+	if (data.img_data == NULL) {
+		return NULL;
+	}
+
+	ts = renderNewTilesheet(data.w / wsq, data.h / hsq, wsq, hsq, convert_to);
+
+	renderUpdateTilesheet(ts, 0, 0, data_t, data.w, data.h);
+	renderPopulateIsometricTilesheet(ts, data.w / wsq, data.h / hsq, data_t);
+	
+	free(data_t);
+	ts->ref = renderAddTSRef(fname, ts);
+
+	return ts;
+}
 
 void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h) {
 	float twgran, thgran;
@@ -338,7 +365,7 @@ int renderDetectTileHeight(int x, int y, int w, int max_h, unsigned int *data) {
 
 	for (i = 0; i < max_h; i++)
 		for (j = 0; j < w; j++)
-			if ((data[j + i * w] & 0xFF000000))
+			if ((data[(j + x) + (i + y) * w] & 0xFF000000))
 				return max_h - i;
 	return 0;
 }
@@ -367,6 +394,7 @@ void renderPopulateIsometricTilesheet(TILESHEET *ts, int tiles_w, int tiles_h, u
 			ts->tile[p].s = phgran * (i * ts->hsq - skip + ts->hsq);
 			ts->tile[p].u = ts->tile[p].r + twgran;
 			ts->tile[p].v = ts->tile[p].s + skip * phgran;
+			ts->tile[p].h_p = skip * d->video.shgran;
 		}
 	return;
 }
@@ -424,7 +452,7 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 	ts->format = (format == PFORMAT_A8) ? PFORMAT_A8 : PFORMAT_RGBA8;
 	#endif
 	
-	if ((ts->tile = malloc(sizeof(TILE) * tiles_w * tiles_h)) == NULL) {
+	if ((ts->tile = malloc(sizeof(TILESHEET_TILE) * tiles_w * tiles_h)) == NULL) {
 		glDeleteTextures(1, &texture);
 		free(ts);
 		return NULL;

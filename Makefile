@@ -41,6 +41,8 @@ clean:
 	+@make -C darnit/ clean
 	@echo " [ CD ] tools/"
 	+@make -C tools/ clean
+	@echo " [ CD ] testapp/"
+	+@make -C testapp/ clean
 	@echo
 	@echo "Source tree cleaned."
 	@echo

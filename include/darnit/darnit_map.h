@@ -59,6 +59,7 @@ typedef struct {
 
 	const int		cam_x;
 	const int 		cam_y;
+	unsigned int		isometric;
 } DARNIT_MAP;
 
 

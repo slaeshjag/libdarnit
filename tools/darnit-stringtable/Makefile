@@ -18,7 +18,6 @@ all: $(OBJFILES)
 clean:
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)
-	@echo 
 
 
 %.o: %.c %.h

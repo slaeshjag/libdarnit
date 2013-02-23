@@ -25,3 +25,4 @@ clean:
 	@echo " [ CD ] tools/darnit-stringtable"
 	+@make -C darnit-stringtable clean
 	@echo "Done."
+	@echo 

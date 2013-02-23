@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2011-2013 Steven Arnow
-'tilemap.h' - This file is part of libdarnit
+'isometric.h' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -23,23 +23,11 @@ freely, subject to the following restrictions:
 */
 
 
-#ifndef __TILEMAP_H__
-#define	__TILEMAP_H__
-
-#define	TILEMAP_DEFAULT_INV_DIV		0xFFF
+#ifndef __ISOMETRIC_H__
+#define	__ISOMETRIC_H__
 
 
-typedef struct {
-	int			w;
-	int			h;
-	unsigned int		*data;
-	RENDER_TILEMAP		*render;
-} TILEMAP_ENTRY;
-
-
-TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int w, int h, int iso);
-TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, unsigned int mask, int iso);
-void *tilemapFree(TILEMAP_ENTRY *tm);
-
+void isometricFromScreen(int s_x, int s_y, int o_x, int o_y, int w, int h, int *iso_x, int *iso_y);
+void isometricToScreen(int x, int y, int o_x, int o_y, int w, int h, int *res_x, int *res_y);
 
 #endif
