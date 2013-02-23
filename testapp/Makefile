@@ -1,5 +1,5 @@
-LDFLAGS += -L../bin -ldarnit
-CFLAGS += -g -Wall 
-
-default:
-	$(CC) $(CFLAGS) testapp.c -o testapp $(LDFLAGS)
+clean:
+	@echo " [ CD ] testapp/testapp_old"
+	+@make -C testapp_old/ clean
+	@echo "Done."
+	@echo

@@ -48,6 +48,7 @@ typedef struct {
 
 
 void *renderTilemapCreate(unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts, unsigned int mask);
+void *renderTilemapCreateISO(unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts, unsigned int mask, int r_h);
 void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile);
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y);
 void renderTilemapRender(RENDER_TILEMAP *tm);

@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 
-TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int w, int h) {
+TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int w, int h, int iso) {
 	TILEMAP_ENTRY *tilemap;
 	int i;
 
@@ -41,10 +41,18 @@ TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int 
 		tilemap->data[i] = 0;
 
 	#ifndef DARNIT_HEADLESS
-	if ((tilemap->render = renderTilemapCreate(w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
-		free(tilemap->data);
-		free(tilemap);
-		return NULL;
+	if (!iso) {
+		if ((tilemap->render = renderTilemapCreate(w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask)) == NULL) {
+			free(tilemap->data);
+			free(tilemap);
+			return NULL;
+		}
+	} else {
+		if ((tilemap->render = renderTilemapCreateISO(w, h, tilemap->data, 0, 0, invs_div, tilesheet, mask, iso)) == NULL) {
+			free(tilemap->data);
+			free(tilemap);
+			return NULL;
+		}
 	}
 	#endif
 
@@ -55,7 +63,7 @@ TILEMAP_ENTRY *tilemapNew(int invs_div, void *tilesheet, unsigned int mask, int 
 }
 
 
-TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, unsigned int mask) {
+TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, unsigned int mask, int iso) {
 	IMGLOAD_DATA data;
 	TILEMAP_ENTRY *tilemap;
 	int i;
@@ -83,7 +91,10 @@ TILEMAP_ENTRY *tilemapLoad(const char *fname, int invs_div, void *tilesheet, uns
 	}
 
 	#ifndef DARNIT_HEADLESS
-	tilemap->render = renderTilemapCreate(tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask);
+	if (iso)
+		tilemap->render = renderTilemapCreateISO(tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask, iso);
+	else
+		tilemap->render = renderTilemapCreate(tilemap->w, tilemap->h, tilemap->data, 0, 0, invs_div, tilesheet, mask);
 	#endif
 
 	return tilemap;
