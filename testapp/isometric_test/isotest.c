@@ -3,7 +3,7 @@
 int main(int argc, char **argv) {
 	DARNIT_TILEMAP *tm;
 	DARNIT_TILESHEET *ts;
-	int i;
+	int i, j;
 
 	d_init("isotest", "isotest", NULL);
 	ts = d_render_tilesheet_isom_load("isosheet.png", 64, 32, DARNIT_PFORMAT_RGB5A1);
@@ -16,7 +16,12 @@ int main(int argc, char **argv) {
 //	d_tilemap_camera_move(tm, -500, -500);
 	
 	for (i = 0;; i++) {
-		d_tilemap_camera_move(tm, 0, i - 200);
+		j = i % 1200;
+		if (j > 600)
+			j = j + (2*(j - 600)) * -1;
+		j *= -1;
+		j += 300;
+		d_tilemap_camera_move(tm, 2*j, 0);
 		d_render_begin();
 		d_render_blend_enable();
 		d_tilemap_draw(tm);
