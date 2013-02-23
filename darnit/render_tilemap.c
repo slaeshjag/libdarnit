@@ -31,7 +31,7 @@ freely, subject to the following restrictions:
 void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y) {
 	int origin = tm->ts->wsq * tm->w / 2;
 
-	isometricFromScreen(x, y, origin, 0, tm->ts->w, tm->r_h, r_x, r_y);
+	isometricFromScreen(x, y, origin, 0, tm->ts->wsq, tm->r_h, r_x, r_y);
 
 	return;
 }
@@ -51,8 +51,9 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	renderTilemapISOCoordinates(tm, tm->cam_xi, tm->cam_yi, &origin_x, &origin_y);
 	origin_y--;
 	x_cur = origin_x;
+	fprintf(stderr, "recalc starts at map(%i,%i),, %i,%i\n", origin_x, origin_y, tm->cam_xi, tm->cam_yi);
 
-	for (i = k = 0; i < tm->w; i++, x_cur++) {
+	for (i = k = 0; i < tm->w; i++, x_cur++, origin_y--) {
 		y_cur = origin_y;
 		x_start = x_step * i - 1.0f + x_step * 2;
 		y_start = 1.0f;
@@ -63,11 +64,11 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 			continue;
 		if (x_cur >= tm->map_w)
 			break;
-		for (j = 0; j < tm->h; j++, y_cur++) {
+		for (j = 0; j < tm->h; j++, y_cur++, y_start -= y_step, x_start -= x_step) {
 			if (y_cur < 0)
 				continue;
 			if (y_cur >= tm->map_h)
-				break;
+				continue;
 			t = tm->map[x_cur + y_cur * tm->map_w] & tm->mask;
 			if (t > tm->ts->tiles)
 				continue;
@@ -80,11 +81,11 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 			/* Rurgh... */
 			tm->cache[k].vertex[0].coord.x = x_pos;
 			tm->cache[k].vertex[0].coord.y = y_pos;
-			tm->cache[k].vertex[1].coord.x = x_pos + x_step;
+			tm->cache[k].vertex[1].coord.x = x_pos + x_step * 2;
 			tm->cache[k].vertex[1].coord.y = y_pos;
-			tm->cache[k].vertex[2].coord.x = x_pos + x_step;
+			tm->cache[k].vertex[2].coord.x = x_pos + x_step * 2;
 			tm->cache[k].vertex[2].coord.y = y_pos - tm->ts->tile[t].h_p;
-			tm->cache[k].vertex[3].coord.x = x_pos + x_step;
+			tm->cache[k].vertex[3].coord.x = x_pos + x_step * 2;
 			tm->cache[k].vertex[3].coord.y = y_pos - tm->ts->tile[t].h_p;
 			tm->cache[k].vertex[4].coord.x = x_pos;
 			tm->cache[k].vertex[4].coord.y = y_pos - tm->ts->tile[t].h_p;
@@ -102,13 +103,13 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 			tm->cache[k].vertex[4].tex.v = tm->ts->tile[t].v;
 			tm->cache[k].vertex[5].tex.u = tm->ts->tile[t].r;
 			tm->cache[k].vertex[5].tex.v = tm->ts->tile[t].s;
+			fprintf(stderr, "K: %i, T: %i - (%i,%i)\n", k, t, x_cur, y_cur);
+			fprintf(stderr, "Coordinates: %f,%f   %f,%f\n", x_pos, y_pos, x_pos + x_step, y_pos - tm->ts->tile[t].h_p);
+			fprintf(stderr, "Tex. coords: %f,%f   %f,%f\n", tm->ts->tile[t].r, tm->ts->tile[t].s, tm->ts->tile[t].u, tm->ts->tile[t].v);
 			k++;
-			
-			y_start -= y_step;
 
 		}
 
-		origin_y++;
 	}
 
 	return k;
@@ -195,11 +196,15 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	h = tm->h;
 	map_w = tm->map_w;
 	map_h = tm->map_h;
-
-	tm->cache_used = renderTilemapRecalc(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div, tm->mask);
-
 	tm->cam_xi = x;
 	tm->cam_yi = y;
+
+
+	if (tm->isometric)
+		tm->cache_used = renderTilemapRecalcISO(tm);
+	else
+		tm->cache_used = renderTilemapRecalc(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div, tm->mask);
+	fprintf(stderr, "Got %i tiles to render\n", tm->cache_used);
 
 	return;
 }
@@ -282,7 +287,10 @@ void renderTilemapFree(RENDER_TILEMAP *tm) {
 void renderTilemapForceRecalc(RENDER_TILEMAP *tm) {
 	if (tm == NULL) return;
 
-	tm->cache_used = renderTilemapRecalc(tm->cache, tm->ts, tm->cam_xi, tm->cam_yi, tm->w, tm->h, tm->map_w, tm->map_h, tm->map, tm->inv_div, tm->mask);
+	if (tm->isometric)
+		tm->cache_used = renderTilemapRecalcISO(tm);
+	else
+		tm->cache_used = renderTilemapRecalc(tm->cache, tm->ts, tm->cam_xi, tm->cam_yi, tm->w, tm->h, tm->map_w, tm->map_h, tm->map, tm->inv_div, tm->mask);
 
 	return;
 }

@@ -226,7 +226,7 @@ LDMZ_MAP *mapLoad(const char *fname) {
 		}
 
 		if ((map->layer[i].tilemap = tilemapNew(TILEMAP_DEFAULT_INV_DIV, map->layer[i].ts, 
-		    TILEMAP_DEFAULT_INV_DIV, map_l[i].layer_w, map_l[i].layer_h)) == NULL)
+		    TILEMAP_DEFAULT_INV_DIV, map_l[i].layer_w, map_l[i].layer_h, 0)) == NULL)
 		    	goto error;		/* Down at the bottom of the function */
 		renderTilemapCameraMove(map->layer[i].tilemap->render, map->cam_x + map->layer[i].offset_x, 
 		    map->cam_y + map->layer[i].offset_y);
