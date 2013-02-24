@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="isometric" width="24" height="16" tilewidth="64" tileheight="32">
+ <properties>
+  <property name="tileset" value="isosheet.png"/>
+ </properties>
+ <tileset firstgid="1" name="testset" tilewidth="64" tileheight="32">
+  <image source="../isometric_test/isosheet.png" width="320" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="24" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYMSDBaAYnxpK8Kj5I8N8QRx4qJg/1MN/1PxR87FhAMp0BCE=
+  </data>
+ </layer>
+</map>
