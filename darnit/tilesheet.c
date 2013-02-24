@@ -389,7 +389,7 @@ void renderPopulateIsometricTilesheet(TILESHEET *ts, int tiles_w, int tiles_h, u
 			x = j * ts->wsq;
 			y = i * ts->hsq;
 			p = i * tiles_w + j;
-			skip = renderDetectTileHeight(x, y, ts->wsq, ts->hsq, ts->w, data);
+			skip = renderDetectTileHeight(x, y, ts->wsq, ts->hsq, tiles_w * ts->wsq, data);
 //			fprintf(stderr, "Tile height %i is %i\n", p, skip);
 //			skip = ts->hsq;
 			ts->tile[p].r = twgran * j;
