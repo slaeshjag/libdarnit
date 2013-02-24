@@ -53,12 +53,11 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	y_iter = (d->video.h / tm->r_h) * 2 + 4;
 	
 	renderTilemapToISOCoordinates(tm, 0, 0, &x_last, &y_last);
-	fprintf(stderr, "%i %i\n", x_last, y_last);
 
 	renderTilemapISOCoordinates(tm, tm->cam_xp - tm->ts->wsq, tm->cam_yp - tm->r_h, &o_x, &o_y);
 	renderTilemapToISOCoordinates(tm, o_x, o_y, &x_last, &y_last);
 	x_start = d->video.swgran * (x_last - tm->cam_xp) - 1.0f - x_step / 2;
-	y_start = 1.0f - d->video.shgran * (y_last - tm->cam_yp);
+	y_start = 1.0f - d->video.shgran * (y_last - tm->cam_yp) - 2 * y_step;
 
 	renderTilemapToISOCoordinates(tm, o_x - 1, o_y, &x_last, &y_last);
 	x_start2 = d->video.swgran * (x_last - tm->cam_xp) - 1.0f - x_step / 2;
