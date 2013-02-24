@@ -35,7 +35,6 @@ int main(int argc, char **argv) {
 	if (!d_init("TESTAPP - libDarnit", "testapp", NULL))
 		return -1;
 
-
 	/* COmpressed writes test */
 	DARNIT_FILE *f;
 	char bzval[64];
@@ -59,6 +58,9 @@ int main(int argc, char **argv) {
 
 
 	music = d_sound_tracked_load("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
+	d_sound_play(music, 0, 127, 127, 0);
+	d_sound_play(music, 0, 127, 127, 0);
+	d_sound_play(music, 0, 127, 127, 0);
 	d_sound_play(music, 0, 127, 127, 0);
 	d_sound_play(music, 0, 127, 127, 0);
 

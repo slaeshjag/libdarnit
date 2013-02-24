@@ -45,12 +45,10 @@ void renderTilemapToISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, i
 int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	float x_start, y_start, x_start2, x_pos, y_pos;
 	float x_step, y_step;
-	int i, j, k, t, o_x, o_y, /*p_x, p_y,*/ x_last, y_last, x_iter, y_iter, x_cur, y_cur;
+	int i, j, k, t, o_x, o_y, x_last, y_last, x_cur, y_cur;
 
 	x_step = d->video.swgran * tm->ts->wsq;
 	y_step = d->video.shgran * tm->r_h / 2;
-	x_iter = d->video.w / tm->ts->wsq + 4;
-	y_iter = (d->video.h / tm->r_h) * 2 + 4;
 	
 	renderTilemapToISOCoordinates(tm, 0, 0, &x_last, &y_last);
 
@@ -63,13 +61,13 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	x_start2 = d->video.swgran * (x_last - tm->cam_xp) - 1.0f - x_step / 2;
 
 	y_pos = y_start;
-	for (i = k = 0; i < y_iter; i++, y_pos -= y_step) {
+	for (i = k = 0; i < tm->h; i++, y_pos -= y_step) {
 		x_pos = (i & 1) ? x_start2 : x_start;
 		x_cur = o_x + (i >> 1);
 		y_cur = o_y + (i >> 1);
 		y_cur += (i & 1);
 
-		for (j = 0; j < x_iter; j++, x_cur++, y_cur--, x_pos += x_step) {
+		for (j = 0; j < tm->w; j++, x_cur++, y_cur--, x_pos += x_step) {
 			if (x_cur >= tm->map_w)
 				break;
 			if (x_cur < 0)
@@ -210,10 +208,10 @@ void *renderTilemapCreateISO(unsigned int w, unsigned int h, unsigned int *map, 
 	tm->inv_div = inv_div;
 	tm->ts = ts;
 	tm->w = d->video.w / ts->wsq + 4;
-	tm->h = d->video.h / r_h * 2 + 4;
+	tm->r_h = r_h;
+	tm->h = d->video.h / r_h * 2 + 3 + tm->ts->hsq / tm->r_h * 2;
 	tm->mask = mask;
 	tm->isometric = 1;
-	tm->r_h = r_h;
 	tm->cam_xp = 0;
 	tm->cam_yp = 0;
 
