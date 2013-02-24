@@ -219,6 +219,7 @@ void *renderTilemapCreateISO(unsigned int w, unsigned int h, unsigned int *map, 
 
 	tm->cache = malloc(sizeof(TILE_CACHE) * tm->w * tm->h);
 	renderTilemapCameraMove(tm, camera_x, camera_y);
+	renderTilemapForceRecalc(tm);
 
 	return tm;
 }
