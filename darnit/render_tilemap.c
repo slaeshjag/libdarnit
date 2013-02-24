@@ -29,14 +29,14 @@ freely, subject to the following restrictions:
 
 
 void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y) {
-	isometricFromScreen(x, y, d->video.w / 2, 0, tm->ts->wsq, tm->r_h, r_x, r_y);
+	isometricFromScreen(x, y, 0, 0, tm->ts->wsq, tm->r_h, r_x, r_y);
 
 	return;
 }
 
 
 void renderTilemapToISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y) {
-	isometricToScreen(x, y, d->video.w / 2, 0, tm->ts->wsq, tm->r_h, r_x, r_y);
+	isometricToScreen(x, y, 0, 0, tm->ts->wsq, tm->r_h, r_x, r_y);
 
 	return;
 }
