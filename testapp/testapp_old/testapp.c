@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
 	colorTest(fancy_text);
 
 	mapsheet = d_render_tilesheet_load("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
-	if ((map = d_map_load("testmap.ldmz")) == NULL)
+	if ((map = d_map_load("testmap_iso.ldmz")) == NULL)
 		fprintf(stderr, "Map load failed\n");
 //	tilemap = darnitRenderTilemapCreate("map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
 //	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
@@ -124,9 +124,8 @@ int main(int argc, char **argv) {
 
 		if (keys.r == 1)
 			d_tilemap_camera_move(map->layer->tilemap, i*4, j*4);
-//		darnitRenderTint(handle, 1.0f, 1.0f, 1.0f, 1.0f);
-		d_tilemap_draw(map->layer->tilemap);
 		d_render_blend_enable();
+		d_tilemap_draw(map->layer->tilemap);
 		if (keys.l == 1)
 			if (d_menu_loop(surface) != -1)
 				return 0;

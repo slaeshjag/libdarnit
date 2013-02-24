@@ -30,17 +30,17 @@ freely, subject to the following restrictions:
 /* Tror jag råkade göra en Exophase :p */
 #define	RENDER_TILEMAP_FILL(k, X, Y, w, h, t)			\
 	tm->cache[(k)].vertex[0].coord.x = (X);			\
-	tm->cache[(k)].vertex[0].coord.y = (Y);			\
+	tm->cache[(k)].vertex[0].coord.y = (Y) + (h);		\
 	tm->cache[(k)].vertex[1].coord.x = (X) + (w);		\
-	tm->cache[(k)].vertex[1].coord.y = (Y); 		\
+	tm->cache[(k)].vertex[1].coord.y = (Y) + (h); 		\
 	tm->cache[(k)].vertex[2].coord.x = (X) + (w);		\
-	tm->cache[(k)].vertex[2].coord.y = (Y) - (h);		\
+	tm->cache[(k)].vertex[2].coord.y = (Y);			\
 	tm->cache[(k)].vertex[3].coord.x = (X) + (w);		\
-	tm->cache[(k)].vertex[3].coord.y = (Y) - (h);		\
+	tm->cache[(k)].vertex[3].coord.y = (Y);			\
 	tm->cache[(k)].vertex[4].coord.x = (X);			\
-	tm->cache[(k)].vertex[4].coord.y = (Y) - (h);		\
+	tm->cache[(k)].vertex[4].coord.y = (Y);			\
 	tm->cache[(k)].vertex[5].coord.x = (X);			\
-	tm->cache[(k)].vertex[5].coord.y = (Y);			\
+	tm->cache[(k)].vertex[5].coord.y = (Y) + (h);		\
 	tm->cache[(k)].vertex[0].tex.u = tm->ts->tile[(t)].r;	\
 	tm->cache[(k)].vertex[0].tex.v = tm->ts->tile[(t)].s;	\
 	tm->cache[(k)].vertex[1].tex.u = tm->ts->tile[(t)].u;	\

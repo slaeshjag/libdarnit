@@ -360,12 +360,12 @@ void renderPopulateTilesheet(TILESHEET *ts, int tiles_w, int tiles_h) {
 }
 
 
-int renderDetectTileHeight(int x, int y, int w, int max_h, unsigned int *data) {
+int renderDetectTileHeight(int x, int y, int w, int max_h, int ts_w, unsigned int *data) {
 	int i, j;
 
 	for (i = 0; i < max_h; i++)
 		for (j = 0; j < w; j++)
-			if ((data[(j + x) + (i + y) * w] & 0xFF000000))
+			if ((data[(j + x) + (i + y) * ts_w] & 0xFF000000))
 				return max_h - i;
 	return 0;
 }
@@ -387,11 +387,13 @@ void renderPopulateIsometricTilesheet(TILESHEET *ts, int tiles_w, int tiles_h, u
 	for (i = 0; i < tiles_h; i++)
 		for (j = 0; j < tiles_w; j++) {
 			x = j * ts->wsq;
-			y = j * ts->hsq;
-			skip = renderDetectTileHeight(x, y, ts->wsq, ts->hsq, data);
+			y = i * ts->hsq;
 			p = i * tiles_w + j;
+			skip = renderDetectTileHeight(x, y, ts->wsq, ts->hsq, ts->w, data);
+//			fprintf(stderr, "Tile height %i is %i\n", p, skip);
+//			skip = ts->hsq;
 			ts->tile[p].r = twgran * j;
-			ts->tile[p].s = phgran * (i * ts->hsq - skip + ts->hsq);
+			ts->tile[p].s = phgran * ((i + 1) * ts->hsq - skip);
 			ts->tile[p].u = ts->tile[p].r + twgran;
 			ts->tile[p].v = ts->tile[p].s + skip * phgran;
 			ts->tile[p].h_p = skip * d->video.shgran;
