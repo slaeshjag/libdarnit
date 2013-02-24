@@ -45,4 +45,7 @@ void d_tilemap_camera_move(DARNIT_TILEMAP *tilemap, int cam_x, int cam_y);
 void d_tilemap_draw(DARNIT_TILEMAP *tilemap);
 DARNIT_TILEMAP *d_tilemap_free(DARNIT_TILEMAP *tilemap);
 
+void d_tilemap_screen_to_iso(DARNIT_TILEMAP *tm, int x, int y, int *tile_x, int *tile_y);
+void d_tilemap_iso_to_screen(DARNIT_TILEMAP *tm, int tile_x, int tile_y, int *x, int *y);
+
 #endif

@@ -72,3 +72,17 @@ void EXPORT_THIS d_tilemap_draw(TILEMAP_ENTRY *tilemap) {
 TILEMAP_ENTRY EXPORT_THIS *d_tilemap_free(TILEMAP_ENTRY *tilemap) {
 	return tilemapFree(tilemap);
 }
+
+
+void EXPORT_THIS d_tilemap_screen_to_iso(TILEMAP_ENTRY *tm, int x, int y, int *tile_x, int *tile_y) {
+	renderTilemapISOCoordinates(tm->render, x, y, tile_x, tile_y);
+
+	return;
+}
+
+
+void EXPORT_THIS d_tilemap_iso_to_screen(TILEMAP_ENTRY *tm, int tile_x, int tile_y, int *x, int *y) {
+	renderTilemapToISOCoordinates(tm->render, tile_x, tile_y, x, y);
+
+	return;
+}
