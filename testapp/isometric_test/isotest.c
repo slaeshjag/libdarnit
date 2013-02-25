@@ -10,11 +10,7 @@ int main(int argc, char **argv) {
 	tm = d_tilemap_isom_new(0, ts, 0xFF, 32, 16, 32);
 
 	d_render_blend_enable();
-//	for (i = 0; i < 32*8; i++)
-//		tm->data[i] = 67;
-		tm->data[0] = 50;
 	d_tilemap_recalc(tm);
-//	d_tilemap_camera_move(tm, -500, -500);
 	
 	for (i = 0;; i++) {
 		j = i % 1200;
