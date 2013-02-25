@@ -124,8 +124,6 @@ int renderTilemapRecalc(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, i
 				if (t % inv_div == 0)
 					continue;
 			/* ugh.. */
-			if (k == 0)
-				fprintf(stderr, "Starting rendering at %i, %i (%i, %i)\n", x_cur, y_cur, i, j);
 			cache[k].vertex[0].coord.x = x_adv_buf[i];
 			cache[k].vertex[0].coord.y = y_adv_buf[j];
 			cache[k].vertex[1].coord.x = x_adv_buf[i+1];
