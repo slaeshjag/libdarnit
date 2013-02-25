@@ -250,8 +250,11 @@ LDMZ_MAP *mapLoad(const char *fname) {
 			    	goto error;		/* Down at the bottom of the function */
 		}
 
-		renderTilemapCameraMove(map->layer[i].tilemap->render, map->cam_x + map->layer[i].offset_x, 
-		    map->cam_y + map->layer[i].offset_y);
+		if (!iso)
+			renderTilemapCameraMove(map->layer[i].tilemap->render, map->cam_x + map->layer[i].offset_x, 
+			    map->cam_y + map->layer[i].offset_y);
+		else
+			renderTilemapCameraMove(map->layer[i].tilemap->render, 0, 0); 
 		fsFileRead(buff, map_l[i].layer_zlen, file);
 		stbi_zlib_decode_buffer((void *) map->layer[i].tilemap->data, map_l[i].layer_w * map_l[i].layer_h * 4, 
 		    buff, map_l[i].layer_zlen);
