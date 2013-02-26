@@ -19,7 +19,33 @@ void colorTest(DARNIT_TEXT_SURFACE *surface) {
 
 	return;
 }
+
+
+int compression_test() {
+	/* COmpressed writes test */
+	DARNIT_FILE *f;
+	char bzval[64];
+
+	f = d_file_open("test.bz2", "wb+");
+	d_file_write_compressed(f, "Fiskpinnar", strlen("Fiskpinnar") + 1);
+	d_file_write("Fiskpinnar", strlen("Fiskpinnar") + 1, f);
+	d_file_close(f);
+	f = d_file_open("test.bz2", "rb");
+	d_file_read_compressed(f, bzval, strlen("Fiskpinnar") + 1);
+	if (strcmp(bzval, "Fiskpinnar")) {
+		fprintf(stderr, "Compression test failed\n");
+		return 0;
+	}
 	
+	d_file_read(bzval, strlen("Fiskpinnar") + 1, f);
+	if (strcmp(bzval, "Fiskpinnar")) {
+		fprintf(stderr, "Post-compression test failed\n");
+		return 0;
+	}
+	
+	fprintf(stderr, "Compression test passed\n");
+	return 1;
+}
 
 
 int main(int argc, char **argv) {
@@ -35,66 +61,48 @@ int main(int argc, char **argv) {
 	if (!d_init("TESTAPP - libDarnit", "testapp", NULL))
 		return -1;
 
-	/* COmpressed writes test */
-	DARNIT_FILE *f;
-	char bzval[64];
+	compression_test();
 
-	f = d_file_open("test.bz2", "wb+");
-	d_file_write_compressed(f, "Fiskpinnar", strlen("Fiskpinnar") + 1);
-	d_file_write("Fiskpinnar", strlen("Fiskpinnar") + 1, f);
-	d_file_close(f);
-	f = d_file_open("test.bz2", "rb");
-	d_file_read_compressed(f, bzval, strlen("Fiskpinnar") + 1);
-	if (strcmp(bzval, "Fiskpinnar"))
-		fprintf(stderr, "Compression test failed\n");
-	else {
-		d_file_read(bzval, strlen("Fiskpinnar") + 1, f);
-		if (strcmp(bzval, "Fiskpinnar"))
-			fprintf(stderr, "Post-compression test failed\n");
-		else
-			fprintf(stderr, "Compression test passed\n");
-	}
-
-
-
+	/* Sound/music */
 	music = d_sound_tracked_load("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
 	d_sound_play(music, 0, 127, 127, 0);
-	d_sound_play(music, 0, 127, 127, 0);
-	d_sound_play(music, 0, 127, 127, 0);
-	d_sound_play(music, 0, 127, 127, 0);
-	d_sound_play(music, 0, 127, 127, 0);
 
+	/* Text rendering */
 	test_text = malloc(64);
 	font = d_font_load("dejavu_sans.ttf", 28, 512, 512);
-	surface = d_menu_vertical_new("Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 3);
-
-	sprite = d_sprite_load("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
-	d_sprite_move(sprite, 50, 50);
 	text = d_text_surface_new(font, 80, 800, 0, 460);
 	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 420);
 	colorTest(fancy_text);
+	fps_text = d_text_surface_new(font, 16, 200, 0, 40);
+
+
+	/* Menutk test */
+	surface = d_menu_vertical_new("Hello\nGoodbye\nOther\nNothing\nLess than nothing", 50, 100, font, 200, 10, 3);
+	sprintf(test_text, "Héllo, world. Modify m€! Test of offsets");
+	textinput = d_menu_textinput_new(0, 0, font, test_text, 64, 200);
+
+	/* Sprites */
+	sprite = d_sprite_load("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
+	d_sprite_move(sprite, 50, 50);
+	d_sprite_animate_start(sprite);
+	
+	mtsprite = d_mtsprite_load("testspr.mts");
+	d_mtsprite_animate_start(mtsprite);
+
+	/* Maps */
 
 	mapsheet = d_render_tilesheet_load("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	if ((map = d_map_load("testmap_iso.ldmz")) == NULL)
 		fprintf(stderr, "Map load failed\n");
-//	tilemap = darnitRenderTilemapCreate("map.png", 10, mapsheet, DARNIT_TILEMAP_DEFAULT_MASK);
-//	darnitRenderTint(handle, 0.5f, 0.5f, 0.5f, 1.0f);
-	d_sprite_animate_start(sprite);
-	sprintf(test_text, "Héllo, world. Modify m€! Test of offsets");
-	textinput = d_menu_textinput_new(0, 0, font, test_text, 64, 200);
 
-	mtsprite = d_mtsprite_load("testspr.mts");
-	d_mtsprite_animate_start(mtsprite);
-
-	fps_text = d_text_surface_new(font, 16, 200, 0, 40);
-
+	/* Tile caches */
 	tilebuf = d_render_tile_new(1, mapsheet);
 	d_render_tile_move(tilebuf, 0, 64, 64);
 	d_render_tile_tilesheet_coord_set(tilebuf, 0, 16, 16, 32, 32);
+
+	/* Misc */
 	fprintf(stderr, "String lenght: %i\n", d_font_string_w(font, "ASDFÅÄÖ,,"));
 
-//	for (i = 0; i < 10; i++) 
-//		darnitRenderTilemapTileSet(tilemap, i, 5, 2);
 
 	for (i = j = 0;;) {
 		keys = d_keys_get();
