@@ -74,6 +74,11 @@ void *socketConnect(const char *host, int port, void (*callback)(int, void *, vo
 
 	if (connect(sock->socket, (void *) &sin, sizeof(struct sockaddr_in)) == -1) {
 		if (!callback) {
+			#ifdef _WIN32
+			closesocket(sock->socket);
+			#else
+			close(sock->socket);
+			#endif
 			fprintf(stderr, "libDarnit: Unable to connect to host %s\n", host);
 			free(sock);
 			return NULL;
@@ -240,6 +245,7 @@ void socketConnectLoop() {
 		(list->callback)(t, list->data, tmp_sock);
 		list = *parent;
 		free(tmp_p);
+		if (t < 0)
 		continue;
 
 		loop:
