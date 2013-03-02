@@ -454,6 +454,8 @@ void renderFadeLoop() {
 void renderFadeFade(unsigned int time, float r, float g, float b) {
 	if (d->video.fade.fadedir == 1.0f)
 		return;
+	if (d->video.fade.a == 1.0f)
+		return;
 
 	d->video.fade.r = r;
 	d->video.fade.g = g;
@@ -469,6 +471,8 @@ void renderFadeFade(unsigned int time, float r, float g, float b) {
 
 void renderFadeUnfade(unsigned int time) {
 	if (d->video.fade.fadedir == -1.0f)
+		return;
+	if (d->video.fade.a == 0.0f)
 		return;
 
 	d->video.fade.fadedir = -1.0f;
