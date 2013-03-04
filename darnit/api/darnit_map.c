@@ -30,6 +30,11 @@ LDMZ_MAP EXPORT_THIS *d_map_load(const char *fname) {
 }
 
 
+LDMZ_MAP EXPORT_THIS *d_map_load_override(const char *fname, int tile_w, int tile_h) {
+	return mapLoadReal(fname, tile_w, tile_h);
+}
+
+
 LDMZ_MAP EXPORT_THIS *d_map_unload(LDMZ_MAP *map) {
 	return mapDestroy(map);
 }
