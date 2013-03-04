@@ -89,6 +89,11 @@ LDMZ_MAP *mapDestroy(LDMZ_MAP *map) {
 
 
 LDMZ_MAP *mapLoad(const char *fname) {
+	return mapLoadReal(fname, -1, -1);
+}
+
+
+LDMZ_MAP *mapLoadReal(const char *fname, int tile_w, int tile_h) {
 	LDMZ_MAP *map;
 	LDMZ_FILE_MAP map_h;
 	LDMZ_FILE_STRTABLE_REF *map_r;
@@ -201,8 +206,12 @@ LDMZ_MAP *mapLoad(const char *fname) {
 	for (i = 0; i < map_h.layers; i++) {
 		map->layer[i].offset_x = map_l[i].layer_offset_x;
 		map->layer[i].offset_y = map_l[i].layer_offset_y;
-		map->layer[i].tile_w = map_l[i].tile_w;
-		map->layer[i].tile_h = map_l[i].tile_h;
+		
+		map->layer[i].tile_w = (tile_w > 0) ? tile_w : map_l[i].tile_w;
+		map->layer[i].tile_h = (tile_h > 0) ? tile_h : map_l[i].tile_h;
+		map_l[i].tile_w = 0;
+		map_l[i].tile_h = 0;
+		
 		map->layer[i].ref = &map->stringrefs[map_l[i].prop_ref];
 
 		if ((tmp = realloc(buff, map_l[i].layer_zlen)) == NULL) 

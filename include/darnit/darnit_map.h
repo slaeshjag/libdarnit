@@ -64,6 +64,7 @@ typedef struct {
 
 
 DARNIT_MAP *d_map_load(const char *fname);
+DARNIT_MAP *d_map_load_override(const char *fname, int tile_w, int tile_h);
 DARNIT_MAP *d_map_unload(DARNIT_MAP *map);
 const char *d_map_prop(DARNIT_MAP_REF *prop, const char *key);
 const char *d_map_layer_prop(DARNIT_MAP *map, int layer, const char *key);
