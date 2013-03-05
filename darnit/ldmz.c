@@ -102,7 +102,7 @@ LDMZ_MAP *mapLoadReal(const char *fname, int tile_w, int tile_h) {
 	FILESYSTEM_FILE *file;
 	void *buff, *tmp;
 	char *stringdata;
-	int i, iso;
+	int i, iso, tile_h_inc;
 
 	map_h.magic = map_h.version = 0;
 
@@ -204,13 +204,18 @@ LDMZ_MAP *mapLoadReal(const char *fname, int tile_w, int tile_h) {
 		map->layer[i].ts = NULL;
 	}
 	for (i = 0; i < map_h.layers; i++) {
-		map->layer[i].offset_x = map_l[i].layer_offset_x;
-		map->layer[i].offset_y = map_l[i].layer_offset_y;
-		
 		map->layer[i].tile_w = (tile_w > 0) ? tile_w : map_l[i].tile_w;
 		map->layer[i].tile_h = (tile_h > 0) ? tile_h : map_l[i].tile_h;
+		if (iso && tile_h > 0) {
+			tile_h_inc = (tile_h << 16) / (map_l[i].tile_h);
+			map_l[i].layer_offset_x *= tile_h_inc;
+			map_l[i].layer_offset_x >>= 16;
+		}
 		map_l[i].tile_w = 0;
 		map_l[i].tile_h = 0;
+		
+		map->layer[i].offset_x = map_l[i].layer_offset_x;
+		map->layer[i].offset_y = map_l[i].layer_offset_y;
 		
 		map->layer[i].ref = &map->stringrefs[map_l[i].prop_ref];
 
