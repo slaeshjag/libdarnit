@@ -73,7 +73,7 @@ typedef struct {
 	int				cam_yp;
 	unsigned int			mask;
 	unsigned int			isometric;
-	unsigned int				r_h;
+	unsigned int			r_h;
 } RENDER_TILEMAP;
 
 void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y);
