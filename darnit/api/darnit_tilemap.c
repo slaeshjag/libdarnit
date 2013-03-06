@@ -75,14 +75,24 @@ TILEMAP_ENTRY EXPORT_THIS *d_tilemap_free(TILEMAP_ENTRY *tilemap) {
 
 
 void EXPORT_THIS d_tilemap_screen_to_iso(TILEMAP_ENTRY *tm, int x, int y, int *tile_x, int *tile_y) {
-	renderTilemapISOCoordinates(tm->render, x, y, tile_x, tile_y);
+	if (tm->render->isometric)
+		renderTilemapISOCoordinates(tm->render, x, y, tile_x, tile_y);
+	else {
+		*tile_x = x / tm->render->ts->wsq;
+		*tile_y = y / tm->render->ts->hsq;
+	}
 
 	return;
 }
 
 
 void EXPORT_THIS d_tilemap_iso_to_screen(TILEMAP_ENTRY *tm, int tile_x, int tile_y, int *x, int *y) {
-	renderTilemapToISOCoordinates(tm->render, tile_x, tile_y, x, y);
+	if (tm->render->isometric)
+		renderTilemapToISOCoordinates(tm->render, tile_x, tile_y, x, y);
+	else {
+		*x = tile_x * tm->render->ts->wsq + (tm->render->ts->wsq >> 1);
+		*y = tile_y * tm->render->ts->hsq;
+	}
 
 	return;
 }
