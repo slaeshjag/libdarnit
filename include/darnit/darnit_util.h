@@ -26,6 +26,12 @@ freely, subject to the following restrictions:
 #ifndef __DARNIT_UTIL_H__
 #define	__DARNIT_UTIL_H__
 
+typedef struct {
+	unsigned int		w;
+	unsigned int		h;
+	unsigned int		*data;
+} DARNIT_IMAGE_DATA;
+
 
 unsigned int d_util_htonl(unsigned int arg);
 unsigned int d_util_ntohl(unsigned int arg);
@@ -34,6 +40,7 @@ int d_util_string_to_int_array(const char *str, const char *delimiter, int *dest
 void d_util_endian_convert(unsigned int *block, int elements);
 int d_util_sin(int angle);
 const char *d_str_null(const char *str);
+DARNIT_IMAGE_DATA d_img_load_raw(const char *fname);
 
 
 #endif
