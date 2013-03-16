@@ -42,6 +42,54 @@ void renderTilemapToISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, i
 }
 
 
+void renderTilemapSortSprites(RENDER_TILEMAP *tm) {
+	SPRITE_ENTRY *tmp;
+	int i, j;
+	
+	// loopen börjar på 1 för att första elementet är definitivt sorterat när det står ensamt.
+	// därefter hämtas ett element i taget ur "buffern" (resten av arrayen)
+	for (i = 1; i < tm->sprites_used; i++) {
+		// så länge nuvarande bufferelement (j) är mindre än det precis till vänster i den sorterade listan
+		// ska det skiftas ett steg till vänster.
+		for (j = i; j > 0 && tm->sprite[j]->y < tm->sprite[j-1]->y; j--) {
+			tmp = tm->sprite[j];
+			tm->sprite[j] = tm->sprite[j-1];
+			tm->sprite[j-1] = tmp;
+		}
+	}
+	
+	return;
+}
+
+
+int renderTilemapSpriteIndex(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite) {
+	int i;
+
+	for (i = 0; i < tm->sprites_used; i++)
+		if (tm->sprite[i] == sprite)
+			return i;
+	return -1;
+}
+
+
+int renderTilemapSpriteAdd(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite) {
+	SPRITE_ENTRY **tmp;
+
+	if (tm->sprites == tm->sprites_used) {
+		tm->sprites++;
+		if (!(tmp = realloc(tm->sprite, sizeof(SPRITE_ENTRY *) * tm->sprites))) {
+			tm->sprites--;
+			return -1;
+		}
+
+	}
+
+	tm->sprite[tm->sprites_used] = sprite;
+	tm->sprites_used++;
+
+	return tm->sprites_used - 1;
+}
+
 int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	float x_start, y_start, x_start2, x_pos, y_pos;
 	float x_step, y_step;
@@ -241,6 +289,10 @@ void *renderTilemapCreate(unsigned int w, unsigned int h, unsigned int *map, int
 	tm->isometric = 0;
 	tm->r_h = ts->hsq;
 
+	tm->sprite = calloc(TILEMAP_SPRITE_START, sizeof(SPRITE_ENTRY *));
+	tm->sprites = TILEMAP_SPRITE_START;
+	tm->sprites_used = 0;
+
 	tm->cache = malloc(sizeof(TILE_CACHE) * tm->w * tm->h);
 	renderTilemapCameraMove(tm, camera_x, camera_y);
 	renderTilemapForceRecalc(tm);
@@ -250,6 +302,7 @@ void *renderTilemapCreate(unsigned int w, unsigned int h, unsigned int *map, int
 
 
 void renderTilemapRender(RENDER_TILEMAP *tm) {
+	renderTilemapSortSprites(tm);
 	glLoadIdentity();
 	glTranslatef(tm->cam_x, tm->cam_y, 0);
 	renderCache(tm->cache, tm->ts, tm->cache_used);
@@ -262,12 +315,11 @@ void renderTilemapRender(RENDER_TILEMAP *tm) {
 
 void renderTilemapFree(RENDER_TILEMAP *tm) {
 	free(tm->cache);
+	free(tm->sprite);
 	free(tm);
 
 	return;
 }
-
-
 
 
 void renderTilemapForceRecalc(RENDER_TILEMAP *tm) {

@@ -26,6 +26,8 @@ freely, subject to the following restrictions:
 #ifndef __RENDER_TILEMAP_H__
 #define	__RENDER_TILEMAP_H__
 
+#define	TILEMAP_SPRITE_START		32
+
 
 /* Tror jag råkade göra en Exophase :p */
 #define	RENDER_TILEMAP_FILL(k, X, Y, w, h, t)			\
@@ -55,6 +57,7 @@ freely, subject to the following restrictions:
 	tm->cache[(k)].vertex[5].tex.v = tm->ts->tile[(t)].s;	\
 
 
+
 typedef struct {
 	int				map_w;
 	int				map_h;
@@ -74,6 +77,10 @@ typedef struct {
 	unsigned int			mask;
 	unsigned int			isometric;
 	unsigned int			r_h;
+
+	SPRITE_ENTRY			**sprite;
+	unsigned int			sprites;
+	unsigned int			sprites_used;
 } RENDER_TILEMAP;
 
 void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y);
