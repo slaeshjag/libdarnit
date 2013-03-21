@@ -57,6 +57,7 @@ int main(int argc, char **argv) {
 	DARNIT_MOUSE mouse;
 	DARNIT_KEYS keys;
 	DARNIT_MAP *map;
+	DARNIT_SPRITE *mapsprite;
 
 	if (!d_init("TESTAPP - libDarnit", "testapp", NULL))
 		return -1;
@@ -83,8 +84,11 @@ int main(int argc, char **argv) {
 
 	/* Sprites */
 	sprite = d_sprite_load("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
+	mapsprite = d_sprite_load("baurn.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	d_sprite_move(sprite, 50, 50);
+	d_sprite_move(mapsprite, 100, 100);
 	d_sprite_animate_start(sprite);
+	d_sprite_animate_start(mapsprite);
 	
 	mtsprite = d_mtsprite_load("testspr.mts");
 	d_mtsprite_animate_start(mtsprite);
@@ -94,6 +98,7 @@ int main(int argc, char **argv) {
 	mapsheet = d_render_tilesheet_load("mapsheet.png", 32, 32, DARNIT_PFORMAT_RGBA8);
 	if ((map = d_map_load("testmap_iso.ldmz")) == NULL)
 		fprintf(stderr, "Map load failed\n");
+	d_tilemap_sprite_add(map->layer[0].tilemap, mapsprite);
 
 	/* Tile caches */
 	tilebuf = d_render_tile_new(1, mapsheet);

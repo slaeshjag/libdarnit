@@ -41,6 +41,8 @@ DARNIT_TILEMAP *d_tilemap_isom_new(unsigned int invisibility_divider, DARNIT_TIL
 DARNIT_TILEMAP *d_tilemap_load(const char *fname, unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask);
 DARNIT_TILEMAP *d_tilemap_isom_load(const char *fname, unsigned int invisibility_divider, DARNIT_TILESHEET *tilesheet, unsigned int mask, int tile_h);
 void d_tilemap_recalc(DARNIT_TILEMAP *tilemap);
+int d_tilemap_sprite_add(DARNIT_TILEMAP *tilemap, DARNIT_SPRITE *sprite);
+int d_tilemap_sprite_delete(DARNIT_TILEMAP *tilemap, DARNIT_SPRITE *sprite);
 void d_tilemap_camera_move(DARNIT_TILEMAP *tilemap, int cam_x, int cam_y);
 void d_tilemap_draw(DARNIT_TILEMAP *tilemap);
 DARNIT_TILEMAP *d_tilemap_free(DARNIT_TILEMAP *tilemap);

@@ -53,6 +53,20 @@ void EXPORT_THIS d_tilemap_recalc(TILEMAP_ENTRY *tilemap) {
 }
 
 
+int EXPORT_THIS d_tilemap_sprite_add(TILEMAP_ENTRY *tilemap, SPRITE_ENTRY *sprite) {
+	if (!tilemap)
+		return -1;
+	return renderTilemapSpriteAdd(tilemap->render, sprite);
+}
+
+
+int EXPORT_THIS d_tilemap_sprite_delete(TILEMAP_ENTRY *tilemap, SPRITE_ENTRY *sprite) {
+	if (!tilemap)
+		return -1;
+	return renderTilemapSpriteDelete(tilemap->render, sprite);
+}
+
+
 void EXPORT_THIS d_tilemap_camera_move(TILEMAP_ENTRY *tilemap, int cam_x, int cam_y) {
 	if (tilemap == NULL) return;
 	renderTilemapCameraMove(tilemap->render, cam_x, cam_y);
