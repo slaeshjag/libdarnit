@@ -56,6 +56,8 @@ freely, subject to the following restrictions:
 	tm->cache[(k)].vertex[5].tex.u = tm->ts->tile[(t)].r;	\
 	tm->cache[(k)].vertex[5].tex.v = tm->ts->tile[(t)].s;	\
 
+#define	RENDER_TILEMAP_PIX_POS(tm, ys, i)	((tm)->r_h * (i) / 2 + (ys) - (tm)->ts->hsq + (tm)->r_h)
+#define	RENDER_TILEMAP_PIX_BASE(tm, ys, i)	((tm)->r_h * (i) / 2 + (ys))
 
 
 typedef struct {
@@ -81,7 +83,10 @@ typedef struct {
 	SPRITE_ENTRY			**sprite;
 	unsigned int			sprites;
 	unsigned int			sprites_used;
+	unsigned int			*sprite_row;
+	unsigned int			*tile_row;
 } RENDER_TILEMAP;
+
 
 void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y);
 void renderTilemapToISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y);
@@ -91,6 +96,8 @@ void *renderTilemapCreate(unsigned int w, unsigned int h, unsigned int *map, int
 void *renderTilemapCreateISO(unsigned int w, unsigned int h, unsigned int *map, int camera_x, int camera_y, unsigned int invisibility_divider, TILESHEET *ts, unsigned int mask, int r_h);
 void renderTilemapTileSet(RENDER_TILEMAP *tm, int x, int y, int tile);
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y);
+int renderTilemapSpriteAdd(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite);
+int renderTilemapSpriteDelete(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite);
 void renderTilemapRender(RENDER_TILEMAP *tm);
 void renderTilemapFree(RENDER_TILEMAP *tm);
 void renderTilemapForceRecalc(RENDER_TILEMAP *tm);

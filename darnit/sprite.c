@@ -187,6 +187,7 @@ void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format
 void spriteTeleport(SPRITE_ENTRY *sprite, int x, int y) {
 	if (sprite == NULL) return;
 
+	sprite->y = y;
 	#ifndef DARNIT_HEADLESS
 	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);
 	#endif
