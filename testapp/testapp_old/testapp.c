@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 	sprite = d_sprite_load("test.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	mapsprite = d_sprite_load("baurn.spr", 0, DARNIT_PFORMAT_RGB5A1);
 	d_sprite_move(sprite, 50, 50);
-	d_sprite_move(mapsprite, 100, 100);
+	d_sprite_move(mapsprite, 0, 0);
 	d_sprite_animate_start(sprite);
 	d_sprite_animate_start(mapsprite);
 	
@@ -110,6 +110,7 @@ int main(int argc, char **argv) {
 
 
 	for (i = j = 0;;) {
+		d_sprite_move(mapsprite, 64, j * 4);
 		keys = d_keys_get();
 		d_text_surface_reset(text); d_text_surface_reset(fps_text);
 		mouse = d_mouse_get();

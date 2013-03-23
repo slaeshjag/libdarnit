@@ -56,8 +56,8 @@ freely, subject to the following restrictions:
 	tm->cache[(k)].vertex[5].tex.u = tm->ts->tile[(t)].r;	\
 	tm->cache[(k)].vertex[5].tex.v = tm->ts->tile[(t)].s;	\
 
-#define	RENDER_TILEMAP_PIX_POS(tm, ys, i)	((tm)->r_h * (i) / 2 + (ys) - (tm)->ts->hsq + (tm)->r_h)
-#define	RENDER_TILEMAP_PIX_BASE(tm, ys, i)	((tm)->r_h * (i) / 2 + (ys))
+#define	RENDER_TILEMAP_PIX_POS(tm, ys, i)	(((int)(tm)->r_h) * (i) / 2 + (ys) - (tm)->ts->hsq + (tm)->r_h)
+#define	RENDER_TILEMAP_PIX_BASE(tm, ys, i)	((int)((tm)->r_h) * (i) / 2 + (ys))
 
 
 typedef struct {
@@ -74,6 +74,8 @@ typedef struct {
 	float				cam_y;
 	int				cam_xi;
 	int				cam_yi;
+	int				cam_xi_c;
+	int				cam_yi_c;
 	int				cam_xp;
 	int				cam_yp;
 	unsigned int			mask;
