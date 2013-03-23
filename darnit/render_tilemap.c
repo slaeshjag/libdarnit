@@ -116,13 +116,16 @@ int renderTilemapFixSprites(RENDER_TILEMAP *tm) {
 	
 	for (i = 0; i < tm->h; i++) {
 		while (sprite_cur < tm->sprites_used) {
-			t = RENDER_TILEMAP_PIX_POS(tm, y_start_pix, i) + 1;
-			tt = tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq;
-			if (t < tt)
-				break;
-			t = RENDER_TILEMAP_PIX_BASE(tm, y_start_pix, i) + 1;
-			if (t < tt)
-				break;
+			if (((int)(tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq)) >= 0) {
+				t = RENDER_TILEMAP_PIX_POS(tm, y_start_pix, i) + 1;
+				tt = tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq;
+				if (t < tt)
+					break;
+				t = RENDER_TILEMAP_PIX_BASE(tm, y_start_pix, i) + 1;
+				if (t < tt)
+					break;
+			}
+
 			sprite_cur++;
 		}
 		
