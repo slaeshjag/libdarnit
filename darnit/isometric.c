@@ -54,8 +54,10 @@ void isometricToScreen(int x, int y, int o_x, int o_y, int w, int h, int *res_x,
 	w >>= 1;
 	h >>= 1;
 
-	(*res_x) = x * w + y * (-w) + o_x;
-	(*res_y) = x * h + y * h + o_y;
+	if (res_x)
+		(*res_x) = x * w + y * (-w) + o_x;
+	if (res_y)
+		(*res_y) = x * h + y * h + o_y;
 
 	return;
 }

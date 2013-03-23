@@ -106,15 +106,43 @@ int renderTilemapSpriteDelete(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite) {
 }
 
 
+int renderTilemapFixSprites(RENDER_TILEMAP *tm) {
+	int o_x, o_y, x_last, y_start_pix, t, tt, i, sprite_cur, sprite_total;
+	
+	renderTilemapISOCoordinates(tm, tm->cam_xp - tm->ts->wsq, tm->cam_yp - tm->r_h, &o_x, &o_y);
+	renderTilemapToISOCoordinates(tm, o_x, o_y, &x_last, &y_start_pix);
+	y_start_pix += tm->r_h;
+	sprite_cur = sprite_total = 0;
+	
+	for (i = 0; i < tm->h; i++) {
+		while (sprite_cur < tm->sprites_used) {
+			t = RENDER_TILEMAP_PIX_POS(tm, y_start_pix, i) + 1;
+			tt = tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq;
+			if (t < tt)
+				break;
+			t = RENDER_TILEMAP_PIX_BASE(tm, y_start_pix, i) + 1;
+			if (t < tt)
+				break;
+			sprite_cur++;
+		}
+		
+		tm->sprite_row[i] = !i ? sprite_cur : sprite_cur - sprite_total;
+		sprite_total = sprite_cur;
+	}
+
+	return 0;
+}
+	
+
+
 int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	float x_start, y_start, x_start2, x_pos, y_pos;
 	float x_step, y_step;
-	int i, j, k, t, o_x, o_y, x_last, y_last, x_cur, y_cur, y_start_pix, sprite_cur, sprite_total, tile_total;
+	int i, j, k, t, o_x, o_y, x_last, y_last, x_cur, y_cur, tile_total;
 
 	x_step = d->video.swgran * tm->ts->wsq;
 	y_step = d->video.shgran * tm->r_h / 2;
-	sprite_cur = 0;
-	sprite_total = tile_total = 0;
+	tile_total = 0;
 	
 	renderTilemapToISOCoordinates(tm, 0, 0, &x_last, &y_last);
 
@@ -122,23 +150,12 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 	renderTilemapToISOCoordinates(tm, o_x, o_y, &x_last, &y_last);
 	x_start = d->video.swgran * (x_last - tm->cam_xp) - 1.0f - x_step / 2;
 	y_start = 1.0f - d->video.shgran * (y_last - tm->cam_yp) - 2 * y_step;
-	y_start_pix = y_last;
 
 	renderTilemapToISOCoordinates(tm, o_x - 1, o_y, &x_last, &y_last);
 	x_start2 = d->video.swgran * (x_last - tm->cam_xp) - 1.0f - x_step / 2;
 
 	y_pos = y_start;
 	for (i = k = 0; i < tm->h; i++, y_pos -= y_step) {
-		while (sprite_cur < tm->sprites_used) {
-//			if (i)
-				if (RENDER_TILEMAP_PIX_POS(tm, y_start_pix, i) < tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq)
-					break;
-			if (RENDER_TILEMAP_PIX_BASE(tm, y_start_pix, i) < tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq)
-				break;
-			fprintf(stderr, "Sprite at %i should render at %i\n", tm->sprite[sprite_cur]->y, RENDER_TILEMAP_PIX_BASE(tm, y_start_pix, i));
-			sprite_cur++;
-		}
-
 		x_pos = (i & 1) ? x_start2 : x_start;
 		x_cur = o_x + (i >> 1);
 		y_cur = o_y + (i >> 1);
@@ -162,14 +179,14 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 				if (t % tm->inv_div == 0)
 					continue;
 
+			if (i == 7)
+				fprintf(stderr, "i=7, %f\n", y_pos);
 			/* Rurgh... */
 			RENDER_TILEMAP_FILL(k, x_pos, y_pos, x_step, tm->ts->tile[t].h_p, t);
 			k++;
 		}
 		
 		tm->tile_row[i] = !i ? k : k - tile_total;
-		tm->sprite_row[i] = !i ? sprite_cur : sprite_cur - sprite_total;
-		sprite_total = sprite_cur;
 		tile_total = k;
 	}
 
@@ -247,9 +264,12 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	tm->cam_x = tm->ts->swgran * (cam_x % tm->ts->wsq) * -1;
 	tm->cam_y = tm->ts->shgran * (cam_y % tm->r_h);
 
+	tm->cam_xi_c = cam_x;
+	tm->cam_yi_c = cam_y;
+
 	x = floorf((float) cam_x / tm->ts->wsq);
 	y = floorf((float) cam_y / tm->r_h);
-	
+
 	if (x == tm->cam_xi && y == tm->cam_yi)
 		return;
 
@@ -345,23 +365,24 @@ void renderTilemapRender(RENDER_TILEMAP *tm) {
 	int i, j, s_i, t_i;
 
 	renderTilemapSortSprites(tm);
+	renderTilemapFixSprites(tm);
 	glLoadIdentity();
 	glTranslatef(tm->cam_x, tm->cam_y, 0);
 	if (!tm->sprites_used || !tm->isometric)
 		renderCache(tm->cache, tm->ts, tm->cache_used);
 	else 
 		for (i = s_i = t_i = 0; i < tm->h; i++) {
-			if (tm->tile_row[i])
-				renderCache(&tm->cache[t_i], tm->ts, tm->tile_row[i]);
-			t_i += tm->tile_row[i];
 			if (tm->sprite_row[i]) {
 				glLoadIdentity();
-				glTranslatef(d->video.swgran * tm->cam_xp, d->video.shgran * tm->cam_yp, 0);
+				glTranslatef(d->video.swgran * tm->cam_xi_c * -1, d->video.shgran * tm->cam_yi_c, 0);
 				for (j = 0; j < tm->sprite_row[i]; j++, s_i++)
 					spriteDraw(tm->sprite[s_i]);
 				glLoadIdentity();
 				glTranslatef(tm->cam_x, tm->cam_y, 0);
 			}
+			if (tm->tile_row[i])
+				renderCache(&tm->cache[t_i], tm->ts, tm->tile_row[i]);
+			t_i += tm->tile_row[i];
 
 		}
 
