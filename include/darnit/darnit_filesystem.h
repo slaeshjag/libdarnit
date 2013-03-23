@@ -34,8 +34,10 @@ freely, subject to the following restrictions:
 #endif
 
 
-#define	DARNIT_FILESYSTEM_TYPE_READ	0x1
-#define	DARNIT_FILESYSTEM_TYPE_WRITE	0x2
+typedef enum {
+	DARNIT_FILESYSTEM_TYPE_READ = 0x1,
+	DARNIT_FILESYSTEM_TYPE_WRITE = 0x2,
+} DARNIT_FILESYSTEM_TYPE;
 
 typedef struct DARNIT_DIR_LIST {
 	const char			*fname;
@@ -76,7 +78,7 @@ off_t d_file_tell(DARNIT_FILE *file);
 size_t d_file_seek(DARNIT_FILE *file, off_t offset, int mode);
 int d_file_eof(DARNIT_FILE *file);
 
-DARNIT_DIR_LIST *d_file_list(const char *path, unsigned int type, int *entries);
+DARNIT_DIR_LIST *d_file_list(const char *path, DARNIT_FILESYSTEM_TYPE type, int *entries);
 DARNIT_DIR_LIST *d_file_list_free(DARNIT_DIR_LIST *list);
 
 #endif
