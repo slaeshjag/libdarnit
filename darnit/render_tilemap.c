@@ -179,8 +179,6 @@ int renderTilemapRecalcISO(RENDER_TILEMAP *tm) {
 				if (t % tm->inv_div == 0)
 					continue;
 
-			if (i == 7)
-				fprintf(stderr, "i=7, %f\n", y_pos);
 			/* Rurgh... */
 			RENDER_TILEMAP_FILL(k, x_pos, y_pos, x_step, tm->ts->tile[t].h_p, t);
 			k++;
