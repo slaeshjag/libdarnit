@@ -75,7 +75,7 @@ int d_file_read_compressed(DARNIT_FILE *file, void *data, int len);
 int d_file_write_compressed(DARNIT_FILE *file, void *data, int len);
 
 off_t d_file_tell(DARNIT_FILE *file);
-size_t d_file_seek(DARNIT_FILE *file, off_t offset, int mode);
+int d_file_seek(DARNIT_FILE *file, off_t offset, int mode);
 int d_file_eof(DARNIT_FILE *file);
 
 DARNIT_DIR_LIST *d_file_list(const char *path, DARNIT_FILESYSTEM_TYPE type, int *entries);
