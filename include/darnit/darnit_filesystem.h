@@ -62,14 +62,14 @@ char *d_fs_exec_path();
 DARNIT_FILE *d_file_open(const char *fname, const char *mode);
 DARNIT_FILE *d_file_close(DARNIT_FILE *file);
 
-void d_directory_create(void *dir_name);
+void d_directory_create(const char *dir_name);
 size_t d_file_read_ints(void *buffer, size_t ints, DARNIT_FILE *file);
 size_t d_file_read(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t d_file_write_ints(void *buffer, size_t ints, DARNIT_FILE *file);
 size_t d_file_write(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t d_file_gets(void *buffer, size_t bytes, DARNIT_FILE *file);
 size_t d_file_getln(void *buffer, size_t bytes, DARNIT_FILE *file);
-size_t d_file_whitespace_skip(DARNIT_FILE *file);
+void  d_file_whitespace_skip(DARNIT_FILE *file);
 
 int d_file_read_compressed(DARNIT_FILE *file, void *data, int len);
 int d_file_write_compressed(DARNIT_FILE *file, void *data, int len);
