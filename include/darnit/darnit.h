@@ -31,11 +31,12 @@ extern "C" {
 #endif
 
 
-#define		DARNIT_PFORMAT_RGBA8		0
-#define		DARNIT_PFORMAT_RGBA4		1
-#define		DARNIT_PFORMAT_RGB5A1		2
-#define		DARNIT_PFORMAT_ALHPA		3
-
+typedef enum {
+	DARNIT_PFORMAT_RGBA8 = 0,
+	DARNIT_PFORMAT_RGBA4 = 1,
+	DARNIT_PFORMAT_RGB5A1 = 2,
+	DARNIT_PFORMAT_ALPHA = 3,
+} DARNIT_PFORMAT;
 
 
 #include <darnit/darnit_main.h>
