@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 
 typedef void DARNIT_MTSPRITE;
 
-DARNIT_MTSPRITE *d_mtsprite_new(void *tilesheet);
+DARNIT_MTSPRITE *d_mtsprite_new(DARNIT_TILESHEET *tilesheet);
 DARNIT_MTSPRITE *d_mtsprite_load(const char *fname);
 DARNIT_MTSPRITE *d_mtsprite_free(DARNIT_MTSPRITE *mtsprite);
 void d_mtsprite_animate_start(DARNIT_MTSPRITE *mtsprite);
