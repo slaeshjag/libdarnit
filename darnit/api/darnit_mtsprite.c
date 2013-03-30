@@ -26,7 +26,8 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 
-void EXPORT_THIS *d_mtsprite_new(void *tilesheet) {
+void EXPORT_THIS *d_mtsprite_new(TILESHEET *tilesheet) {
+	tilesheet->ref_count++;
 	return mtSpriteNew(0, 0, tilesheet);
 }
 
