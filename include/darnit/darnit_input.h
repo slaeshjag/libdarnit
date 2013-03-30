@@ -26,11 +26,14 @@ freely, subject to the following restrictions:
 #ifndef __DARNIT_INPUT_H__
 #define	__DARNIT_INPUT_H__
 
+
 #define		BUTTON_ACCEPT		b
 #define		BUTTON_CANCEL		a
 
-#define DARNIT_KEYACTION_PRESS		1
-#define DARNIT_KEYACTION_RELEASE	2
+typedef enum {
+	DARNIT_KEYACTION_PRESS = 1,
+	DARNIT_KEYACTION_RELEASE = 2,
+} DARNIT_KEYACTION;
 
 
 typedef struct {
@@ -66,9 +69,9 @@ typedef struct {
 
 
 typedef struct {
-	int		keysym;
-	int		action;
-	int		unicode;
+	int			keysym;
+	DARNIT_KEYACTION	action;
+	int			unicode;
 } DARNIT_KEY_RAW;
 
 
@@ -106,7 +109,7 @@ void d_keymapping_reset();
 void d_keymapping_set(DARNIT_INPUT_MAP map);
 DARNIT_INPUT_MAP d_keymapping_get();
 void d_joystick_get(int *js0_x, int *js0_y, int *js1_x, int *js1_y);
-void d_key_raw_push(int sym, int action, int unicode);
+void d_key_raw_push(int sym, DARNIT_KEYACTION action, int unicode);
 DARNIT_KEY_RAW d_key_raw_pop();
 void d_key_raw_clear();
 void d_input_unicode(int enable);

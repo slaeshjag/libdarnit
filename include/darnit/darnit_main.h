@@ -39,9 +39,11 @@ freely, subject to the following restrictions:
 #define		DARNIT_PLATFORM_MAEMO		0x80
 #define		DARNIT_PLATFORM_BIGENDIAN	0x80000000
 
+typedef	int			DARNIT_PLATFORMS;
+
 
 typedef struct {
-	unsigned int		platform;
+	DARNIT_PLATFORMS	platform;
 	unsigned int		screen_w;
 	unsigned int		screen_h;
 	unsigned int		fullscreen;
