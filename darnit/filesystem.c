@@ -235,7 +235,8 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		free(path_new);
 	}
 
-	if (*name == '/');				/* Path is absolute, skip all FS stuff */
+	if (*name == '/')				/* Path is absolute, skip all FS stuff */
+		return fsFileNew(path, mode, fp, fsFILELenghtGet(fp), 0);
 	/* Try read-only locations */
 	else if (!strstr(mode, "w") && !strstr(mode, "a") && !strstr(mode, "+")) {		
 		/* Mkay, that didn't work. I guess we'll try open it directly */
