@@ -26,16 +26,20 @@ freely, subject to the following restrictions:
 #ifndef __DARNIT_RENDER_H__
 #define	__DARNIT_RENDER_H__
 
-#define	DARNIT_RENDER_LOGIC_OP_NONE	0
-#define	DARNIT_RENDER_LOGIC_OP_AND	1
-#define	DARNIT_RENDER_LOGIC_OP_NAND	2
-#define	DARNIT_RENDER_LOGIC_OP_OR	3
-#define	DARNIT_RENDER_LOGIC_OP_NOR	4
-#define	DARNIT_RENDER_LOGIC_OP_XOR	5
+typedef enum {
+	DARNIT_RENDER_LOGIC_OP_NONE	= 0,
+	DARNIT_RENDER_LOGIC_OP_AND	= 1,
+	DARNIT_RENDER_LOGIC_OP_NAND	= 2,
+	DARNIT_RENDER_LOGIC_OP_OR	= 3,
+	DARNIT_RENDER_LOGIC_OP_NOR	= 4,
+	DARNIT_RENDER_LOGIC_OP_XOR	= 5,
+} DARNIT_RENDER_LOGIC_OP;
 
-#define	DARNIT_SCALE_NEAREST		1
-#define	DARNIT_SCALE_LINEAR		2
 
+typedef enum {
+	DARNIT_SCALE_NEAREST		= 1,
+	DARNIT_SCALE_LINEAR		= 2,
+} DARNIT_RENDER_SCALE;
 
 typedef void DARNIT_TILESHEET;
 typedef void DARNIT_TILE;
@@ -44,9 +48,9 @@ typedef void DARNIT_CIRCLE;
 typedef void DARNIT_RECT;
 
 
-DARNIT_TILESHEET *d_render_tilesheet_load(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format);
+DARNIT_TILESHEET *d_render_tilesheet_load(const char *fname, unsigned int wsq, unsigned int hsq, DARNIT_PFORMAT target_format);
 DARNIT_TILESHEET *d_render_tilesheet_new(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
-DARNIT_TILESHEET *d_render_tilesheet_isom_load(const char *fname, unsigned int wsq, unsigned int hsq, unsigned int target_format);
+DARNIT_TILESHEET *d_render_tilesheet_isom_load(const char *fname, unsigned int wsq, unsigned int hsq, DARNIT_PFORMAT target_format);
 void d_render_tilesheet_update(DARNIT_TILESHEET *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data);
 void d_render_tilesheet_geometrics(DARNIT_TILESHEET *tilesheet, int *w, int *h, int *tile_w, int *tile_h);
 DARNIT_TILESHEET *d_render_tilesheet_free(DARNIT_TILESHEET *tilesheet);
@@ -96,8 +100,8 @@ void d_render_state_restore();
 int d_render_tilesheet_animation_apply(DARNIT_TILESHEET *tilesheet, const char *fname);
 void d_render_tilesheet_animate(DARNIT_TILESHEET *tilesheet);
 
-void d_render_logic_op(unsigned int logicop);
-void d_render_tilesheet_scale_algorithm(DARNIT_TILESHEET *tilesheet, unsigned int scaling);
+void d_render_logic_op(DARNIT_RENDER_LOGIC_OP logicop);
+void d_render_tilesheet_scale_algorithm(DARNIT_TILESHEET *tilesheet, DARNIT_RENDER_SCALE scaling);
 
 
 
@@ -109,7 +113,7 @@ void d_render_tilesheet_scale_algorithm(DARNIT_TILESHEET *tilesheet, unsigned in
 
 
 /* Please don't use this function. I hate it <.< */
-void d_render_tile_blit(void *tilesheet, unsigned int tile, int x, int y);
+void d_render_tile_blit(DARNIT_TILESHEET *tilesheet, unsigned int tile, int x, int y);
 
 
 #endif
