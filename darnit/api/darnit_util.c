@@ -67,6 +67,6 @@ const char EXPORT_THIS *d_str_null(const char *str) {
 }
 
 
-IMGLOAD_DATA d_img_load_raw(const char *fname) {
+IMGLOAD_DATA EXPORT_THIS d_img_load_raw(const char *fname) {
 	return imgloadLoad(fname);
 }
