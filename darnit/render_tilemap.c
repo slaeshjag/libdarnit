@@ -108,13 +108,16 @@ int renderTilemapSpriteDelete(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite) {
 
 int renderTilemapFixSprites(RENDER_TILEMAP *tm) {
 	int o_x, o_y, x_last, y_start_pix, t, tt, i, sprite_cur, sprite_total;
+
+	if (!tm->isometric)
+		return 0;
 	
 	renderTilemapISOCoordinates(tm, tm->cam_xp - tm->ts->wsq, tm->cam_yp - tm->r_h, &o_x, &o_y);
 	renderTilemapToISOCoordinates(tm, o_x, o_y, &x_last, &y_start_pix);
 	y_start_pix += tm->r_h;
 	sprite_cur = sprite_total = 0;
 	
-	for (i = 0; i < tm->h; i++) {
+	for (i = 0; i < tm->h && tm->sprite_row; i++) {
 		while (sprite_cur < tm->sprites_used) {
 			if (((int)(tm->sprite[sprite_cur]->y + tm->sprite[sprite_cur]->ts->hsq)) >= 0) {
 				t = RENDER_TILEMAP_PIX_POS(tm, y_start_pix, i) + 1;
