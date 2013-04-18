@@ -175,7 +175,6 @@ int bboxCollBoxTest(BBOX *bbox, int x, int y, unsigned int w, unsigned int h, un
 			test = 0;
 	}
 	
-	fprintf(stderr, "Starting test at test=%i\n", test);
 	no = 0;
 
 	for (i = test; i < bbox->bboxes; i++) {
