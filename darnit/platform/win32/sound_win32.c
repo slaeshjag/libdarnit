@@ -22,6 +22,8 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#include <windows.h>
+#include <mmsystem.h>
 
 #define TPW_INTERNAL
 #include "../main.h"
