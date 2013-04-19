@@ -21,33 +21,3 @@ freely, subject to the following restrictions:
 	3. This notice may not be removed or altered from any source
 	distribution.
 */
-
-#ifndef __TPW_SOUND_H__
-#define	__TPW_SOUND_H__
-
-
-#ifdef TPW_INTERNAL
-#ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.h"
-#endif
-#endif
-
-typedef enum {
-	TPW_SAMPLE_FORMAT_S16LE,
-	TPW_SAMPLE_FORMAT_S8
-} TPW_SAMPLE_FORMAT;
-
-
-typedef struct {
-	unsigned int		sample_rate;
-	TPW_SAMPLE_FORMAT	format;
-	unsigned int		channels;
-	unsigned int		samples;
-	void			(*callback)(void *data, void *mixdata, int bytes);
-	void			*userdata;
-} TPW_SOUND_SETTINGS;
-
-int tpw_sound_open(TPW_SOUND_SETTINGS settings);
-void tpw_sound_pause(int pause);
-
-#endif

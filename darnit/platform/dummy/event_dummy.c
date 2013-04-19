@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'sound_dummy.h' - This file is part of libdarnit_tpw
+'event_dummy.c' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,32 +22,34 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#ifndef __TPW_SOUND_H__
-#define	__TPW_SOUND_H__
+#define	TPW_INTERNAL
+#include "../main.h"
+
+void tpw_event_loop() {
+	#warning tpw_event_loop(): Not implemented yet
+	return;
+}
 
 
-#ifdef TPW_INTERNAL
-#ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.h"
-#endif
-#endif
-
-typedef enum {
-	TPW_SAMPLE_FORMAT_S16LE,
-	TPW_SAMPLE_FORMAT_S8
-} TPW_SAMPLE_FORMAT;
+TPW_JOYSTICK *tpw_joystick_open(int js_id) {
+	#warning tpw_joystick_open(): Not implemented yet
+	return NULL;
+}
 
 
-typedef struct {
-	unsigned int		sample_rate;
-	TPW_SAMPLE_FORMAT	format;
-	unsigned int		channels;
-	unsigned int		samples;
-	void			(*callback)(void *data, void *mixdata, int bytes);
-	void			*userdata;
-} TPW_SOUND_SETTINGS;
+int tpw_joystick_num() {
+	#warning tpw_joystick_num(): Not implemented yet
+	return 0;
+}
 
-int tpw_sound_open(TPW_SOUND_SETTINGS settings);
-void tpw_sound_pause(int pause);
 
-#endif
+void tpw_joystick_enable(TPW_ENBOOL enable) {
+	#warning tpw_joystick_enable(): Not implemented yet
+	return;
+}
+
+
+unsigned int tpw_keys_modifiers() {
+	#warning tpw_keys_modifiers(): Not implemented yet
+	return 0;
+}

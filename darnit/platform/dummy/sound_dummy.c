@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'sound_dummy.h' - This file is part of libdarnit_tpw
+'sound_dummy.c' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,32 +22,20 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#ifndef __TPW_SOUND_H__
-#define	__TPW_SOUND_H__
+#define TPW_INTERNAL
+#include "../main.h"
 
 
-#ifdef TPW_INTERNAL
-#ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.h"
-#endif
-#endif
-
-typedef enum {
-	TPW_SAMPLE_FORMAT_S16LE,
-	TPW_SAMPLE_FORMAT_S8
-} TPW_SAMPLE_FORMAT;
+int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
+	#warning tpw_sound_open(): Not implemented yet
+	return 1;
+}
 
 
-typedef struct {
-	unsigned int		sample_rate;
-	TPW_SAMPLE_FORMAT	format;
-	unsigned int		channels;
-	unsigned int		samples;
-	void			(*callback)(void *data, void *mixdata, int bytes);
-	void			*userdata;
-} TPW_SOUND_SETTINGS;
+void tpw_sound_control(TPW_SOUND_COMMAND command) {
+	#warning tpw_sound_command(): Not implemented yet
+	return;
+}
 
-int tpw_sound_open(TPW_SOUND_SETTINGS settings);
-void tpw_sound_pause(int pause);
 
-#endif
+
