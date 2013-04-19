@@ -32,7 +32,23 @@ freely, subject to the following restrictions:
 #endif
 #endif
 
+/* Modifier keys */
+#define	TPW_KEY_MOD_LSHIFT		0x0001
+#define	TPW_KEY_MOD_RSHIFT		0x0002
+#define	TPW_KEY_MOD_LCTRL		0x0004
+#define	TPW_KEY_MOD_RCTRL		0x0008
+#define	TPW_KEY_MOD_LALT		0x0010
+#define	TPW_KEY_MOD_RALT		0x0020
+#define	TPW_KEY_MOD_LMETA		0x0040
+#define	TPW_KEY_MOD_RMETA		0x0080
+
+#define	TPW_KEY_MOD_SHIFT		0x0003
+#define	TPW_KEY_MOD_CTRL		0x000C
+#define	TPW_KEY_MOD_ALT			0x0030
+#define	TPW_KEY_MOD_META		0x00C0
+
 #define	TPW_FIFO_NEXT(cur, max)		(((cur) + 1 == (max)) ? 0 : (cur + 1))
+typedef void TPW_JOYSTICK;
 
 
 typedef enum {
@@ -42,8 +58,18 @@ typedef enum {
 	TPW_EVENT_TYPE_MOUSEBTN_UP,
 	TPW_EVENT_TYPE_MOUSEBTN_DOWN,
 	TPW_EVENT_TYPE_JOYSTICK_MOVE,
-	TPW_EVENT_QUIT,
+	TPW_EVENT_TYPE_ACTIVE,
+	TPW_EVENT_TYPE_QUIT,
 } TPW_EVENT_TYPE;
+
+
+typedef enum {
+	TPW_MOUSE_BUTTON_LEFT		= 1,
+	TPW_MOUSE_BUTTON_MIDDLE		= 2,
+	TPW_MOUSE_BUTTON_RIGHT		= 3,
+	TPW_MOUSE_BUTTON_WHEEL_UP	= 4,
+	TPW_MOUSE_BUTTON_WHEEL_DOWN	= 5,
+} TPW_MOUSE_BUTTON;
 
 
 typedef struct {
@@ -55,13 +81,13 @@ typedef struct {
 typedef struct {
 	int				x;
 	int				y;
-	unsigned int			button;
+	TPW_MOUSE_BUTTON		button;
 } TPW_EVENT_MOUSE;
 
 
 typedef struct {
-	int				js_x;
-	int				js_y;
+	int				axis;
+	int				value;
 	int				js_id;
 	int				button;
 } TPW_EVENT_JOYSTICK;
@@ -94,5 +120,11 @@ void tpw_event_push(TPW_EVENT event);
 int tpw_event_pop(TPW_EVENT *event);
 
 void tpw_event_loop();
+TPW_JOYSTICK *tpw_joystick_open(int js_id);
+const char *tpw_joystick_name(int i);
+int tpw_joystick_num();
+void tpw_joystick_enable(TPW_ENBOOL enable);
+unsigned int tpw_keys_modifiers();
+
 
 #endif

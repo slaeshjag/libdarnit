@@ -31,7 +31,6 @@ freely, subject to the following restrictions:
 #include <stdlib.h>
 #include <math.h>
 #include "platform/tpw.h"
-#include <SDL/SDL.h>
 #include <errno.h>
 
 
@@ -163,7 +162,6 @@ typedef struct {
 	DARNIT_PLATFORM		platform;
 	SOCKET_LIST		*connect_list;
 	UTIL			util;
-	SDL_Surface		*icon;
 	RENDER_PARAMS		render_params;
 } DARNIT;
 

@@ -71,6 +71,6 @@ typedef struct {
 	#endif
 } TPW;
 
-
+int tpw_init_platform();
 
 #endif

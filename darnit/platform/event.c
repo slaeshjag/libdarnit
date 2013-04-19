@@ -25,6 +25,10 @@ freely, subject to the following restrictions:
 #define TPW_INTERNAL
 #include "main.h"
 
+#ifdef PLATFORM_SDL
+#include "sdl/event_sdl.c"
+#endif
+
 
 int tpw_event_init(int queue_size) {
 	tpw.common.event.event_read = 0;
@@ -51,7 +55,7 @@ int tpw_event_pop(TPW_EVENT *event) {
 	if (tpw.common.event.event_read == tpw.common.event.event_write)
 		return 0;
 	*event = tpw.common.event.event[tpw.common.event.event_read];
-	tpw.common.event.event_read = TPW_FIFO_NEXT(tpw.common.event.event_read, tpw.common.event.event_write);
+	tpw.common.event.event_read = TPW_FIFO_NEXT(tpw.common.event.event_read, tpw.common.event.event_max);
 
 	return 1;
 }

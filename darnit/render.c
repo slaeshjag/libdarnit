@@ -522,7 +522,6 @@ void renderSetLogicOp(unsigned int logicop) {
 
 
 int videoSetIcon(const char *icon) {
-	SDL_Surface *surface;
 	IMGLOAD_DATA img;
 
 	if (!icon)
@@ -531,12 +530,8 @@ int videoSetIcon(const char *icon) {
 	if (!(img = imgloadLoad(icon)).img_data)
 		return -1;
 
-	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, img.w, img.h, 32, 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
-	free(surface->pixels);
-	surface->pixels = img.img_data;
-	d->icon = surface;
-
-	SDL_WM_SetIcon(surface, NULL);
+	tpw_icon_set(img.img_data, img.w, img.h);
+	free(img.img_data);
 	
 	return 0;
 }

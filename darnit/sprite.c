@@ -126,7 +126,7 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 	if (sprite == NULL)
 		return;
 
-	sprite->time = SDL_GetTicks();
+	sprite->time = tpw_ticks();
 	sprite->dir = dir;
 	sprite->repeat = 1;
 	renderCalcTileCache(&sprite->cache, sprite->ts, sprite->spr[dir].tile[sprite->frame].tile);
@@ -207,7 +207,7 @@ void spriteEnableAnimation(SPRITE_ENTRY *sprite) {
 	dir = sprite->dir;
 
 	sprite->animate = 1;
-	sprite->time = SDL_GetTicks();
+	sprite->time = tpw_ticks();
 	sprite->tleft = sprite->spr[dir].tile[sprite->frame].time;
 
 	return;
@@ -226,7 +226,7 @@ void spriteDisableAnimation(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return;
 
 	sprite->frame = 0;
-	sprite->time = SDL_GetTicks();
+	sprite->time = tpw_ticks();
 	spriteAnimate(sprite);
 	sprite->animate = 0;
 
@@ -238,7 +238,7 @@ void spriteAnimate(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return;
 	unsigned int time, dir, tile;
 
-	time = SDL_GetTicks();
+	time = tpw_ticks();
 
 	if (sprite->used == 0 || sprite->animate == 0)
 		return;

@@ -26,3 +26,10 @@ freely, subject to the following restrictions:
 #ifdef PLATFORM_SDL
 #include "sdl/main_sdl.c"
 #endif
+
+int tpw_init() {
+	if (!tpw_event_init(512))
+		return 0;
+	return tpw_init_platform();
+}
+

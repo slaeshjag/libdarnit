@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "../main.h"
 
 
-int tpw_init() {
+int tpw_init_platform() {
 	#ifdef _WIN32
 	void *libtmp;
 	#endif
@@ -173,6 +173,18 @@ void tpw_cursor_show(unsigned int show) {
 	SDL_ShowCursor(0);
 
 	return;
+}
+
+
+int tpw_icon_set(void *pixdata_rgba32, int w, int h) {
+	SDL_Surface *surface;
+
+	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
+	memcpy(surface->pixels, pixdata_rgba32, w * h * 4);
+
+	SDL_WM_SetIcon(surface, NULL);
+
+	return 1;
 }
 
 

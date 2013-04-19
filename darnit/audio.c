@@ -172,7 +172,7 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 }
 
 
-void audioMix(void *data, Uint8 *mixdata, int bytes) {
+void audioMix(void *data, void *mixdata, int bytes) {
 	int frames;
 
 	frames = bytes >>2;
