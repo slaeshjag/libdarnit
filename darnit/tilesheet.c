@@ -435,6 +435,8 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 	ts->animation.data = NULL;
 	ts->w = tilesheet_w;
 	ts->h = tilesheet_h;
+	ts->tiles_w = tiles_w;
+	ts->tiles_h = tiles_h;
 	ts->format = format;
 
 	#ifndef _WIN32
@@ -475,9 +477,9 @@ void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq
 	if (!ts)
 		return;
 	if (w)
-		*w = ts->w;
+		*w = ts->tiles_w * ts->wsq;
 	if (h)
-		*h = ts->h;
+		*h = ts->tiles_h * ts->hsq;
 	if (wsq)
 		*wsq = ts->wsq;
 	if (hsq)
