@@ -221,7 +221,7 @@ int audioInit() {
 	d->audio.compression = 1;
 	d->audio.compression_enabled = 1;
 
-	tpw_sound_pause(0);
+	tpw_sound_control(TPW_SOUND_COMMAND_PLAY);
 
 	return 0;
 }

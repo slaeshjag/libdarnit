@@ -49,8 +49,15 @@ int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 }
 
 
-void tpw_sound_pause(int pause) {
-	SDL_PauseAudio(pause);
-
+void tpw_sound_control(TPW_SOUND_COMMAND command) {
+	switch(command) {
+		case TPW_SOUND_COMMAND_PAUSE:
+			SDL_PauseAudio(1);
+			break;
+		case TPW_SOUND_COMMAND_PLAY:
+			SDL_PauseAudio(0);
+			break;
+	}
+	
 	return;
 }

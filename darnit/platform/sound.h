@@ -37,6 +37,10 @@ typedef enum {
 	TPW_SAMPLE_FORMAT_S8
 } TPW_SAMPLE_FORMAT;
 
+typedef enum {
+	TPW_SOUND_COMMAND_PLAY,
+	TPW_SOUND_COMMAND_PAUSE,
+} TPW_SOUND_COMMAND;
 
 typedef struct {
 	unsigned int		sample_rate;
@@ -48,6 +52,6 @@ typedef struct {
 } TPW_SOUND_SETTINGS;
 
 int tpw_sound_open(TPW_SOUND_SETTINGS settings);
-void tpw_sound_pause(int pause);
+void tpw_sound_control(TPW_SOUND_COMMAND command);
 
 #endif
