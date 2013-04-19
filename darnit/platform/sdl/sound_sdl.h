@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
 
 
 #ifndef __TPW_SDL_SOUND_H__
-#define	__TPW_SDL_SOUNT_H__
+#define	__TPW_SDL_SOUND_H__
 
 #include <SDL/SDL.h>
 

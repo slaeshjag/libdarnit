@@ -61,6 +61,7 @@ static const EGLint egl_config_attrib[] = {
 typedef struct {
 	SDL_Surface		*screen;
 	TPW_SOUND_SETTINGS	sound;
+	TPW_COMMON		common;
 	#ifdef HAVE_GLES
 	Display			*XDisplay;
 	eglConfig		eglConfig;

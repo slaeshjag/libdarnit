@@ -167,6 +167,8 @@ int inputInit() {
 
 
 void inputPoll() {
+	TPW_EVENT event;
+
 	while (SDL_PollEvent(&d->input.event)) {
 		if (d->input.event.type == SDL_KEYDOWN) {
 			if (d->input.event.key.keysym.sym == d->input.map.up)

@@ -37,7 +37,13 @@ typedef struct {
 	unsigned short	w, h;
 } TPW_RECT;
 
+#include "keysym.h"
 #include "sound.h"
+#include "event.h"
+
+typedef struct {
+	TPW_EVENT_S	event;
+} TPW_COMMON;
 
 #ifdef PLATFORM_SDL
 #ifdef TPW_INTERNAL
