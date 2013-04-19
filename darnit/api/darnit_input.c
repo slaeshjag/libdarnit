@@ -63,7 +63,7 @@ INPUT_MAP EXPORT_THIS d_keymapping_get() {
 
 
 void EXPORT_THIS d_input_grab() {
-	SDL_WM_GrabInput(SDL_GRAB_ON);
+	tpw_input_grab(TPW_INPUT_GRAB_GRAB);
 
 	return;
 }
@@ -71,7 +71,7 @@ void EXPORT_THIS d_input_grab() {
 
 void EXPORT_THIS d_input_release() {
 	#ifndef MAEMO
-	SDL_WM_GrabInput(SDL_GRAB_OFF);
+	tpw_input_grab(TPW_INPUT_GRAB_RELEASE);
 	#endif
 
 	return;
@@ -118,12 +118,12 @@ void EXPORT_THIS d_key_raw_clear() {
 
 
 const char EXPORT_THIS *d_key_name_get(int sym) {
-	return SDL_GetKeyName(sym);
+	return tpw_key_name_get(sym);
 }
 
 
 void EXPORT_THIS d_input_unicode(int enable) {
-	SDL_EnableUNICODE(enable);
+	tpw_input_unicode(enable);
 
 	return;
 }

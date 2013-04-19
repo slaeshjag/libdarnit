@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'sound.c' - This file is part of libdarnit_tpw
+'threads.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,6 +22,21 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#ifndef __TPW_THREADS_H__
+#define	__TPW_THREADS_H__
+
+#ifdef TPW_INTERNAL
 #ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.c"
+#include "sdl/threads_sdl.h"
+#endif
+#else
+typedef	void		TPW_MUTEX;
+#endif
+
+
+TPW_MUTEX *tpw_mutex_create();
+void tpw_mutex_lock(TPW_MUTEX *mutex);
+void tpw_mutex_unlock(TPW_MUTEX *mutex);
+
+
 #endif

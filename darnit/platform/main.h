@@ -26,17 +26,39 @@ freely, subject to the following restrictions:
 #ifndef __PLATFORM_MAIN_H__
 #define	__PLATFORM_MAIN_H__
 
+typedef enum {
+	TPW_INPUT_GRAB_GRAB,
+	TPW_INPUT_GRAB_RELEASE
+} TPW_INPUT_GRAB;
+
+
+typedef struct {
+	signed short	x, y;
+	unsigned short	w, h;
+} TPW_RECT;
+
+#include "sound.h"
 
 #ifdef PLATFORM_SDL
+#ifdef TPW_INTERNAL
 #include "sdl/main_sdl.h"
+#endif
 #endif
 
 int tpw_init();
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, unsigned int bpp);
 void tpw_sleep(unsigned int msec);
 unsigned int tpw_ticks();
+void tpw_input_grab(TPW_INPUT_GRAB grab);
+const char *tpw_key_name_get(int sym);
+void tpw_render_buffer_swap();
+TPW_RECT **tpw_videomodes_list();
+void tpw_input_unicode(int enable);
+void tpw_cursor_show(unsigned int show);
+void tpw_quit();
 
-
+#ifdef TPW_INTERNAL
 TPW tpw;
+#endif
 
 #endif

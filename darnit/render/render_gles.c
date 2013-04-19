@@ -73,7 +73,7 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	#endif
 	
 	#ifdef MAEMO
-		SDL_WM_GrabInput(SDL_GRAB_ON);
+		tpw_input_grab(TPW_INPUT_GRAB_GRAB);
 	#endif
 
 	return 0;
@@ -83,8 +83,8 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 
 void videoSwapBuffers() {
 	int n;
-	
-	eglSwapBuffers(d->video.eglDisplay, d->video.eglSurface);
+
+	tpw_render_buffer_swap();
 	
 	if (d->video.fbdev >= 0) {
 		n = 0;

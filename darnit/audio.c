@@ -32,13 +32,13 @@ void audioSoundStop(int key) {
 	if (key == -1)
 		return;
 
-	SDL_mutexP(d->audio.lock);
+	tpw_mutex_lock(d->audio.lock);
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
 		if (d->audio.playback_chan[i].key == key)
 			break;
 	if (i == AUDIO_PLAYBACK_CHANNELS) {
-		SDL_mutexV(d->audio.lock);
+		tpw_mutex_lock(d->audio.lock);
 		return;
 	}
 
@@ -46,7 +46,7 @@ void audioSoundStop(int key) {
 	audioUnload(d->audio.playback_chan[i].res);
 	d->audio.playback_chan[i].key = -1;
 	
-	SDL_mutexV(d->audio.lock);
+	tpw_mutex_unlock(d->audio.lock);
 	
 	return;
 }
@@ -176,28 +176,28 @@ void audioMix(void *data, Uint8 *mixdata, int bytes) {
 	int frames;
 
 	frames = bytes >>2;
-	SDL_mutexP(d->audio.lock);
+	tpw_mutex_lock(d->audio.lock);
 	
 	audioDecodeMixNew(frames, mixdata);
 	
-	SDL_mutexV(d->audio.lock);
+	tpw_mutex_unlock(d->audio.lock);
 
 	return;
 }
 
 
 int audioInit() {
-	SDL_AudioSpec fmt;
+	TPW_SOUND_SETTINGS fmt;
 	int i;
 
-	fmt.freq = AUDIO_SAMPLE_RATE;
+	fmt.sample_rate = AUDIO_SAMPLE_RATE;
 	fmt.format = AUDIO_S16;
 	fmt.channels = 2;
 	fmt.samples = 1024;
-	fmt.callback = audioMix;
+	fmt.callback = (void *) audioMix;
 	fmt.userdata = NULL;
 
-	d->audio.lock = SDL_CreateMutex();
+	d->audio.lock = tpw_mutex_create();
 
 	if ((d->audio.samplebuf = malloc(1024*4*4*2)) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
@@ -212,8 +212,8 @@ int audioInit() {
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
 		d->audio.playback_chan[i].key = -1;
 
-	if (SDL_OpenAudio(&fmt, NULL) < 0) {
-		fprintf(stderr, "libDarnit: Unable to open audio: %s\n", SDL_GetError());
+	if (tpw_sound_open(fmt) < 0) {
+		fprintf(stderr, "libDarnit: Unable to open audio\n");
 		return -1;
 	}
 
@@ -221,7 +221,7 @@ int audioInit() {
 	d->audio.compression = 1;
 	d->audio.compression_enabled = 1;
 
-	SDL_PauseAudio(0);
+	tpw_sound_pause(0);
 
 	return 0;
 }

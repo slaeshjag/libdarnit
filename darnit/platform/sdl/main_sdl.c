@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#define	TPW_INTERNAL
 #include "../main.h"
 
 
@@ -123,4 +124,60 @@ void tpw_sleep(unsigned int msec) {
 
 unsigned int tpw_ticks() {
 	return SDL_GetTicks();
+}
+
+
+void tpw_input_grab(TPW_INPUT_GRAB grab) {
+	switch (grab) {
+		case TPW_INPUT_GRAB_GRAB:
+			SDL_WM_GrabInput(SDL_GRAB_ON);
+			break;
+		case TPW_INPUT_GRAB_RELEASE:
+			SDL_WM_GrabInput(SDL_GRAB_OFF);
+			break;
+	}
+
+	return;
+}
+
+
+void tpw_render_buffer_swap() {
+	#ifndef HAVE_GLES
+	SDL_GL_SwapBuffers();
+	#else
+	eglSwapBuffers(tpw.eglDisplay, tpw.eglSurface);
+	#endif
+
+	return;
+}
+
+
+const char *tpw_key_name_get(int sym) {
+	return SDL_GetKeyName(sym);
+}
+
+
+TPW_RECT **tpw_videomodes_list() {
+	return (TPW_RECT **) SDL_ListModes(NULL, SDL_HWSURFACE | SDL_FULLSCREEN);
+}
+
+
+void tpw_input_unicode(int enable) {
+	SDL_EnableUNICODE(enable);
+	
+	return;
+}
+
+
+void tpw_cursor_show(unsigned int show) {
+	SDL_ShowCursor(0);
+
+	return;
+}
+
+
+void tpw_quit() {
+	SDL_Quit();
+
+	return;
 }

@@ -21,3 +21,12 @@ freely, subject to the following restrictions:
 	3. This notice may not be removed or altered from any source
 	distribution.
 */
+
+
+#ifndef __TPW_SDL_SOUND_H__
+#define	__TPW_SDL_SOUNT_H__
+
+#include <SDL/SDL.h>
+
+
+#endif

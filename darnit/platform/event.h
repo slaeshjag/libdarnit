@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 #define	__PLATFORM_INPUT_H__
 
 #ifdef PLATFORM_SDL
-#include "sdl/input.h"
+#include "sdl/event_sdl.h"
 #endif
 
 #endif

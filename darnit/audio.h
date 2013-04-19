@@ -91,7 +91,7 @@ typedef struct {
 //	short				*samplebuf;
 	short				*scratchbuf;
 	int				*samplebuf;
-	SDL_mutex			*lock;
+	TPW_MUTEX			*lock;
 	AUDIO_PLAYBACK_CHANNEL		playback_chan[AUDIO_PLAYBACK_CHANNELS];
 	unsigned int			cnt;
 	int				compression;

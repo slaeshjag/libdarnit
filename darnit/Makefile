@@ -30,6 +30,8 @@ clean:
 	@echo
 	@echo " [ CD ] darnit/api/"
 	+@make -C api/ clean
+	@echo " [ CD ] darnit/platform/"
+	+@make -C platform/ clean
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)
 	@$(RM) darnit.res

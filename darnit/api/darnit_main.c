@@ -96,9 +96,9 @@ int EXPORT_THIS d_init_rest(const char *wtitle, int win_w, int win_h, int fullsc
 
 	videoSetIcon(icon);
 	renderInit();
-	SDL_ShowCursor(0);
-	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
-	d->fps.time = SDL_GetTicks() / 1000;
+	tpw_cursor_show(0);
+	d->fps.time_at_last_frame = d->fps.time_at_flip = tpw_ticks();
+	d->fps.time = tpw_ticks() / 1000;
 
 	t = videoInit(wtitle, win_w, win_h, fullscreen);
 	darnitSetPlatform(0);
@@ -159,7 +159,7 @@ void EXPORT_THIS d_loop() {
 
 
 unsigned int EXPORT_THIS d_time_get() {
-	return SDL_GetTicks();
+	return tpw_ticks();
 }
 
 
@@ -187,7 +187,7 @@ void EXPORT_THIS d_quit() {
 	videoDestroy();
 	
 	#ifndef PANDORA
-	SDL_Quit();
+	tpw_quit();
 	#endif
 
 	exit(0);
@@ -197,7 +197,7 @@ void EXPORT_THIS d_quit() {
 
 
 void EXPORT_THIS **d_videomode_get() {
-	void **nnn = (void **) SDL_ListModes(NULL, SDL_HWSURFACE | SDL_FULLSCREEN);
+	void **nnn = (void **) tpw_videomodes_list();
 	if (nnn == (void **) -1)
 		return NULL;
 	return nnn;

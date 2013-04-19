@@ -35,6 +35,8 @@ freely, subject to the following restrictions:
 #include <EGL/egl.h>
 #include <GLES/glext.h>
 #include <SDL/SDL_syswm.h>
+#else
+#include <SDL/SDL_opengl.h>
 #endif
 
 
@@ -58,6 +60,7 @@ static const EGLint egl_config_attrib[] = {
 
 typedef struct {
 	SDL_Surface		*screen;
+	TPW_SOUND_SETTINGS	sound;
 	#ifdef HAVE_GLES
 	Display			*XDisplay;
 	eglConfig		eglConfig;

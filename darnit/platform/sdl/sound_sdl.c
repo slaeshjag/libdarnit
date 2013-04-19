@@ -21,3 +21,36 @@ freely, subject to the following restrictions:
 	3. This notice may not be removed or altered from any source
 	distribution.
 */
+
+#define TPW_INTERNAL
+#include "../main.h"
+
+
+int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
+	SDL_AudioSpec fmt;
+
+	tpw.sound = settings;
+
+	fmt.freq = settings.sample_rate;
+	switch (settings.format) {
+		case TPW_SAMPLE_FORMAT_S16LE:
+			fmt.format = AUDIO_S16;
+			break;
+		case TPW_SAMPLE_FORMAT_S8:
+			fmt.format = AUDIO_S8;
+			break;
+	}
+	fmt.channels = settings.channels;
+	fmt.samples = settings.samples;
+	fmt.callback = (void *) settings.callback;
+	fmt.userdata = settings.userdata;
+
+	return SDL_OpenAudio(&fmt, NULL);
+}
+
+
+void tpw_sound_pause(int pause) {
+	SDL_PauseAudio(pause);
+
+	return;
+}

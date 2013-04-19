@@ -57,7 +57,7 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	d->video.camx = 0;
 	d->video.camy = 0;
 	d->video.offset_x = d->video.offset_y = 0;
-	d->video.time = SDL_GetTicks();
+	d->video.time = tpw_ticks();
 	
 	videoInitGL(screenw, screenh);
 
@@ -75,13 +75,13 @@ int videoLoop() {
 	videoSwapBuffers();
 	videoClearScreen();
 
-	delay = 16 - (SDL_GetTicks() - d->video.time);
+	delay = 16 - (tpw_ticks() - d->video.time);
 
 	if (delay < 0)
 		delay = 0;
 
-	SDL_Delay(delay);
-	d->video.time = SDL_GetTicks();
+	tpw_sleep(delay);
+	d->video.time = tpw_ticks();
 
 	
 	return 0;
@@ -90,7 +90,7 @@ int videoLoop() {
 
 void videoSwapBuffers() {
 	
-	SDL_GL_SwapBuffers();
+	tpw_render_buffer_swap();
 	
 	return;
 }

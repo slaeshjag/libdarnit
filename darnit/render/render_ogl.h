@@ -26,23 +26,12 @@ freely, subject to the following restrictions:
 #ifndef		__VIDEO_OGL_H__
 #define		__VIDEO_OGL_H__
 
+#include <GL/gl.h>
 
 
 /* DO NOT INCLUDE THIS FILE MANUALLY, THAT IS HANDLED BY render.h */
 
-#define COLOURDEPTH_RED_SIZE  		5
-#define COLOURDEPTH_GREEN_SIZE 		6
-#define COLOURDEPTH_BLUE_SIZE 		5
-#define COLOURDEPTH_DEPTH_SIZE		16
-
-
-
-#include	<SDL/SDL.h>
-#include	<SDL/SDL_opengl.h>
-
-
 typedef struct {
-	SDL_Surface			*screen;
 	FADE_STRUCT			fade;
 	float				swgran;
 	float				shgran;

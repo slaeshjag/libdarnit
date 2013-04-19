@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'sound.c' - This file is part of libdarnit_tpw
+'tpw.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,6 +22,14 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.c"
+
+#ifndef __TPW_H__
+#define	__TPW_H__
+
+#include "main.h"
+#include "event.h"
+#include "threads.h"
+#include "sound.h"
+
+
 #endif

@@ -42,16 +42,6 @@ freely, subject to the following restrictions:
 #endif
 
 
-#include	<X11/Xutil.h>
-#ifndef RASPBERRYPI
-#include	<GLES/egl.h>
-#endif
-#include	<EGL/egl.h>
-#include	<GLES/gl.h>
-#include	<GLES/glext.h>
-#include	<SDL/SDL.h>
-#include	<SDL/SDL_syswm.h>
-
 #ifdef PANDORA
 	#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
 #else
