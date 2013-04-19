@@ -43,15 +43,8 @@ int videoInitGL(int w, int h) {
 
 
 int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
-	unsigned int mode;
-
-	mode = SDL_OPENGL;
-	if (fullscreen) mode |= SDL_FULLSCREEN;
-
-	
-	SDL_WM_SetCaption(wtitle, wtitle);
-	if ((d->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to set up a window for SDL\n");
+	if (!tpw_window_create(wtitle, screenw, screenh, fullscreen, 16)) {
+		fprintf(stderr, "videoInit(): Fatal error: Unable to open a window\n");
 		return -1;
 	}
 	

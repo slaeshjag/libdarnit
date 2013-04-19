@@ -1,7 +1,7 @@
 # Project: libDarnit
 include $(TOPDIR)/config.mk
 
-DEPFILES	=	../deps/deps.a
+DEPFILES	=	../deps/deps.a platform/tpw.a
 APIFILES	=	api/*.o
 
 CFLAGS		+=	-DDATA_PATH=$(DATA_PATH)
@@ -19,6 +19,8 @@ OBJFILES	=	$(SRCFILES:.c=.o)
 all: $(OBJFILES) $(DEPENDS)
 	@echo " [ CD ] darnit/api/"
 	+@make -C api/
+	@echo " [ CD ] darnit/platform/"
+	+@make -C platform/
 	@echo " [ LD ] $(LIB)"
 	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS)
 	@echo "Done."

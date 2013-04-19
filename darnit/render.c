@@ -411,7 +411,7 @@ void renderFadeLoop() {
 	if (d->video.fade.a == 0.0f && d->video.fade.fading == 0)
 		return;
 
-	timediff = SDL_GetTicks() - d->video.fade.fadestart;
+	timediff = tpw_ticks() - d->video.fade.fadestart;
 
 	if (timediff < 0)
 		timediff = 1;
@@ -462,7 +462,7 @@ void renderFadeFade(unsigned int time, float r, float g, float b) {
 	d->video.fade.b = b;
 	d->video.fade.fadefactor = 1.0f / time;
 	d->video.fade.fadedir = 1.0f;
-	d->video.fade.fadestart = SDL_GetTicks();
+	d->video.fade.fadestart = tpw_ticks();
 	d->video.fade.fading = 1;
 
 	return;
@@ -476,7 +476,7 @@ void renderFadeUnfade(unsigned int time) {
 		return;
 
 	d->video.fade.fadedir = -1.0f;
-	d->video.fade.fadestart = SDL_GetTicks();
+	d->video.fade.fadestart = tpw_ticks();
 	d->video.fade.fadestart -= (time - d->video.fade.fadeprog);
 	d->video.fade.fadefactor = 1.0f / time;
 	d->video.fade.fading = -1;
@@ -518,11 +518,6 @@ void renderSetLogicOp(unsigned int logicop) {
 	glLogicOp(mode);
 
 	return;
-}
-
-
-int videoInitPartial() {
-	return SDL_Init(SDL_INIT_EVERYTHING);
 }
 
 

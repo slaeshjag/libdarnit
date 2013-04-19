@@ -144,7 +144,6 @@ typedef struct {
 
 
 int renderInit();
-int videoInitPartial();
 
 int renderLineTest();
 

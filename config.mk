@@ -25,6 +25,7 @@ ifeq ($(strip $(OS)), Windows_NT)
 	PREFIX	=	/mingw
 	LDFLAGS	+=	-lSDL -lopengl32 -lws2_32 -lshlwapi
 	LDTOOLS	+=	-lws2_32
+	CFLAGS	+=	-DPLATFORM_SDL
 else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo specifics
@@ -32,6 +33,7 @@ ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	CFLAGS	+=	-fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
 	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11
 	INSTARG	+=	strip
+	CFLAGS	+=	-DPLATFORM_SDL
 else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
@@ -39,17 +41,20 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL
 	INSTARG	+=	strip
+	CFLAGS	+=	-DPLATFORM_SDL
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
 	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL
 	INSTARG	+=	strip
+	CFLAGS	+=	-DPLATFORM_SDL
 else
 	#Linux defaults
 	DATA_PATH=	\"/usr/share/games\"
 	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lSDL -lGL
+	CFLAGS	+=	-DPLATFORM_SDL
 endif
 endif
 endif

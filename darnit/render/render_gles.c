@@ -45,61 +45,9 @@ int videoInitGL(int w, int h) {
 
 
 int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
-	EGLint configs_avail = 0;
-	SDL_SysWMinfo sysinfo;
-	unsigned int mode;
+	if (!tpw_window_create(wtitle, screenw, screenh, fullscreen, 16))
+		return -1;
 
-	SDL_WM_SetCaption(wtitle, wtitle);
-	mode = SDL_SWSURFACE;
-	if (fullscreen) mode |= SDL_FULLSCREEN;
-	
-	if (!(d->video.XDisplay = XOpenDisplay(NULL))) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to get a display handle from X\n");
-		return -1;
-	}
-	
-	if (!(d->video.eglDisplay = eglGetDisplay((EGLNativeDisplayType) d->video.XDisplay))) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to get a display handle from EGL\n");
-		return -1;
-	}
-	
-	if (!eglInitialize(d->video.eglDisplay, NULL, NULL)) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to initialize EGL\n");
-		return -1;
-	}
-	
-	if ((d->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to set up a window for SDL\n");
-		return -1;
-	}
-	
-	if (eglChooseConfig(d->video.eglDisplay, egl_config_attrib, &d->video.eglConfig, 1, &configs_avail) != EGL_TRUE)  {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to find a config for EGL (%i)\n", configs_avail);
-		return -1;
-	}
-	
-	SDL_VERSION(&sysinfo.version);
-	if (SDL_GetWMInfo(&sysinfo) <= 0) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to get window handle\n");
-		return -1;
-	}
-	
-	if ((d->video.eglSurface = eglCreateWindowSurface(d->video.eglDisplay, d->video.eglConfig, (EGLNativeWindowType) sysinfo.info.x11.window, 0)) == EGL_NO_SURFACE) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to create a EGL surface\n");
-		return -1;
-	}
-	
-	eglBindAPI(EGL_OPENGL_ES_API);
-	if ((d->video.eglContext = eglCreateContext(d->video.eglDisplay, d->video.eglConfig, NULL, NULL)) == EGL_NO_CONTEXT) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to create a EGL context\n");
-		return -1;
-	}
-	
-	if (eglMakeCurrent(d->video.eglDisplay, d->video.eglSurface, d->video.eglSurface, d->video.eglContext) == EGL_FALSE) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to make the EGL context current\n");
-		return -1;
-	}
-	
 	d->video.swgran = 2.0f/screenw;
 	d->video.shgran = 2.0f/screenh;
 

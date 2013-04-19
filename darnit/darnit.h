@@ -30,6 +30,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "platform/main.h"
 #include <SDL/SDL.h>
 #include <errno.h>
 

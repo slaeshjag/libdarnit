@@ -29,25 +29,6 @@ void *d_init_partial(const char *data_dir);
 int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
-void darnit_init_common() {
-	#ifdef _WIN32
-	void *libtmp;
-
-	SDL_Init(SDL_INIT_NOPARACHUTE);
-	libtmp = LoadLibrary(TEXT("DDRAW.DLL"));
-	if (libtmp != NULL)
-		FreeLibrary(libtmp);
-	#endif
-
-	#ifdef _WIN32
-	SDL_SetModuleHandle(GetModuleHandle(NULL));
-	#endif
-
-
-	return;
-}
-
-
 void darnitSetPlatform(int partial) {
 	DARNIT_ENDIAN_CONVERT end;
 
@@ -133,16 +114,13 @@ void EXPORT_THIS *d_init_partial(const char *data_dir) {
 		return d;
 	}
 
-	#ifdef _WIN32
-	darnit_init_common();
-	#endif
+	tpw_init();
 
 	d->platform.platform = 0;
 	darnitSetPlatform(1);
 	utilInit();
 
-	if (videoInitPartial());
-	else if (inputInit() < 0);
+	if (inputInit() < 0);
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);
 	else {
@@ -157,7 +135,7 @@ void EXPORT_THIS *d_init_partial(const char *data_dir) {
 
 
 void EXPORT_THIS d_loop() {
-	int time = SDL_GetTicks();
+	int time = tpw_ticks();
 	
 	if (time / 1000 != d->fps.time) {
 		d->fps.frames_last = d->fps.frames_counting;
@@ -173,7 +151,7 @@ void EXPORT_THIS d_loop() {
 	inputPoll(d);
 
 	d->fps.time_at_last_frame = d->fps.time_at_flip;
-	d->fps.time_at_flip = SDL_GetTicks();
+	d->fps.time_at_flip = tpw_ticks();
 	socketConnectLoop();
 
 	return;
