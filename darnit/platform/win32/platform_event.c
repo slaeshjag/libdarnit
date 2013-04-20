@@ -168,7 +168,7 @@ unsigned int tpw_keysym_translate(unsigned int vk) {
 }
 
 
-unsigned int tpw_modifiers(unsigned int vk) {
+unsigned int tpw_modifier(unsigned int vk) {
 	switch (vk) {
 		case 0xA0:
 			return TPW_KEY_MOD_LSHIFT;
