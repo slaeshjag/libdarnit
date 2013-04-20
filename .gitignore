@@ -5,3 +5,4 @@ bin/
 testapp/testapp_old/testapp
 isotest
 *.res
+*.orig
