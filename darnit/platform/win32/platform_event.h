@@ -25,6 +25,8 @@ freely, subject to the following restrictions:
 #ifndef __TPW_WIN32_EVENT_H__
 #define	__TPW_WIN32_EVENT_H__
 
+LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 static unsigned short vk_translate[256] = {
 	[0x00] = 0,
 	[0x01] = 0,

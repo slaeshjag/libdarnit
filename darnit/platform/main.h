@@ -54,7 +54,7 @@ typedef struct {
 #include "platform_main.h"
 
 int tpw_init();
-int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, unsigned int bpp);
+int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp);
 void tpw_sleep(unsigned int msec);
 unsigned int tpw_ticks();
 void tpw_input_grab(TPW_INPUT_GRAB grab);

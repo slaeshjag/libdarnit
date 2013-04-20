@@ -44,7 +44,7 @@ int tpw_init_platform() {
 }
 
 
-int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, unsigned int bpp) {
+int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp) {
 	unsigned int mode;
 	#ifdef HAVE_GLES
 	EGLint configs_avail = 0;

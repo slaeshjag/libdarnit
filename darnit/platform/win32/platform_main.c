@@ -35,7 +35,7 @@ int tpw_init_platform() {
 }
 
 
-int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, unsigned int bpp) {
+int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp) {
 	#warning tpw_window_create(): Not tested yet
 
 	GLuint PixelFormat;
@@ -59,11 +59,11 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	tpw.fullscreen = fullscreen;
 
 	tpw.hInstance = GetModuleName(NULL);
-	wc.style = CS_REDRAW | CS_VREDRAW | CS_OWNDC;
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = tpw_message_process;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
+	wc.hInstance = tpw.hInstance;
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = NULL;
@@ -95,12 +95,12 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		}
 	} else {
 		nofullscreen:
-		dwExStyle = WS_EZ_APPWINDOW | WS_EX_WINDOWEDGE;
+		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 		dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 	}
 
 	AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);
-	if (!(tpw.hWnd = CreateWindowEx(dwExStyle, WINDOW_CLASS_NAME, title, WS_CLIPSIBLINGS | WS_CLIPCHILDRED, dwStyle, 0, 0, WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top,
+	if (!(tpw.hWnd = CreateWindowEx(dwExStyle, WINDOW_CLASS_NAME, title, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0, 0, WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top,
 			NULL, NULL, tpw.hInstance, NULL))) {
 		fprintf(stderr, "Unable to create a window\n");
 		tpw_quit();
@@ -137,9 +137,9 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		return 0;
 	}
 
-	ShowWindow();
+	ShowWindow(tpw.hWnd, SW_SHOW);
 	SetForegroundWindow(tpw.hWnd);
-	SetFocus(hWnd);
+	SetFocus(tpw.hWnd);
 
 	return 1;
 }
@@ -195,7 +195,7 @@ void tpw_input_unicode_enable(int enable) {
 }
 
 
-void tpw_cursor_show(int show) {
+void tpw_cursor_show(unsigned int show) {
 	ShowCursor((show) ? TRUE : FALSE);
 	return;
 }
@@ -213,7 +213,7 @@ void tpw_quit() {
 
 	if (tpw.hRC) {
 		wglMakeCurrent(NULL, NULL);
-		wglDeleteContect(tpw.hRC);
+		wglDeleteContext(tpw.hRC);
 		tpw.hRC = NULL;
 	}
 
@@ -226,9 +226,6 @@ void tpw_quit() {
 		DestroyWindow(tpw.hWnd);
 	UnregisterClass(WINDOW_CLASS_NAME, tpw.hInstance);
 
-	return;
-}
-	
 	#warning tpw_quit(): Not tested yet
 	return;
 }
