@@ -26,7 +26,10 @@ freely, subject to the following restrictions:
 #define	__PLATFORM_DUMMY_MAIN_H__
 
 #include <windows.h>
-#include <gl/gl.h>
+#include <windowsx.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <GL/gl.h>
 
 #define	WINDOW_CLASS_NAME	"TPW window"
 

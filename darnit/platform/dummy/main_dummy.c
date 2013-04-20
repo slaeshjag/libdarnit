@@ -73,13 +73,13 @@ TPW_RECT **tpw_videomodes_list() {
 }
 
 
-void tpw_input_unicode_enable(int enable) {
+void tpw_input_unicode(int enable) {
 	#warning tpw_input_unicode_enable(): Not implemented yet
 	return;
 }
 
 
-void tpw_cursor_show(int show) {
+void tpw_cursor_show(unsigned int show) {
 	#warning tpw_cursor_show(): Not implemented yet
 	return;
 }

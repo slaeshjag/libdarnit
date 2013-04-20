@@ -35,7 +35,7 @@ int tpw_init_platform() {
 }
 
 
-int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, unsigned int bpp) {
+int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp) {
 	#warning tpw_window_create(): Not tested yet
 
 	GLuint PixelFormat;
@@ -48,8 +48,10 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	static PIXELFORMATDESCRIPTOR pfd = {
 		sizeof(PIXELFORMATDESCRIPTOR),
 		1, PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-		PFD_TYPE_RGBA, bpp, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0 ,0, 0, PFD_MAIN_PLANE, 0, 0, 0, 0
+		PFD_TYPE_RGBA, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0 ,0, 0, PFD_MAIN_PLANE, 0, 0, 0, 0
 	};
+
+	pfd.cColorBits = bpp;
 
 	WindowRect.left = 0;
 	WindowRect.right = window_w;
@@ -58,12 +60,12 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 
 	tpw.fullscreen = fullscreen;
 
-	tpw.hInstance = GetModuleName(NULL);
-	wc.style = CS_REDRAW | CS_VREDRAW | CS_OWNDC;
+	tpw.hInstance = GetModuleHandle(NULL);
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = tpw_message_process;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
+	wc.hInstance = tpw.hInstance;
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = NULL;
@@ -77,14 +79,14 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	
 	
 	if (fullscreen) {
-		ZeroMemory(dmScreenSettings, sizeof(DEVMODE));
+		ZeroMemory(&dmScreenSettings, sizeof(DEVMODE));
 		dmScreenSettings.dmSize = sizeof(DEVMODE);
 		dmScreenSettings.dmPelsWidth = window_w;
 		dmScreenSettings.dmPelsHeight = window_h;
 		dmScreenSettings.dmBitsPerPel = bpp;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 		
-		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) |= DISP_CHANGE_SUCCESSFUL) {
+		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
 			fprintf(stderr, "WARNING: Unable to enter fullscreen, will run in a window..\n");
 			fullscreen = tpw.fullscreen = 0;
 			goto nofullscreen;
@@ -95,12 +97,12 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		}
 	} else {
 		nofullscreen:
-		dwExStyle = WS_EZ_APPWINDOW | WS_EX_WINDOWEDGE;
+		dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 		dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
 	}
 
 	AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);
-	if (!(tpw.hWnd = CreateWindowEx(dwExStyle, WINDOW_CLASS_NAME, title, WS_CLIPSIBLINGS | WS_CLIPCHILDRED, dwStyle, 0, 0, WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top,
+	if (!(tpw.hWnd = CreateWindowEx(dwExStyle, WINDOW_CLASS_NAME, title, WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0, 0, WindowRect.right-WindowRect.left, WindowRect.bottom-WindowRect.top,
 			NULL, NULL, tpw.hInstance, NULL))) {
 		fprintf(stderr, "Unable to create a window\n");
 		tpw_quit();
@@ -137,9 +139,9 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		return 0;
 	}
 
-	ShowWindow();
+	ShowWindow(tpw.hWnd, SW_SHOW);
 	SetForegroundWindow(tpw.hWnd);
-	SetFocus(hWnd);
+	SetFocus(tpw.hWnd);
 
 	return 1;
 }
@@ -189,13 +191,13 @@ TPW_RECT **tpw_videomodes_list() {
 }
 
 
-void tpw_input_unicode_enable(int enable) {
+void tpw_input_unicode(int enable) {
 	tpw.unicode_key = enable;
 	return;
 }
 
 
-void tpw_cursor_show(int show) {
+void tpw_cursor_show(unsigned int show) {
 	ShowCursor((show) ? TRUE : FALSE);
 	return;
 }
@@ -213,7 +215,7 @@ void tpw_quit() {
 
 	if (tpw.hRC) {
 		wglMakeCurrent(NULL, NULL);
-		wglDeleteContect(tpw.hRC);
+		wglDeleteContext(tpw.hRC);
 		tpw.hRC = NULL;
 	}
 
@@ -226,9 +228,6 @@ void tpw_quit() {
 		DestroyWindow(tpw.hWnd);
 	UnregisterClass(WINDOW_CLASS_NAME, tpw.hInstance);
 
-	return;
-}
-	
 	#warning tpw_quit(): Not tested yet
 	return;
 }
