@@ -48,8 +48,10 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	static PIXELFORMATDESCRIPTOR pfd = {
 		sizeof(PIXELFORMATDESCRIPTOR),
 		1, PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-		PFD_TYPE_RGBA, bpp, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0 ,0, 0, PFD_MAIN_PLANE, 0, 0, 0, 0
+		PFD_TYPE_RGBA, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0 ,0, 0, PFD_MAIN_PLANE, 0, 0, 0, 0
 	};
+
+	pfd.cColorBits = bpp;
 
 	WindowRect.left = 0;
 	WindowRect.right = window_w;
@@ -58,7 +60,7 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 
 	tpw.fullscreen = fullscreen;
 
-	tpw.hInstance = GetModuleName(NULL);
+	tpw.hInstance = GetModuleHandle(NULL);
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.lpfnWndProc = tpw_message_process;
 	wc.cbClsExtra = 0;
@@ -77,14 +79,14 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	
 	
 	if (fullscreen) {
-		ZeroMemory(dmScreenSettings, sizeof(DEVMODE));
+		ZeroMemory(&dmScreenSettings, sizeof(DEVMODE));
 		dmScreenSettings.dmSize = sizeof(DEVMODE);
 		dmScreenSettings.dmPelsWidth = window_w;
 		dmScreenSettings.dmPelsHeight = window_h;
 		dmScreenSettings.dmBitsPerPel = bpp;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 		
-		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) |= DISP_CHANGE_SUCCESSFUL) {
+		if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL) {
 			fprintf(stderr, "WARNING: Unable to enter fullscreen, will run in a window..\n");
 			fullscreen = tpw.fullscreen = 0;
 			goto nofullscreen;
