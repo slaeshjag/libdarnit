@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'main.c' - This file is part of libdarnit_tpw
+'threads_dummy.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -23,13 +23,9 @@ freely, subject to the following restrictions:
 */
 
 
-#ifdef PLATFORM_SDL
-#include "sdl/main_sdl.c"
+#ifndef __TPW_DUMMY_THREADS_H__
+#define	__TPW_DUMMY_THREADS_H__
+
+typedef void TPW_MUTEX;
+
 #endif
-
-int tpw_init() {
-	if (!tpw_event_init(512))
-		return 0;
-	return tpw_init_platform();
-}
-

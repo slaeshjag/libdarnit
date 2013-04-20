@@ -172,7 +172,7 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 }
 
 
-void audioMix(void *data, Uint8 *mixdata, int bytes) {
+void audioMix(void *data, void *mixdata, int bytes) {
 	int frames;
 
 	frames = bytes >>2;
@@ -191,7 +191,7 @@ int audioInit() {
 	int i;
 
 	fmt.sample_rate = AUDIO_SAMPLE_RATE;
-	fmt.format = AUDIO_S16;
+	fmt.format = TPW_SAMPLE_FORMAT_S16LE;
 	fmt.channels = 2;
 	fmt.samples = 1024;
 	fmt.callback = (void *) audioMix;

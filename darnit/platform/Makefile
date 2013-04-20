@@ -5,6 +5,7 @@ OBJECTFILES	=	*.o
 
 DEPENDS		=
 PLATFORMLIB	=	tpw.a
+CFLAGS		+=	-std=c89 -pedantic
 
 SRCFILES	=	$(wildcard *.c)
 OBJFILES	=	$(SRCFILES:.c=.o)

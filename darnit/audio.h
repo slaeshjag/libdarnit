@@ -26,8 +26,6 @@ freely, subject to the following restrictions:
 #ifndef __AUDIO_H__
 #define	__AUDIO_H__
 
-#include <SDL/SDL_audio.h>
-#include <SDL/SDL_mutex.h>
 #include <libmodplug/modplug.h>
 #include <stb_vorbis.h>
 

@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'main.c' - This file is part of libdarnit_tpw
+'event_dummy.c' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,14 +22,34 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#define	TPW_INTERNAL
+#include "../main.h"
 
-#ifdef PLATFORM_SDL
-#include "sdl/main_sdl.c"
-#endif
-
-int tpw_init() {
-	if (!tpw_event_init(512))
-		return 0;
-	return tpw_init_platform();
+void tpw_event_loop() {
+	#warning tpw_event_loop(): Not implemented yet
+	return;
 }
 
+
+TPW_JOYSTICK *tpw_joystick_open(int js_id) {
+	#warning tpw_joystick_open(): Not implemented yet
+	return NULL;
+}
+
+
+int tpw_joystick_num() {
+	#warning tpw_joystick_num(): Not implemented yet
+	return 0;
+}
+
+
+void tpw_joystick_enable(TPW_ENBOOL enable) {
+	#warning tpw_joystick_enable(): Not implemented yet
+	return;
+}
+
+
+unsigned int tpw_keys_modifiers() {
+	#warning tpw_keys_modifiers(): Not implemented yet
+	return 0;
+}

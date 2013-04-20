@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'main.c' - This file is part of libdarnit_tpw
+'threads_dummy.c' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -23,13 +23,22 @@ freely, subject to the following restrictions:
 */
 
 
-#ifdef PLATFORM_SDL
-#include "sdl/main_sdl.c"
-#endif
+#define	TPW_INTERNAL
+#include "../threads.h"
 
-int tpw_init() {
-	if (!tpw_event_init(512))
-		return 0;
-	return tpw_init_platform();
+TPW_MUTEX *tpw_mutex_create() {
+	#warning tpw_mutex_create(): Not implemented yet
+	return NULL;
 }
 
+
+void tpw_mutex_lock(TPW_MUTEX *mutex) {
+	#warning tpw_mutex_lock(): Not implemented yet
+	return;
+}
+
+
+void tpw_mutex_unlock(TPW_MUTEX *mutex) {
+	#warning tpw_mutex_unlock(): Not implemented yet
+	return;
+}

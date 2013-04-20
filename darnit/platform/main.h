@@ -32,12 +32,24 @@ typedef enum {
 } TPW_INPUT_GRAB;
 
 
+typedef enum {
+	TPW_ENBOOL_DISABLE = 0,
+	TPW_ENBOOL_ENABLE = 1,
+} TPW_ENBOOL;
+
+
 typedef struct {
 	signed short	x, y;
 	unsigned short	w, h;
 } TPW_RECT;
 
+#include "keysym.h"
 #include "sound.h"
+#include "event.h"
+
+typedef struct {
+	TPW_EVENT_S	event;
+} TPW_COMMON;
 
 #ifdef PLATFORM_SDL
 #ifdef TPW_INTERNAL
@@ -55,6 +67,7 @@ void tpw_render_buffer_swap();
 TPW_RECT **tpw_videomodes_list();
 void tpw_input_unicode(int enable);
 void tpw_cursor_show(unsigned int show);
+int tpw_icon_set(void *pixdata_rgba32, int w, int h);
 void tpw_quit();
 
 #ifdef TPW_INTERNAL

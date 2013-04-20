@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'main.c' - This file is part of libdarnit_tpw
+'sound_dummy.c' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,14 +22,20 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#define TPW_INTERNAL
+#include "../main.h"
 
-#ifdef PLATFORM_SDL
-#include "sdl/main_sdl.c"
-#endif
 
-int tpw_init() {
-	if (!tpw_event_init(512))
-		return 0;
-	return tpw_init_platform();
+int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
+	#warning tpw_sound_open(): Not implemented yet
+	return 1;
 }
+
+
+void tpw_sound_control(TPW_SOUND_COMMAND command) {
+	#warning tpw_sound_command(): Not implemented yet
+	return;
+}
+
+
 

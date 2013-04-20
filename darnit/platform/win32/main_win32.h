@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'main.c' - This file is part of libdarnit_tpw
+'main_dummy.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,14 +22,27 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#ifndef __PLATFORM_DUMMY_MAIN_H__
+#define	__PLATFORM_DUMMY_MAIN_H__
 
-#ifdef PLATFORM_SDL
-#include "sdl/main_sdl.c"
+#include <windows.h>
+#include <gl/gl.h>
+
+#define	WINDOW_CLASS_NAME	"TPW window"
+
+typedef struct {
+	TPW_COMMON		common;
+	HMODULE			hInstance;
+	HWND			hWnd;
+	HDC			hDC;
+	HGLRC			hRC;
+	int			fullscreen;
+
+	/* Event stuffs */
+	unsigned int		unicode_key;
+	char			keys[256];
+	unsigned int		modifiers;
+} TPW;
+
+
 #endif
-
-int tpw_init() {
-	if (!tpw_event_init(512))
-		return 0;
-	return tpw_init_platform();
-}
-

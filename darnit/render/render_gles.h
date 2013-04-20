@@ -64,12 +64,6 @@ static const EGLint egl_config_attrib[] = {
 
 
 typedef struct {
-	Display				*XDisplay;
-	EGLConfig			eglConfig;
-	EGLContext			eglContext;
-	EGLSurface			eglSurface;
-	EGLDisplay			eglDisplay;
-	SDL_Surface			*screen;
 	FADE_STRUCT			fade;
 	float				swgran;
 	float				shgran;
