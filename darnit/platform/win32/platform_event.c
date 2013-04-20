@@ -126,6 +126,8 @@ unsigned int tpw_keysym_translate(unsigned int vk);
 
 LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	TPW_EVENT event;
+	WORD ht;
+	static bool hidden_cursor = 0;
 	short keys[2];
 
 	switch (uMsg) {
@@ -200,6 +202,16 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			event.mouse.x = GET_X_LPARAM(lParam);
 			event.mouse.y = GET_Y_LPARAM(lParam);
 			DefWindowProc(hWnd, uMsg, wParam, lParam);
+			break;
+		case WM_SETCURSOR:
+			ht = LOWORD(lparam);
+			if (ht == HTCLIENT && !hidden_cursor && tpw.hide_cursor) {
+				hidden_cursor = 1;
+				ShowCursor(FALSE);
+			} else if (ht != HTCLIENT && hidden_cursor) {
+				hidden_cursor = 0;
+				ShowCursor(TRUE);
+			}
 			break;
 
 		default:

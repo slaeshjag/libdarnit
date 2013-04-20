@@ -29,6 +29,7 @@ int tpw_init_platform() {
 	ZeroMemory(tpw.keys, 256);
 	tpw.unicode_key = 0;
 	tpw.modifiers = 0;
+	hide_cursor = 0;
 	return 1;
 }
 
@@ -89,7 +90,6 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		} else {
 			dwExStyle = WS_EX_APPWINDOW;
 			dwStyle = WS_POPUP;
-			ShowCursor(FALSE);
 		}
 	} else {
 		nofullscreen:
@@ -199,6 +199,7 @@ void tpw_input_unicode(int enable) {
 
 
 void tpw_cursor_show(unsigned int show) {
+	tpw.hide_cursor = !show;
 	ShowCursor((show) ? TRUE : FALSE);
 	return;
 }
