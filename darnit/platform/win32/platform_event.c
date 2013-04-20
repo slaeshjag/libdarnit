@@ -127,7 +127,6 @@ unsigned int tpw_keysym_translate(unsigned int vk);
 LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	TPW_EVENT event;
 	short keys[2];
-	#warning tpw_message_process(): Not tested yet
 
 	switch (uMsg) {
 		case WM_ACTIVATE:
@@ -226,7 +225,6 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 
 void tpw_event_loop() {
-	#warning tpw_event_loop(): Probably incomplete implementation
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);

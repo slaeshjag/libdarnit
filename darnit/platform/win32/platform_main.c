@@ -26,8 +26,6 @@ freely, subject to the following restrictions:
 
 
 int tpw_init_platform() {
-	#warning tpw_init_platform(): Not tested yet
-
 	ZeroMemory(tpw.keys, 256);
 	tpw.unicode_key = 0;
 	tpw.modifiers = 0;
@@ -36,8 +34,6 @@ int tpw_init_platform() {
 
 
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp) {
-	#warning tpw_window_create(): Not tested yet
-
 	GLuint PixelFormat;
 	WNDCLASS wc;
 	DWORD dwExStyle;
@@ -154,8 +150,13 @@ void tpw_sleep(unsigned int msec) {
 
 
 unsigned int tpw_ticks() {
-	#warning tpw_ticks(): Not implemented yet
-	return 0;
+	LARGE_INTEGER i, j;
+	QueryPerformanceCounter(&i);
+	QueryPerformanceFrequency(&j);
+	j /= 1000;
+	if (j == 0)
+		j = 1;
+	return i / j;
 }
 
 
@@ -228,6 +229,5 @@ void tpw_quit() {
 		DestroyWindow(tpw.hWnd);
 	UnregisterClass(WINDOW_CLASS_NAME, tpw.hInstance);
 
-	#warning tpw_quit(): Not tested yet
 	return;
 }
