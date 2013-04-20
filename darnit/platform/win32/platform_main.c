@@ -199,7 +199,7 @@ void tpw_input_unicode(int enable) {
 
 
 void tpw_cursor_show(unsigned int show) {
-	//ShowCursor((show) ? TRUE : FALSE);
+	ShowCursor((show) ? TRUE : FALSE);
 	return;
 }
 

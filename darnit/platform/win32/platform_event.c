@@ -140,7 +140,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				case SC_MONITORPOWER:
 					return 0;
 				default:
-					return 1;
+					return DefWindowProc(hWnd, uMsg, wParam, lParam);
 			}
 		case WM_CLOSE:
 			event.type = TPW_EVENT_TYPE_QUIT;

@@ -24,7 +24,7 @@ ifeq ($(strip $(OS)), Windows_NT)
 	#Windows specifics
 	LIB	=	$(TOPDIR)/bin/libdarnit.dll
 	PREFIX	=	/mingw
-	LDFLAGS	+=	-lSDL -lopengl32 -lws2_32 -lshlwapi -lwinmm -lgdi32 -ldl
+	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lwinmm -lgdi32 -ldl
 	LDTOOLS	+=	-lws2_32
 	PLATFORM=	win32
 else 
@@ -32,7 +32,7 @@ ifeq ($(BUILDFOR), WIN32)
 	#Windows specifics, for cross compiling to windows
 	LIB	=	$(TOPDIR)/bin/libdarnit.dll
 	PREFIX	=	/mingw
-	LDFLAGS	+=	-lSDL -lopengl32 -lws2_32 -lshlwapi -lstdc++ -lgdi32 -lwinmm
+	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lstdc++ -lgdi32 -lwinmm
 	LDTOOLS	+=	-lws2_32
 	CC	=	i586-mingw32msvc-gcc
 	AR	=	i586-mingw32msvc-ar

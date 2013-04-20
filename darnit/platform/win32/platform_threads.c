@@ -25,19 +25,19 @@ freely, subject to the following restrictions:
 #include "../threads.h"
 
 TPW_MUTEX *tpw_mutex_create() {
-	return SDL_CreateMutex();
+	return (TPW_MUTEX *) CreateMutex(NULL, FALSE, NULL);
 }
 
 
 void tpw_mutex_lock(TPW_MUTEX *mutex) {
-	SDL_mutexP(mutex);
+	WaitForSingleObject((HANDLE) mutex);
 	
 	return;
 }
 
 
 void tpw_mutex_unlock(TPW_MUTEX *mutex) {
-	SDL_mutexV(mutex);
+	ReleaseMutex((HANDLE *) mutex);
 
 	return;
 }

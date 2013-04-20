@@ -25,8 +25,7 @@ freely, subject to the following restrictions:
 #ifndef __TPW_WIN32_THREADS_H__
 #define	__TPW_WIN32_THREADS_H__
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_thread.h>
+#include <windows.h>
 
 typedef SDL_mutex TPW_MUTEX;
 
