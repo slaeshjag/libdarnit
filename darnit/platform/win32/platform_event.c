@@ -182,6 +182,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				default:
 					return 0;
 			}
+			DefWindowProc(hWnd, uMsg, wParam, lParam);
 			break;
 		case WM_MBUTTONUP:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_UP;
@@ -198,15 +199,18 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				default:
 					return 0;
 			}
+			DefWindowProc(hWnd, uMsg, wParam, lParam);
 			break;
 		case WM_MOUSEWHEEL:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_DOWN;
 			event.mouse.button = (GET_WHEEL_DELTA_WPARAM(wParam) < 0) ? TPW_MOUSE_BUTTON_WHEEL_UP : TPW_MOUSE_BUTTON_WHEEL_DOWN;
+			DefWindowProc(hWnd, uMsg, wParam, lParam);
 			break;
 		case WM_MOUSEMOVE:
 			event.type = TPW_EVENT_TYPE_MOUSEMOVE;
 			event.mouse.x = GET_X_LPARAM(lParam);
 			event.mouse.y = GET_Y_LPARAM(lParam);
+			DefWindowProc(hWnd, uMsg, wParam, lParam);
 			break;
 
 		default:
