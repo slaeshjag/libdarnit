@@ -193,12 +193,8 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 
 	if (spr->animate == 0)
 		return;
-
-<<<<<<< HEAD
+	
 	time = tpw_ticks();
-=======
-	time = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	time -= spr->time_last;
 
 	spr->time_left -= time;
@@ -210,11 +206,7 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 		spr->time_left += spr->frame[spr->cur_frame].time;
 	}
 
-<<<<<<< HEAD
 	spr->time_last = tpw_ticks();
-=======
-	spr->time_last = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	return;
 }
@@ -233,11 +225,7 @@ void mtSpriteDraw(MTSPRITE_ENTRY *spr) {
 void mtSpriteEnableAnimation(MTSPRITE_ENTRY *spr) {
 	if (spr == NULL) return;
 
-<<<<<<< HEAD
 	spr->time_last = tpw_ticks();
-=======
-	spr->time_last = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	spr->animate = 1;
 
 	return;

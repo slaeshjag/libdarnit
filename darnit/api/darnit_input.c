@@ -63,11 +63,7 @@ INPUT_MAP EXPORT_THIS d_keymapping_get() {
 
 
 void EXPORT_THIS d_input_grab() {
-<<<<<<< HEAD
 	tpw_input_grab(TPW_INPUT_GRAB_GRAB);
-=======
-	SDL_WM_GrabInput(SDL_GRAB_ON);
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	return;
 }
@@ -75,11 +71,7 @@ void EXPORT_THIS d_input_grab() {
 
 void EXPORT_THIS d_input_release() {
 	#ifndef MAEMO
-<<<<<<< HEAD
 	tpw_input_grab(TPW_INPUT_GRAB_RELEASE);
-=======
-	SDL_WM_GrabInput(SDL_GRAB_OFF);
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	#endif
 
 	return;
@@ -126,20 +118,12 @@ void EXPORT_THIS d_key_raw_clear() {
 
 
 const char EXPORT_THIS *d_key_name_get(int sym) {
-<<<<<<< HEAD
 	return tpw_key_name_get(sym);
-=======
-	return SDL_GetKeyName(sym);
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 }
 
 
 void EXPORT_THIS d_input_unicode(int enable) {
-<<<<<<< HEAD
 	tpw_input_unicode(enable);
-=======
-	SDL_EnableUNICODE(enable);
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	return;
 }

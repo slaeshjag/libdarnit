@@ -43,20 +43,8 @@ int videoInitGL(int w, int h) {
 
 
 int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
-<<<<<<< HEAD
 	if (!tpw_window_create(wtitle, screenw, screenh, fullscreen, 16)) {
 		fprintf(stderr, "videoInit(): Fatal error: Unable to open a window\n");
-=======
-	unsigned int mode;
-
-	mode = SDL_OPENGL;
-	if (fullscreen) mode |= SDL_FULLSCREEN;
-
-	
-	SDL_WM_SetCaption(wtitle, wtitle);
-	if ((d->video.screen = SDL_SetVideoMode(screenw, screenh, 16, mode)) == NULL) {
-		fprintf(stderr, "videoInit(): Fatal error: Unable to set up a window for SDL\n");
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 		return -1;
 	}
 	
@@ -69,11 +57,7 @@ int videoInit(const char *wtitle, int screenw, int screenh, int fullscreen) {
 	d->video.camx = 0;
 	d->video.camy = 0;
 	d->video.offset_x = d->video.offset_y = 0;
-<<<<<<< HEAD
 	d->video.time = tpw_ticks();
-=======
-	d->video.time = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	videoInitGL(screenw, screenh);
 
@@ -90,23 +74,14 @@ int videoLoop() {
 
 	videoSwapBuffers();
 	videoClearScreen();
-
-<<<<<<< HEAD
+	
 	delay = 16 - (tpw_ticks() - d->video.time);
-=======
-	delay = 16 - (SDL_GetTicks() - d->video.time);
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
-
+	
 	if (delay < 0)
 		delay = 0;
-
-<<<<<<< HEAD
+	
 	tpw_sleep(delay);
 	d->video.time = tpw_ticks();
-=======
-	SDL_Delay(delay);
-	d->video.time = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	
 	return 0;
@@ -115,11 +90,7 @@ int videoLoop() {
 
 void videoSwapBuffers() {
 	
-<<<<<<< HEAD
 	tpw_render_buffer_swap();
-=======
-	SDL_GL_SwapBuffers();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	return;
 }

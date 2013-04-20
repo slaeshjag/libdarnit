@@ -1,11 +1,7 @@
 # Project: libDarnit
 include $(TOPDIR)/config.mk
 
-<<<<<<< HEAD
 DEPFILES	=	../deps/deps.a platform/tpw.a
-=======
-DEPFILES	=	../deps/deps.a
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 APIFILES	=	api/*.o
 
 CFLAGS		+=	-DDATA_PATH=$(DATA_PATH)
@@ -23,11 +19,8 @@ OBJFILES	=	$(SRCFILES:.c=.o)
 all: $(OBJFILES) $(DEPENDS)
 	@echo " [ CD ] darnit/api/"
 	+@make -C api/
-<<<<<<< HEAD
 	@echo " [ CD ] darnit/platform/"
 	+@make -C platform/
-=======
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	@echo " [ LD ] $(LIB)"
 	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS)
 	@echo "Done."
@@ -37,11 +30,8 @@ clean:
 	@echo
 	@echo " [ CD ] darnit/api/"
 	+@make -C api/ clean
-<<<<<<< HEAD
 	@echo " [ CD ] darnit/platform/"
 	+@make -C platform/ clean
-=======
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)
 	@$(RM) darnit.res

@@ -30,11 +30,7 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-<<<<<<< HEAD
 #include "platform/tpw.h"
-=======
-#include <SDL/SDL.h>
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 #include <errno.h>
 
 
@@ -166,10 +162,6 @@ typedef struct {
 	DARNIT_PLATFORM		platform;
 	SOCKET_LIST		*connect_list;
 	UTIL			util;
-<<<<<<< HEAD
-=======
-	SDL_Surface		*icon;
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	RENDER_PARAMS		render_params;
 } DARNIT;
 

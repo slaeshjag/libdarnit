@@ -410,12 +410,8 @@ void renderFadeLoop() {
 
 	if (d->video.fade.a == 0.0f && d->video.fade.fading == 0)
 		return;
-
-<<<<<<< HEAD
+	
 	timediff = tpw_ticks() - d->video.fade.fadestart;
-=======
-	timediff = SDL_GetTicks() - d->video.fade.fadestart;
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	if (timediff < 0)
 		timediff = 1;
@@ -466,11 +462,7 @@ void renderFadeFade(unsigned int time, float r, float g, float b) {
 	d->video.fade.b = b;
 	d->video.fade.fadefactor = 1.0f / time;
 	d->video.fade.fadedir = 1.0f;
-<<<<<<< HEAD
 	d->video.fade.fadestart = tpw_ticks();
-=======
-	d->video.fade.fadestart = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	d->video.fade.fading = 1;
 
 	return;
@@ -484,11 +476,7 @@ void renderFadeUnfade(unsigned int time) {
 		return;
 
 	d->video.fade.fadedir = -1.0f;
-<<<<<<< HEAD
 	d->video.fade.fadestart = tpw_ticks();
-=======
-	d->video.fade.fadestart = SDL_GetTicks();
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	d->video.fade.fadestart -= (time - d->video.fade.fadeprog);
 	d->video.fade.fadefactor = 1.0f / time;
 	d->video.fade.fading = -1;
@@ -533,17 +521,8 @@ void renderSetLogicOp(unsigned int logicop) {
 }
 
 
-<<<<<<< HEAD
 int videoSetIcon(const char *icon) {
-=======
-int videoInitPartial() {
-	return SDL_Init(SDL_INIT_EVERYTHING);
-}
 
-
-int videoSetIcon(const char *icon) {
-	SDL_Surface *surface;
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	IMGLOAD_DATA img;
 
 	if (!icon)
@@ -552,17 +531,8 @@ int videoSetIcon(const char *icon) {
 	if (!(img = imgloadLoad(icon)).img_data)
 		return -1;
 
-<<<<<<< HEAD
 	tpw_icon_set(img.img_data, img.w, img.h);
 	free(img.img_data);
-=======
-	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, img.w, img.h, 32, 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
-	free(surface->pixels);
-	surface->pixels = img.img_data;
-	d->icon = surface;
-
-	SDL_WM_SetIcon(surface, NULL);
->>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	return 0;
 }
