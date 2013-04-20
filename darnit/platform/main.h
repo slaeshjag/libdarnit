@@ -44,6 +44,7 @@ typedef struct {
 } TPW_RECT;
 
 #include "keysym.h"
+#include "event.h"
 #include "sound.h"
 
 typedef struct {
@@ -51,7 +52,6 @@ typedef struct {
 } TPW_COMMON;
 
 #include "platform_main.h"
-#include "event.h"
 
 int tpw_init();
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp);
