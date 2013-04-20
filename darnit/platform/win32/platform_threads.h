@@ -27,6 +27,6 @@ freely, subject to the following restrictions:
 
 #include <windows.h>
 
-typedef SDL_mutex TPW_MUTEX;
+typedef void TPW_MUTEX;
 
 #endif
