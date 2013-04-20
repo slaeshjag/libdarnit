@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 
 #include <windows.h>
 LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
+MSG msg;
 
 extern unsigned short vk_translate[256];
 
