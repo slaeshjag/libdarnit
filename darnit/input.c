@@ -52,6 +52,7 @@ INPUT_RAW_KEY inputRawPop() {
 
 
 void inputKeymapReset() {
+<<<<<<< HEAD
 	d->input.map.up = TPW_KEY_UP;
 	d->input.map.down = TPW_KEY_DOWN;
 	d->input.map.left = TPW_KEY_LEFT;
@@ -92,6 +93,48 @@ void inputKeymapReset() {
 	d->input.map.r = TPW_KEY_d;
 	d->input.map.start = TPW_KEY_RETURN;
 	d->input.map.select = TPW_KEY_ESCAPE;
+=======
+	d->input.map.up = SDLK_UP;
+	d->input.map.down = SDLK_DOWN;
+	d->input.map.left = SDLK_LEFT;
+	d->input.map.right = SDLK_RIGHT;
+	#ifdef PANDORA
+	d->input.map.x = SDLK_PAGEDOWN;
+	d->input.map.y = SDLK_PAGEUP;
+	d->input.map.a = SDLK_HOME;
+	d->input.map.b = SDLK_END;
+	d->input.map.start = SDLK_LALT;
+	d->input.map.select = SDLK_LCTRL;
+	d->input.map.l = SDLK_RSHIFT;
+	d->input.map.r = SDLK_RCTRL;
+	#elif defined(MAEMO)
+	d->input.map.x = SDLK_s;
+	d->input.map.y = SDLK_w;
+	d->input.map.a = SDLK_a;
+	d->input.map.b = SDLK_d;
+	d->input.map.start = SDLK_KP_ENTER;
+	d->input.map.select = SDLK_BACKSPACE;
+	d->input.map.l = SDLK_q;
+	d->input.map.r = SDLK_e;
+	#elif defined(GCW_ZERO)
+	d->input.map.x = SDLK_LSHIFT;
+	d->input.map.y = SDLK_SPACE;
+	d->input.map.a = SDLK_LCTRL;
+	d->input.map.b = SDLK_LALT;
+	d->input.map.start = SDLK_ENTER;
+	d->input.map.select = SDLK_ESCAPE;
+	d->input.map.l = SDLK_TAB;
+	d->input.map.r = SDLK_BACKSPACE;
+	#else
+	d->input.map.x = SDLK_s;
+	d->input.map.y = SDLK_w;
+	d->input.map.a = SDLK_LCTRL;
+	d->input.map.b = SDLK_LALT;
+	d->input.map.l = SDLK_a;
+	d->input.map.r = SDLK_d;
+	d->input.map.start = SDLK_RETURN;
+	d->input.map.select = SDLK_ESCAPE;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	#endif
 
 	d->input.key = 0;
@@ -118,6 +161,7 @@ int inputInitJoystick() {
 	d->input.js.nub0_x = d->input.js.nub0_y = d->input.js.nub1_x = d->input.js.nub1_y = 0;
 
 	
+<<<<<<< HEAD
 	for (i = 0; i < tpw_joystick_num(); i++) {
 		if (!any) {
 			if (strcmp(js0, tpw_joystick_name(i)) == 0) {
@@ -125,15 +169,32 @@ int inputInitJoystick() {
 				d->input.js.nub0i = i;
 			} else if (strcmp("nub1", tpw_joystick_name(i)) == 0) {
 				d->input.js.nub1 = tpw_joystick_open(i);
+=======
+	for (i = 0; i < SDL_NumJoysticks(); i++) {
+		if (!any) {
+			if (strcmp(js0, SDL_JoystickName(i)) == 0) {
+				d->input.js.nub0 = SDL_JoystickOpen(i);
+				d->input.js.nub0i = i;
+			} else if (strcmp("nub1", SDL_JoystickName(i)) == 0) {
+				d->input.js.nub1 = SDL_JoystickOpen(i);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 				d->input.js.nub1i = i;
 			}
 		} else {
 			if (any == 1) {
+<<<<<<< HEAD
 				d->input.js.nub0 = tpw_joystick_open(i);
 				d->input.js.nub0i = i;
 				any++;
 			} else if (any == 2) {
 				d->input.js.nub1 = tpw_joystick_open(i);
+=======
+				d->input.js.nub0 = SDL_JoystickOpen(i);
+				d->input.js.nub0i = i;
+				any++;
+			} else if (any == 2) {
+				d->input.js.nub1 = SDL_JoystickOpen(i);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 				d->input.js.nub1i = i;
 				any++;
 			}
@@ -141,7 +202,11 @@ int inputInitJoystick() {
 	}
 
 	if (d->input.js.nub0 != NULL || d->input.js.nub1 != NULL)
+<<<<<<< HEAD
 		tpw_joystick_enable(TPW_ENBOOL_ENABLE);
+=======
+		SDL_JoystickEventState(SDL_ENABLE);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	return 0;
 }
@@ -157,6 +222,11 @@ int inputInit() {
 	d->input.key = 0;
 	d->input.mouse.x = d->input.mouse.y = d->input.mouse.wheel = d->input.mouse.mb_l = d->input.mouse.mb_r = 0;
 
+<<<<<<< HEAD
+=======
+	memset(&d->input.event, 0, sizeof(d->input.event));
+
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	inputKeymapReset();
 	inputInitJoystick();
 
@@ -165,6 +235,7 @@ int inputInit() {
 
 
 void inputPoll() {
+<<<<<<< HEAD
 	TPW_EVENT event;
 
 	tpw_event_loop();
@@ -246,10 +317,90 @@ void inputPoll() {
 				d->input.key |= KEY_L;
 				d->input.key ^= KEY_L;
 			} else if (event.key.keysym == d->input.map.r) {
+=======
+	while (SDL_PollEvent(&d->input.event)) {
+		if (d->input.event.type == SDL_KEYDOWN) {
+			if (d->input.event.key.keysym.sym == d->input.map.up)
+				d->input.key |= KEY_UP;
+			else if (d->input.event.key.keysym.sym == d->input.map.down)
+				d->input.key |= KEY_DOWN;
+			else if (d->input.event.key.keysym.sym == d->input.map.left)
+				d->input.key |= KEY_LEFT;
+			else if (d->input.event.key.keysym.sym == d->input.map.right)
+				d->input.key |= KEY_RIGHT;
+			else if (d->input.event.key.keysym.sym == d->input.map.x)
+				d->input.key |= KEY_X;
+			else if (d->input.event.key.keysym.sym == d->input.map.y)
+				d->input.key |= KEY_Y;
+			else if (d->input.event.key.keysym.sym == d->input.map.a)
+				d->input.key |= KEY_A;
+			else if (d->input.event.key.keysym.sym == d->input.map.b)
+				d->input.key |= KEY_B;
+			else if (d->input.event.key.keysym.sym == d->input.map.start)
+				d->input.key |= KEY_START;
+			else if (d->input.event.key.keysym.sym == d->input.map.select)
+				d->input.key |= KEY_SELECT;
+			else if (d->input.event.key.keysym.sym == d->input.map.l)
+				d->input.key |= KEY_L;
+			else if (d->input.event.key.keysym.sym == d->input.map.r)
+				d->input.key |= KEY_R;
+			/* I'm sorry Sara... */
+			#ifdef PANDORA
+			else if (d->input.event.key.keysym.sym == SDLK_ESCAPE)
+				d_quit();
+			#elif defined(MAEMO)
+			else if (d->input.event.key.keysym.sym == SDLK_BACKSPACE && (d->input.event.key.keysym.mod&KMOD_CTRL))
+				SDL_WM_GrabInput(SDL_GRAB_OFF);
+			#endif
+			if (d->input.event.key.keysym.sym == SDLK_LSHIFT)
+				d->input.upper |= 2;
+			else if (d->input.event.key.keysym.sym == SDLK_RSHIFT)
+				d->input.upper |= 1;
+			if (d->input.event.key.keysym.sym < 0x80)	/* ASCII */
+				d->input.lastkey = d->input.event.key.keysym.sym;
+			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_PRESS, d->input.event.key.keysym.unicode);
+
+		} else if (d->input.event.type == SDL_KEYUP) {
+			if (d->input.event.key.keysym.sym == d->input.map.up) {
+				d->input.key |= KEY_UP;
+				d->input.key ^= KEY_UP;
+			} else if (d->input.event.key.keysym.sym == d->input.map.down) {
+				d->input.key |= KEY_DOWN;
+				d->input.key ^= KEY_DOWN;
+			} else if (d->input.event.key.keysym.sym == d->input.map.left) {
+				d->input.key |= KEY_LEFT;
+				d->input.key ^= KEY_LEFT;
+			} else if (d->input.event.key.keysym.sym == d->input.map.right) {
+				d->input.key |= KEY_RIGHT;
+				d->input.key ^= KEY_RIGHT;
+			} else if (d->input.event.key.keysym.sym == d->input.map.x) {
+				d->input.key |= KEY_X;
+				d->input.key ^= KEY_X;
+			} else if (d->input.event.key.keysym.sym == d->input.map.y) {
+				d->input.key |= KEY_Y;
+				d->input.key ^= KEY_Y;
+			} else if (d->input.event.key.keysym.sym == d->input.map.a) {
+				d->input.key |= KEY_A;
+				d->input.key ^= KEY_A;
+			} else if (d->input.event.key.keysym.sym == d->input.map.b) {
+				d->input.key |= KEY_B;
+				d->input.key ^= KEY_B;
+			} else if (d->input.event.key.keysym.sym == d->input.map.start) {
+				d->input.key |= KEY_START;
+				d->input.key ^= KEY_START;
+			} else if (d->input.event.key.keysym.sym == d->input.map.select) {
+				d->input.key |= KEY_SELECT;
+				d->input.key ^= KEY_SELECT;
+			} else if (d->input.event.key.keysym.sym == d->input.map.l) {
+				d->input.key |= KEY_L;
+				d->input.key ^= KEY_L;
+			} else if (d->input.event.key.keysym.sym == d->input.map.r) {
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 				d->input.key |= KEY_R;
 				d->input.key ^= KEY_R;
 			}
 
+<<<<<<< HEAD
 			if (event.key.keysym == TPW_KEY_LSHIFT) {
 				d->input.upper |= 2;
 				d->input.upper ^= 2;
@@ -279,10 +430,42 @@ void inputPoll() {
 				d->input.key ^= MB_LEFT;
 				d->input.mouse.mb_l = 0;
 			} else if (event.mouse.button == TPW_MOUSE_BUTTON_RIGHT) {
+=======
+			if (d->input.event.key.keysym.sym == SDLK_LSHIFT) {
+				d->input.upper |= 2;
+				d->input.upper ^= 2;
+			} else if (d->input.event.key.keysym.sym == SDLK_RSHIFT) {
+				d->input.upper |= 1;
+				d->input.upper ^= 1;
+			}
+			inputRawPush(d->input.event.key.keysym.sym, DARNIT_KEYACTION_RELEASE, d->input.event.key.keysym.unicode);
+			
+		} else if (d->input.event.type == SDL_MOUSEMOTION) {
+			d->input.mouse.x = d->input.event.motion.x;
+			d->input.mouse.y = d->input.event.motion.y;
+		} else if (d->input.event.type == SDL_MOUSEBUTTONDOWN) {
+			if (d->input.event.button.button == SDL_BUTTON_LEFT) {
+				d->input.key |= MB_LEFT;
+				d->input.mouse.mb_l = 1;
+			} else if (d->input.event.button.button == SDL_BUTTON_RIGHT) {
+				d->input.key |= MB_RIGHT_D;
+				d->input.mouse.mb_r = 1;
+			} else if (d->input.event.button.button == SDL_BUTTON_WHEELUP)
+				d->input.mouse.wheel--;
+			else if (d->input.event.button.button == SDL_BUTTON_WHEELDOWN)
+				d->input.mouse.wheel++;
+		} else if (d->input.event.type == SDL_MOUSEBUTTONUP) {
+			if (d->input.event.button.button == SDL_BUTTON_LEFT) {
+				d->input.key |= MB_LEFT;
+				d->input.key ^= MB_LEFT;
+				d->input.mouse.mb_l = 0;
+			} else if (d->input.event.button.button == SDL_BUTTON_RIGHT) {
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 				d->input.key |= MB_RIGHT_D;
 				d->input.key ^= MB_RIGHT_D;
 				d->input.mouse.mb_r = 0;
 			}
+<<<<<<< HEAD
 		} else if (event.type == TPW_EVENT_TYPE_JOYSTICK_MOVE) {
 			if (event.joystick.js_id == d->input.js.nub0i) {
 				if (event.joystick.axis == 0)
@@ -300,12 +483,35 @@ void inputPoll() {
 			tpw_input_grab(TPW_INPUT_GRAB_GRAB);
 		#endif
 		}  else if (event.type == TPW_EVENT_TYPE_QUIT)
+=======
+		} else if (d->input.event.type == SDL_JOYAXISMOTION) {
+			if (d->input.event.jaxis.which == d->input.js.nub0i) {
+				if (d->input.event.jaxis.axis == 0)
+					d->input.js.nub0_x = d->input.event.jaxis.value;
+				else
+					d->input.js.nub0_y = d->input.event.jaxis.value;
+			} else {
+				if (d->input.event.jaxis.axis == 0)
+					d->input.js.nub1_x = d->input.event.jaxis.value;
+				else
+					d->input.js.nub1_y = d->input.event.jaxis.value;
+			}
+		#ifdef MAEMO
+		} else if (d->input.event.type == SDL_ACTIVEEVENT && d->input.event.active.gain == 1 && d->input.event.active.type == SDL_APPACTIVE) {
+			SDL_WM_GrabInput(SDL_GRAB_ON);
+		#endif
+		}  else if (d->input.event.type == SDL_QUIT)
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 			exit(0);
 	}
 
 	d->input.keypending &= d->input.key;
 
+<<<<<<< HEAD
 	d->input.key |= ((tpw_keys_modifiers()) << 16);
+=======
+	d->input.key |= (((unsigned int) SDL_GetModState()) << 16);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	return;
 }

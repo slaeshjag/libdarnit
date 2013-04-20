@@ -72,8 +72,13 @@ typedef struct {
 	int				nub0_y;
 	int				nub1_x;
 	int				nub1_y;
+<<<<<<< HEAD
 	TPW_JOYSTICK			*nub0;
 	TPW_JOYSTICK			*nub1;
+=======
+	SDL_Joystick			*nub0;
+	SDL_Joystick			*nub1;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	int				nub0i;
 	int				nub1i;
 } INPUT_JOYSTICK;
@@ -93,6 +98,10 @@ typedef struct {
 
 
 typedef struct {
+<<<<<<< HEAD
+=======
+	SDL_Event			event;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	unsigned int			key;
 	unsigned int			keypending;
 	unsigned int			upper;

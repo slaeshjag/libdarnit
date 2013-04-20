@@ -435,6 +435,11 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 	ts->animation.data = NULL;
 	ts->w = tilesheet_w;
 	ts->h = tilesheet_h;
+<<<<<<< HEAD
+=======
+	ts->tiles_w = tiles_w;
+	ts->tiles_h = tiles_h;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	ts->format = format;
 
 	#ifndef _WIN32
@@ -475,9 +480,15 @@ void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq
 	if (!ts)
 		return;
 	if (w)
+<<<<<<< HEAD
 		*w = ts->w;
 	if (h)
 		*h = ts->h;
+=======
+		*w = ts->tiles_w * ts->wsq;
+	if (h)
+		*h = ts->tiles_h * ts->hsq;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	if (wsq)
 		*wsq = ts->wsq;
 	if (hsq)

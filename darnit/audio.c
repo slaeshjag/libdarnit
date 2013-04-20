@@ -32,13 +32,21 @@ void audioSoundStop(int key) {
 	if (key == -1)
 		return;
 
+<<<<<<< HEAD
 	tpw_mutex_lock(d->audio.lock);
+=======
+	SDL_mutexP(d->audio.lock);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
 		if (d->audio.playback_chan[i].key == key)
 			break;
 	if (i == AUDIO_PLAYBACK_CHANNELS) {
+<<<<<<< HEAD
 		tpw_mutex_lock(d->audio.lock);
+=======
+		SDL_mutexV(d->audio.lock);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 		return;
 	}
 
@@ -46,7 +54,11 @@ void audioSoundStop(int key) {
 	audioUnload(d->audio.playback_chan[i].res);
 	d->audio.playback_chan[i].key = -1;
 	
+<<<<<<< HEAD
 	tpw_mutex_unlock(d->audio.lock);
+=======
+	SDL_mutexV(d->audio.lock);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	return;
 }
@@ -141,6 +153,12 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 				d->audio.samplebuf[(j<<1)+1] += (((int)d->audio.scratchbuf[(j<<1)+1] * d->audio.playback_chan[i].rvol) >> 7);
 			}
 		}
+<<<<<<< HEAD
+=======
+
+		d->audio.playback_chan[i].pos += decoded;
+
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	}
 
 	if (d->audio.compression_enabled) {
@@ -172,6 +190,7 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 }
 
 
+<<<<<<< HEAD
 void audioMix(void *data, void *mixdata, int bytes) {
 	int frames;
 
@@ -181,12 +200,24 @@ void audioMix(void *data, void *mixdata, int bytes) {
 	audioDecodeMixNew(frames, mixdata);
 	
 	tpw_mutex_unlock(d->audio.lock);
+=======
+void audioMix(void *data, Uint8 *mixdata, int bytes) {
+	int frames;
+
+	frames = bytes >>2;
+	SDL_mutexP(d->audio.lock);
+	
+	audioDecodeMixNew(frames, mixdata);
+	
+	SDL_mutexV(d->audio.lock);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	return;
 }
 
 
 int audioInit() {
+<<<<<<< HEAD
 	TPW_SOUND_SETTINGS fmt;
 	int i;
 
@@ -198,6 +229,19 @@ int audioInit() {
 	fmt.userdata = NULL;
 
 	d->audio.lock = tpw_mutex_create();
+=======
+	SDL_AudioSpec fmt;
+	int i;
+
+	fmt.freq = AUDIO_SAMPLE_RATE;
+	fmt.format = AUDIO_S16;
+	fmt.channels = 2;
+	fmt.samples = 1024;
+	fmt.callback = audioMix;
+	fmt.userdata = NULL;
+
+	d->audio.lock = SDL_CreateMutex();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	if ((d->audio.samplebuf = malloc(1024*4*4*2)) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to malloc(%i)\n", 4096);
@@ -212,8 +256,13 @@ int audioInit() {
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
 		d->audio.playback_chan[i].key = -1;
 
+<<<<<<< HEAD
 	if (tpw_sound_open(fmt) < 0) {
 		fprintf(stderr, "libDarnit: Unable to open audio\n");
+=======
+	if (SDL_OpenAudio(&fmt, NULL) < 0) {
+		fprintf(stderr, "libDarnit: Unable to open audio: %s\n", SDL_GetError());
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 		return -1;
 	}
 
@@ -221,7 +270,11 @@ int audioInit() {
 	d->audio.compression = 1;
 	d->audio.compression_enabled = 1;
 
+<<<<<<< HEAD
 	tpw_sound_pause(0);
+=======
+	SDL_PauseAudio(0);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	return 0;
 }

@@ -42,6 +42,19 @@ freely, subject to the following restrictions:
 #endif
 
 
+<<<<<<< HEAD
+=======
+#include	<X11/Xutil.h>
+#ifndef RASPBERRYPI
+#include	<GLES/egl.h>
+#endif
+#include	<EGL/egl.h>
+#include	<GLES/gl.h>
+#include	<GLES/glext.h>
+#include	<SDL/SDL.h>
+#include	<SDL/SDL_syswm.h>
+
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 #ifdef PANDORA
 	#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
 #else
@@ -64,6 +77,15 @@ static const EGLint egl_config_attrib[] = {
 
 
 typedef struct {
+<<<<<<< HEAD
+=======
+	Display				*XDisplay;
+	EGLConfig			eglConfig;
+	EGLContext			eglContext;
+	EGLSurface			eglSurface;
+	EGLDisplay			eglDisplay;
+	SDL_Surface			*screen;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	FADE_STRUCT			fade;
 	float				swgran;
 	float				shgran;

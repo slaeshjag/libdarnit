@@ -66,6 +66,11 @@ typedef struct {
 	unsigned int	h;
 	TILESHEET_TILE	*tile;
 	unsigned int	tiles;
+<<<<<<< HEAD
+=======
+	unsigned int	tiles_w;
+	unsigned int	tiles_h;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	float		sw;
 	float		sh;
 	float		swgran;
