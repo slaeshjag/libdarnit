@@ -152,6 +152,12 @@ void tpw_joystick_enable(TPW_ENBOOL enable) {
 }
 
 
+const char *tpw_joystick_name(int i) {
+	#warning tpw_joystick_name(): Not implemented yet
+	return;
+}
+
+
 unsigned int tpw_keys_modifiers() {
 	return tpw.modifiers;
 }

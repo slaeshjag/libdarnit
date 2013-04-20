@@ -53,3 +53,9 @@ unsigned int tpw_keys_modifiers() {
 	#warning tpw_keys_modifiers(): Not implemented yet
 	return 0;
 }
+
+
+const char *tpw_joystick_name(int i) {
+	#warning tpw_joystick_name(): Not implemented yet
+	return "blah";
+}
