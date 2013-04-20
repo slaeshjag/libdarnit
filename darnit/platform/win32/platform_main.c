@@ -61,7 +61,7 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	tpw.fullscreen = fullscreen;
 
 	tpw.hInstance = GetModuleHandle(NULL);
-	wc.style = CS_OWNDC;
+	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = tpw_message_process;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
