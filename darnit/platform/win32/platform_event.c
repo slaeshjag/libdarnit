@@ -148,9 +148,6 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		case WM_KEYDOWN:
 			if (tpw.keys[wParam])
 				return 0;
-			if (wParam == 1) goto lbuttondown;
-			if (wParam == 2) goto rbuttondown;
-			if (wParam == 4) goto mbuttondown;
 			event.type = TPW_EVENT_TYPE_KEYDOWN;
 			tpw.modifiers |= tpw_modifier(wParam);
 			event.key.keysym = tpw_keysym_translate(wParam);
@@ -163,9 +160,6 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				event.key.unicode = 0;
 			break;
 		case WM_KEYUP:
-			if (wParam == 1) goto lbuttonup;
-			if (wParam == 2) goto rbuttonup;
-			if (wParam == 4) goto mbuttonup;
 			tpw.keys[wParam] = 0;
 			event.type = TPW_EVENT_TYPE_KEYUP;
 			event.key.keysym = tpw_keysym_translate(wParam);
@@ -173,32 +167,26 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			tpw.modifiers ^= tpw_modifier(wParam);
 			break;
 		case WM_LBUTTONDOWN:
-			lbuttondown:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_DOWN;
 			event.mouse.button = TPW_MOUSE_BUTTON_LEFT;
 			break;
 		case WM_MBUTTONDOWN:
-			mbuttondown:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_DOWN;
 			event.mouse.button = TPW_MOUSE_BUTTON_MIDDLE;
 			break;
 		case WM_RBUTTONDOWN:
-			rbuttondown:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_DOWN;
 			event.mouse.button = TPW_MOUSE_BUTTON_RIGHT;
 			break;
 		case WM_LBUTTONUP:
-			lbuttonup:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_UP;
 			event.mouse.button = TPW_MOUSE_BUTTON_LEFT;
 			break;
 		case WM_MBUTTONUP:
-			mbuttonup:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_UP;
 			event.mouse.button = TPW_MOUSE_BUTTON_MIDDLE;
 			break;
 		case WM_RBUTTONUP:
-			rbuttonup:
 			event.type = TPW_EVENT_TYPE_MOUSEBTN_UP;
 			event.mouse.button = TPW_MOUSE_BUTTON_RIGHT;
 			break;
