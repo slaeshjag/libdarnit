@@ -22,7 +22,6 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#define TPW_INTERNAL
 #include "../main.h"
 
 

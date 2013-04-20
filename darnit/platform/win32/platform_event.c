@@ -22,7 +22,6 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#define	TPW_INTERNAL
 #include "../main.h"
 
 unsigned int tpw_modifier(unsigned int vk);
@@ -38,7 +37,7 @@ LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 		case WM_ACTIVATE:
 			event.type = TPW_EVENT_TYPE_ACTIVE;
 			event.active.gain = (!HIWORD(wParam));
-			event.active.active = 1;
+			event.active.app_active = 1;
 			break;
 		case WM_SYSCOMMAND:
 			switch (wParam) {
@@ -52,7 +51,7 @@ LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 			event.type = TPW_EVENT_TYPE_QUIT;
 			break;
 		case WM_KEYDOWN:
-			if (event.keys[wParam])
+			if (tpw.keys[wParam])
 				return 0;
 			event.type = TPW_EVENT_TYPE_KEYDOWN;
 			tpw.modifiers |= tpw_modifier(wParam);

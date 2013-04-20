@@ -1,6 +1,6 @@
 /*
-Copyright (c) 2013 Steven Arnow
-'threads.c' - This file is part of libdarnit_tpw
+Copyright (c) 2013 Axel Isaksson
+'sound_sdl.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,3 +22,9 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+
+#ifndef __TPW_WIN32_SOUND_H__
+#define	__TPW_WIN32_SOUND_H__
+
+
+#endif

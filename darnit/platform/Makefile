@@ -1,23 +1,24 @@
 # Project: libDarnit - tpw (Tiny Platform Wrapper)
 include $(TOPDIR)/config.mk
 
-OBJECTFILES	=	*.o
-
 DEPENDS		=
 PLATFORMLIB	=	tpw.a
-CFLAGS		+=	-std=c89 -pedantic
 
 SRCFILES	=	$(wildcard *.c)
 OBJFILES	=	$(SRCFILES:.c=.o)
 .PHONY: all clean
 
 all: $(OBJFILES) $(DEPENDS)
+	@echo " [ CD ] darnit/platform/$(PLATFORM)/"
+	+@make -C $(PLATFORM)
 	@echo " [ AR ] $(PLATFORMLIB)"
-	@$(AR) -cr $(PLATFORMLIB) $(OBJECTFILES)
+	@$(AR) -cr $(PLATFORMLIB) $(OBJFILES) $(PLATFORM)/*.o
 	@echo "Done."
 	@echo
 	
 clean:
+	@echo " [ CD ] darnit/platform/$(PLATFORM)/"
+	+@make -C $(PLATFORM) clean
 	@echo
 	@echo " [ RM ] $(OBJFILES)"
 	@$(RM) $(OBJFILES)

@@ -22,10 +22,9 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#include "main.h"
 
-#ifdef PLATFORM_SDL
-#include "sdl/main_sdl.c"
-#endif
+TPW tpw;
 
 int tpw_init() {
 	if (!tpw_event_init(512))

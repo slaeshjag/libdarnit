@@ -25,13 +25,7 @@ freely, subject to the following restrictions:
 #ifndef __TPW_THREADS_H__
 #define	__TPW_THREADS_H__
 
-#ifdef TPW_INTERNAL
-#ifdef PLATFORM_SDL
-#include "sdl/threads_sdl.h"
-#endif
-#else
-typedef	void		TPW_MUTEX;
-#endif
+#include "platform_threads.h"
 
 
 TPW_MUTEX *tpw_mutex_create();

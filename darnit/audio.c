@@ -141,6 +141,9 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 				d->audio.samplebuf[(j<<1)+1] += (((int)d->audio.scratchbuf[(j<<1)+1] * d->audio.playback_chan[i].rvol) >> 7);
 			}
 		}
+
+		d->audio.playback_chan[i].pos += decoded;
+
 	}
 
 	if (d->audio.compression_enabled) {

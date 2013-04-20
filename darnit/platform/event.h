@@ -26,11 +26,7 @@ freely, subject to the following restrictions:
 #ifndef __PLATFORM_INPUT_H__
 #define	__PLATFORM_INPUT_H__
 
-#ifdef TPW_INTERNAL
-#ifdef PLATFORM_SDL
-#include "sdl/event_sdl.h"
-#endif
-#endif
+#include "platform_event.h"
 
 /* Modifier keys */
 #define	TPW_KEY_MOD_LSHIFT		0x0001

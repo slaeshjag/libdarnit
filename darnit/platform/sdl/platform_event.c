@@ -24,7 +24,6 @@ freely, subject to the following restrictions:
 
 #include "../main.h"
 
-
 void tpw_event_loop() {
 	SDL_Event event_sdl;
 	TPW_EVENT event;

@@ -25,8 +25,9 @@ freely, subject to the following restrictions:
 #include <windows.h>
 #include <mmsystem.h>
 
-#define TPW_INTERNAL
 #include "../main.h"
+
+#define BUFFERS 8
 
 static const unsigned int sample_format[] = {
 	[TPW_SAMPLE_FORMAT_S16LE] = 16,
@@ -41,20 +42,23 @@ static struct CALLBACK_DATA {
 static struct {
 	HWAVEOUT handle;
 	WAVEFORMATEX format;
-	WAVEHDR header[2];
+	WAVEHDR header[BUFFERS];
 	unsigned int current;
 } sound;
 
-static void callback(HWAVEOUT hwo, UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR param2) {
+static void CALLBACK callback(HWAVEOUT hwo, UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR param2) {
 	if(msg!=WOM_DONE)
 		return;
 	callback_data.fetch_audio(callback_data.userdata, sound.header[sound.current].lpData, sound.header[sound.current].dwBufferLength);
 	waveOutWrite(hwo, &(sound.header[sound.current]), sizeof(WAVEHDR));
 	
-	sound.current=!sound.current;
+	sound.current=(sound.current+1)%BUFFERS;
 }
 
 int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
+	int res;
+	unsigned int buflen;
+	int i;
 	sound.format.wFormatTag = WAVE_FORMAT_PCM;
 	sound.format.nChannels = settings.channels;
 	sound.format.nSamplesPerSec = settings.sample_rate;
@@ -66,25 +70,32 @@ int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 	callback_data.fetch_audio=settings.callback;
 	callback_data.userdata=settings.userdata;
 	
-	sound.header[0].dwBufferLength=sound.header[1].dwBufferLength=(sample_format[settings.format]/8)*settings.samples;
-	sound.header[0].lpData=malloc(sound.header[0].dwBufferLength);
-	sound.header[1].lpData=malloc(sound.header[1].dwBufferLength);
+	buflen=(sample_format[settings.format]/8)*settings.samples;
 	
-	if(waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD_PTR) callback, 0, CALLBACK_FUNCTION)==MMSYSERR_NOERROR) {
-		waveOutPrepareHeader(sound.handle, &(sound.header[0]), sizeof(WAVEHDR));
-		waveOutPrepareHeader(sound.handle, &(sound.header[1]), sizeof(WAVEHDR));
+	for(i=0; i<BUFFERS; i++) {
+		sound.header[i].dwBufferLength=buflen;
+		sound.header[i].lpData=malloc(buflen);
+	}
+	
+	if((res=waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD) callback, callback, CALLBACK_FUNCTION))==MMSYSERR_NOERROR) {
+		fprintf(stderr, "arne\n");
+		for(i=0; i<BUFFERS; i++)
+			waveOutPrepareHeader(sound.handle, &(sound.header[i]), sizeof(WAVEHDR));
 		waveOutPause(sound.handle);
 		return 0;
 	}
+	fprintf(stderr, "res %i\n", res);
 	return -1;
 }
 
 
 void tpw_sound_control(TPW_SOUND_COMMAND command) {
+	int i;
 	switch(command) {
 		case TPW_SOUND_COMMAND_PLAY:
 			waveOutRestart(sound.handle);
-			callback(sound.handle, WOM_DONE, 0, 0, 0);
+			for(i=0; i<BUFFERS; i++)
+				callback(sound.handle, WOM_DONE, 0, 0, 0);
 			break;
 		case TPW_SOUND_COMMAND_PAUSE:
 			waveOutPause(sound.handle);

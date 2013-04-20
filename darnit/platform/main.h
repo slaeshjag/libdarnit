@@ -51,11 +51,7 @@ typedef struct {
 	TPW_EVENT_S	event;
 } TPW_COMMON;
 
-#ifdef PLATFORM_SDL
-#ifdef TPW_INTERNAL
-#include "sdl/main_sdl.h"
-#endif
-#endif
+#include "platform_main.h"
 
 int tpw_init();
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, unsigned int bpp);
@@ -70,8 +66,6 @@ void tpw_cursor_show(unsigned int show);
 int tpw_icon_set(void *pixdata_rgba32, int w, int h);
 void tpw_quit();
 
-#ifdef TPW_INTERNAL
-TPW tpw;
-#endif
+extern TPW tpw;
 
 #endif

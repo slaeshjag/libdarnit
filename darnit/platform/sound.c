@@ -22,6 +22,3 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.c"
-#endif

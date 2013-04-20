@@ -25,12 +25,7 @@ freely, subject to the following restrictions:
 #ifndef __TPW_SOUND_H__
 #define	__TPW_SOUND_H__
 
-
-#ifdef TPW_INTERNAL
-#ifdef PLATFORM_SDL
-#include "sdl/sound_sdl.h"
-#endif
-#endif
+#include "platform_sound.h"
 
 typedef enum {
 	TPW_SAMPLE_FORMAT_S16LE,

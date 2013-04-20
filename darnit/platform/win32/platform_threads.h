@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'threads_sdl.c' - This file is part of libdarnit_tpw
+'threads_sdl.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,23 +22,12 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#define	TPW_INTERNAL
-#include "../threads.h"
+#ifndef __TPW_WIN32_THREADS_H__
+#define	__TPW_WIN32_THREADS_H__
 
-TPW_MUTEX *tpw_mutex_create() {
-	return SDL_CreateMutex();
-}
+#include <SDL/SDL.h>
+#include <SDL/SDL_thread.h>
 
+typedef SDL_mutex TPW_MUTEX;
 
-void tpw_mutex_lock(TPW_MUTEX *mutex) {
-	SDL_mutexP(mutex);
-	
-	return;
-}
-
-
-void tpw_mutex_unlock(TPW_MUTEX *mutex) {
-	SDL_mutexV(mutex);
-
-	return;
-}
+#endif

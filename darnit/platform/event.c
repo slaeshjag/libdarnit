@@ -22,13 +22,7 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#define TPW_INTERNAL
 #include "main.h"
-
-#ifdef PLATFORM_SDL
-#include "sdl/event_sdl.c"
-#endif
-
 
 int tpw_event_init(int queue_size) {
 	tpw.common.event.event_read = 0;
