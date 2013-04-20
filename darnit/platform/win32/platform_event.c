@@ -127,7 +127,7 @@ unsigned int tpw_keysym_translate(unsigned int vk);
 LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	TPW_EVENT event;
 	WORD ht;
-	static bool hidden_cursor = 0;
+	static int hidden_cursor = 0;
 	short keys[2];
 
 	switch (uMsg) {
@@ -204,7 +204,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			DefWindowProc(hWnd, uMsg, wParam, lParam);
 			break;
 		case WM_SETCURSOR:
-			ht = LOWORD(lparam);
+			ht = LOWORD(lParam);
 			if (ht == HTCLIENT && !hidden_cursor && tpw.hide_cursor) {
 				hidden_cursor = 1;
 				ShowCursor(FALSE);
@@ -253,7 +253,7 @@ void tpw_joystick_enable(TPW_ENBOOL enable) {
 
 const char *tpw_joystick_name(int i) {
 	#warning tpw_joystick_name(): Not implemented yet
-	return;
+	return "Blah";
 }
 
 
