@@ -45,13 +45,13 @@ typedef struct {
 
 #include "keysym.h"
 #include "sound.h"
-#include "event.h"
 
 typedef struct {
 	TPW_EVENT_S	event;
 } TPW_COMMON;
 
 #include "platform_main.h"
+#include "event.h"
 
 int tpw_init();
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp);
