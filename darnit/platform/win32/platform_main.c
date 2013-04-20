@@ -150,10 +150,10 @@ void tpw_sleep(unsigned int msec) {
 
 
 unsigned int tpw_ticks() {
-	LARGE_INTEGER i, j;
+	unsigned long long i, j;
 	QueryPerformanceCounter(&i);
 	QueryPerformanceFrequency(&j);
-	j /= 1000;
+	j = j / 1000;
 	if (j == 0)
 		j = 1;
 	return i / j;
