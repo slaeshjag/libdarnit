@@ -191,7 +191,7 @@ TPW_RECT **tpw_videomodes_list() {
 }
 
 
-void tpw_input_unicode_enable(int enable) {
+void tpw_input_unicode(int enable) {
 	tpw.unicode_key = enable;
 	return;
 }
