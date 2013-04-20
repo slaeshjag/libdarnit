@@ -29,6 +29,28 @@ void *d_init_partial(const char *data_dir);
 int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
 
 
+<<<<<<< HEAD
+=======
+void darnit_init_common() {
+	#ifdef _WIN32
+	void *libtmp;
+
+	SDL_Init(SDL_INIT_NOPARACHUTE);
+	libtmp = LoadLibrary(TEXT("DDRAW.DLL"));
+	if (libtmp != NULL)
+		FreeLibrary(libtmp);
+	#endif
+
+	#ifdef _WIN32
+	SDL_SetModuleHandle(GetModuleHandle(NULL));
+	#endif
+
+
+	return;
+}
+
+
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 void darnitSetPlatform(int partial) {
 	DARNIT_ENDIAN_CONVERT end;
 
@@ -96,9 +118,15 @@ int EXPORT_THIS d_init_rest(const char *wtitle, int win_w, int win_h, int fullsc
 
 	videoSetIcon(icon);
 	renderInit();
+<<<<<<< HEAD
 	tpw_cursor_show(0);
 	d->fps.time_at_last_frame = d->fps.time_at_flip = tpw_ticks();
 	d->fps.time = tpw_ticks() / 1000;
+=======
+	SDL_ShowCursor(0);
+	d->fps.time_at_last_frame = d->fps.time_at_flip = SDL_GetTicks();
+	d->fps.time = SDL_GetTicks() / 1000;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	t = videoInit(wtitle, win_w, win_h, fullscreen);
 	darnitSetPlatform(0);
@@ -114,13 +142,24 @@ void EXPORT_THIS *d_init_partial(const char *data_dir) {
 		return d;
 	}
 
+<<<<<<< HEAD
 	tpw_init();
+=======
+	#ifdef _WIN32
+	darnit_init_common();
+	#endif
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	d->platform.platform = 0;
 	darnitSetPlatform(1);
 	utilInit();
 
+<<<<<<< HEAD
 	if (inputInit() < 0);
+=======
+	if (videoInitPartial());
+	else if (inputInit() < 0);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	else if (audioInit() < 0);
 	else if (socketInit() < 0);
 	else {
@@ -135,7 +174,11 @@ void EXPORT_THIS *d_init_partial(const char *data_dir) {
 
 
 void EXPORT_THIS d_loop() {
+<<<<<<< HEAD
 	int time = tpw_ticks();
+=======
+	int time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	if (time / 1000 != d->fps.time) {
 		d->fps.frames_last = d->fps.frames_counting;
@@ -151,7 +194,11 @@ void EXPORT_THIS d_loop() {
 	inputPoll(d);
 
 	d->fps.time_at_last_frame = d->fps.time_at_flip;
+<<<<<<< HEAD
 	d->fps.time_at_flip = tpw_ticks();
+=======
+	d->fps.time_at_flip = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	socketConnectLoop();
 
 	return;
@@ -159,7 +206,11 @@ void EXPORT_THIS d_loop() {
 
 
 unsigned int EXPORT_THIS d_time_get() {
+<<<<<<< HEAD
 	return tpw_ticks();
+=======
+	return SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 }
 
 
@@ -187,7 +238,11 @@ void EXPORT_THIS d_quit() {
 	videoDestroy();
 	
 	#ifndef PANDORA
+<<<<<<< HEAD
 	tpw_quit();
+=======
+	SDL_Quit();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	#endif
 
 	exit(0);
@@ -197,7 +252,11 @@ void EXPORT_THIS d_quit() {
 
 
 void EXPORT_THIS **d_videomode_get() {
+<<<<<<< HEAD
 	void **nnn = (void **) tpw_videomodes_list();
+=======
+	void **nnn = (void **) SDL_ListModes(NULL, SDL_HWSURFACE | SDL_FULLSCREEN);
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	if (nnn == (void **) -1)
 		return NULL;
 	return nnn;

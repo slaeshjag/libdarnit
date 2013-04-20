@@ -26,6 +26,11 @@ freely, subject to the following restrictions:
 #ifndef __AUDIO_H__
 #define	__AUDIO_H__
 
+<<<<<<< HEAD
+=======
+#include <SDL/SDL_audio.h>
+#include <SDL/SDL_mutex.h>
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 #include <libmodplug/modplug.h>
 #include <stb_vorbis.h>
 
@@ -89,7 +94,11 @@ typedef struct {
 //	short				*samplebuf;
 	short				*scratchbuf;
 	int				*samplebuf;
+<<<<<<< HEAD
 	TPW_MUTEX			*lock;
+=======
+	SDL_mutex			*lock;
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	AUDIO_PLAYBACK_CHANNEL		playback_chan[AUDIO_PLAYBACK_CHANNELS];
 	unsigned int			cnt;
 	int				compression;

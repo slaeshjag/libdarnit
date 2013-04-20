@@ -276,7 +276,11 @@ void *menutkVerticalShadeCreate(int x, int y, int shadeh, int option_advance, in
 	menu->change = 1;
 	menu->hidden = 0;
 	menu->text = NULL;
+<<<<<<< HEAD
 	menu->time = tpw_ticks();
+=======
+	menu->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	menu->autorep = 0;
 	menu->str = NULL;
 	menu->scroll_threshold = max_h;
@@ -328,7 +332,11 @@ void *menutkVerticalCreate(const char *options, int x, int y, TEXT_FONT *font, i
 	menu->swgran = d->video.swgran, menu->shgran = d->video.shgran;
 	menu->change = 1;
 	menu->hidden = 0;
+<<<<<<< HEAD
 	menu->time = tpw_ticks();
+=======
+	menu->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	menu->autorep = 0;
 	menu->top_sel = 0;
 	menu->scroll_threshold = max_h;
@@ -459,7 +467,11 @@ void menutkInputH(MENUTK_ENTRY *menu) {
 
 
 void menutkInputV(MENUTK_ENTRY *menu) {
+<<<<<<< HEAD
 	unsigned int step = tpw_ticks();
+=======
+	unsigned int step = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	
 	step -= menu->time;
 
@@ -492,11 +504,19 @@ void menutkInputV(MENUTK_ENTRY *menu) {
 		if (menu->autorep && step >= MENUTK_AUTOREP_STEP)
 			menu->autorep = 0;
 		else if (menu->autorep != 1 && step >= MENUTK_AUTOREP_DELAY && (d->input.key & (KEY_UP | KEY_DOWN))) {
+<<<<<<< HEAD
 			menu->time = tpw_ticks();
 			menu->autorep = 1;
 		} else if (!(d->input.key & (KEY_UP | KEY_DOWN))) {
 			menu->autorep = 0;
 			menu->time = tpw_ticks();
+=======
+			menu->time = SDL_GetTicks();
+			menu->autorep = 1;
+		} else if (!(d->input.key & (KEY_UP | KEY_DOWN))) {
+			menu->autorep = 0;
+			menu->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 		}
 		return;
 	}
@@ -504,7 +524,11 @@ void menutkInputV(MENUTK_ENTRY *menu) {
 	menutkTopSelRecalc(menu);
 
 	if (menu->autorep == 1)
+<<<<<<< HEAD
 		menu->time = tpw_ticks();
+=======
+		menu->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	menu->change = 1;
 	if (menu->selection > -1)
 		menutkHighlightMove(menu, 0, menu->advance*(menu->selection - menu->top_sel));
@@ -555,7 +579,11 @@ void menutkSpinbuttonInput(MENUTK_ENTRY *menu) {
 void menutkUpdateCursorBlink(MENUTK_ENTRY *menu) {
 	unsigned int time;
 
+<<<<<<< HEAD
 	time = tpw_ticks();
+=======
+	time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	if (menu->waiting == 1)
 		menu->cursor_display = ((time % 1000) >= 500) ? 1 : 0;
 	else
@@ -580,7 +608,11 @@ void menutkTextinputInput(MENUTK_ENTRY *menu) {
 	}
 
 	if (menu->selection == -1);
+<<<<<<< HEAD
 	else if (key == TPW_KEY_RETURN) {
+=======
+	else if (key == SDLK_RETURN) {
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 		menu->waiting = 0;
 		menu->cursor_display = 0;
 	} else if (key == 0) {

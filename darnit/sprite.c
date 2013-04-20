@@ -126,7 +126,11 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 	if (sprite == NULL)
 		return;
 
+<<<<<<< HEAD
 	sprite->time = tpw_ticks();
+=======
+	sprite->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	sprite->dir = dir;
 	sprite->repeat = 1;
 	renderCalcTileCache(&sprite->cache, sprite->ts, sprite->spr[dir].tile[sprite->frame].tile);
@@ -207,7 +211,11 @@ void spriteEnableAnimation(SPRITE_ENTRY *sprite) {
 	dir = sprite->dir;
 
 	sprite->animate = 1;
+<<<<<<< HEAD
 	sprite->time = tpw_ticks();
+=======
+	sprite->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	sprite->tleft = sprite->spr[dir].tile[sprite->frame].time;
 
 	return;
@@ -226,7 +234,11 @@ void spriteDisableAnimation(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return;
 
 	sprite->frame = 0;
+<<<<<<< HEAD
 	sprite->time = tpw_ticks();
+=======
+	sprite->time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 	spriteAnimate(sprite);
 	sprite->animate = 0;
 
@@ -238,7 +250,11 @@ void spriteAnimate(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return;
 	unsigned int time, dir, tile;
 
+<<<<<<< HEAD
 	time = tpw_ticks();
+=======
+	time = SDL_GetTicks();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 	if (sprite->used == 0 || sprite->animate == 0)
 		return;

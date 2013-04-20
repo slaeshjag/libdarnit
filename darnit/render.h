@@ -144,6 +144,10 @@ typedef struct {
 
 
 int renderInit();
+<<<<<<< HEAD
+=======
+int videoInitPartial();
+>>>>>>> 21eafb2752d367b675f1f5e5f75430333a4a015f
 
 int renderLineTest();
 
