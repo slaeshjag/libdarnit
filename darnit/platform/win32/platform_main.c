@@ -29,7 +29,7 @@ int tpw_init_platform() {
 	ZeroMemory(tpw.keys, 256);
 	tpw.unicode_key = 0;
 	tpw.modifiers = 0;
-	hide_cursor = 0;
+	tpw.hide_cursor = 0;
 	return 1;
 }
 
@@ -151,8 +151,8 @@ void tpw_sleep(unsigned int msec) {
 
 unsigned int tpw_ticks() {
 	unsigned long long i, j;
-	QueryPerformanceCounter(&i);
-	QueryPerformanceFrequency(&j);
+	QueryPerformanceCounter((LARGE_INTEGER *) &i);
+	QueryPerformanceFrequency((LARGE_INTEGER *) &j);
 	j = j / 1000;
 	if (j == 0)
 		j = 1;
