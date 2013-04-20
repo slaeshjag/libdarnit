@@ -36,7 +36,7 @@ int tpw_init_platform() {
 	tpw.hide_cursor = 0;
 
 	for (i = 0; EnumDisplaySettings(NULL, i, &devmode); i++) {
-		tpw.screen_res = realloc(tpw.screen_res, sizeof(TPW_RECT *) * (i + 1));
+		tpw.screen_res = realloc(tpw.screen_res, sizeof(TPW_RECT *) * (i + 2));
 		tpw.screen_res[i] = malloc(sizeof(TPW_RECT));
 		tpw.screen_res[i]->x = tpw.screen_res[i]->y = 0;
 		tpw.screen_res[i]->w = devmode.dmPelsWidth;
