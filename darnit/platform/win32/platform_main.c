@@ -26,10 +26,25 @@ freely, subject to the following restrictions:
 
 
 int tpw_init_platform() {
+	DEVMODE devmode;
+	int i;
+	
+	tpw.screen_res = NULL;
 	ZeroMemory(tpw.keys, 256);
 	tpw.unicode_key = 0;
 	tpw.modifiers = 0;
 	tpw.hide_cursor = 0;
+
+	for (i = 0; EnumDisplaySettings(NULL, i, &devmode); i++) {
+		tpw.screen_res = realloc(tpw.screen_res, (TPW_RECT *) * (i + 1));
+		tpw.screen_res[i] = malloc(sizeof(TPW_RECT));
+		tpw.screen_res[i]->x = tpw.screen_res[i]->y = 0;
+		tpw.screen_res[i]->w = dmPelsWidth;
+		tpw.screen_res[i]->h = dmPelsHeight;
+	}
+
+	if (i > 0) tpw.screen_res[i] = NULL;
+
 	return 1;
 }
 
@@ -187,8 +202,7 @@ const char *tpw_key_name_get(int sym) {
 
 
 TPW_RECT **tpw_videomodes_list() {
-	#warning tpw_videomodes_list(): Not implemented yet
-	return (void *) -1;
+	return tpw.screen_res;
 }
 
 

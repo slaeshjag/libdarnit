@@ -46,6 +46,9 @@ typedef struct {
 	char			keys[256];
 	unsigned int		modifiers;
 	unsigned int		hide_cursor;
+
+	/* Screen resolution */
+	TPW_RECT		**screen_res;
 } TPW;
 
 
