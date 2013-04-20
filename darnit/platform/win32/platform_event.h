@@ -29,7 +29,7 @@ freely, subject to the following restrictions:
 LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 
-extern unsigned short vk_translate[256]
+extern unsigned short vk_translate[256];
 
 
 #endif
