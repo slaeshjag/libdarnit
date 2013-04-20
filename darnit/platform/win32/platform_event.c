@@ -28,7 +28,7 @@ unsigned int tpw_modifier(unsigned int vk);
 unsigned int tpw_keysym_translate(unsigned int vk); 
 
 
-LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	TPW_EVENT event;
 	short keys[2];
 	#warning tpw_message_process(): Not tested yet
@@ -60,9 +60,9 @@ LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 			if (!event.key.keysym)
 				return 0;
 			if (tpw.unicode_key)
-				event.unicode = (ToUnicode(wParam, lParam, tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
+				event.key.unicode = (ToUnicode(wParam, lParam, tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 			else
-				event.unicode = 0;
+				event.key.unicode = 0;
 			break;
 		case WM_KEYUP:
 			tpw.keys[wParam] = 0;
@@ -80,7 +80,7 @@ LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 				case MK_MBUTTON:
 					event.mouse.button = TPW_MOUSE_BUTTON_MIDDLE;
 					break;
-				case MT_RBUTTON:
+				case MK_RBUTTON:
 					event.mouse.button = TPW_MOUSE_BUTTON_RIGHT;
 					break;
 				default:
@@ -113,7 +113,7 @@ LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 			event.mouse.y = GET_Y_LPARAM(lParam);
 			break;
 
-		defailt:
+		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 
