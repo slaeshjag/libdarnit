@@ -125,7 +125,11 @@ LRESULT CALLBACK tpw_message_process(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 
 
 void tpw_event_loop() {
-	#warning tpw_event_loop(): Not implemented yet
+	#warning tpw_event_loop(): Probably incomplete implementation
+	while PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 	return;
 }
 
@@ -149,8 +153,7 @@ void tpw_joystick_enable(TPW_ENBOOL enable) {
 
 
 unsigned int tpw_keys_modifiers() {
-	#warning tpw_keys_modifiers(): Not implemented yet
-	return 0;
+	return tpw.modifiers;
 }
 
 
