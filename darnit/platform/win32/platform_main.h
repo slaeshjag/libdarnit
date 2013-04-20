@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 
 #include <windows.h>
 #include <windowsx.h>
-#include <gl/gl.h>
+#include <GL/gl.h>
 
 #define	WINDOW_CLASS_NAME	"TPW window"
 

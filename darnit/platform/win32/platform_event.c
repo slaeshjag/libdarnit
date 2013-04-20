@@ -60,7 +60,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			if (!event.key.keysym)
 				return 0;
 			if (tpw.unicode_key)
-				event.key.unicode = (ToUnicode(wParam, lParam, (unsigned short *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
+				event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 			else
 				event.key.unicode = 0;
 			break;
