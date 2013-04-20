@@ -60,7 +60,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			if (!event.key.keysym)
 				return 0;
 			if (tpw.unicode_key)
-				event.key.unicode = (ToUnicode(wParam, lParam, tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
+				event.key.unicode = (ToUnicode(wParam, lParam, (unsigned short *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 			else
 				event.key.unicode = 0;
 			break;
@@ -124,8 +124,9 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 
 void tpw_event_loop() {
+	MSG msg;
 	#warning tpw_event_loop(): Probably incomplete implementation
-	while PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) {
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
