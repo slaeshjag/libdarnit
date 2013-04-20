@@ -30,7 +30,7 @@ TPW_MUTEX *tpw_mutex_create() {
 
 
 void tpw_mutex_lock(TPW_MUTEX *mutex) {
-	WaitForSingleObject((HANDLE) mutex);
+	WaitForSingleObject((HANDLE) mutex, INFINITE);
 	
 	return;
 }
