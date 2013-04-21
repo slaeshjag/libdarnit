@@ -60,12 +60,14 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			tpw.modifiers |= tpw_modifier(wParam);
 			event.key.keysym = tpw_keysym_translate(wParam);
 			tpw.keys[wParam] = 0xFF;
-			if (!event.key.keysym)
-				return 0;
 			if (tpw.unicode_key)
 				event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 			else
 				event.key.unicode = 0;
+			if (!event.key.keysym && !event.key.unicode)
+				return 0;
+			if (!event.key.keysym)
+				event.key.keysym = 512 + wParam;
 			break;
 		case WM_KEYUP:
 			tpw.keys[wParam] = 0;
