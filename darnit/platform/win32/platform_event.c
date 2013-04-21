@@ -198,33 +198,6 @@ unsigned int tpw_modifier(unsigned int vk) {
 	return 0;
 }
 
-
-unsigned int tpw_modifier(unsigned int vk) {
-	switch (vk) {
-		case 0xA0:
-			return TPW_KEY_MOD_LSHIFT;
-		case 0xA1:
-			return TPW_KEY_MOD_RSHIFT;
-		case 0xA2:
-			return TPW_KEY_MOD_LCTRL;
-		case 0xA3:
-			return TPW_KEY_MOD_RCTRL;
-		case 0xA4:
-			return TPW_KEY_MOD_LALT;
-		case 0xA5:
-			return TPW_KEY_MOD_RALT;
-		case 0x5B:
-			return TPW_KEY_MOD_LMETA;
-		case 0x5C:
-			return TPW_KEY_MOD_RMETA;
-		default:
-			return 0;
-	}
-
-	return 0;
-}
-
-
 void tpw_event_platform_init() {
 	/* Ugly hack to make MSVS happy... <.< */
 	vk_translate[0x08] = 8;
