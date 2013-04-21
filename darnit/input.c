@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 #ifndef DARNIT_HEADLESS
+void d_quit();
 
 void inputRawPush(int sym, int action, int unicode) {
 	if (d->input.raw.use == RAW_BUFFER_LEN)
@@ -298,8 +299,10 @@ void inputPoll() {
 		} else if (event.type == TPW_EVENT_TYPE_ACTIVE && event.active.gain == 1 && event.active.app_active) {
 			tpw_input_grab(TPW_INPUT_GRAB_GRAB);
 		#endif
-		}  else if (event.type == TPW_EVENT_TYPE_QUIT)
+		}  else if (event.type == TPW_EVENT_TYPE_QUIT) {
+			d_quit();
 			exit(0);
+		}
 	}
 
 	d->input.keypending &= d->input.key;

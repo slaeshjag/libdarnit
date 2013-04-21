@@ -28,8 +28,8 @@ freely, subject to the following restrictions:
 #include "platform_sound.h"
 
 typedef enum {
-	TPW_SAMPLE_FORMAT_S16LE,
-	TPW_SAMPLE_FORMAT_S8
+	TPW_SAMPLE_FORMAT_S16LE = 0,
+	TPW_SAMPLE_FORMAT_S8 = 1
 } TPW_SAMPLE_FORMAT;
 
 typedef enum {

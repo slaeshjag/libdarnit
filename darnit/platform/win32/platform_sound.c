@@ -30,8 +30,8 @@ freely, subject to the following restrictions:
 #define BUFFERS 8
 
 static const unsigned int sample_format[] = {
-	[TPW_SAMPLE_FORMAT_S16LE] = 16,
-	[TPW_SAMPLE_FORMAT_S8] = 8,
+	16,	/* TPW_SAMPLE_FORMAT_S16LE */
+	8,	/* TPW_SAMPLE_FORMAT_S8 */
 };
 
 static struct CALLBACK_DATA {
@@ -74,10 +74,10 @@ int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 	
 	for(i=0; i<BUFFERS; i++) {
 		sound.header[i].dwBufferLength=buflen;
-		sound.header[i].lpData=malloc(buflen);
+		sound.header[i].lpData=(LPSTR)malloc(buflen);
 	}
 	
-	if((res=waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD) callback, callback, CALLBACK_FUNCTION))==MMSYSERR_NOERROR) {
+	if((res=waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD) callback, (DWORD) callback, CALLBACK_FUNCTION))==MMSYSERR_NOERROR) {
 		fprintf(stderr, "arne\n");
 		for(i=0; i<BUFFERS; i++)
 			waveOutPrepareHeader(sound.handle, &(sound.header[i]), sizeof(WAVEHDR));
