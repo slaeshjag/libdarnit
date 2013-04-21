@@ -60,6 +60,8 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			tpw.modifiers |= tpw_modifier(wParam);
 			event.key.keysym = tpw_keysym_translate(wParam);
 			tpw.keys[wParam] = 0xFF;
+			if (event.key.keysym)
+				tpw.common.sdl_keys[event.key.keysym] = 1;
 			if (tpw.unicode_key)
 				event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 			else
@@ -70,16 +72,20 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				event.key.keysym = 512 + wParam;
 			break;
 		case WM_KEYUP:
-			tpw.keys[wParam] = 0;
 			event.type = TPW_EVENT_TYPE_KEYUP;
 			event.key.keysym = tpw_keysym_translate(wParam);
+			if (event.key.keysym)
+				tpw.common.sdl_keys[event.key.keysym] = 0;
 			if (!event.key.keysym) {
 				if (tpw.unicode_key)
 					event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
+				else
+					event.key.unicode = 0;
 				if (event.key.unicode)
 					event.key.keysym = 512 + wParam;
 			}
 				
+			tpw.keys[wParam] = 0;
 			tpw.modifiers |= tpw_modifier(wParam);
 			tpw.modifiers ^= tpw_modifier(wParam);
 			break;
@@ -302,6 +308,14 @@ void tpw_event_platform_init() {
 	vk_translate[0xA3] = 305;
 	vk_translate[0xA4] = 308;
 	vk_translate[0xA5] = 307;
+	vk_translate[0xBA] = 59;
+	vk_translate[0xBF] = 47;
+	vk_translate[0xC0] = 96;
+	vk_translate[0xDB] = 91;
+	vk_translate[0xDC] = 92;
+	vk_translate[0xDD] = 93;
+	vk_translate[0xDE] = 39;
+	vk_translate[0xE2] = 60;
 	
 	return;
 }

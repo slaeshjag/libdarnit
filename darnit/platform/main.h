@@ -49,6 +49,7 @@ typedef struct {
 
 typedef struct {
 	TPW_EVENT_S	event;
+	char		sdl_keys[311];
 } TPW_COMMON;
 
 #include "platform_main.h"
@@ -65,6 +66,8 @@ void tpw_input_unicode(int enable);
 void tpw_cursor_show(unsigned int show);
 int tpw_icon_set(void *pixdata_rgba32, int w, int h);
 void tpw_quit();
+
+char *tpw_keystate();
 
 extern TPW tpw;
 

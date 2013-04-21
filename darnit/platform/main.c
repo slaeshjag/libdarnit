@@ -29,6 +29,10 @@ TPW tpw;
 int tpw_init() {
 	if (!tpw_event_init(512))
 		return 0;
+	memset(tpw.common.sdl_keys, 0, 311);
 	return tpw_init_platform();
 }
 
+char *tpw_keystate() {
+	return tpw.common.sdl_keys;
+}
