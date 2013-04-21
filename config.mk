@@ -9,7 +9,7 @@ DBGFLAGS	=	-O0 -g -D__DEBUG__
 LDTOOLS		:=	$(LDFLAGS)
 CTOOLS		:=	$(CFLAGS) -Wall -O3
 #General flags
-CFLAGS		+=	-Wall -I../deps -shared $(DBGFLAGS) -DPLATFORM=$(PLATFORM) -I$(TOPDIR)/darnit/platform/$(PLATFORM)
+CFLAGS		+=	-Wall -I../deps -shared -fvisibility=hidden $(DBGFLAGS) -DPLATFORM=$(PLATFORM) -I$(TOPDIR)/darnit/platform/$(PLATFORM)
 LDFLAGS		+=	-Wl,-soname,libdarnit.so -lmodplug -lbz2
 PREFIX		=	/usr/local
 
@@ -41,7 +41,7 @@ else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo specifics
 	DATA_PATH=	\"/opt/usr/games\"
-	CFLAGS	+=	--fvisibility=hidden fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
+	CFLAGS	+=	-fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
 	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11 -ldl
 	INSTARG	+=	strip
 	PLATFORM=	sdl
@@ -49,21 +49,21 @@ else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
 	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
-	CFLAGS	+=	--fvisibility=hidden fPIC
+	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
 	INSTARG	+=	strip
 	PLATFORM=	sdl
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
-	CFLAGS	+=	--fvisibility=hidden fPIC
+	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -ldl
 	INSTARG	+=	strip
 	PLATFORM=	sdl
 else
 	#Linux defaults
 	DATA_PATH=	\"/usr/share/games\"
-	CFLAGS	+=	--fvisibility=hidden fPIC
+	CFLAGS	+=	-fPIC
 	LDFLAGS	+=	-lSDL -lGL -ldl
 	PLATFORM=	sdl
 endif
