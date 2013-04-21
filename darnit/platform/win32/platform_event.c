@@ -212,7 +212,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				hidden_cursor = 0;
 				ShowCursor(TRUE);
 			}
-			break;
+			return 1;
 
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
