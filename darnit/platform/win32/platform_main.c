@@ -214,6 +214,7 @@ void tpw_input_unicode(int enable) {
 
 
 void tpw_cursor_show(unsigned int show) {
+	tpw.hide_cursor = !show;
 	ShowCursor((show) ? TRUE : FALSE);
 	return;
 }
