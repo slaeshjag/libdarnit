@@ -26,10 +26,14 @@ freely, subject to the following restrictions:
 #ifndef __TPW_H__
 #define	__TPW_H__
 
-#include "main.h"
-#include "event.h"
-#include "threads.h"
-#include "sound.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#include "main.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
