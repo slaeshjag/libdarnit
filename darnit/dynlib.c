@@ -40,6 +40,7 @@ void *dynlibOpen(const char *fname) {
 		char *err;
 		fname_n = utilPathTranslate(dl->tmp->file);
 		fname_n = realloc(fname_n, strlen(fname_n) + 2);
+		fclose(dl->tmp->fp);
 //		strcat(fname_n, ".");
 		fprintf(stderr, "Loading %s\n", fname_n);
 		dl->handle = LoadLibrary(fname_n);
@@ -74,6 +75,7 @@ void *dynlibClose(DYNLIB *lib) {
 	if (lib == NULL) return NULL;
 	#ifdef _WIN32
 		FreeLibrary(lib->handle);
+		lib->tmp->fp = fopen(lib->tmp->file, "r");
 	#else
 		dlclose(lib->handle);
 	#endif
