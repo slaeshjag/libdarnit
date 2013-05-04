@@ -815,9 +815,7 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 		}
 		#endif
 		/* Here, the new file needs to be created */
-		fprintf(stderr, "Opening new file %s\n", new_file);
 		if (!(dest = fsFileOpen(new_file, "wb"))) {
-			fprintf(stderr, "Unable to open %s\n", new_file);
 			free(new_file);
 			return NULL;
 		}
