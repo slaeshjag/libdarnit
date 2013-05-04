@@ -39,6 +39,8 @@ void *dynlibOpen(const char *fname) {
 	#ifdef _WIN32
 		
 		fname_n = utilPathTranslate(dl->tmp->file);
+		fname_n = realloc(fname_n, strlen(fname_n) + 2);
+		strcat(fname_n, ".");
 		HINSTANCE *lib;
 
 		lib = malloc(sizeof(HINSTANCE));
