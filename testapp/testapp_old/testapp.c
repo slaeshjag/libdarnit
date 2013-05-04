@@ -48,6 +48,33 @@ int compression_test() {
 }
 
 
+void dynlib_test() {
+	DARNIT_DYNLIB *dlib;
+	int (*test)(int);
+	int b = 21;
+
+	if (!(dlib = d_dynlib_open("libldi/dynlib_test.so"))) {
+		fprintf(stderr, "Dynlib test failed: Unable to open dynlib\n");
+		return;
+	}
+
+	if (!(test = d_dynlib_get(dlib, "dynlib_test"))) {
+		fprintf(stderr, "Dynlib test failed: Unable to get a pointer to dynlib_test()\n");
+		d_dynlib_close(dlib);
+		return;
+	}
+	
+	if ((b = test(b)) != 42) {
+		fprintf(stderr, "Dynlib test failed: Test function returned wrong value: %i\n", b);
+		d_dynlib_close(dlib);
+		return;
+	}
+	
+	fprintf(stderr, "Dynlib-in-a-ldi test successful\n");
+	d_dynlib_close(dlib);
+	return;
+}
+
 int main(int argc, char **argv) {
 	int i, j, js0_x, js0_y, js1_x, js1_y;
 	void *font, *surface, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf, *fancy_text;
@@ -63,6 +90,8 @@ int main(int argc, char **argv) {
 		return -1;
 
 	compression_test();
+	d_fs_mount_self();
+	dynlib_test();
 
 	/* Sound/music */
 	music = d_sound_tracked_load("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);

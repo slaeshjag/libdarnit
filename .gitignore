@@ -2,6 +2,8 @@
 bin/
 *.o
 *.a
+*.so
 testapp/testapp_old/testapp
 isotest
 *.res
+*.ldi

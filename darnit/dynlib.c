@@ -33,7 +33,8 @@ void *dynlibOpen(const char *fname) {
 	DYNLIB *dl = malloc(sizeof(DYNLIB));
 	if (fname == NULL) return NULL;
 	
-	dl->tmp = fsGetRealFile(fname);
+	if (!(dl->tmp = fsGetRealFile(fname)))
+		return NULL;
 
 	#ifdef _WIN32
 		
