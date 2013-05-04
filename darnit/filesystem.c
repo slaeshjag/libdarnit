@@ -238,7 +238,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		free(path_new);
 	}
 
-	if (*name == '/') {				/* Path is absolute, skip all FS stuff */
+	if (*name == '/' || name[1] == ':') {		/* Path is absolute, skip all FS stuff */
 		if (strstr(mode, "w") || strstr(mode, "a") || strstr(mode, "+"))
 			write = 1;
 		path_new = utilPathTranslate(name);
