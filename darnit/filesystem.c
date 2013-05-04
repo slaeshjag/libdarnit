@@ -795,7 +795,7 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 	FILESYSTEM_FILE *file, *dest;
 	char *new_file, *real_file, buff[4096];
 
-	if (!(file = fsFileOpen(path_src, "r")))
+	if (!(file = fsFileOpen(path_src, "rb")))
 		return NULL;
 	if (file->offset) {		/* File is in a container */
 		#ifndef _WIN32
@@ -816,7 +816,7 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 		#endif
 		/* Here, the new file needs to be created */
 		fprintf(stderr, "Opening new file %s\n", new_file);
-		if (!(dest = fsFileOpen(new_file, "w"))) {
+		if (!(dest = fsFileOpen(new_file, "wb"))) {
 			free(new_file);
 			return NULL;
 		}
