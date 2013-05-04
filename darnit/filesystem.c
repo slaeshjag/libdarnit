@@ -794,6 +794,7 @@ int fsReadCompressed(FILESYSTEM_FILE *f, void *data, int len) {
 FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 	FILESYSTEM_FILE *file, *dest;
 	char *new_file, *real_file, buff[4096];
+	int blah, bleh;
 
 	if (!(file = fsFileOpen(path_src, "rb")))
 		return NULL;
@@ -823,7 +824,9 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 		}
 		
 		/* Ugly, I know... */
-		for (; !fsFileEOF(file); fsFileWrite(buff, fsFileRead(buff, 4096, file), dest));
+		for (; !fsFileEOF(file); bleh = fsFileWrite(buff, (blah = fsFileRead(buff, 4096, file)), dest)) {
+			fprintf(stderr, "Read %i bytes, wrote %i bytes\n", blah, bleh);
+		}
 		dest->temporary = 1;
 		fsFileClose(file);
 

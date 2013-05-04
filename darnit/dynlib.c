@@ -44,6 +44,8 @@ void *dynlibOpen(const char *fname) {
 		fprintf(stderr, "Loading %s\n", fname_n);
 		dl->handle = LoadLibrary(fname_n);
 		free(fname_n);
+		if (!dl->handle)
+			return NULL;
 	#else
 		dl->handle = dlopen(dl->tmp->file, RTLD_NOW | RTLD_GLOBAL);
 	#endif
