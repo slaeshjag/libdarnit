@@ -808,9 +808,9 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 		char path[MAX_PATH];
 		new_file = malloc(MAX_PATH);
 		GetTempPath(MAX_PATH, path);
-		if (!GetTempName(path, d->fs.directory_suffix, 0, new_file)) {
-			fclose(file);
-			free(new_tile);
+		if (!GetTempFileName(path, d->fs.directory_suffix, 0, new_file)) {
+			fsFileClose(file);
+			free(new_file);
 			return NULL;
 		}
 		#endif

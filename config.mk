@@ -9,7 +9,7 @@ DBGFLAGS	=	-O0 -g -D__DEBUG__
 LDTOOLS		:=	$(LDFLAGS)
 CTOOLS		:=	$(CFLAGS) -Wall -O3
 #General flags
-CFLAGS		+=	-Wall -I../deps -shared -fvisibility=hidden $(DBGFLAGS)
+CFLAGS		+=	-Wall -I../deps -shared $(DBGFLAGS)
 LDFLAGS		+=	-Wl,-soname,libdarnit.so -lmodplug -lbz2
 PREFIX		=	/usr/local
 
@@ -38,26 +38,26 @@ else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo specifics
 	DATA_PATH=	\"/opt/usr/games\"
-	CFLAGS	+=	-fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
+	CFLAGS	+=	-fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags` -fvisibility=hidden
 	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11 -ldl
 	INSTARG	+=	strip
 else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
 	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
-	CFLAGS	+=	-fPIC
+	CFLAGS	+=	-fPIC -fvisibility=hidden
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
 	INSTARG	+=	strip
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
-	CFLAGS	+=	-fPIC
+	CFLAGS	+=	-fPIC -fvisibility=hidden
 	LDFLAGS	+=	-lGLES_CM -lEGL -ldl
 	INSTARG	+=	strip
 else
 	#Linux defaults
 	DATA_PATH=	\"/usr/share/games\"
-	CFLAGS	+=	-fPIC
+	CFLAGS	+=	-fPIC -fvisibility=hidden
 	LDFLAGS	+=	-lSDL -lGL -ldl
 endif
 endif
