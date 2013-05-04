@@ -27,7 +27,11 @@ freely, subject to the following restrictions:
 #define __DYNLIB_H__
 
 typedef struct {
+	#ifndef _WIN32
 	void			*handle;
+	#else
+	HMODULE			handle;
+	#endif
 	FILESYSTEM_FILE		*tmp;
 } DYNLIB;
 

@@ -41,11 +41,8 @@ void *dynlibOpen(const char *fname) {
 		fname_n = utilPathTranslate(dl->tmp->file);
 		fname_n = realloc(fname_n, strlen(fname_n) + 2);
 		strcat(fname_n, ".");
-		HINSTANCE *lib;
-
-		lib = malloc(sizeof(HINSTANCE));
-		*lib = LoadLibrary(fname_n);
-		dl->handle = lib;
+		fprintf(stderr, "Loading %s\n", fname_n);
+		dl->handle = LoadLibrary(fname_n);
 		free(fname_n);
 	#else
 		dl->handle = dlopen(dl->tmp->file, RTLD_NOW | RTLD_GLOBAL);
@@ -57,10 +54,9 @@ void *dynlibOpen(const char *fname) {
 void *dynlibSymbolGet(DYNLIB *lib, const char *symbol) {
 	if (lib == NULL || symbol == NULL) return NULL;
 	#ifdef _WIN32
-		HINSTANCE *libh = lib->handle;
 		void *sym;
 
-		sym = GetProcAddress(*libh, symbol);
+		sym = GetProcAddress(lib->handle, symbol);
 		return sym;
 	#else
 		void *sym;
@@ -74,10 +70,7 @@ void *dynlibSymbolGet(DYNLIB *lib, const char *symbol) {
 void *dynlibClose(DYNLIB *lib) {
 	if (lib == NULL) return NULL;
 	#ifdef _WIN32
-		HINSTANCE *libh = lib->handle;
-
-		FreeLibrary(*libh);
-		free(lib->handle);
+		FreeLibrary(lib->handle);
 	#else
 		dlclose(lib->handle);
 	#endif
