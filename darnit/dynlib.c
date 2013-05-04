@@ -43,8 +43,7 @@ void *dynlibOpen(const char *fname) {
 //		strcat(fname_n, ".");
 		fprintf(stderr, "Loading %s\n", fname_n);
 		dl->handle = LoadLibrary(fname_n);
-		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER, FORMAT_MESSAGE_FROM_HMODULE, GetLastError(), 0, &err, 1, NULL);
-		fprintf(stderr, "Error: %s\n", err);
+		fprintf(stderr, "Error: %i\n", GetLastError());
 		free(fname_n);
 		if (!dl->handle)
 			return NULL;
