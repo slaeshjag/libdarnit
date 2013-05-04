@@ -26,10 +26,15 @@ freely, subject to the following restrictions:
 #ifndef __DYNLIB_H__
 #define __DYNLIB_H__
 
+typedef struct {
+	void			*handle;
+	FILESYSTEM_FILE		*tmp;
+} DYNLIB;
+
 
 void *dynlibOpen(const char *fname);
-void *dynlibSymbolGet(void *lib, const char *symbol);
-void *dynlibClose(void *lib);
+void *dynlibSymbolGet(DYNLIB *lib, const char *symbol);
+void *dynlibClose(DYNLIB *lib);
 
 
 #endif

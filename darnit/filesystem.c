@@ -36,6 +36,8 @@ void fsPathMakeNative(char *path) {
 
 int fsInit(const char *dir_name) {
 	const char *data_dir;
+
+	d->fs.directory_suffix = strdup(dir_name);
 	
 	if (d->platform.platform & DARNIT_PLATFORM_PANDORA) {
 		d->fs.data_dir = ".";
@@ -203,6 +205,7 @@ FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_si
 	file->offset = file_start;
 	file->pos = 0;
 	file->size = file_size;
+	file->temporary = 0;
 	fseek(file->fp, file_start, SEEK_SET);
 
 	return file;
@@ -418,6 +421,12 @@ FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file) {
 	if (file == NULL)
 		return NULL;
 	fclose(file->fp);
+	if (file->temporary)
+	#ifdef _WIN32
+	DeleteFile(file->file);
+	#else
+	unlink(file->file);
+	#endif
 	free(file->file);
 	free(file->mode);
 	free(file);
@@ -781,3 +790,45 @@ int fsReadCompressed(FILESYSTEM_FILE *f, void *data, int len) {
 	return 0;
 }
 
+
+FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
+	FILESYSTEM_FILE *file, *dest;
+	char *new_file, *real_file, buff[4096];
+
+	if (!(file = fsFileOpen(path_src, "r")))
+		return NULL;
+	if (file->offset) {		/* File is in a container */
+		#ifndef _WIN32
+		new_file = tempnam(NULL, d->fs.directory_suffix);
+		real_file = malloc(strlen(new_file) + 1 + 10);
+		sprintf(real_file, "%s.%i", new_file, d->fs.temp_counter);
+		free(new_file);
+		new_file = real_file;
+		#else
+		char path[MAX_PATH];
+		new_file = malloc(MAX_PATH);
+		GetTempPath(MAX_PATH, path);
+		if (!GetTempName(path, d->fs.directory_suffix, 0, new_file)) {
+			fclose(file);
+			free(new_tile);
+			return NULL;
+		}
+		#endif
+		/* Here, the new file needs to be created */
+		if (!(dest = fsFileOpen(new_file, "w"))) {
+			free(new_file);
+			return NULL;
+		}
+		
+		/* Ugly, I know... */
+		for (; !fsFileEOF(file); fsFileWrite(buff, fsFileRead(buff, 4096, file), dest));
+		dest->temporary = 1;
+		fsFileClose(file);
+
+		return dest;
+	} else {
+		return file;
+	}
+
+	return NULL;
+}
