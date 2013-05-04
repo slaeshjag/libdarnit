@@ -37,12 +37,14 @@ void *dynlibOpen(const char *fname) {
 		return NULL;
 
 	#ifdef _WIN32
-		
+		char *err;
 		fname_n = utilPathTranslate(dl->tmp->file);
 		fname_n = realloc(fname_n, strlen(fname_n) + 2);
 //		strcat(fname_n, ".");
 		fprintf(stderr, "Loading %s\n", fname_n);
 		dl->handle = LoadLibrary(fname_n);
+		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER, FORMAT_MESSAGE_FROM_HMODULE, GetLastError(), 0, &err, 1, NULL);
+		fprintf(stderr, "Error: %s\n", err);
 		free(fname_n);
 		if (!dl->handle)
 			return NULL;
