@@ -31,7 +31,7 @@ unsigned int EXPORT_THIS d_keys_get() {
 }
 
 
-unsigned int EXPORT_THIS d_gets_zero() {
+unsigned int EXPORT_THIS d_keys_zero() {
 	return 0;
 }
 

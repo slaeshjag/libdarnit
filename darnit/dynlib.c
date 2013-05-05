@@ -42,10 +42,15 @@ void *dynlibOpen(const char *fname) {
 		fclose(dl->tmp->fp);
 		dl->handle = LoadLibrary(fname_n);
 		free(fname_n);
-		if (!dl->handle)
+		if (!dl->handle) {
+			free(dl);
 			return NULL;
+		}
 	#else
-		dl->handle = dlopen(dl->tmp->file, RTLD_NOW | RTLD_GLOBAL);
+		if (!(dl->handle = dlopen(dl->tmp->file, RTLD_NOW | RTLD_GLOBAL))) {
+			free(dl);
+			return NULL;
+		}
 	#endif
 	return dl;
 }
