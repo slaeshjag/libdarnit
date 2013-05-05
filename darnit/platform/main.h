@@ -46,6 +46,7 @@ typedef struct {
 #include "keysym.h"
 #include "event.h"
 #include "sound.h"
+#include "threads.h"
 
 typedef struct {
 	TPW_EVENT_S	event;

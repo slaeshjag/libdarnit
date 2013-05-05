@@ -343,7 +343,7 @@ void renderColCache(TILE_COLOR_TEX_CACHE *cache, TILESHEET *ts, int tiles) {
 	
 	glVertexPointer(2, GL_FLOAT, 20, cache);
 	glTexCoordPointer(2, GL_FLOAT, 20, &cache[0].vertex[0].tex);
-	glColorPointer(3, GL_UNSIGNED_BYTE, 20, &cache->vertex->col);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 20, &cache->vertex->col);
 
 	glDrawArrays(GL_TRIANGLES, 0, tiles*6);
 

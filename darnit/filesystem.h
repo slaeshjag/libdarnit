@@ -73,6 +73,7 @@ typedef struct {
 	off_t				offset;
 	off_t				pos;
 	off_t				size;
+	int				temporary;
 } FILESYSTEM_FILE;
 
 
@@ -98,6 +99,8 @@ typedef struct {
 	char				*data_dir;
 	char				*write_dir;
 	struct FILESYSTEM_IMAGE		*mount;
+	char				*directory_suffix;
+	int				temp_counter;
 } FILESYSTEM;
 
 
@@ -141,6 +144,7 @@ off_t fsContainerFILELength(FILE *fp, const char *name);
 off_t fsContainerFILEStart(FILE *fp, const char *name);
 FILESYSTEM_FILE *fsContainerFS(FILE *fp);
 FILE *fsContainerFileInternalGet(const char *name);
+FILESYSTEM_FILE *fsGetRealFile(const char *path_src);
 
 
 #endif

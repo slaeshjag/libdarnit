@@ -22,25 +22,6 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-
-/***********************************************************/
-/** UTF-8 Encoder/Decoder by Steven Arnow <s@rdw.se> 2012 **/
-/***********************************************************/
-/**  This encoder/decoder comes with no warranty what so  **/
-/**   ever and is only provided in the hopes that it is   **/
-/**  useful. By using it, you agree that I can't be held  **/
-/**  responsible for any bad things this code might do.   **/
-/***********************************************************/
-/**    You are free to use this encoder/decoder in any    **/
-/**  product or product you want for free, as long as its **/
-/**  origin is not misrepresented. You are also free to   **/
-/**  modify the source code as you wish, and distribute   **/
-/**  those changes as you wish, as long as this header is **/
-/**  kept intact and your changes are clearly marked out. **/
-/***********************************************************/
-/**       Originally written as a part of libDarnit       **/
-/***********************************************************/
-
 #include "darnit.h"
 
 

@@ -26,6 +26,12 @@ freely, subject to the following restrictions:
 #ifndef __DARNIT_DYNLIB_H__
 #define	__DARNIT_DYNLIB_H__
 
+#ifdef _WIN32
+#define	DARNIT_EXPORT	__declspec(dllexport)
+#else
+#define	DARNIT_EXPORT	__attribute__ ((visibility ("default")))
+#endif
+
 typedef void DARNIT_DYNLIB;
 
 DARNIT_DYNLIB *d_dynlib_open(const char *fname);
