@@ -3,6 +3,7 @@ include $(TOPDIR)/config.mk
 
 DEPFILES	=	../deps/deps.a platform/tpw.a
 APIFILES	=	api/*.o
+OUTLIB		=	../bin/libdarnit.a
 
 CFLAGS		+=	-DDATA_PATH=$(DATA_PATH)
 
@@ -23,6 +24,8 @@ all: $(OBJFILES) $(DEPENDS)
 	+@make -C platform/
 	@echo " [ LD ] $(LIB)"
 	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS)
+	@echo " [ AR ] $(OUTLIB)"
+	@$(AR) -cr $(OUTLIB) ../deps/*.o platform/*.o platform/*$(PLATFORM)/*.o api/*.o *.o
 	@echo "Done."
 	@echo
 	
