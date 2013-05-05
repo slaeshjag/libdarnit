@@ -94,7 +94,7 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		return 0;
 	}
 
-	if ((tpw.eglSurface = eglCreateWindowSurface(tpw.eglDisplay, tpw.eglConfig, NULL, NULL)) == EGL_NO_SURFACE) {
+	if ((tpw.eglSurface = eglCreateWindowSurface(tpw.eglDisplay, tpw.eglConfig, (EGLNativeWindowType) sysinfo.info.x11.window, NULL)) == EGL_NO_SURFACE) {
 		fprintf(stderr, "tpw_window_create(): Unable to create an EGL surface\n");
 		return 0;
 	}
