@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #include <SDL/SDL.h>
 
 #ifdef HAVE_GLES
-#include <X11/xutil.h>
+#include <X11/Xutil.h>
 #ifndef RASPBERRYPI
 	#include <GLES/egl.h>
 #endif
@@ -46,14 +46,14 @@ freely, subject to the following restrictions:
 static const EGLint egl_config_attrib[] = {
 	#ifndef MAEMO
 	EGL_RED_SIZE,		5,
-	EGL_GREEN_SIZE		6,
+	EGL_GREEN_SIZE,		6,
 	EGL_BLUE_SIZE,		5,
 	EGL_DEPTH_SIZE,		16,
 	#endif
-	EGL_SURFACE_TYPE	EGL_WINDOW_BIT,
+	EGL_SURFACE_TYPE,	EGL_WINDOW_BIT,
 	EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES_BIT,
-	EGL_NON
-}
+	EGL_NONE
+};
 #endif
 #endif
 
@@ -64,8 +64,8 @@ typedef struct {
 	TPW_COMMON		common;
 	#ifdef HAVE_GLES
 	Display			*XDisplay;
-	eglConfig		eglConfig;
-	EGLCOntext		eglContext;
+	EGLConfig		eglConfig;
+	EGLContext		eglContext;
 	EGLSurface		eglSurface;
 	EGLDisplay		eglDisplay;
 	#endif

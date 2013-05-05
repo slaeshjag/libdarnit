@@ -22,6 +22,7 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
+#define	TPW_INTERNAL
 #include "../main.h"
 
 
@@ -104,11 +105,12 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		return 0;
 	}
 
-	if (eglMakeCurrent(tpw.eglDisplay, tpw.eglSurface, tpw.eglContext) == EGL_FALSE) {
+	if (eglMakeCurrent(tpw.eglDisplay, tpw.eglSurface, tpw.eglSurface, tpw.eglContext) == EGL_FALSE) {
 		fprintf(stderr, "tpw_window_create(): Unable to make the EGL context current\n");
 		return 0;
 	}
 	#endif
+
 
 	return 1;
 }
