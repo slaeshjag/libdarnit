@@ -576,12 +576,15 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 			case TEXT_O_TOP_TO_BOTTOM:
 				surface->cur_xf = surface->orig_xf;
 				surface->cur_yf += surface->yf_skip;
+				break;
 			case TEXT_O_LEFT_TO_RIGHT:
 				surface->cur_yf = surface->orig_yf;
 				surface->cur_xf += surface->yf_skip;
+				break;
 			case TEXT_O_RIGHT_TO_LEFT:
 				surface->cur_yf = surface->orig_yf;
 				surface->cur_xf -= surface->yf_skip;
+				break;
 		}
 		
 		surface->pos = 0;
