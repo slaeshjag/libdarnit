@@ -292,6 +292,13 @@ int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph) {
 }
 
 
+float textGetGlyphHeightf(TEXT_FONT *font) {
+	float h = font->font_height;
+	
+	return h * d->video.shgran;
+}
+
+
 int textGetStringWidth(TEXT_FONT *font, const char *string) {
 	int i, w;
 	unsigned int glyph;
@@ -482,6 +489,8 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	surface->x = d->video.swgran * (x + (linelen >> 1)) - 1.0f;
 	surface->y = 1.0f - d->video.shgran * (y + ((font->ascent + font->descent) >> 1));
 	surface->last = 0;
+	surface->prim = TEXT_O_LEFT_TO_RIGHT;
+	surface->sec = TEXT_O_TOP_TO_BOTTOM;
 
 	surface->g_cache = surface->l_cache = NULL;
 
@@ -543,19 +552,38 @@ float textGetKern(TEXT_SURFACE *surface, unsigned int cp) {
 }
 
 
+void textSurfaceSetOrientation(TEXT_SURFACE *surface, FONT_ORIENTATION prim, FONT_ORIENTATION sec) {
+	if (!surface)
+		return;
+	surface->prim = prim;
+	surface->sec = sec;
+	return;
+}
+
+
 int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	if (surface == NULL) return 1;
 
 	struct TEXT_FONT_GLYPH *glyph_e;
 	unsigned int glyph = cp;
-	float x, y, x2, y2, wf;
-	int w;
+	float x, y, x2, y2, hf;
+	int w, h;
 
 	if (surface->len == surface->index) return 1;
 
 	if (cp == '\n') {
-		surface->cur_xf = surface->orig_xf;
-		surface->cur_yf += surface->yf_skip;
+		switch (surface->sec) {
+			case TEXT_O_TOP_TO_BOTTOM:
+				surface->cur_xf = surface->orig_xf;
+				surface->cur_yf += surface->yf_skip;
+			case TEXT_O_LEFT_TO_RIGHT:
+				surface->cur_yf = surface->orig_yf;
+				surface->cur_xf += surface->yf_skip;
+			case TEXT_O_RIGHT_TO_LEFT:
+				surface->cur_yf = surface->orig_yf;
+				surface->cur_xf -= surface->yf_skip;
+		}
+		
 		surface->pos = 0;
 		return 1;
 	}
@@ -563,30 +591,58 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 	if ((glyph_e = textGetGlyphEntry(surface->font, glyph)) == NULL)
 		return 1;
 
-	wf = textGetGlyphWidthf(surface->font, glyph);
+//	wf = textGetGlyphWidthf(surface->font, glyph);
+	hf = textFontGetHS(surface->font);
 	w = textGetGlyphWidth(surface->font, glyph);
-	surface->cur_xf += textGetKern(surface, cp);
+	h = textFontGetH(surface->font);
+	if (surface->prim == TEXT_O_LEFT_TO_RIGHT)
+		surface->cur_xf += textGetKern(surface, cp);
 
-	if (surface->cur_xf + wf - surface->orig_xf >= surface->linelenf) {
-		surface->cur_xf = surface->orig_xf;
-		surface->cur_yf += surface->yf_skip;
-		surface->pos = 0;
+	
+	if (surface->prim == TEXT_O_LEFT_TO_RIGHT || surface->prim == TEXT_O_TOP_TO_BOTTOM) {
+		if (surface->pos + w >= surface->linelen) {
+			textSurfaceAppendCodepoint(surface, '\n');
+	
+			if (cp == ' ')
+				return 1;
+			surface->pos = w;
+		} else
+			surface->pos += w;
+	} else if (surface->prim == TEXT_O_TOP_TO_BOTTOM) {
+		if (surface->pos + h >= surface->linelen) {
+			textSurfaceAppendCodepoint(surface, '\n');
 
-		if (cp == ' ')
-			return 1;
-		surface->pos = w;
-	} else
-		surface->pos += w;
+			if (cp == ' ')
+				return 1;
+			surface->pos = h;
+		} else
+			surface->pos += h;
+	}
+
 	x = surface->cur_xf;
-	surface->cur_xf += glyph_e->advf;
+	
+	if (surface->prim == TEXT_O_LEFT_TO_RIGHT) {
+		surface->cur_xf += glyph_e->advf;
+		x += glyph_e->skipf;
+		x2 = x + d->video.swgran * glyph_e->cw;
+		y2 = surface->cur_yf + glyph_e->rise;
+		y = y2 - d->video.shgran * glyph_e->ch;
+	} else if (surface->prim == TEXT_O_RIGHT_TO_LEFT) {
+		surface->cur_xf -= glyph_e->advf;
+		x2 = x;
+		x2 -= glyph_e->skipf;
+		x = x2 - d->video.swgran * glyph_e->cw;
+		y2 = surface->cur_yf + glyph_e->rise;
+		y = y2 - d->video.shgran * glyph_e->ch;
+	} else if (surface->prim == TEXT_O_TOP_TO_BOTTOM) {
+		x2 = x + d->video.swgran * glyph_e->cw;
+		y2 = surface->cur_yf;
+		y = y2 - d->video.shgran * glyph_e->ch;
+		surface->cur_yf += hf;
+	}
 
-	x += glyph_e->skipf;
-	x2 = x + d->video.swgran * glyph_e->cw;
-	y2 = surface->cur_yf + glyph_e->rise;
-	y = y2 - d->video.shgran * glyph_e->ch;
 
-
-	if (cp != ' ') {						/* "Temporary" work-around that makes OpenGL|ES happier... */
+	if (cp != ' ') {		/* "Temporary" work-around that makes OpenGL|ES happier... */
 		if (surface->type == NORMAL)
 			renderSetTileCoordinates(&surface->cache[surface->index], x, y, x2, y2, glyph_e->u1, glyph_e->v1, glyph_e->u2, glyph_e->v2);
 		else if (surface->type == COLOR)
@@ -716,7 +772,12 @@ void textSurfaceSkip(TEXT_SURFACE *surface, int pixels) {
 void textSurfaceSetPos(TEXT_SURFACE *surface, int x_pos) {
 	if (surface == NULL)
 		return;
-	surface->cur_xf = surface->orig_xf + d->video.swgran * x_pos;
+	if (surface->prim == TEXT_O_LEFT_TO_RIGHT)
+		surface->cur_xf = surface->orig_xf + d->video.swgran * x_pos;
+	else if (surface->prim == TEXT_O_RIGHT_TO_LEFT)
+		surface->cur_xf = surface->orig_xf - d->video.swgran * x_pos;
+	else if (surface->prim == TEXT_O_TOP_TO_BOTTOM)
+		surface->cur_xf = surface->orig_yf + d->video.shgran * x_pos;
 	
 	return;
 }

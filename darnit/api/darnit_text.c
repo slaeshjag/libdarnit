@@ -124,3 +124,10 @@ void EXPORT_THIS d_text_surface_offset_next_set(void *surface, int x_pos) {
 
 	return;
 }
+
+
+void EXPORT_THIS d_text_surface_orientation(void *surface, FONT_ORIENTATION prim, FONT_ORIENTATION sec) {
+	textSurfaceSetOrientation(surface, prim, sec);
+	
+	return;
+}
