@@ -292,8 +292,12 @@ int textGetGlyphWidth(TEXT_FONT *font, unsigned int glyph) {
 }
 
 
-float textGetGlyphHeightf(TEXT_FONT *font) {
-	float h = font->font_height;
+float textGetGlyphHeightf(TEXT_FONT *font, unsigned int glyph) {
+	struct TEXT_FONT_GLYPH *glyph_e;
+	float h;
+
+	glyph_e = textGetGlyphEntry(font, glyph);
+	h = glyph_e->ch;
 	
 	return h * d->video.shgran;
 }
@@ -579,11 +583,11 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 				break;
 			case TEXT_O_LEFT_TO_RIGHT:
 				surface->cur_yf = surface->orig_yf;
-				surface->cur_xf += surface->yf_skip;
+				surface->cur_xf += d->video.swgran * surface->font->font_height;
 				break;
 			case TEXT_O_RIGHT_TO_LEFT:
 				surface->cur_yf = surface->orig_yf;
-				surface->cur_xf -= surface->yf_skip;
+				surface->cur_xf -= d->video.swgran * surface->font->font_height;
 				break;
 		}
 		
@@ -595,14 +599,14 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		return 1;
 
 //	wf = textGetGlyphWidthf(surface->font, glyph);
-	hf = textFontGetHS(surface->font);
+	hf = textGetGlyphHeightf(surface->font, glyph);
 	w = textGetGlyphWidth(surface->font, glyph);
 	h = textFontGetH(surface->font);
 	if (surface->prim == TEXT_O_LEFT_TO_RIGHT)
 		surface->cur_xf += textGetKern(surface, cp);
 
 	
-	if (surface->prim == TEXT_O_LEFT_TO_RIGHT || surface->prim == TEXT_O_TOP_TO_BOTTOM) {
+	if (surface->prim == TEXT_O_LEFT_TO_RIGHT || surface->prim == TEXT_O_RIGHT_TO_LEFT) {
 		if (surface->pos + w >= surface->linelen) {
 			textSurfaceAppendCodepoint(surface, '\n');
 	
@@ -617,9 +621,9 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 
 			if (cp == ' ')
 				return 1;
-			surface->pos = h;
+			surface->pos = surface->font->font_height;
 		} else
-			surface->pos += h;
+			surface->pos += surface->font->font_height;
 	}
 
 	x = surface->cur_xf;
@@ -638,10 +642,11 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		y2 = surface->cur_yf + glyph_e->rise;
 		y = y2 - d->video.shgran * glyph_e->ch;
 	} else if (surface->prim == TEXT_O_TOP_TO_BOTTOM) {
-		x2 = x + d->video.swgran * glyph_e->cw;
+		x2 = x;
+		x -= d->video.swgran * glyph_e->cw;
 		y2 = surface->cur_yf;
-		y = y2 - d->video.shgran * glyph_e->ch;
-		surface->cur_yf += hf;
+		y = y2 - hf;
+		surface->cur_yf -= d->video.shgran * surface->font->font_height;
 	}
 
 
