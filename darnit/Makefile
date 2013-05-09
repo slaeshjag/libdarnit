@@ -3,7 +3,7 @@ include $(TOPDIR)/config.mk
 
 DEPFILES	=	../deps/deps.a platform/tpw.a
 APIFILES	=	api/*.o
-OUTLIB		=	../bin/libdarnit.a
+OUTLIB		=	../libdarnit.a
 
 CFLAGS		+=	-DDATA_PATH=$(DATA_PATH)
 
