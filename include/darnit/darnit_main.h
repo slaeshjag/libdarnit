@@ -67,6 +67,7 @@ int d_last_frame_time();
 DARNIT_PLATFORM d_platform_get();
 void d_quit();
 
+void d_cursor_show(int show) {
 
 /* Special init funcs, in case you need to parse a config file or something before you init video */
 /* If you call initPartial, you must not call d_init nor d_init_custom. You must not call any rendering or timing function either, as these are undefined before video inits */

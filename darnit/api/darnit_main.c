@@ -91,6 +91,12 @@ void EXPORT_THIS *d_init_custom(const char *wtitle, int win_w, int win_h, int fu
 }
 
 
+void EXPORT_THIS d_cursor_show(int show) {
+	tpw_cursor_show(show);
+	return;
+}
+
+
 int EXPORT_THIS d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon) {
 	int t;
 
