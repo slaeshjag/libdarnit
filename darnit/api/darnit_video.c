@@ -118,6 +118,19 @@ void EXPORT_THIS d_render_circle_move(DARNIT_RENDER_LINE_BUFFER *buf, int x, int
 	}
 }
 
+
+void EXPORT_THIS d_render_point_move(DARNIT_RENDER_POINT_BUFFER *buf, unsigned int point, int x, int y) {
+	POINT_CACHE *cache;
+
+	if (buf->points <= point)
+		return;
+	cache = &buf->pc[point];
+	renderPointCalc(cache, x, y);
+
+	return;
+}
+
+
 void EXPORT_THIS d_render_rect_move(DARNIT_RENDER_RECT_BUFFER *buf, unsigned int rect, int x1, int y1, int x2, int y2) {
 	RECT_CACHE *cache;
 
@@ -226,6 +239,11 @@ void EXPORT_THIS d_render_circle_draw(DARNIT_RENDER_LINE_BUFFER *buf) {
 }
 
 
+void EXPORT_THIS d_render_point_draw(DARNIT_RENDER_POINT_BUFFER *buf, int points) {
+	renderPointCache(buf->pc, points, buf->point_w);
+}
+
+
 void EXPORT_THIS d_render_rect_draw(DARNIT_RENDER_RECT_BUFFER *buf, int rects) {
 	if (buf == NULL)
 		return;
@@ -304,6 +322,32 @@ void EXPORT_THIS *d_render_circle_new(unsigned int lines, unsigned int line_w) {
 	return d_render_line_new(lines+1, line_w);
 }
 
+
+void EXPORT_THIS *d_render_point_new(unsigned int points, unsigned int point_w) {
+	DARNIT_RENDER_POINT_BUFFER *buf;
+	int i, j;
+	float *arr;
+
+	if (!(buf = malloc(sizeof(DARNIT_RENDER_POINT_BUFFER) * points)))
+		return NULL;
+	if (!(buf->pc = malloc(sizeof(POINT_CACHE) * points))) {
+		free(buf);
+		return NULL;
+	}
+
+	for (i = 0; i < points; i++) {
+		arr = (void *) &buf->pc[i];
+		for (j = 0; j < 2; j++)
+			arr[j] = 0;
+	}
+
+	buf->points = points;
+	buf->point_w = point_w;
+
+	return buf;
+}
+
+
 void EXPORT_THIS *d_render_tile_free(DARNIT_RENDER_BUFFER *buf) {
 	if (buf == NULL) return NULL;
 	free(buf->tc);
@@ -326,6 +370,17 @@ void EXPORT_THIS *d_render_line_free(DARNIT_RENDER_LINE_BUFFER *buf) {
 void EXPORT_THIS *d_render_circle_free(DARNIT_RENDER_LINE_BUFFER *buf) {
 	return d_render_line_free(buf);
 }
+
+
+void EXPORT_THIS *d_render_point_free(DARNIT_RENDER_POINT_BUFFER *buf) {
+	if (!buf)
+		return NULL;
+	free(buf->pc);
+	free(buf);
+
+	return NULL;
+}
+
 
 void EXPORT_THIS *d_render_rect_free(DARNIT_RENDER_RECT_BUFFER *buf) {
 	if (buf == NULL)

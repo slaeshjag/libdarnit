@@ -46,6 +46,7 @@ typedef void DARNIT_TILE;
 typedef void DARNIT_LINE;
 typedef void DARNIT_CIRCLE;
 typedef void DARNIT_RECT;
+typedef void DARNIT_POINT;
 
 
 DARNIT_TILESHEET *d_render_tilesheet_load(const char *fname, unsigned int wsq, unsigned int hsq, DARNIT_PFORMAT target_format);
@@ -81,6 +82,11 @@ DARNIT_CIRCLE *d_render_circle_new(unsigned int lines, unsigned int line_w);
 void d_render_circle_move(DARNIT_CIRCLE *circle_p, int x, int y, int radius);
 void d_render_circle_draw(DARNIT_CIRCLE *circle_p);
 DARNIT_CIRCLE *d_render_circle_free(DARNIT_CIRCLE *circle_p);
+
+DARNIT_POINT *d_render_point_new(unsigned int points, unsigned int point_w);
+void d_render_point_move(DARNIT_POINT *buf, unsigned int point, int x, int y);
+void d_render_point_draw(DARNIT_POINT *point, int points);
+DARNIT_POINT *d_render_point_free(DARNIT_POINT *point);
 
 void d_render_line_get(DARNIT_LINE *buf, unsigned int line, int *x, int *y, int *x2, int *y2);
 void d_render_begin();

@@ -144,6 +144,13 @@ typedef struct {
 
 
 typedef struct {
+	POINT_CACHE		*pc;
+	unsigned int		points;
+	unsigned int		point_w;
+} DARNIT_RENDER_POINT_BUFFER;
+
+
+typedef struct {
 	int			frames_counting;
 	int			frames_last;
 	int			time;

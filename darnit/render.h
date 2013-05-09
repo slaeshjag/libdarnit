@@ -120,6 +120,10 @@ typedef struct {
 } RECT_CACHE;
 
 typedef struct {
+	COORDINATE	coord[1];
+} POINT_CACHE;
+
+typedef struct {
 	COLOR_VERTEX	vertex[6];
 
 } TILE_COLOR_CACHE;
@@ -152,6 +156,7 @@ void renderMapCacheSetTile(unsigned int layer, unsigned int k, unsigned int t, i
 void renderCalcTileCache(TILE_CACHE *cache, TILESHEET *ts, unsigned int tile);
 void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2);
 void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2);
+void renderPointCalc(POINT_CACHE *cache, int x, int y);
 void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void renderTileSetSize(TILE_CACHE *cache, int w, int h);
 void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
@@ -161,6 +166,7 @@ void renderColCache(TILE_COLOR_TEX_CACHE *cache, TILESHEET *ts, int tiles);
 void renderLineCache(LINE_CACHE *cache, int lines, int line_w);
 void renderRectCache(RECT_CACHE *cache, int rects);
 void renderTriCache(TRI_COLOR_CACHE *cache, int triangles);
+void renderPointCache(POINT_CACHE *cache, int points, int point_w);
 void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2);
 
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
