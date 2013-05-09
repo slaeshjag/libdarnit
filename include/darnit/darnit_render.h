@@ -50,7 +50,7 @@ typedef void DARNIT_POINT;
 
 
 DARNIT_TILESHEET *d_render_tilesheet_load(const char *fname, unsigned int wsq, unsigned int hsq, DARNIT_PFORMAT target_format);
-DARNIT_TILESHEET *d_render_tilesheet_new(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format);
+DARNIT_TILESHEET *d_render_tilesheet_new(int tiles_w, int tiles_h, int tile_w, int tile_h, DARNIT_PFORMAT format);
 DARNIT_TILESHEET *d_render_tilesheet_isom_load(const char *fname, unsigned int wsq, unsigned int hsq, DARNIT_PFORMAT target_format);
 void d_render_tilesheet_update(DARNIT_TILESHEET *tilesheet, int sheet_x, int sheet_y, int change_w, int change_h, void *data);
 void d_render_tilesheet_geometrics(DARNIT_TILESHEET *tilesheet, int *w, int *h, int *tile_w, int *tile_h);
