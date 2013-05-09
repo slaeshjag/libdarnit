@@ -82,6 +82,8 @@ int main(int argc, char **argv) {
 	char test[256], fps[16];
 	char *test_text;
 	DARNIT_MOUSE mouse;
+	DARNIT_FONT *moonrune_font;
+	DARNIT_TEXT_SURFACE *moonrunes;
 	DARNIT_KEYS keys;
 	DARNIT_MAP *map;
 	DARNIT_SPRITE *mapsprite;
@@ -104,6 +106,12 @@ int main(int argc, char **argv) {
 	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 420);
 	colorTest(fancy_text);
 	fps_text = d_text_surface_new(font, 16, 200, 0, 40);
+
+	/* Moonrunes */
+	moonrune_font = d_font_load("DroidSansJapanese.ttf", 32, 512, 512);
+	moonrunes = d_text_surface_new(moonrune_font, 80, 256, 780, 128);
+	d_text_surface_orientation(moonrunes, DARNIT_FONT_TOP_TO_BOTTOM, DARNIT_FONT_RIGHT_TO_LEFT);
+	d_text_surface_string_append(moonrunes, "印刷会社の経営者\nという立場\nから文字の私的研究にのめりこみ");
 
 
 	/* Menutk test */
@@ -179,6 +187,7 @@ int main(int argc, char **argv) {
 		d_text_surface_draw(text);
 		d_text_surface_draw(fancy_text);
 		d_text_surface_draw(fps_text);
+		d_text_surface_draw(moonrunes);
 
 		d_render_offset(-200, -200);
 		d_mtsprite_draw(mtsprite);

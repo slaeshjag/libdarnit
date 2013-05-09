@@ -29,6 +29,14 @@ freely, subject to the following restrictions:
 typedef void DARNIT_FONT;
 typedef void DARNIT_TEXT_SURFACE;
 
+
+typedef enum {
+	DARNIT_FONT_LEFT_TO_RIGHT,
+	DARNIT_FONT_RIGHT_TO_LEFT,
+	DARNIT_FONT_TOP_TO_BOTTOM
+} DARNIT_FONT_ORIENTATION;
+
+
 DARNIT_FONT *d_font_load(const char *fname, unsigned int size, unsigned int sheet_w, int sheet_h);
 unsigned int d_font_glyph_w(DARNIT_FONT *font, const char *s);
 unsigned int d_font_string_w(DARNIT_FONT *font, const char *string);
@@ -40,6 +48,7 @@ void d_text_surface_reset(DARNIT_TEXT_SURFACE *surface);
 DARNIT_TEXT_SURFACE *d_text_surface_new(DARNIT_FONT *font, unsigned int glyphs, unsigned int linelen, int x, int y);
 DARNIT_TEXT_SURFACE *d_text_surface_color_new(DARNIT_FONT *font, unsigned int glyphs, unsigned int linelen, int x, int y);
 DARNIT_TEXT_SURFACE *d_text_surface_free(DARNIT_TEXT_SURFACE *surface);
+void d_text_surface_orientation(void *surface, DARNIT_FONT_ORIENTATION prim, DARNIT_FONT_ORIENTATION sec);
 int d_text_surface_char_append(DARNIT_TEXT_SURFACE *surface, const char *c);
 void d_text_surface_string_append(DARNIT_TEXT_SURFACE *surface, const char *string);
 void d_text_surface_color_next(DARNIT_TEXT_SURFACE *surface, unsigned char r, unsigned char g, unsigned char b);

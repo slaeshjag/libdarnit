@@ -32,6 +32,14 @@ typedef enum FONT_TYPE {
 	COLOR
 } FONT_TYPE;
 
+
+typedef enum {
+	TEXT_O_LEFT_TO_RIGHT,
+	TEXT_O_RIGHT_TO_LEFT,
+	TEXT_O_TOP_TO_BOTTOM
+} FONT_ORIENTATION;
+
+
 struct TEXT_FONT_GLYPH {
 	float			u1;
 	float			v1;
@@ -132,6 +140,8 @@ typedef struct {
 	float			yf_skip;
 	float			orig_xf;
 	float			orig_yf;
+	FONT_ORIENTATION	prim;
+	FONT_ORIENTATION	sec;
 } TEXT_SURFACE;
 
 
@@ -156,6 +166,7 @@ void textRender(TEXT_SURFACE *surface);
 void textSurfaceSkip(TEXT_SURFACE *surface, int pixels);
 int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp);
 void textSurfaceSetPos(TEXT_SURFACE *surface, int x_pos);
+void textSurfaceSetOrientation(TEXT_SURFACE *surface, FONT_ORIENTATION prim, FONT_ORIENTATION sec);
 
 
 #endif

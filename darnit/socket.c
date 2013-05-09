@@ -245,12 +245,11 @@ void socketConnectLoop() {
 		(list->callback)(t, list->data, tmp_sock);
 		list = *parent;
 		free(tmp_p);
-		if (t < 0)
 		continue;
 
 		loop:
 			parent = &list->next;
-			list = *parent;
+			list = list->next;
 	}
 
 	#ifdef _WIN32
