@@ -240,6 +240,8 @@ void EXPORT_THIS d_render_circle_draw(DARNIT_RENDER_LINE_BUFFER *buf) {
 
 
 void EXPORT_THIS d_render_point_draw(DARNIT_RENDER_POINT_BUFFER *buf, int points) {
+	if (points == -1 || buf->points < points)
+		points = buf->points;
 	renderPointCache(buf->pc, points, buf->point_w);
 }
 
