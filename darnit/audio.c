@@ -144,7 +144,7 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 
 		d->audio.playback_chan[i].pos += decoded;
 		if (decoded < frames)
-			audioSoundStop(i);
+			audioSoundStop(d->audio.playback_chan[i].key);
 
 	}
 
