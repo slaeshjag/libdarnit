@@ -121,6 +121,7 @@ void utilInit() {
 
 int utilSine(int angle) {
 	if (angle < 0) {
+		angle = abs(angle);
 		angle = angle % 3600;
 		angle = 3600 - angle;
 	}
