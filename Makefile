@@ -8,6 +8,7 @@ export TOPDIR
 .PHONY: all tools lib install strip clean
 
 all:
+	@cp darnit/platform/keysym.h include/darnit/darnit_keysym.h
 	@echo " [INIT] bin/"
 	@$(MKDIR) bin/
 	@echo " [ CD ] deps/"

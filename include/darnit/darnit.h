@@ -56,6 +56,7 @@ typedef enum {
 #include <darnit/darnit_stringtable.h>
 #include <darnit/darnit_filesystem.h>
 #include <darnit/darnit_map.h>
+#include <darnit/darnit_keysym.h>
 
 
 #ifdef __cplusplus

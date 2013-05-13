@@ -179,6 +179,14 @@ void renderLineCalc(LINE_CACHE *cache, int x, int y, int x2, int y2) {
 }
 
 
+void renderPointCalc(POINT_CACHE *cache, int x, int y) {
+	cache->coord[0].x = ((d->video.swgran * x) - 1.0f);
+	cache->coord[0].y = (1.0f - (d->video.shgran * y));
+
+	return;
+}
+
+
 void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2) {
 	float xf, yf, xf2, yf2;
 
@@ -381,6 +389,22 @@ void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
 	glLineWidth(line_w);
 	glVertexPointer(2, GL_FLOAT, 0, cache);
 	glDrawArrays(GL_LINES, 0, lines * 2);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
+
+	return;
+}
+
+
+void renderPointCache(POINT_CACHE *cache, int points, int point_w) {
+	if (!cache)
+		return;
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+	glPointSize(point_w);
+	glVertexPointer(2, GL_FLOAT, 0, cache);
+	glDrawArrays(GL_POINTS, 0, points);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 
