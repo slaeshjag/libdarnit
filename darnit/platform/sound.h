@@ -48,5 +48,6 @@ typedef struct {
 
 int tpw_sound_open(TPW_SOUND_SETTINGS settings);
 void tpw_sound_control(TPW_SOUND_COMMAND command);
+void tpw_sound_callback(void (*callback)(void *data, void *mixdata, int bytes));
 
 #endif

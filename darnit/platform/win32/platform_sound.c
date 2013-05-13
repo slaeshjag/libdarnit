@@ -46,6 +46,12 @@ static struct {
 	unsigned int current;
 } sound;
 
+void tpw_sound_callback(void (*callback)(void *data, void *mixdata, int bytes)) {
+	callback_data.fetch_audio = callback;
+	
+	return;
+}
+	
 static void CALLBACK callback(HWAVEOUT hwo, UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR param2) {
 	if(msg!=WOM_DONE)
 		return;
@@ -55,6 +61,7 @@ static void CALLBACK callback(HWAVEOUT hwo, UINT msg, DWORD_PTR instance, DWORD_
 	sound.current=(sound.current+1)%BUFFERS;
 }
 
+	
 int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 	int res;
 	unsigned int buflen;

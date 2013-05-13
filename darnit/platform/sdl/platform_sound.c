@@ -24,6 +24,19 @@ freely, subject to the following restrictions:
 
 #include "../main.h"
 
+void tpw_sound_callback(void (*callback)(void *data, void *mixdata, int bytes)) {
+	tpw.sound.callback = callback;
+
+	return;
+}
+
+
+void tpw_sound_do_callback(void *data, void *mixdata, int bytes) {
+	(tpw.sound.callback)(data, mixdata, bytes);
+
+	return;
+}
+
 
 int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 	SDL_AudioSpec fmt;
@@ -41,7 +54,7 @@ int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 	}
 	fmt.channels = settings.channels;
 	fmt.samples = settings.samples;
-	fmt.callback = (void *) settings.callback;
+	fmt.callback = (void *) tpw_sound_do_callback;
 	fmt.userdata = settings.userdata;
 
 	return SDL_OpenAudio(&fmt, NULL);

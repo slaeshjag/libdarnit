@@ -84,6 +84,13 @@ void EXPORT_THIS d_sound_playback_volume_set(unsigned int playback_key, int vol_
 }
 
 
+void EXPORT_THIS d_sound_mix_callback_set(void *callback) {
+	audioSetCallback(callback);
+
+	return;
+}
+
+
 void EXPORT_THIS d_sound_compression_enable() {
 	d->audio.compression_enabled = 1;
 	

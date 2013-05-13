@@ -229,5 +229,13 @@ int audioInit() {
 	return 0;
 }
 
+
+void audioSetCallback(void *func) {
+	if (!func)
+		tpw_sound_callback((!func) ? audioMix : func);
+	return;
+}
+
+
 // DARNIT_HEADLESS
 #endif

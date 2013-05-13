@@ -103,6 +103,7 @@ void audioSoundClear();
 short audioSampleMix(short s1, short s2);
 void audioFrameMix(short *target, short *source1, short *source2, int frames);
 int audioInit();
+void audioSetCallback(void *func);
 
 
 
