@@ -187,6 +187,22 @@ void renderPointCalc(POINT_CACHE *cache, int x, int y) {
 }
 
 
+void renderColorPointCalc(POINT_COLOR_CACHE *cache, int x, int y) {
+	cache->coord[0].coord.x = ((d->video.swgran * x) - 1.0f);
+	cache->coord[0].coord.y = (1.0f - (d->video.shgran * y));
+
+	return;
+}
+
+
+void renderPointColor(POINT_COLOR_CACHE *cache, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+	cache->coord[0].col.rgba[0] = r;
+	cache->coord[0].col.rgba[1] = g;
+	cache->coord[0].col.rgba[2] = b;
+	cache->coord[0].col.rgba[3] = a;
+}
+
+
 void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2) {
 	float xf, yf, xf2, yf2;
 
@@ -391,6 +407,28 @@ void renderLineCache(LINE_CACHE *cache, int lines, int line_w) {
 	glDrawArrays(GL_LINES, 0, lines * 2);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
+
+	return;
+}
+
+
+void renderColorPointCache(POINT_COLOR_CACHE *cache, int points, int point_w) {
+	if (!cache)
+		return;
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisable(GL_TEXTURE_2D);
+	glEnableClientState(GL_COLOR_ARRAY);
+	glPointSize(point_w);
+	glVertexPointer(2, GL_FLOAT, 12, cache);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 12, &cache->coord->col);
+	glDrawArrays(GL_POINTS, 0, points);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
+	
+	/* Since this value gets overwritten on windows, set it again! */
+	glColor4f(d->video.tint_r, d->video.tint_g, d->video.tint_b, d->video.tint_a);
 
 	return;
 }

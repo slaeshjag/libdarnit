@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011-2013 Steven Arnow
+Copyright (c) 2013 Steven Arnow
 'particle.c' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
@@ -28,166 +28,197 @@ freely, subject to the following restrictions:
 #ifndef DARNIT_HEADLESS
 
 
-#if 0
-void particleRenderColorTri(PARTICLE_EMITTER *pe) {
-	int i;
+PARTICLE *particleFree(PARTICLE *p) {
+	if (!p)
+		return p;
+	free(p->tex);
+	free(p->particle);
+	free(p);
 
-	for (i = 0; i < pe->particle_max; i++) {
-		if (pe->com[i].age == -1)
-			continue;
-		pe->tri[i].
-#endif
-
-
-void particleTexturedInit(COLOR_TEX_VERTEX *tex) {
-	tex->coord.x = 0.0f;
-	tex->coord.y = 0.0f;
-	tex->col.rgba[0] = 0.0f;
-	tex->col.rgba[1] = 0.0f;
-	tex->col.rgba[2] = 0.0f;
-	tex->col.rgba[3] = 0.0f;
-	tex->tex.u = 0.0f;
-	tex->tex.v = 0.0f;
-
-	return;
+	return NULL;
 }
 
 
-void particleColoredInit(COLOR_VERTEX *vert) {
-	vert->coord.x = 0.0f;
-	vert->coord.y = 0.0f;
-	vert->col.rgba[0] = 0.0f;
-	vert->col.rgba[1] = 0.0f;
-	vert->col.rgba[2] = 0.0f;
-	vert->col.rgba[3] = 0.0f;
+void particleMove(PARTICLE *p, int index, int x, int y) {
+	p->particle[index].x_pos = x;
+	p->particle[index].y_pos = y;
 
-	return;
-}
-
-
-PARTICLE_EMITTER *particleEmitterNew(PARTICLE_CONFIG *conf) {
-	PARTICLE_EMITTER *pe;
-	int i, j;
-
-	if (!(pe = malloc(sizeof(PARTICLE_EMITTER))))
-		return NULL;
-	
-	pe->tint_r = CCOLOR_FLOAT(conf->start_r);
-	pe->tint_g = CCOLOR_FLOAT(conf->start_g);
-	pe->tint_b = CCOLOR_FLOAT(conf->start_b);
-	pe->tint_a = CCOLOR_FLOAT(conf->start_a);
-
-	pe->d_r = CCOLOR_DELTA(conf->target_r, conf->start_r, conf->ttl);
-	pe->d_g = CCOLOR_DELTA(conf->target_g, conf->start_g, conf->ttl);
-	pe->d_b = CCOLOR_DELTA(conf->target_b, conf->start_b, conf->ttl);
-	pe->d_a = CCOLOR_DELTA(conf->target_a, conf->start_a, conf->ttl);
-
-	pe->gravity_x = PER_MSEC(conf->gravity_x);
-	pe->gravity_y = PER_MSEC(conf->gravity_y);
-	pe->spread_direction = conf->spawn_direction * 10;
-	pe->spread_angle = conf->spawn_spread * 10;
-
-	pe->ttl = conf->ttl;
-	pe->particle_max = conf->particles_max;
-	pe->spawnrate = PER_MSEC(conf->spawnrate);
-	pe->mode = conf->mode;
-	pe->size = conf->size;
-
-	pe->spawn_vel_max = PER_MSEC(conf->spawn_maxvel);
-	pe->spawn_vel_min = PER_MSEC(conf->spawn_minvel);
-
-	pe->particle_max = conf->particles_max;
-	pe->ttl = conf->ttl;
-
-	pe->pulse_interval = pe->ttl / (pe->particle_max / pe->spawnrate) + 1;
-	pe->ts = NULL;
-
-	pe->com = malloc(sizeof(PARTICLE_COMMON) * pe->particle_max);
-	for (i = 0; i < pe->particle_max; i++) {
-		pe->com[i].age = -1;
-		pe->com[i].x_vel = 0;
-		pe->com[i].y_vel = 0;
-	}
-	
-	switch (pe->mode & 0xF) {
-		case PARTICLE_MODE_TEXTURED:
-			pe->tex = malloc(sizeof(TILE_CACHE) * pe->particle_max);
-			for (i = 0; i < pe->particle_max; i++)
-				for (j = 0; j < 6; j++)
-					particleTexturedInit(&pe->tex[i].vertex[j]);
-			pe->ts_u1 = 1.0f / conf->ts->w * conf->ts_x;
-			pe->ts_v1 = 1.0f / conf->ts->h * conf->ts_y;
-			pe->ts_u2 = pe->ts_u1 + 1.0f / conf->ts->w * conf->size;
-			pe->ts_v2 = pe->ts_v1 + 1.0f / conf->ts->h * conf->size;
-			pe->ts = conf->ts;
-			break;
-		case PARTICLE_MODE_TRIANGLE:
-			for (i = 0; i < pe->particle_max; i++)
-				for (j = 0; j < 3; j++)
-					particleColoredInit(&pe->tri[i].vertex[j]);
-			break;
-		case PARTICLE_MODE_QUAD:
-			for (i = 0; i < pe->particle_max; i++)
-				for (j = 0; j < 6; j++)
-					particleColoredInit(&pe->quad[i].vertex[j]);
-			break;
-		case PARTICLE_MODE_LINE:
-			for (i = 0; i < pe->particle_max; i++)
-				for (j = 0; j < 2; j++)
-					particleColoredInit(&pe->line[i].vertex[j]);
+	switch (p->type) {
+		case PARTICLE_TYPE_POINT:
+			renderColorPointCalc(&p->point[index], p->particle[index].x_pos / 1000, p->particle[index].y_pos / 1000);
 			break;
 		default:
-			fprintf(stderr, "Fixme: Unhandled mode\n");
+			break;
 	}
 
-	return pe;
+	return;
 }
 
-#if 0
-void particleMove(PARTICLE_EMITTER *pei) {
+
+void particleColor(PARTICLE *p, int index) {
+	switch (p->type) {
+		case PARTICLE_TYPE_POINT:
+			renderPointColor(&p->point[index], p->particle[index].color.r / 1000000, p->particle[index].color.g / 1000000, p->particle[index].color.b / 1000000, p->particle[index].color.a / 1000000);
+			break;
+		default:
+			break;
+	}
+
+	return;
+}
+
+
+void particleClear(PARTICLE *p, int index) {
+	p->particle[index].color.r = p->particle[index].color.g = p->particle[index].color.b = p->particle[index].color.a = 0;
+	particleMove(p, index, ~0, ~0);
+	p->particle[index].used = 0;
+
+	return;
+}
+
+
+void particleSpawn(PARTICLE *p, int index) {
+	int velocity, angle;
+
+	p->particle[index].color = p->source;
+	p->particle[index].used = 1;
+	p->particle[index].age = 0;
+
+	velocity = rand() % (p->max_velocity - p->min_velocity) + p->min_velocity;
+	angle = rand() % (p->max_angle - p->min_angle) + p->min_angle;
+
+	p->particle[index].x_vel = (utilSine(angle + 900) * velocity) >> 16;
+	p->particle[index].x_vel = (utilSine(angle) * velocity) >> 16;
+
+	particleMove(p, index, p->emit_x * 1000, p->emit_y * 1000);
+
+	return;
+}
+
+
+PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type) {
+	PARTICLE *p;
 	int i;
 
-	for (i = 0; i < pe->particle_max; i++) {
-		if (pe->com[i].age == -1)
-			continue;
-	f
+	if (!(p = malloc(sizeof(PARTICLE))))
+		return NULL;
 
-
-void particleEmitterRender(PARTICLE_EMITTER *pe) {
-	int i, spawn;
-
-	if (!pe)
-		return;
-	
-	for (i = 0; i < pe->particle_max; i++) {
-		if (pe->com[i].age == -1)
-			continue;
-		pe->com[i].x_vel += pe->gravity_x * (d->fps.time_at_flip - d->fps.time_at_last_frame);
-		pe->com[i].y_vel += pe->gravity_y * (d->fps.time_at_flip - d->fps.time_at_last_frame);
+	if (!(p->particle = malloc(sizeof(PARTICLE_COMMON) * max_particles))) {
+		free(p);
+		return NULL;
 	}
+
+	p->mode = PARTICLE_MODE_OFF;
+	p->type = type;
+
+	switch (type) {
+		case PARTICLE_TYPE_POINT:
+			p->point = malloc(sizeof(POINT_COLOR_CACHE) * max_particles);
+			break;
+		default:
+			p->tex = NULL;
+			fprintf(stderr, "Unimplemented mode %i\n", type);
+			return particleFree(p);
+	}
+
+	for (i = 0; i < max_particles; particleClear(p, i++));
 	
-	particleMove(pe, i);
+	p->emit_x = p->emit_y = ~0;
+	p->min_angle = p->min_velocity = 0;
+	p->max_angle = p->max_velocity = 1;
+	p->gravity_x = p->gravity_y = 0;
+	p->particle_life = 0;
 
-	spawn = pe->spawnrate * (d->fps.time_at_flip - d->fps.time_at_last_frame);
+	p->particles_max = max_particles;
 
-	/* Render */
-	switch (pe->mode & 0xF) {
-		case PARTICLE_MODE_TEXTURED:
+	p->ts = NULL;
+	p->source.r = p->source.g = p->source.b = p->source.a = 0;
+	p->delta_c = p->source;
+	p->target = p->source;
+
+	p->last_frame_time = tpw_ticks();
+	
+	return p;
+}
+
+
+int particleHandle(PARTICLE *p, int index, int d_t) {
+	if (!p->particle[index].used)
+		return 0;
+	
+	p->particle[index].x_vel += p->gravity_x * d_t / 1000;
+	p->particle[index].y_vel += p->gravity_y * d_t / 1000;
+
+	p->particle[index].age += d_t;
+	if (p->particle[index].age >= p->particle_life) {
+		particleClear(p, index);
+		return 0;
+	}
+
+	p->particle[index].x_pos += p->particle[index].x_vel * d_t;
+	p->particle[index].y_pos += p->particle[index].y_vel * d_t;
+	
+	p->particle[index].color.r += p->delta_c.r * d_t;
+	p->particle[index].color.g += p->delta_c.g * d_t;
+	p->particle[index].color.b += p->delta_c.b * d_t;
+	p->particle[index].color.a += p->delta_c.a * d_t;
+	
+	particleMove(p, index, p->particle[index].x_pos, p->particle[index].y_pos);
+	particleColor(p, index);
+
+	return 1;
+}
+
+
+
+void particleLoop(PARTICLE *p) {
+	int d_t, spawn, i;
+
+	if (!p)
+		return;
+	d_t = tpw_ticks() - p->last_frame_time;
+	p->last_frame_time = tpw_ticks();
+
+	switch (p->mode) {
+		case PARTICLE_MODE_OFF:
+		case PARTICLE_MODE_PULSAR:
+			spawn = 0;
 			break;
-		case PARTICLE_MODE_TRIANGLE:
+		case PARTICLE_MODE_SHOWER:
+			spawn = p->particles_max * 1000 / p->particle_life * d_t / 1000;
 			break;
-		case PARTICLE_MODE_QUAD:
-			for (i = 0; i < pe->particles_max; i++) {
-#if 0
+		case PARTICLE_MODE_AUTOPULSAR:
+			spawn = p->particles_max;
+			break;
+	}
 
-int particleEmitterMode(PARTICLE_EMITTER *pe, unsigned int mode, void *data) {
-	if (!pe)
-		return -1;
-	switch (mode) {
-		case 
+	for (i = 0; i < p->particles_max; i++)
+		if (!particleHandle(p, i, d_t))
+			if (spawn-- > 0)
+				particleSpawn(p, i);
 
-#endif
-#endif
+	switch (p->type) {
+		case PARTICLE_TYPE_POINT:
+			renderColorPointCache(p->point, p->particles_max, 1);
+			break;
+		default:
+			break;
+	}
+
+
+	return;
+}
+
+
+void particleColorDelta(PARTICLE *p) {
+	p->delta_c.r = (p->target.r - p->source.r) / p->particle_life;
+	p->delta_c.g = (p->target.g - p->source.g) / p->particle_life;
+	p->delta_c.b = (p->target.b - p->source.b) / p->particle_life;
+	p->delta_c.a = (p->target.a - p->source.a) / p->particle_life;
+
+	return;
+}
+	
 
 // DARNIT_HEADLESS
 #endif

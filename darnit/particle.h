@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011-2013 Steven Arnow
+Copyright (c) 2013 Steven Arnow
 'particle.h' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
@@ -26,110 +26,88 @@ freely, subject to the following restrictions:
 #ifndef __PARTICLE_H__
 #define	__PARTICLE_H__
 
-#define	CCOLOR_FLOAT(x)			(1.0f / ((x) - 255))
-#define	CCOLOR_DELTA(x, xn, y)		((1.0f / (((x) - (xn)) - 255)) / (y))
-#define	PER_MSEC(x)			(((float) (x)) / 1000.0f)
 
-#define	PARTICLE_MODE_UNDEF		0
-#define	PARTICLE_MODE_TEXTURED		1
-#define	PARTICLE_MODE_TRIANGLE		2
-#define	PARTICLE_MODE_QUAD		3
-#define	PARTICLE_MODE_LINE		4
+typedef enum {
+	PARTICLE_TYPE_POINT,
+	PARTICLE_TYPE_TEXTURED,
+	PARTICLE_TYPE_TRIANGLE,
+	PARTICLE_TYPE_QUAD,
+} PARTICLE_TYPE;
 
-#define	PARTICLE_MODE_PULSAR		0x100
+typedef enum {
+	PARTICLE_MODE_OFF,
+	PARTICLE_MODE_SHOWER,
+	PARTICLE_MODE_PULSAR,
+	PARTICLE_MODE_AUTOPULSAR
+} PARTICLE_MODE;
+
+
+typedef struct {
+	int				r;
+	int				g;
+	int				b;
+	int				a;
+} PARTICLE_COLOR;
 
 
 typedef struct {
 	int				age;
-	float				x_vel;
-	float				y_vel;
+	int				x_vel;
+	int				y_vel;
+
+	int				x_pos;
+	int				y_pos;
+
+	int				used;
+
+	PARTICLE_COLOR			color;
 } PARTICLE_COMMON;
 
 
-
 typedef struct {
-	unsigned int			particle_max;
-	unsigned int			ttl;
-	unsigned int			size;
-	float				spawnrate;
-	unsigned int			mode;
-	unsigned int			spread_direction;
-	unsigned int			spread_angle;
+	PARTICLE_COLOR			source;
+	PARTICLE_COLOR			delta_c;
+	PARTICLE_COLOR			target;
+	PARTICLE_MODE			mode;
+	PARTICLE_TYPE			type;
 
-	/* Only used by pulsars */
-	int				pulse_interval;
-	
+	int				particle_life;
 
-	float				tint_r;
-	float				tint_g;
-	float				tint_b;
-	float				tint_a;
+	int				emit_x;
+	int				emit_y;
 
-	float				d_r;
-	float				d_g;
-	float				d_b;
-	float				d_a;
+	int				min_angle;
+	int				max_angle;
 
-	float				gravity_x;
-	float				gravity_y;
-
-	float				spawn_vel_max;
-	float				spawn_vel_min;
-
-
-	/* Some members for textured particles */
-	TILESHEET			*ts;
-	float				ts_u1;
-	float				ts_v1;
-	float				ts_u2;
-	float				ts_v2;
-
-	PARTICLE_COMMON			*com;
-
-	union {
-		TILE_COLOR_TEX_CACHE	*tex;
-		TRI_COLOR_CACHE		*tri;
-		TILE_COLOR_CACHE	*quad;
-		LINE_COLOR_CACHE	*line;
-		void			*buffer;
-	};
-} PARTICLE_EMITTER;
-
-
-typedef struct {
-	unsigned int			spawnrate;
-	unsigned int			particles_max;
-	unsigned int			ttl;
-	unsigned int			size;
-
-	unsigned int			mode;
-
-	/* Only for textured particles */
-	TILESHEET			*ts;
-	int				ts_x;
-	int				ts_y;
-
-	/* For all particles */
-	unsigned char			start_r;
-	unsigned char			start_g;
-	unsigned char			start_b;
-	unsigned char			start_a;
-
-	unsigned char			target_r;
-	unsigned char			target_g;
-	unsigned char			target_b;
-	unsigned char			target_a;
-
-	unsigned int			spawn_maxvel;
-	unsigned int			spawn_minvel;
-
-					/* In degrees */
-	unsigned int			spawn_direction;
-	unsigned int			spawn_spread;
+	int				min_velocity;
+	int				max_velocity;
 
 	int				gravity_x;
 	int				gravity_y;
-} PARTICLE_CONFIG;
+
+	int				particles_max;
+
+	unsigned int			last_frame_time;
+
+	PARTICLE_COMMON			*particle;
+
+	union {
+		TILE_COLOR_TEX_CACHE	*tex;
+		RECT_CACHE		*quad;
+		TRI_COLOR_CACHE		*tri;
+		POINT_COLOR_CACHE	*point;
+	};
+
+	/* Only used by PARTICLE_TYPE_TEXTURED */
+	TILESHEET			*ts;
+} PARTICLE;
+
+
+
+PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type);
+void particleLoop(PARTICLE *p);
+void particleColorDelta(PARTICLE *p);
+PARTICLE *particleFree(PARTICLE *p);
 
 
 #endif
