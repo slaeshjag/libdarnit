@@ -137,6 +137,7 @@ PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type) {
 	p->delta_c = p->source;
 	p->target = p->source;
 	p->pulse = 0;
+	p->point_size = 1;
 
 	p->last_frame_time = tpw_ticks();
 	
@@ -205,7 +206,7 @@ void particleLoop(PARTICLE *p) {
 
 	switch (p->type) {
 		case PARTICLE_TYPE_POINT:
-			renderColorPointCache(p->point, p->particles_max, 1);
+			renderColorPointCache(p->point, p->particles_max, p->point_size);
 			break;
 		default:
 			break;

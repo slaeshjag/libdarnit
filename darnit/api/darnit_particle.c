@@ -137,6 +137,14 @@ void EXPORT_THIS d_particle_pulse(PARTICLE *p) {
 }
 
 
+void EXPORT_THIS d_particle_point_size(PARTICLE *p, int size) {
+	if (!p)
+		return;
+	p->point_size = size;
+	return;
+}
+
+
 PARTICLE EXPORT_THIS *d_particle_free(PARTICLE *p) {
 	return particleFree(p);
 }

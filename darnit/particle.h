@@ -99,6 +99,9 @@ typedef struct {
 		POINT_COLOR_CACHE	*point;
 	};
 
+	/* Only used by PARTICLE_TYPE_POINT */
+	int				point_size;
+
 	/* Only used by PARTICLE_TYPE_TEXTURED */
 	TILESHEET			*ts;
 } PARTICLE;
