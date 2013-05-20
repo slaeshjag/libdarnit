@@ -88,6 +88,7 @@ typedef struct {
 	int				particles_max;
 
 	unsigned int			last_frame_time;
+	int				pulse;
 
 	PARTICLE_COMMON			*particle;
 

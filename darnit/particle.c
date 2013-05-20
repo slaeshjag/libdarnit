@@ -88,9 +88,10 @@ void particleSpawn(PARTICLE *p, int index) {
 	angle = rand() % (p->max_angle - p->min_angle) + p->min_angle;
 
 	p->particle[index].x_vel = (utilSine(angle + 900) * velocity) >> 16;
-	p->particle[index].x_vel = (utilSine(angle) * velocity) >> 16;
+	p->particle[index].y_vel = (utilSine(angle) * velocity) >> 16;
 
-	particleMove(p, index, p->emit_x * 1000, p->emit_y * 1000);
+	particleMove(p, index, p->emit_x, p->emit_y);
+	particleColor(p, index);
 
 	return;
 }
@@ -127,7 +128,7 @@ PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type) {
 	p->min_angle = p->min_velocity = 0;
 	p->max_angle = p->max_velocity = 1;
 	p->gravity_x = p->gravity_y = 0;
-	p->particle_life = 0;
+	p->particle_life = 1;
 
 	p->particles_max = max_particles;
 
@@ -135,6 +136,7 @@ PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type) {
 	p->source.r = p->source.g = p->source.b = p->source.a = 0;
 	p->delta_c = p->source;
 	p->target = p->source;
+	p->pulse = 0;
 
 	p->last_frame_time = tpw_ticks();
 	
@@ -181,8 +183,10 @@ void particleLoop(PARTICLE *p) {
 
 	switch (p->mode) {
 		case PARTICLE_MODE_OFF:
-		case PARTICLE_MODE_PULSAR:
 			spawn = 0;
+			break;
+		case PARTICLE_MODE_PULSAR:
+			spawn = p->pulse * p->particles_max;
 			break;
 		case PARTICLE_MODE_SHOWER:
 			spawn = p->particles_max * 1000 / p->particle_life * d_t / 1000;
@@ -191,6 +195,8 @@ void particleLoop(PARTICLE *p) {
 			spawn = p->particles_max;
 			break;
 	}
+	
+	p->pulse = 0;
 
 	for (i = 0; i < p->particles_max; i++)
 		if (!particleHandle(p, i, d_t))

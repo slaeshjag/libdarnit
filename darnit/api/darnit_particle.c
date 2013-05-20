@@ -37,6 +37,20 @@ void EXPORT_THIS d_particle_draw(PARTICLE *p) {
 }
 
 
+void EXPORT_THIS d_particle_color_target(PARTICLE *p, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+	if (!p)
+		return;
+	p->target.r = 1000000 * r;
+	p->target.g = 1000000 * g;
+	p->target.b = 1000000 * b;
+	p->target.a = 1000000 * a;
+
+	particleColorDelta(p);
+
+	return;
+}
+
+
 void EXPORT_THIS d_particle_color_start(PARTICLE *p, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
 	if (!p)
 		return;
@@ -47,6 +61,78 @@ void EXPORT_THIS d_particle_color_start(PARTICLE *p, unsigned char r, unsigned c
 
 	particleColorDelta(p);
 
+	return;
+}
+
+
+void EXPORT_THIS d_particle_emitter_move(PARTICLE *p, int x, int y) {
+	if (!p)
+		return;
+	p->emit_x = x * 1000;
+	p->emit_y = y * 1000;
+
+	return;
+}
+
+
+void EXPORT_THIS d_particle_emitter_angle(PARTICLE *p, int angle_min, int angle_max) {
+	if (!p)
+		return;
+	if (!(angle_min - angle_max))
+		angle_max++;
+	p->max_angle = angle_max;
+	p->min_angle = angle_min;
+
+	return;
+}
+
+
+void EXPORT_THIS d_particle_emitter_velocity(PARTICLE *p, int velocity_min, int velocity_max) {
+	if (!p)
+		return;
+	if (!(velocity_max - velocity_min))
+		velocity_max++;
+	p->max_velocity = velocity_max;
+	p->min_velocity = velocity_min;
+
+	return;
+}
+
+
+void EXPORT_THIS d_particle_emitter_gravity(PARTICLE *p, int gravity_xvel, int gravity_yvel) {
+	if (!p)
+		return;
+	p->gravity_x = gravity_xvel;
+	p->gravity_y = gravity_yvel;
+
+	return;
+}
+
+
+void EXPORT_THIS d_particle_life(PARTICLE *p, int msec) {
+	if (!p)
+		return;
+	p->particle_life = (msec) ? msec : 1;
+	particleColorDelta(p);
+
+	return;
+}
+
+
+void EXPORT_THIS d_particle_mode(PARTICLE *p, PARTICLE_MODE mode) {
+	if (!p)
+		return;
+	p->mode = mode;
+
+	return;
+}
+
+
+void EXPORT_THIS d_particle_pulse(PARTICLE *p) {
+	if (!p)
+		return;
+	p->pulse = 1;
+	
 	return;
 }
 
