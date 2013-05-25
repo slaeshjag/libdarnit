@@ -106,6 +106,20 @@ int renderTilemapSpriteDelete(RENDER_TILEMAP *tm, SPRITE_ENTRY *sprite) {
 }
 
 
+void renderTilemapSpriteSort(SPRITE_ENTRY **arr, int size) {
+	SPRITE_ENTRY *tmp;
+	int i, j;
+
+	for (i = 0; i < size; i++)
+		for (j = i; j > 0 && arr[j]->x < arr[j-1]->x; j--) {
+			tmp = arr[j];
+			arr[j] = arr[j-1];
+			arr[j-1] = tmp;
+		}
+	return;
+}
+
+
 int renderTilemapFixSprites(RENDER_TILEMAP *tm) {
 	int o_x, o_y, x_last, y_start_pix, t, tt, i, sprite_cur, sprite_total;
 
@@ -133,6 +147,7 @@ int renderTilemapFixSprites(RENDER_TILEMAP *tm) {
 		}
 		
 		tm->sprite_row[i] = !i ? sprite_cur : sprite_cur - sprite_total;
+		renderTilemapSpriteSort(&tm->sprite[(i > 0) ? tm->sprite_row[i - 1] : 0], tm->sprite_row[i] - ((i > 0) ? tm->sprite_row[i - 1] : 0));
 		sprite_total = sprite_cur;
 	}
 

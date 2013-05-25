@@ -47,6 +47,7 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 	se->animate = 0;
 	se->used = 1;
 	se->y = 0;
+	se->angle = 0;
 	se->wsq = se->hsq = 0;
 	*se->tilesheet = 0;
 
@@ -188,6 +189,7 @@ void spriteTeleport(SPRITE_ENTRY *sprite, int x, int y) {
 	if (sprite == NULL) return;
 
 	sprite->y = y;
+	sprite->x = x;
 	#ifndef DARNIT_HEADLESS
 	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);
 	#endif

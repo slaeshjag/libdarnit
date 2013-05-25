@@ -55,8 +55,10 @@ typedef struct {
 	unsigned int		hsq;
 	TILESHEET		*ts;
 	TILE_CACHE		cache;
+	int			x;
 	int			y;
 	unsigned int		repeat;
+	int			angle;
 } SPRITE_ENTRY;
 
 
