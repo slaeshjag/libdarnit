@@ -57,6 +57,7 @@ typedef enum {
 #include <darnit/darnit_filesystem.h>
 #include <darnit/darnit_map.h>
 #include <darnit/darnit_particle.h>
+#include <darnit/darnit_collision.h>
 #include <darnit/darnit_keysym.h>
 
 

@@ -111,6 +111,7 @@ typedef struct {
 #include "ldmz.h"
 #include "particle.h"
 #include "isometric.h"
+#include "collision.h"
 
 int darnitTimeLastFrameTook();
 
