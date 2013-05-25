@@ -76,7 +76,7 @@ void dynlib_test() {
 }
 
 int main(int argc, char **argv) {
-	int i, j, js0_x, js0_y, js1_x, js1_y;
+	int i, j, k, js0_x, js0_y, js1_x, js1_y;
 	void *font, *surface, *text, *mapsheet, *sprite, *textinput, *mtsprite, *fps_text, *tilebuf, *fancy_text;
 	void *music;
 	char test[256], fps[16];
@@ -146,8 +146,9 @@ int main(int argc, char **argv) {
 	fprintf(stderr, "String lenght: %i\n", d_font_string_w(font, "ASDFÅÄÖ,,"));
 
 
-	for (i = j = 0;;) {
+	for (i = j = k = 0;; k++) {
 		d_sprite_move(mapsprite, 64, j * 4);
+		d_sprite_rotate(sprite, k * 50);
 		keys = d_keys_get();
 		d_text_surface_reset(text); d_text_surface_reset(fps_text);
 		mouse = d_mouse_get();

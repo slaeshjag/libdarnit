@@ -191,7 +191,7 @@ void spriteTeleport(SPRITE_ENTRY *sprite, int x, int y) {
 	sprite->y = y;
 	sprite->x = x;
 	#ifndef DARNIT_HEADLESS
-	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y);
+	renderCalcTilePosCache(&sprite->cache, sprite->ts, x, y, sprite->angle);
 	#endif
 
 	return;

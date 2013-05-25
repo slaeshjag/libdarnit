@@ -104,6 +104,16 @@ void EXPORT_THIS d_sprite_draw(void *sprite) {
 }
 
 
+void EXPORT_THIS d_sprite_rotate(SPRITE_ENTRY *sprite, int angle) {
+	if (!sprite)
+		return;
+	sprite->angle = angle;
+	spriteTeleport(sprite, sprite->x, sprite->y);
+
+	return;
+}
+
+
 void EXPORT_THIS d_sprite_frame_entry_set(void *sprite, int dir, int frame, int tile, int time) {
 	spriteSetFrameEntry(sprite, dir, frame, tile, time);
 

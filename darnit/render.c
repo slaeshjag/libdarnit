@@ -119,21 +119,51 @@ int renderInit() {
 }
 
 
-void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y) {
+void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y, int angle) {
+	int i;
+
 	x /= ts->wsq;
 	y /= ts->hsq;
-	cache->vertex[0].coord.x = (x*ts->sw) - 1.0f;
-	cache->vertex[0].coord.y = 1.0f-(y*ts->sh);
-	cache->vertex[1].coord.x = (ts->sw + x*ts->sw) - 1.0f;
-	cache->vertex[1].coord.y = 1.0f-(y*ts->sh);
-	cache->vertex[2].coord.x = (ts->sw + x*ts->sw-1.0f);
-	cache->vertex[2].coord.y = (1.0f-y*ts->sh - ts->sh);
-	cache->vertex[3].coord.x = (ts->sw + x*ts->sw-1.0f);
-	cache->vertex[3].coord.y = (1.0f-y*ts->sh - ts->sh);
-	cache->vertex[4].coord.x = (x*ts->sw-1.0f);
-	cache->vertex[4].coord.y = (1.0f-y*ts->sh - ts->sh);
-	cache->vertex[5].coord.x = (x*ts->sw-1.0f);
-	cache->vertex[5].coord.y = (1.0f-y*ts->sh);
+
+	if (!angle) {
+		cache->vertex[0].coord.x = x*ts->sw;
+		cache->vertex[0].coord.y = y*ts->sh;
+		cache->vertex[1].coord.x = ts->sw + x*ts->sw;
+		cache->vertex[1].coord.y = y*ts->sh;
+		cache->vertex[2].coord.x = ts->sw + x*ts->sw;
+		cache->vertex[2].coord.y = y*ts->sh + ts->sh;
+		cache->vertex[3].coord.x = ts->sw + x*ts->sw;
+		cache->vertex[3].coord.y = y*ts->sh + ts->sh;
+		cache->vertex[4].coord.x = x*ts->sw;
+		cache->vertex[4].coord.y = y*ts->sh + ts->sh;
+		cache->vertex[5].coord.x = x*ts->sw;
+		cache->vertex[5].coord.y = y*ts->sh;
+	} else {
+		x += 0.5;
+		y += 0.5;
+		
+		for (i = 0; i < 6; i++) {
+			cache->vertex[i].coord.x = (i > 0 && i < 4) ? 0.5f : -0.5f; 
+			cache->vertex[i].coord.y = (i > 1 && i < 5) ? 0.5f : -0.5f;
+			utilCoordinatesRotate(&cache->vertex[i].coord.x, &cache->vertex[i].coord.y, angle);
+		}
+
+		for (i = 0; i < 6; i++) {
+			cache->vertex[i].coord.x += x; 
+			cache->vertex[i].coord.y += y;
+		}
+		
+		for (i = 0; i < 6; i++) {
+			cache->vertex[i].coord.x *= ts->sw; 
+			cache->vertex[i].coord.y *= ts->sh;
+		}
+	}
+	
+	for (i = 0; i < 6; i++) {
+		cache->vertex[i].coord.x -= 1.0f;
+		cache->vertex[i].coord.y = 1.0f - cache->vertex[i].coord.y;
+	}
+
 
 	return;
 }
@@ -267,7 +297,7 @@ void renderBlitTile(TILESHEET *ts, unsigned int tile, int x, int y) {
 	TILE_CACHE tile_c;
 
 	renderCalcTileCache(&tile_c, ts, tile);
-	renderCalcTilePosCache(&tile_c, ts, x, y);
+	renderCalcTilePosCache(&tile_c, ts, x, y, 0);
 	renderCache(&tile_c, ts, 1);
 	
 	return;

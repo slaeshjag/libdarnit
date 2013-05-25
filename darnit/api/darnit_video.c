@@ -73,7 +73,7 @@ void EXPORT_THIS d_render_tile_move(DARNIT_RENDER_BUFFER *buf, unsigned int tile
 		return;
 	
 	cache = &buf->tc[tile];
-	renderCalcTilePosCache(cache, buf->ts, x, y);
+	renderCalcTilePosCache(cache, buf->ts, x, y, 0);
 
 	return;
 }

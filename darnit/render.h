@@ -163,7 +163,7 @@ void renderRectCalc(RECT_CACHE *cache, int x, int y, int x2, int y2);
 void renderPointCalc(POINT_CACHE *cache, int x, int y);
 void renderSetTileCoord(TILE_CACHE *cache, TILESHEET *ts, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void renderTileSetSize(TILE_CACHE *cache, int w, int h);
-void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y);
+void renderCalcTilePosCache(TILE_CACHE *cache, TILESHEET *ts, float x, float y, int angle);
 void renderCacheOne(TILE_CACHE *cache, TILESHEET *ts);
 
 void renderColorPointCalc(POINT_COLOR_CACHE *cache, int x, int y);

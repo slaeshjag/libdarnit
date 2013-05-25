@@ -26,6 +26,23 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 
+void utilCoordinatesRotate(float *x, float *y, int angle) {
+	float sin, cos;
+	float x_o, y_o;
+
+	angle *= -1;
+	sin = (1.0f/65536.0) * utilSine(angle);
+	cos = (1.0f/65536.0) * utilSine(angle + 900);
+
+	x_o = *x;
+	y_o = *y;
+	*x = cos * x_o - sin * y_o;
+	*y = sin * x_o + cos * y_o;
+
+	return;
+}
+
+
 unsigned int utilHtonl(unsigned int val) {
 	return htonl(val);
 }

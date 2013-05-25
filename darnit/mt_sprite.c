@@ -28,7 +28,7 @@ freely, subject to the following restrictions:
 #ifndef DARNIT_HEADLESS
 
 void mtSpriteCalcCacheTile(TILESHEET *ts, TILE_CACHE *cache, int x, int y, int w, int h, int rx, int ry) {
-	renderCalcTilePosCache(cache, ts, rx, ry);
+	renderCalcTilePosCache(cache, ts, rx, ry, 0);
 	renderSetTileCoord(cache, ts, x, y, w, h);
 
 	return;

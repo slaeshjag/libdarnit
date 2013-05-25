@@ -39,10 +39,11 @@ void d_sprite_direction_set(DARNIT_SPRITE *sprite, int dir);
 void d_sprite_activate(DARNIT_SPRITE *sprite, int dir);
 void d_sprite_frame_set(DARNIT_SPRITE *sprite, int frame);
 void d_sprite_move(DARNIT_SPRITE *sprite, int x, int y);
+void d_sprite_rotate(DARNIT_SPRITE *sprite, int angle);
 void d_sprite_animate_start(DARNIT_SPRITE *sprite);
 void d_sprite_animate_pause(DARNIT_SPRITE *sprite);
 void d_sprite_animate_stop(DARNIT_SPRITE *sprite);
-void d_sprite_animate_repeat(void *sprite, int repeat);
+void d_sprite_animate_repeat(DARNIT_SPRITE *sprite, int repeat);
 void d_sprite_draw(DARNIT_SPRITE *sprite);
 void d_sprite_frame_entry(DARNIT_SPRITE *sprite, int dir, int frame, int tile, int time);
 
