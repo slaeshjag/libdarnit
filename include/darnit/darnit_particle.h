@@ -50,6 +50,7 @@ void d_particle_emitter_velocity(DARNIT_PARTICLE *p, int velocity_min, int veloc
 void d_particle_emitter_gravity(DARNIT_PARTICLE *p, int gravity_xvel, int gravity_yvel);
 void d_particle_life(DARNIT_PARTICLE *p, int msec);
 void d_particle_mode(DARNIT_PARTICLE *p, DARNIT_PARTICLE_MODE mode);
+void d_particle_spawnrate(DARNIT_PARTICLE *p, int spawnrate);
 void d_particle_point_size(DARNIT_PARTICLE *p, int point_size);
 void d_particle_pulse(DARNIT_PARTICLE *p);
 DARNIT_PARTICLE *d_particle_free(DARNIT_PARTICLE *p);
