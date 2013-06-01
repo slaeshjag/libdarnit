@@ -26,14 +26,17 @@ freely, subject to the following restrictions:
 #ifndef	__DARNIT_SPRITE_H__
 #define	__DARNIT_SPRITE_H__
 
-#define	DARNIT_SPRITE_ANIMATION_NOREPEAT	0
-#define	DARNIT_SPRITE_ANIMATION_REPEAT		1
+
+typedef enum {
+	DARNIT_SPRITE_ANIMATION_NOREPEAT = 0,
+	DARNIT_SPRITE_ANIMATION_REPEAT = 1,
+} DARNIT_SPRITE_ANIMATION;
 
 typedef void DARNIT_SPRITE;
 
 
 DARNIT_SPRITE *d_sprite_new(DARNIT_TILESHEET *tilesheet);
-DARNIT_SPRITE *d_sprite_load(const char *fname, int dir, unsigned int target_format);
+DARNIT_SPRITE *d_sprite_load(const char *fname, int dir, DARNIT_PFORMAT target_format);
 DARNIT_SPRITE *d_sprite_free(DARNIT_SPRITE *sprite);
 void d_sprite_direction_set(DARNIT_SPRITE *sprite, int dir);
 void d_sprite_activate(DARNIT_SPRITE *sprite, int dir);
@@ -43,7 +46,7 @@ void d_sprite_rotate(DARNIT_SPRITE *sprite, int angle);
 void d_sprite_animate_start(DARNIT_SPRITE *sprite);
 void d_sprite_animate_pause(DARNIT_SPRITE *sprite);
 void d_sprite_animate_stop(DARNIT_SPRITE *sprite);
-void d_sprite_animate_repeat(DARNIT_SPRITE *sprite, int repeat);
+void d_sprite_animate_repeat(DARNIT_SPRITE *sprite, DARNIT_SPRITE_ANIMATION repeat);
 void d_sprite_draw(DARNIT_SPRITE *sprite);
 void d_sprite_frame_entry(DARNIT_SPRITE *sprite, int dir, int frame, int tile, int time);
 

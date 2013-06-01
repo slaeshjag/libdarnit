@@ -84,6 +84,17 @@ void EXPORT_THIS d_sound_playback_volume_set(unsigned int playback_key, int vol_
 }
 
 
+void EXPORT_THIS d_sound_master_volume(int volume) {
+	if (volume < 0)
+		volume = 0;
+	if (volume > 128)
+		volume = 128;
+	d->audio.master_volume = volume;
+
+	return;
+}
+
+
 void EXPORT_THIS d_sound_mix_callback_set(void *callback) {
 	audioSetCallback(callback);
 

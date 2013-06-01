@@ -173,6 +173,10 @@ void audioDecodeMixNew(int frames, void *mixdata) {
 	if (d->audio.compression == 1)
 		for (i = 0; i < samples; i++)
 			mixbuf[i] = d->audio.samplebuf[i];
+	if (d->audio.master_volume != 128)
+		for (i = 0; i < samples; i++)
+			mixbuf[i] = ((int) mixbuf[i] * d->audio.master_volume) >> 7;
+
 	return;
 }
 
@@ -225,6 +229,7 @@ int audioInit() {
 	d->audio.cnt = 0;
 	d->audio.compression = 1;
 	d->audio.compression_enabled = 1;
+	d->audio.master_volume = 128;
 
 	tpw_sound_control(TPW_SOUND_COMMAND_PLAY);
 

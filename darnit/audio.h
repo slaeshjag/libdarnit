@@ -94,6 +94,7 @@ typedef struct {
 	unsigned int			cnt;
 	int				compression;
 	int				compression_enabled;
+	int				master_volume;
 } AUDIO;
 
 
