@@ -60,6 +60,12 @@ unsigned int EXPORT_THIS d_font_word_w(void *font, const char *string, unsigned 
 
 
 unsigned int EXPORT_THIS d_font_string_geometrics(void *font, const char *string, int linelen, int *string_w) {
+	*string_w = 0;
+	return textStringGeometrics(font, string, linelen, string_w);
+}
+
+
+unsigned int EXPORT_THIS d_font_string_geometrics_o(void *font, const char *string, int linelen, int *string_w) {
 	return textStringGeometrics(font, string, linelen, string_w);
 }
 
@@ -130,4 +136,11 @@ void EXPORT_THIS d_text_surface_orientation(void *surface, FONT_ORIENTATION prim
 	textSurfaceSetOrientation(surface, prim, sec);
 	
 	return;
+}
+
+
+unsigned int EXPORT_THIS d_text_surface_pos(TEXT_SURFACE *text) {
+	if (!text)
+		return 0;
+	return text->pos;
 }

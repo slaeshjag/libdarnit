@@ -86,6 +86,7 @@ typedef struct {
 	int				gravity_y;
 
 	int				particles_max;
+	int				spawnrate_max;
 
 	unsigned int			last_frame_time;
 	int				pulse;

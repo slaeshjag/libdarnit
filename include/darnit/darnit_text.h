@@ -42,6 +42,7 @@ unsigned int d_font_glyph_w(DARNIT_FONT *font, const char *s);
 unsigned int d_font_string_w(DARNIT_FONT *font, const char *string);
 unsigned int d_font_word_w(DARNIT_FONT *font, const char *string, unsigned int *bytes);
 unsigned int d_font_string_geometrics(DARNIT_FONT *font, const char *string, int linelen, int *string_w);
+unsigned int d_font_string_geometrics_o(DARNIT_FONT *font, const char *string, int linelen, int *string_w);
 unsigned int d_font_glyph_h(DARNIT_FONT *font);
 unsigned int d_font_glyph_hs(DARNIT_FONT *font);
 void d_text_surface_reset(DARNIT_TEXT_SURFACE *surface);
@@ -55,5 +56,6 @@ void d_text_surface_color_next(DARNIT_TEXT_SURFACE *surface, unsigned char r, un
 void d_text_surface_draw(DARNIT_TEXT_SURFACE *surface);
 void d_text_surface_offset_next_add(DARNIT_TEXT_SURFACE *surface, int pixels);
 void d_text_surface_offset_next_set(DARNIT_TEXT_SURFACE *surface, int x_pos);
+unsigned int d_text_surface_pos(DARNIT_TEXT_SURFACE *text)
 
 #endif

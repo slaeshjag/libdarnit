@@ -97,10 +97,8 @@ int textWillGlyphFit(struct TEXT_FONT_CACHE *cache, int w, int h) {
 	int pos_y;
 
 	pos_y = (cache->line_pos_x + w >= cache->sheet_w) ? cache->line_pos_y + cache->line_height : cache->line_pos_y;
-	if (pos_y + h >= cache->sheet_h) {
-		fprintf(stderr, "No, it will not fit\n");
+	if (pos_y + h >= cache->sheet_h)
 		return -1;
-	}
 	return 0;
 }
 
@@ -320,7 +318,9 @@ int textGetStringWidth(TEXT_FONT *font, const char *string) {
 int textStringWordLength(TEXT_FONT *font, const char *string, int *bytes) {
 	int i, w;
 	unsigned int glyph;
-
+	
+	if (bytes)
+		*bytes = 0;
 	if (!font)
 		return 0;
 
@@ -364,8 +364,9 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 	if (!font)
 		return 0;
 	w_max = 0;
-	for (j = 0; *string; j++) {
-		for (w = 0; *string != 0 && *string != '\n';) {
+	w = *w_set;
+	for (j = 0; *string; j++, w = 0) {
+		for (; *string != 0 && *string != '\n';) {
 			t = textStringWordLength(font, string, &b);
 			if (t + w >= linelen) {
 				if (w > 0)
