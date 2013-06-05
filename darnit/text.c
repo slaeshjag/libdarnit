@@ -229,12 +229,15 @@ struct TEXT_FONT_GLYPH *textRenderGlyphToCache(TEXT_FONT *font, unsigned int gly
 	
 	/* Just in case the coords aren't reported correctly o_O */
 	x1 = y1 = x2 = y2 = 0;
-	stbtt_GetCodepointBox(&font->face, glyph_index, &x1, &y1, &x2, &y2);
+//	stbtt_GetCodepointBox(&font->face, glyph_index, &x1, &y1, &x2, &y2);
+	stbtt_GetCodepointBitmapBox(&font->face, glyph, font->scale, font->scale, &x1, &y1, &x2, &y2);
 
+#if 0
 	x1 = font->scale * x1;
 	y1 = font->scale * y1;
 	x2 = font->scale * x2;
 	y2 = font->scale * y2;
+#endif
 	
 	while (next != NULL) {
 		if (textWillGlyphFit(next, x2 - x1, y2 - y1) == 0)
