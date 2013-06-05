@@ -440,6 +440,7 @@ void textResetSurface(TEXT_SURFACE *srf) {
 	srf->last = 0;
 	srf->cur_xf = srf->orig_xf;
 	srf->cur_yf = srf->orig_yf;
+	srf->color[0] = srf->color[1] = srf->color[2] = srf->color[3] = 0;
 
 
 	return;
