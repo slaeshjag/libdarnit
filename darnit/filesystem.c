@@ -95,6 +95,7 @@ int fsInit(const char *dir_name) {
 	#endif
 
 	d->fs.mount = NULL;
+	d->fs.temp_counter = 0;
 
 	return 0;
 }
@@ -802,6 +803,7 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 		new_file = tempnam(NULL, d->fs.directory_suffix);
 		real_file = malloc(strlen(new_file) + 1 + 10);
 		sprintf(real_file, "%s.%i", new_file, d->fs.temp_counter);
+		fprintf(stderr, "%s\n", real_file);
 		free(new_file);
 		new_file = real_file;
 		#else

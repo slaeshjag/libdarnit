@@ -569,6 +569,11 @@ void menutkTextinputInput(MENUTK_ENTRY *menu) {
 	unsigned int key, i, tmp, change;
 
 	key = inputASCIIPop();
+	if (key)
+		if (d->input.raw.raw[d->input.raw.use - 1].keysym == key)
+			key = d->input.raw.raw[d->input.raw.use - 1].unicode ? d->input.raw.raw[d->input.raw.use - 1].unicode : key;
+		
+		
 	change = 1;
 
 	if (key == 127 && menu->selection >= 0) {

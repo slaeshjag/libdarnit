@@ -94,6 +94,7 @@ int main(int argc, char **argv) {
 	compression_test();
 	d_fs_mount_self();
 	dynlib_test();
+	d_input_unicode(1);
 
 	/* Sound/music */
 	music = d_sound_tracked_load("latyl-greasy_duck_v1.mod", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);

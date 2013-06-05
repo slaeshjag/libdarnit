@@ -207,7 +207,7 @@ void inputPoll() {
 				d->input.upper |= 2;
 			else if (event.key.keysym == TPW_KEY_RSHIFT)
 				d->input.upper |= 1;
-			if (event.key.keysym < 0x80)	/* ASCII */
+			if (event.key.keysym < 273)
 				d->input.lastkey = event.key.keysym;
 			inputRawPush(event.key.keysym, DARNIT_KEYACTION_PRESS, event.key.unicode);
 
