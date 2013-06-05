@@ -26,24 +26,29 @@ freely, subject to the following restrictions:
 #ifndef __DARNIT_AUDIO_H__
 #define	__DARNIT_AUDIO_H__
 
-#define			DARNIT_AUDIO_MONO		1
-#define			DARNIT_AUDIO_STEREO		2
+typedef enum {
+	DARNIT_AUDIO_MONO = 1,
+	DARNIT_AUDIO_STEREO = 2,
+} DARNIT_AUDIO_CHANNELS;
 
-#define			DARNIT_AUDIO_PRELOAD		0
-#define			DARNIT_AUDIO_STREAM		1
+typedef enum {
+	DARNIT_AUDIO_PRELOAD = 0,
+	DARNIT_AUDIO_STREAM = 1,
+} DARNIT_AUDIO_MODE;
 
 #define			DARNIT_AUDIO_NOREPEAT		-1
 
 typedef void DARNIT_SOUND;
 
-DARNIT_SOUND *d_sound_tracked_load(const char *fname, int preload, int makemono);
-DARNIT_SOUND *d_sound_streamed_load(const char *fname, int preload, int makemono);
+DARNIT_SOUND *d_sound_tracked_load(const char *fname, DARNIT_AUDIO_MODE mode, DARNIT_AUDIO_CHANNELS channels);
+DARNIT_SOUND *d_sound_streamed_load(const char *fname, DARNIT_AUDIO_MODE mode, DARNIT_AUDIO_CHANNELS channels);
 DARNIT_SOUND *d_sound_unload(DARNIT_SOUND *sound_resource);
 void d_sound_stop_all();
 void d_sound_stop(int playback_key);
 int d_sound_play(DARNIT_SOUND *sound_resource, int loop, int vol_l, int vol_r, int jmpto);
 int d_sound_playback_status(int playback_key);
 void d_sound_playback_volume_set(unsigned int playback_key, int vol_l, int vol_r);
+void d_sound_master_volume(int volume);
 void d_sound_mix_callback_set(void (*callback)(void *ignore, void *mixdata, int bytes));
 
 void d_sound_compression_enable();

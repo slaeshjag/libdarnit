@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
 
 	/* Text rendering */
 	test_text = malloc(64);
-	font = d_font_load("dejavu_sans.ttf", 28, 512, 512);
+	font = d_font_load("dejavu_sans.ttf", 28, 64, 64);
 	text = d_text_surface_new(font, 80, 800, 0, 460);
 	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 420);
 	colorTest(fancy_text);

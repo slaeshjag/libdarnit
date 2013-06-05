@@ -137,6 +137,13 @@ void EXPORT_THIS d_particle_pulse(PARTICLE *p) {
 }
 
 
+void EXPORT_THIS d_particle_spawnrate(PARTICLE *p, int spawnrate) {
+	if (!p)
+		return;
+	p->spawnrate_max = spawnrate;
+}
+
+
 void EXPORT_THIS d_particle_point_size(PARTICLE *p, int size) {
 	if (!p)
 		return;

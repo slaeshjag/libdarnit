@@ -131,6 +131,7 @@ PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type) {
 	p->particle_life = 1;
 
 	p->particles_max = max_particles;
+	p->spawnrate_max = -1;
 
 	p->ts = NULL;
 	p->source.r = p->source.g = p->source.b = p->source.a = 0;
@@ -190,7 +191,7 @@ void particleLoop(PARTICLE *p) {
 			spawn = p->pulse * p->particles_max;
 			break;
 		case PARTICLE_MODE_SHOWER:
-			spawn = p->particles_max * 1000 / p->particle_life * d_t / 1000;
+			spawn = (p->spawnrate_max == -1) ? p->particles_max * 1000 / p->particle_life * d_t / 1000 : p->spawnrate_max;
 			break;
 		case PARTICLE_MODE_AUTOPULSAR:
 			spawn = p->particles_max;

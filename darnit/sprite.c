@@ -45,10 +45,18 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 	se->time = 0;
 	se->tleft = 0;
 	se->animate = 0;
+	se->repeat = 1;
 	se->used = 1;
 	se->y = 0;
 	se->angle = 0;
-	se->wsq = se->hsq = 0;
+	if (!ts)
+		se->wsq = se->hsq = 0;
+	else {
+		se->wsq = ts->wsq;
+		se->hsq = ts->hsq;
+	}
+
+	se->ts = ts;
 	*se->tilesheet = 0;
 
 	return se;
@@ -111,7 +119,7 @@ void spriteSetFrameEntry(SPRITE_ENTRY *sprite, int dir, int frame, int tile, int
 	if (sprite == NULL)
 		return;
 
-	if (tile >= 8 || time <= 0 || tile < 0 || dir < 0 || dir >= 8)
+	if (tile >= 8 || time < 0 || tile < 0 || dir < 0 || dir >= 32)
 		return;
 	if (tile >= sprite->spr[dir].tiles)
 		sprite->spr[dir].tiles = tile + 1;
@@ -127,6 +135,10 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 	if (sprite == NULL)
 		return;
 
+	if (dir < 0 || dir >= 32)
+		dir = 0;
+	if (sprite->spr[dir].tiles < sprite->frame)
+		sprite->frame = 0;
 	sprite->time = tpw_ticks();
 	sprite->dir = dir;
 	sprite->repeat = 1;
@@ -140,7 +152,7 @@ void spriteActivate(SPRITE_ENTRY *sprite, int dir) {
 void spriteSetRepeat(SPRITE_ENTRY *sprite, int repeat) {
 	if (!sprite)
 		return;
-	sprite->repeat = (repeat) ? 0 : 1;
+	sprite->repeat = (repeat) ? 1 : 0;
 
 	return;
 }
@@ -238,7 +250,7 @@ void spriteDisableAnimation(SPRITE_ENTRY *sprite) {
 
 void spriteAnimate(SPRITE_ENTRY *sprite) {
 	if (sprite == NULL) return;
-	unsigned int time, dir, tile;
+	unsigned int time, dir, tile, start;
 
 	time = tpw_ticks();
 
@@ -248,9 +260,12 @@ void spriteAnimate(SPRITE_ENTRY *sprite) {
 	sprite->tleft -= (time - sprite->time);
 	sprite->time = time;
 	dir = sprite->dir;
+	start = sprite->frame;
 
 	while (sprite->tleft < 0) {
 		sprite->frame++;
+		if (sprite->frame == start)
+			break;
 		if (sprite->frame >= sprite->spr[dir].tiles)
 			sprite->frame = (sprite->repeat) ? 0 : sprite->frame - 1;
 		sprite->tleft += sprite->spr[dir].tile[sprite->frame].time;
