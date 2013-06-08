@@ -63,6 +63,8 @@ install: $(INSTARG)
 	@install -D -m 0755 include/darnit/* $(PREFIX)/include/darnit
 	@echo " [INST] libdarnit.so"
 	@install -D -m 0755 $(LIB) $(PREFIX)/lib
+	@echo " [INST] libdarnit_s.a"
+	@install -D -m 0755 bin/libdarnit_s.a $(PREFIX)/lib
 	-@ldconfig
 	@echo " [INST] tools"
 	@install -D -m 0755 bin/darnit-* $(PREFIX)/bin
