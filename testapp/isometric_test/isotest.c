@@ -8,6 +8,7 @@ int main(int argc, char **argv) {
 	d_init("isotest", "isotest", NULL);
 	ts = d_render_tilesheet_isom_load("isosheet.png", 64, 64, DARNIT_PFORMAT_RGB5A1);
 	tm = d_tilemap_isom_new(0, ts, 0xFF, 32, 16, 32);
+	tm->data[1] = 5;
 
 	d_render_blend_enable();
 	d_tilemap_recalc(tm);
