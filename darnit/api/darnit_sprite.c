@@ -136,3 +136,11 @@ int EXPORT_THIS d_sprite_height(void *sprite) {
 		return 0;
 	return sprite_e->ts->hsq;
 }
+
+
+int EXPORT_THIS d_sprite_frame(void *sprite) {
+	SPRITE_ENTRY *sprite_e = sprite;
+	if (!sprite)
+		return 0;
+	return sprite_e->frame;
+}

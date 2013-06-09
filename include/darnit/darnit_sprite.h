@@ -52,5 +52,6 @@ void d_sprite_frame_entry(DARNIT_SPRITE *sprite, int dir, int frame, int tile, i
 
 int d_sprite_width(DARNIT_SPRITE *sprite);
 int d_sprite_height(DARNIT_SPRITE *sprite);
+int d_sprite_sprite(DARNIT_SPRITE *sprite);
 
 #endif
