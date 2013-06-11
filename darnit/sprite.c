@@ -36,6 +36,9 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 		for (j = 0; j < 8; j++) {
 			se->spr[i].tile[j].time = 50;
 			se->spr[i].tile[j].tile = 0;
+			se->spr[i].tile[j].hitbox[0] = se->spr[i].tile[j].hitbox[1] = 0;
+			se->spr[i].tile[j].hitbox[2] = ts->wsq;
+			se->spr[i].tile[j].hitbox[3] = ts->hsq;
 		}
 		se->spr[i].tiles = 0;
 	}
@@ -67,6 +70,7 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 void spriteLoadText(FILESYSTEM_FILE *fp, SPRITE_ENTRY *se) {
 	unsigned int i, j;
 	char c, buf[512];
+	int buf_i[4];
 
 	fsFileSeek(fp, 0, SEEK_SET);
 	fsFileGets(buf, 512, fp);
@@ -80,12 +84,28 @@ void spriteLoadText(FILESYSTEM_FILE *fp, SPRITE_ENTRY *se) {
 			case 'D':
 				fsFileGets(buf, 512, fp);
 				j = 0;
+				se->spr[i].tile[0].hitbox[0] = se->spr[i].tile[0].hitbox[1] = 0;
+				se->spr[i].tile[0].hitbox[2] = se->wsq;
+				se->spr[i].tile[0].hitbox[3] = se->hsq;
 				break;
 			case 'T':
 				fsFileGets(buf, 512, fp);
 				sscanf(buf, "%i %i\n", &se->spr[i].tile[j].time, &se->spr[i].tile[j].tile);
 				j++;
+				if (j < 8) {
+					se->spr[i].tile[j].hitbox[0] = se->spr[i].tile[j-1].hitbox[0];
+					se->spr[i].tile[j].hitbox[1] = se->spr[i].tile[j-1].hitbox[1];
+					se->spr[i].tile[j].hitbox[2] = se->spr[i].tile[j-1].hitbox[2];
+					se->spr[i].tile[j].hitbox[3] = se->spr[i].tile[j-1].hitbox[3];
+				}
 				break;
+			case 'H':
+				fsFileGets(buf, 512, fp);
+				sscanf(buf, "%i %i %i %i", &buf_i[0], &buf_i[1], &buf_i[2], &buf_i[3]);
+				se->spr[i].tile[j].hitbox[0] = buf_i[0];
+				se->spr[i].tile[j].hitbox[1] = buf_i[1];
+				se->spr[i].tile[j].hitbox[2] = buf_i[2];
+				se->spr[i].tile[j].hitbox[3] = buf_i[3];
 			case 'E':
 				se->spr[i].tiles = j;
 				j = 0;
@@ -175,7 +195,7 @@ void *spriteLoad(const char *fname, unsigned int dir, unsigned int target_format
 		return NULL;
 	}
 	
-	if (header != 0x00FF10EF)
+	if (header != 0x00FF20EF)
 		spriteLoadText(fp, sprite_e);
 	else 
 		fsFileRead(sprite_e, sizeof(SPRITE_ENTRY), fp);

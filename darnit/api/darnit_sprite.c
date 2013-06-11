@@ -114,6 +114,18 @@ void EXPORT_THIS d_sprite_rotate(SPRITE_ENTRY *sprite, int angle) {
 }
 
 
+void EXPORT_THIS d_sprite_hitbox_set(SPRITE_ENTRY *sprite, int dir, int frame, int x, int y, int w, int h) {
+	if (!sprite)
+		return;
+	sprite->spr[dir].tile[frame].hitbox[0] = x;
+	sprite->spr[dir].tile[frame].hitbox[1] = y;
+	sprite->spr[dir].tile[frame].hitbox[2] = w;
+	sprite->spr[dir].tile[frame].hitbox[3] = h;
+
+	return;
+}
+
+
 void EXPORT_THIS d_sprite_frame_entry_set(void *sprite, int dir, int frame, int tile, int time) {
 	spriteSetFrameEntry(sprite, dir, frame, tile, time);
 
@@ -143,4 +155,26 @@ int EXPORT_THIS d_sprite_frame(void *sprite) {
 	if (!sprite)
 		return 0;
 	return sprite_e->frame;
+}
+
+
+void EXPORT_THIS d_sprite_hitbox(SPRITE_ENTRY *sprite, int *x, int *y, int *w, int *h) {
+	if (!sprite)
+		return;
+	if (x) *x = sprite->spr[sprite->dir].tile[sprite->frame].hitbox[0];
+	if (y) *y = sprite->spr[sprite->dir].tile[sprite->frame].hitbox[1];
+	if (w) *w = sprite->spr[sprite->dir].tile[sprite->frame].hitbox[2];
+	if (h) *h = sprite->spr[sprite->dir].tile[sprite->frame].hitbox[3];
+}
+
+
+void EXPORT_THIS d_sprite_hitbox_last(SPRITE_ENTRY *sprite, int *x, int *y, int *w, int *h) {
+	int t;
+	if (!sprite)
+		return;
+	t = (sprite->frame - 1 < 0) ? sprite->spr[sprite->dir].tiles - 1 : sprite->frame - 1;
+	if (x) *x = sprite->spr[sprite->dir].tile[t].hitbox[0];
+	if (y) *y = sprite->spr[sprite->dir].tile[t].hitbox[1];
+	if (w) *w = sprite->spr[sprite->dir].tile[t].hitbox[2];
+	if (h) *h = sprite->spr[sprite->dir].tile[t].hitbox[3];
 }

@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
 	len = fscanf(in, "%s %i %i\n", se.tilesheet, &se.wsq, &se.hsq);
 	
-	se.header = 0x00FF10EF;
+	se.header = 0x00FF20EF;
 	se.dir = 0;
 	se.frame = 0;
 	se.time = 0;

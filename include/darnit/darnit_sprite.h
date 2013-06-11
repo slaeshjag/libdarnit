@@ -49,9 +49,13 @@ void d_sprite_animate_stop(DARNIT_SPRITE *sprite);
 void d_sprite_animate_repeat(DARNIT_SPRITE *sprite, DARNIT_SPRITE_ANIMATION repeat);
 void d_sprite_draw(DARNIT_SPRITE *sprite);
 void d_sprite_frame_entry(DARNIT_SPRITE *sprite, int dir, int frame, int tile, int time);
+void d_sprite_hitbox_set(DARNIT_SPRITE *sprite, int dir, int frame, int x, int y, int w, int h);
 
 int d_sprite_width(DARNIT_SPRITE *sprite);
 int d_sprite_height(DARNIT_SPRITE *sprite);
 int d_sprite_frame(DARNIT_SPRITE *sprite);
+
+void d_sprite_hitbox(DARNIT_SPRITE *sprite, int *x, int *y, int *w, int *h);
+void d_sprite_hitbox_last(DARNIT_SPRITE *sprite, int *x, int *y, int *w, int *h);
 
 #endif

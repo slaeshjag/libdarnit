@@ -5,6 +5,7 @@
 typedef struct {
 	unsigned int		time;
 	unsigned int		tile;
+	short			hitbox[4];
 } SPRITE_TILE;
 
 
