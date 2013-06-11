@@ -44,8 +44,6 @@ clean:
 	+@make -C tools/ clean
 	@echo " [ CD ] testapp/"
 	+@make -C testapp/ clean
-	@echo " [ RM ] libdarnit.a"
-	@rm -f libdarnit.a
 	@echo
 	@echo "Source tree cleaned."
 	@echo
