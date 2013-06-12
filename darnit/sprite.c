@@ -36,9 +36,11 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 		for (j = 0; j < 8; j++) {
 			se->spr[i].tile[j].time = 50;
 			se->spr[i].tile[j].tile = 0;
-			se->spr[i].tile[j].hitbox[0] = se->spr[i].tile[j].hitbox[1] = 0;
-			se->spr[i].tile[j].hitbox[2] = ts->wsq;
-			se->spr[i].tile[j].hitbox[3] = ts->hsq;
+			if (ts) {
+				se->spr[i].tile[j].hitbox[0] = se->spr[i].tile[j].hitbox[1] = 0;
+				se->spr[i].tile[j].hitbox[2] = ts->wsq;
+				se->spr[i].tile[j].hitbox[3] = ts->hsq;
+			}
 		}
 		se->spr[i].tiles = 0;
 	}
