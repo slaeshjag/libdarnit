@@ -34,12 +34,12 @@ freely, subject to the following restrictions:
 
 
 typedef struct {
-	unsigned int			x;
-	unsigned int			y;
-	unsigned int			w;
-	unsigned int			h;
-	unsigned int			xb;
-	unsigned int			yb;
+	int				x;
+	int				y;
+	int				w;
+	int				h;
+	int				xb;
+	int				yb;
 	int				key;
 } DARNIT_BBOX_ENTRY;
 
