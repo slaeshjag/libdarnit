@@ -313,9 +313,14 @@ void spriteDraw(SPRITE_ENTRY *sprite) {
 
 void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir) {
 	if (sprite == NULL) return;
-	int tile;
+	int tile, time;
 
+	time = sprite->spr[sprite->dir].tile[sprite->frame].time;
+	time -= sprite->tleft;
 	sprite->dir = dir;
+	if (sprite->spr[sprite->dir].tiles <= sprite->frame)
+		sprite->frame = 0;
+	sprite->tleft = sprite->spr[sprite->dir].tile[sprite->frame].time - time;
 
 	tile = sprite->spr[dir].tile[sprite->frame].tile;
 	renderCalcTileCache(&sprite->cache, sprite->ts, tile);
