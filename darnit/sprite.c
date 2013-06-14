@@ -108,6 +108,7 @@ void spriteLoadText(FILESYSTEM_FILE *fp, SPRITE_ENTRY *se) {
 				se->spr[i].tile[j].hitbox[1] = buf_i[1];
 				se->spr[i].tile[j].hitbox[2] = buf_i[2];
 				se->spr[i].tile[j].hitbox[3] = buf_i[3];
+				break;
 			case 'E':
 				se->spr[i].tiles = j;
 				j = 0;
@@ -292,7 +293,7 @@ void spriteAnimate(SPRITE_ENTRY *sprite) {
 			sprite->frame = (sprite->repeat) ? 0 : sprite->frame - 1;
 		sprite->tleft += sprite->spr[dir].tile[sprite->frame].time;
 	}
-	
+
 	tile = sprite->spr[dir].tile[sprite->frame].tile;
 	renderCalcTileCache(&sprite->cache, sprite->ts, tile);
 	
