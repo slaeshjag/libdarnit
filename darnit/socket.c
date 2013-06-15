@@ -202,8 +202,10 @@ void socketConnectLoop() {
 	#ifdef _WIN32
 	fd_set fd_win_use, fd_win_error;
 	struct timeval time_delay;
+	#if 0
 	FILE *connect_error;
 	connect_error = fopen("socket_error.txt", "a");
+	#endif
 	#endif
 
 	parent = &d->connect_list;
@@ -220,10 +222,10 @@ void socketConnectLoop() {
 		
 		/*lol.*/
 		if (/*FD_ISSET(list->socket->socket, &fd_win_use)*/d_time_get()-list->socket->retarded_wait>RETARDED_WAIT_TIMEOUT) {
-			fprintf(connect_error, "Apparently, the connect has happenedi\n");
+	//		fprintf(connect_error, "Apparently, the connect has happenedi\n");
 			t=0;
 		} else if (FD_ISSET(list->socket->socket, &fd_win_error)&&0) {
-			fprintf(connect_error, "Connect did not succeed\n");
+	//		fprintf(connect_error, "Connect did not succeed\n");
 			t=1;
 		} else
 			goto loop;
@@ -253,7 +255,9 @@ void socketConnectLoop() {
 	}
 
 	#ifdef _WIN32
+	#if 0
 	fclose(connect_error);
+	#endif
 	#endif
 
 	return;
