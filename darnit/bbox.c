@@ -103,7 +103,8 @@ void bboxSort(BBOX *bbox) {
 		if (bbox->bbox[i].key == -1)
 			continue;
 		for (j = i; bbox->sortmode == SORT_MODE_X && j > 0 
-		  && (bbox->bbox[j].x < bbox->bbox[j-1].x 
+		  && (bbox->bbox[j].x < bbox->bbox[j-1].x || 
+		  (bbox->bbox[j].x == bbox->bbox[j-1].x && bbox->bbox[j].y < bbox->bbox[j-1].y)
 		  || bbox->bbox[j-1].key == -1); j--) {
 			tmp = bbox->bbox[j];
 			bbox->bbox[j] = bbox->bbox[j-1];
