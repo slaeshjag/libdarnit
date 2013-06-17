@@ -338,13 +338,19 @@ size_t fsFileWriteInts(void *buffer, size_t ints, FILESYSTEM_FILE *file) {
 
 size_t fsFileGets(void *buffer, size_t bytes, FILESYSTEM_FILE *file) {
 	int lim;
+	size_t bef, aft;
 	if (file == NULL)
 		return 0;
 	if (bytes <= 0)
 		return 0;
+	bef = ftell(file->fp);
 	lim = (bytes > file->size - file->pos) ? file->size - file->pos : bytes;
 	fgets(buffer, lim, file->fp);
-	file->pos += strlen(buffer);
+	aft = ftell(file->fp);
+	file->pos += (aft - bef);
+	if (!(aft-bef)) 
+		if (file->pos != file->size)	/* Must be at end of file? */
+			file->pos = file->size;
 
 	return strlen(buffer);
 }
