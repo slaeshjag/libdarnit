@@ -71,9 +71,12 @@ int fsInit(const char *dir_name) {
 			int sz=256;
 			sprintf(tmp, "SOFTWARE\\libdarnit\\%s", dir_name);
 		
-			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS)
-				d->fs.data_dir = ".";
-			else {
+			if (SHGetValue(HKEY_LOCAL_MACHINE, tmp, "path", NULL, val, (LPDWORD) &sz) != ERROR_SUCCESS) {
+				/* Use path of the binary. In windows, this is a good guess */
+				d->fs.data_dir = fsFindBinaryPath();
+				*strrchr(d->fs.data_dir, '\\') = 0;
+				
+			} else {
 				if ((d->fs.data_dir = malloc(strlen(val) + 1)) == NULL)
 					d->fs.data_dir = ".";
 				else
