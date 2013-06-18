@@ -53,6 +53,7 @@ void bboxDelete(BBOX *bbox, int key) {
 		if (bbox->bbox[i].key == key) {
 			bbox->bbox[i].key = -1;
 			bbox->sort = 1;
+			bbox->bboxes--;
 			return;
 		}
 	
@@ -161,7 +162,7 @@ int bboxCollBoxTest(BBOX *bbox, int x, int y, unsigned int w, unsigned int h, un
 				test -= i;
 		}
 
-		if (bbox->bbox[test].xb > x)
+		if (bbox->bbox[test].xb > x || bbox->bbox[test].key == -1)
 			test = 0;
 	} else {
 		for (; i > TARGET_FILTER; i>>=1) {
@@ -212,8 +213,11 @@ void *bboxNew(unsigned int size) {
 
 	bbox->max = size;
 
-	for (i = 0; i < bbox->max; i++)
+	for (i = 0; i < bbox->max; i++) {
+		bbox->bbox[i].xb = -1;
+		bbox->bbox[i].yb = -1;
 		bbox->bbox[i].key = -1;
+	}
 
 	bboxSort(bbox);
 	bbox->sortmode = SORT_MODE_X;
