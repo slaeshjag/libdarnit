@@ -179,19 +179,29 @@ off_t fsFILELenghtGet(FILE *fp) {
 
 FILE *fsFILEDup(FILESYSTEM_FILE *file) {
 	FILE *copy;
+	FILESYSTEM_FILE *f;
 	
 	if (file->fp == NULL)
 		return NULL;
 
-	if ((copy = fopen(file->file, file->mode)) == NULL)
-		return NULL;
+	if ((copy = fopen(file->file, file->mode)) == NULL) {
+		/* Parent is in an LDI, most likely */
+		if (!file->parent)
+			return NULL;
+		f = fsFileOpen(file->parent, file->mode);
+		copy = fsFILEDup(f);
+		fsFileClose(f);
+		if (!copy)
+			return NULL;
+	}
+
 	fseek(copy, ftell(file->fp), SEEK_SET);
 
 	return copy;
 }
 
 
-FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start) {
+FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start, char *parent) {
 	FILESYSTEM_FILE *file;
 
 	if ((file = malloc(sizeof(FILESYSTEM_FILE))) == NULL)
@@ -208,6 +218,7 @@ FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_si
 	sprintf(file->mode, "%s", mode);
 	file->offset = file_start;
 	file->pos = 0;
+	file->parent = (parent) ? strdup(parent) : NULL;
 	file->size = file_size;
 	file->temporary = 0;
 	fseek(file->fp, file_start, SEEK_SET);
@@ -236,8 +247,8 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else {
 			if (write)
-				return fsFileNew(path_new, mode, fp, -1, 0);
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+				return fsFileNew(path_new, mode, fp, -1, 0, NULL);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0, NULL);
 		}
 		free(path_new);
 	}
@@ -249,8 +260,8 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		if (!(fp = fopen(path_new, mode)));
 		else {
 			if (write)
-				return fsFileNew(path_new, mode, fp, -1, 0);
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+				return fsFileNew(path_new, mode, fp, -1, 0, NULL);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0, NULL);
 		}
 		free(path_new);
 		return NULL;
@@ -262,7 +273,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		path_new = utilPathTranslate(name);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else						/* W00t! */
-			return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0);
+			return fsFileNew(path_new, mode, fp, (write) ? -1 : fsFILELenghtGet(fp), 0, NULL);
 		free(path_new);
 
 		/* Look in data containers */
@@ -270,7 +281,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		sprintf(path_new, "%s", name);
 		if ((fp = fsContainerFileInternalGet(path_new)) == NULL);
 		else {
-			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name));
+			return fsFileNew(path_new, mode, fsFILEDup(fsContainerFS(fp)), fsContainerFILELength(fp, name), fsContainerFILEStart(fp, name), fsContainerFS(fp)->file);
 		}
 		free(path_new);
 		
@@ -279,7 +290,7 @@ FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode) {
 		path_new = utilPathTranslate(path);
 		if ((fp = fopen(path_new, mode)) == NULL);
 		else
-			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0);
+			return fsFileNew(path_new, mode, fp, fsFILELenghtGet(fp), 0, NULL);
 		free(path_new);
 	} 
 	
@@ -437,6 +448,7 @@ FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file) {
 	#else
 	unlink(file->file);
 	#endif
+	free(file->parent);
 	free(file->file);
 	free(file->mode);
 	free(file);
@@ -566,7 +578,7 @@ off_t fsContainerFILEStart(FILE *fp, const char *name) {
 
 	if ((img = fsContainerGetDir(fp, name)) == NULL)
 		return 0;
-	return img->pos;
+	return img->pos + fsContainerFS(fp)->offset;
 }
 
 
@@ -604,6 +616,7 @@ FILE *fsContainerFileInternalGet(const char *name) {
 		for (i = 0; i < next->dir_ents; i++)
 			if (next->dir[i].comp == comp)
 				if (strcmp(name, next->dir[i].name) == 0) {
+					fseek(next->file->fp, next->dir[i].pos + next->file->offset, SEEK_SET);
 					return next->file->fp;
 				}
 		next = next->next;

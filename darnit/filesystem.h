@@ -69,6 +69,7 @@ typedef struct {
 typedef struct {
 	FILE				*fp;
 	char				*file;
+	char				*parent;
 	char				*mode;
 	off_t				offset;
 	off_t				pos;
@@ -118,7 +119,7 @@ char *fsFindBinaryPath();
 
 off_t fsFILELenghtGet(FILE *fp);
 FILE *fsFILEDup(FILESYSTEM_FILE *file);
-FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start);
+FILESYSTEM_FILE *fsFileNew(char *name, const char *mode, FILE *fp, off_t file_size, off_t file_start, char *parent);
 FILESYSTEM_FILE *fsFileOpen(const char *name, const char *mode);
 size_t fsFileReadInts(unsigned int *buffer, size_t ints, FILESYSTEM_FILE *file);
 size_t fsFileRead(void *buffer, size_t bytes, FILESYSTEM_FILE *file);
