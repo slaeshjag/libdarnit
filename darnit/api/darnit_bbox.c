@@ -69,7 +69,7 @@ void EXPORT_THIS d_bbox_resize(BBOX *bbox, int key, unsigned int w, unsigned int
 }
 
 
-void EXPORT_THIS d_bbox_Clear(BBOX *bbox) {
+void EXPORT_THIS d_bbox_clear(BBOX *bbox) {
 	bboxClear(bbox);
 
 	return;
