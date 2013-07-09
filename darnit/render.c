@@ -114,6 +114,7 @@ int renderInit() {
 	d->video.fade.fadedir = 0.0f;
 	d->video.fade.a = 0.0f;
 	d->video.fade.fadestart = 0;
+	d->video.blend = 0;
 
 	return 0;
 }
