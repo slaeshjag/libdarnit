@@ -29,6 +29,7 @@ void tpw_event_loop() {
 	TPW_EVENT event;
 
 	event.key.unicode = event_sdl.key.keysym.unicode = 0;
+	event.key.keysym = 0;
 	while (SDL_PollEvent(&event_sdl)) {
 		switch (event_sdl.type) {
 			case SDL_KEYDOWN:
