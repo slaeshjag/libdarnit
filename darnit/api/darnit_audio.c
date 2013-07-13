@@ -36,6 +36,11 @@ void EXPORT_THIS *d_sound_streamed_load(const char *fname, int preload, int make
 }
 
 
+void EXPORT_THIS *d_sound_callback_load(void *callback, void *data, int makemono) {
+	return audioOpenCallback(callback, makemono, data);
+}
+
+
 void EXPORT_THIS *d_sound_unload(void *sound_resource) {
 	return audioUnload(sound_resource);
 }

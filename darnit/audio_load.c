@@ -435,6 +435,46 @@ void *audioStopTracked(AUDIO_HANDLE *pb) {
 }
 
 
+AUDIO_HANDLE *audioOpenCallback(void *callback, int channels, void *data) {
+	AUDIO_HANDLE *ah;
+
+	ah = malloc(sizeof(*ah));
+	ah->data = data;
+	ah->codec_handle = callback;
+	ah->channels = channels;
+	ah->type = AUDIO_TYPE_CALLBACK;
+
+	return ah;
+}
+
+
+void *audioStopCallback(AUDIO_HANDLE *pb) {
+	free(pb);
+	return NULL;
+}
+
+
+AUDIO_HANDLE *audioPlayCallback(AUDIO_HANDLE *ah, int channels) {
+	AUDIO_HANDLE *pb;
+
+	pb = malloc(sizeof(*pb));
+	pb->codec_handle = ah->codec_handle;
+	pb->data = ah->data;
+	pb->channels = ah->channels;
+	pb->type= ah->type;
+
+	return pb;
+}
+
+
+int audioDecodeCallback(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
+	int (*callback)(signed short *buff, int buff_len, int pos, void *data);
+
+	callback = pb->codec_handle;
+	return callback(buff, buff_len, pos, pb->data);
+}
+
+
 void *audioUnload(AUDIO_HANDLE *pb) {
 	if (pb->usage > 0)
 		return pb;
@@ -443,6 +483,8 @@ void *audioUnload(AUDIO_HANDLE *pb) {
 		return audioStopTracked(pb);
 	else if (pb->type == AUDIO_TYPE_TRACKED)
 		return audioStopTracked(pb);
+	else if (pb->type == AUDIO_TYPE_CALLBACK)
+		return audioStopCallback(pb);
 	
 	return NULL;
 }
@@ -456,6 +498,8 @@ AUDIO_HANDLE *audioPlay(AUDIO_HANDLE *ah, int channels, int loop) {
 		return audioPlayStreamed(ah, loop, channels);
 	else if (ah->type == AUDIO_TYPE_TRACKED)
 		return audioPlayTracked(ah, loop, channels);
+	else if (ah->type == AUDIO_TYPE_CALLBACK)
+		return audioPlayCallback(ah, channels);
 	
 	return NULL;
 }
@@ -467,6 +511,8 @@ int audioDecode(AUDIO_HANDLE *ah, void *buff, int buff_len, int pos) {
 		return audioDecodeStreamed(ah, buff, buff_len, pos);
 	else if (ah->type == AUDIO_TYPE_TRACKED)
 		return audioDecodeTracked(ah, buff, buff_len, pos);
+	else if (ah->type == AUDIO_TYPE_CALLBACK)
+		return audioDecodeCallback(ah, buff, buff_len, pos);
 	
 	return 0;
 }

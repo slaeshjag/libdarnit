@@ -71,6 +71,7 @@ void *audioStopStreamed(AUDIO_HANDLE *pb);
 AUDIO_HANDLE *audioPlayStreamed(AUDIO_HANDLE *ah, int loop, int channels);
 int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos);
 AUDIO_HANDLE *audioOpenStreamed(const char *fname, int mode, int channels);
+AUDIO_HANDLE *audioOpenCallback(void *callback, int channels, void *data);
 void *audioUnload(AUDIO_HANDLE *pb);
 AUDIO_HANDLE *audioPlay(AUDIO_HANDLE *ah, int channels, int loop);
 int audioDecode(AUDIO_HANDLE *ah, void *buff, int buff_len, int pos);

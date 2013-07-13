@@ -1,10 +1,28 @@
 #include <darnit/darnit.h>
 
+
+int callback(signed short *buff, int buff_len, int pos, void *data) {
+	int i;
+	buff_len >>= 1;
+
+
+	for (i = 0; i < buff_len; i++)
+		buff[i] = (((pos >> 1) + i) % 441 > 220) ? -8000 : 8000;
+
+	return i << 1;
+}
+		
+
+
 int main(int argc, char **argv) {
 	DARNIT_PARTICLE *p_shower, *p_pulsar, *p_autopulsar;
+	DARNIT_SOUND *sound;
 	int i, a1, a2;
 
 	d_init("paricle_test", "Particle engine test", NULL);
+
+	sound = d_sound_callback_load(callback, NULL, 2);
+	d_sound_play(sound, 0, 4, 4, 0);
 
 	p_shower = d_particle_new(1000, DARNIT_PARTICLE_TYPE_POINT);
 	p_pulsar = d_particle_new(1000, DARNIT_PARTICLE_TYPE_POINT);

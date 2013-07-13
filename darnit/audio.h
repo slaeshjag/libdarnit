@@ -33,9 +33,12 @@ freely, subject to the following restrictions:
 #define		AUDIO_SFX_FILES			64
 
 
-#define		AUDIO_TYPE_WAV			0
-#define		AUDIO_TYPE_OGG			1
-#define		AUDIO_TYPE_TRACKED		2
+typedef enum {
+	AUDIO_TYPE_WAV			= 0,
+	AUDIO_TYPE_OGG			= 1,
+	AUDIO_TYPE_TRACKED		= 2,
+	AUDIO_TYPE_CALLBACK		= 3,
+} AUDIO_TYPE;
 
 #define		AUDIO_SAMPLE_RATE		44100
 
