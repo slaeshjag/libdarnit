@@ -151,6 +151,8 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		return 0;
 	}
 
+	if (!fullscreen)
+		SetWindowPos(tpw.hWnd, 0, (GetSystemMetrics(SM_CXSCREEN) - window_w) >> 1, (GetSystemMetrics(SM_CXSCREEN) - window_h) >> 1, window_w, window_h, SWP_NOZORDER | SWP_NOSIZE);
 	ShowWindow(tpw.hWnd, SW_SHOW);
 	SetForegroundWindow(tpw.hWnd);
 	SetFocus(tpw.hWnd);
