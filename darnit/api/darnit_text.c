@@ -60,7 +60,8 @@ unsigned int EXPORT_THIS d_font_word_w(void *font, const char *string, unsigned 
 
 
 unsigned int EXPORT_THIS d_font_string_geometrics(void *font, const char *string, int linelen, int *string_w) {
-	*string_w = 0;
+	if (string_w)
+		*string_w = 0;
 	return textStringGeometrics(font, string, linelen, string_w);
 }
 
