@@ -43,7 +43,7 @@ ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	DATA_PATH=	\"/opt/usr/games\"
 	CFLAGS	+=	-fvisibility=hidden -fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
 	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11 -ldl
-	INSTARG	+=	strip
+	INSTARG	+=	$(STRIP)
 	PLATFORM=	sdl
 else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
@@ -51,14 +51,14 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
-	INSTARG	+=	strip
+	INSTARG	+=	$(STRIP)
 	PLATFORM=	sdl
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -ldl
-	INSTARG	+=	strip
+	INSTARG	+=	$(STRIP)
 	PLATFORM=	sdl
 else
 	#Linux defaults
