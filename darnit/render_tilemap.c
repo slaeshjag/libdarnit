@@ -409,7 +409,8 @@ void renderTilemapRender(RENDER_TILEMAP *tm) {
 	if (!tm->isometric)
 		for (i = 0; i < tm->sprites_used; i++)
 			spriteDraw(tm->sprite[i]);
-	
+	glLoadIdentity();
+	glTranslatef(d->video.swgran * d->video.offset_x, d->video.shgran * d->video.offset_y, 0.0f);
 
 	return;
 }

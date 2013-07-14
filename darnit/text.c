@@ -367,7 +367,10 @@ int textStringGeometrics(TEXT_FONT *font, const char *string, int linelen, int *
 	if (!font)
 		return 0;
 	w_max = 0;
-	w = *w_set;
+	if (w_set)
+		w = *w_set;
+	else
+		w = 0;
 	for (j = 0; *string; j++, w = 0) {
 		for (; *string != 0 && *string != '\n';) {
 			t = textStringWordLength(font, string, &b);
