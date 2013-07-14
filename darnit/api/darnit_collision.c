@@ -24,6 +24,6 @@ freely, subject to the following restrictions:
 
 #include "darnit.h"
 
-int EXPORT_THIS d_coll_circle(int x1, int y1, int x2, int y2, int rad1, int rad2) {
-	return collisionCircleTest(x1, y1, x2, y2, rad1, rad2);
+int EXPORT_THIS d_coll_circle(int x1, int y1, int x2, int y2, int rad_1, int rad_2) {
+	return collisionCircleTest(x1, y1, x2, y2, rad_1, rad_2);
 }
