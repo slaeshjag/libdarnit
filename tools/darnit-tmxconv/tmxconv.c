@@ -119,6 +119,26 @@ void *inflate_data(void *data_in, int *data_size) {
 }
 
 
+void *deflate_data(void *data_in, int data_size, unsigned int *data_out_size) {
+	z_stream zstr;
+	void *data_out = malloc(data_size + 128);
+
+	zstr.zalloc = Z_NULL;
+	zstr.zfree = Z_NULL;
+	zstr.opaque = Z_NULL;
+	deflateInit(&zstr, 9);
+	zstr.avail_in = data_size;
+	zstr.next_in = data_in;
+	zstr.avail_out = data_size + 128;
+	zstr.next_out = data_out;
+	deflate(&zstr, Z_FINISH);
+	*data_out_size = data_size + 128 - zstr.avail_out;
+	deflateEnd(&zstr);
+
+	return data_out;
+}
+
+
 int ref_add(const char *key, const char *val) {
 	int r;
 
@@ -291,8 +311,8 @@ void parse_object(xmlDocPtr doc, xmlNodePtr cur) {
 
 	o = map_info.objects++;
 	map_info.object = realloc(map_info.object, sizeof(*map_info.object) * map_info.objects);
-	map_info.object[o].x = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "x")) / map_info.tileset[layer[ldmz_main->layers - 1].ts].tile_w;
-	map_info.object[o].y = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "y")) / map_info.tileset[layer[ldmz_main->layers - 1].ts].tile_h;
+	map_info.object[o].x = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "x")) / map_info.tile_w;
+	map_info.object[o].y = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "y")) / map_info.tile_h;
 	map_info.object[o].l = ldmz_main->layers - 1;
 	map_info.object[o].ref = NULL;
 	map_info.object[o].refs = 0;
@@ -321,12 +341,13 @@ void parse_objectgroup(xmlDocPtr doc, xmlNodePtr cur) {
 
 
 int parse_map(xmlDocPtr doc, xmlNodePtr cur) {
+	int nn;
 	
-	ldmz_main->version = (strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "orientation"), "orthogonal")) ? LDMZ_VERSION_ORTHO : LDMZ_VERSION_ISOM;
+	ldmz_main->version = (!strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "orientation"), "orthogonal")) ? LDMZ_VERSION_ORTHO : LDMZ_VERSION_ISOM;
 	map_info.tile_w = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "tilewidth"));
 	map_info.tile_h = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "tileheight"));
 
-
+	nn = 0;
 	for (cur = cur->xmlChildrenNode; cur; cur = cur->next) {
 		if (!strcmp("layer", (const char *) cur->name))
 			parse_layer(doc, cur);
@@ -336,8 +357,15 @@ int parse_map(xmlDocPtr doc, xmlNodePtr cur) {
 			parse_objectgroup(doc, cur);
 		if (!strcmp("properties", (const char *) cur->name)) {
 			add_refs(doc, cur, &map_info.map_ref, &map_info.map_refs);
+			inject_ref("generator", "darnit-tmxconv v.0.1", &map_info.map_ref, &map_info.map_refs);
 			inject_ref(NULL, NULL, &map_info.map_ref, &map_info.map_refs);
+			nn = 1;
 		}
+	}
+	
+	if (!nn) {
+		inject_ref("ldmz-generator", "darnit-tmxconv v.0.1", &map_info.map_ref, &map_info.map_refs);
+		inject_ref(NULL, NULL, &map_info.map_ref, &map_info.map_refs);
 	}
 
 	return 1;
@@ -346,11 +374,71 @@ int parse_map(xmlDocPtr doc, xmlNodePtr cur) {
 
 void map_write(const char *fname) {
 	FILE *fp;
+	void *strtablez, *refz, *layerz, *objectz;
+	struct ldmz_object *object;
+	struct ldmz_layer *layer_n;
+	int i;
 
 	if (!(fp = fopen(fname, "wb+"))) {
 		fprintf(stderr, "Unable to open %s\n", fname);
 		exit(-1);
 	}
+
+	ldmz_main->stringtable_size = map_info.ref_size;
+	ldmz_main->stringtable_ref_size = map_info.refs * sizeof(*map_info.ref_d);
+	ldmz_main->stringtable_ref_count = map_info.refs;
+	ldmz_main->map_ref_index = map_info.map_ref[0];
+	ldmz_main->objects = map_info.objects;
+
+	object = malloc(sizeof(*object) * map_info.objects);
+	for (i = 0; i < map_info.objects; i++) {
+		object[i].x = map_info.object[i].x;
+		object[i].y = map_info.object[i].y;
+		object[i].l = map_info.object[i].l;
+		object[i].ref = map_info.object[i].ref[0];
+	}
+
+	layer_n = malloc(sizeof(*layer_n) * ldmz_main->layers);
+	for (i = 0; i < ldmz_main->layers; i++) {
+		layer_n[i].tile_w = map_info.tile_w;
+		layer_n[i].tile_h = map_info.tile_h;
+		if (ldmz_main->version == LDMZ_VERSION_ORTHO)
+			layer_n[i].layer_off_x = layer_n[i].layer_off_y = 0;
+		else {
+			layer_n[i].layer_off_x = map_info.tileset[layer[i].ts].tile_h;
+			layer_n[i].layer_off_y = 0;
+		}
+		layer_n[i].ref = layer[i].ref[0];
+		layer_n[i].w = layer[i].width;
+		layer_n[i].h = layer[i].height;
+
+		endian_convert((int *) layer[i].tile, layer[i].width * layer[i].height);
+		layer[i].tile_z = deflate_data(layer[i].tile, layer[i].width * layer[i].height * sizeof(unsigned int), &layer_n[i].layer_size_z);
+	}
+
+	endian_convert((int *) map_info.ref_d, ldmz_main->stringtable_ref_count * 2);
+	endian_convert((int *) object, ldmz_main->objects * 4);
+	endian_convert((int *) layer_n, ldmz_main->layers * 8);
+
+	strtablez = deflate_data(map_info.ref, map_info.ref_size, &ldmz_main->stringtable_compr);
+	refz = deflate_data(map_info.ref_d, map_info.refs * sizeof(*map_info.ref_d), &ldmz_main->stringtable_ref_compr);
+	objectz = deflate_data(object, map_info.objects * sizeof(*object), &ldmz_main->objects_compr);
+	layerz = deflate_data(layer_n, ldmz_main->layers * sizeof(*layer_n), &ldmz_main->layer_header_compr);
+
+	free(map_info.ref);
+	free(map_info.ref_d);
+	endian_convert((int *) ldmz_main, 12);
+
+	fwrite(ldmz_main, 12, 4, fp);
+	endian_convert((int *) ldmz_main, 12);
+	endian_convert((int *) layer_n, ldmz_main->layers * 8);
+	fwrite(strtablez, ldmz_main->stringtable_compr, 1, fp);
+	fwrite(refz, ldmz_main->stringtable_ref_compr, 1, fp);
+	fwrite(objectz, ldmz_main->objects_compr, 1, fp);
+	fwrite(layerz, ldmz_main->layer_header_compr, 1, fp);
+
+	for (i = 0; i < ldmz_main->layers; i++)
+		fwrite(layer[i].tile_z, layer_n[i].layer_size_z, 1, fp);
 
 	
 	return;
@@ -395,13 +483,9 @@ int main(int argc, char **argv) {
 	parse_map(doc, cur);
 	
 	fprintf(stderr, "%i refs\n", map_info.refs);
-	for (i = 0; i < map_info.refs; i++) {
-		if (map_info.ref_d[i].ref[0] < 0) {
-			fprintf(stderr, "STOP\n");
+	for (i = 0; i < map_info.refs; i++)
+		if (map_info.ref_d[i].ref[0] < 0)
 			continue;
-		}
-		fprintf(stderr, "%s: %s\n", map_info.ref + map_info.ref_d[i].ref[0], map_info.ref + map_info.ref_d[i].ref[1]);
-	}
 
 	map_write(argv[2]);
 

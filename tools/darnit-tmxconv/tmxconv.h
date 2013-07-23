@@ -29,11 +29,32 @@ struct ldmz_main {
 
 struct layer_info {
 	unsigned int			*tile;
+	void				*tile_z;
 	unsigned int			width;
 	unsigned int			height;
 	unsigned int			ts;
 	int				*ref;
 	int				refs;
+};
+
+
+struct ldmz_object {
+	int				x;
+	int				y;
+	int				l;
+	int				ref;
+};
+
+
+struct ldmz_layer {
+	int				w;
+	int				h;
+	int				layer_off_x;
+	int				layer_off_y;
+	unsigned int			layer_size_z;
+	int				ref;
+	int				tile_w;
+	int				tile_h;
 };
 
 #endif
