@@ -280,8 +280,8 @@ int renderTilemapRecalc(TILE_CACHE *cache, TILESHEET *ts, int x, int y, int w, i
 void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	int x, y, w, h, map_w, map_h;
 	
-	tm->cam_x = tm->ts->swgran * (cam_x % tm->ts->wsq) * -1;
-	tm->cam_y = tm->ts->shgran * (cam_y % tm->r_h);
+	tm->cam_x = d->video.swgran * (cam_x % tm->ts->wsq) * -1;
+	tm->cam_y = d->video.shgran * (cam_y % tm->r_h);
 
 	tm->cam_xi_c = cam_x;
 	tm->cam_yi_c = cam_y;

@@ -85,13 +85,13 @@ int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 	}
 	
 	if((res=waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD) callback, (DWORD) callback, CALLBACK_FUNCTION))==MMSYSERR_NOERROR) {
-		fprintf(stderr, "arne\n");
+//		fprintf(stderr, "arne\n");
 		for(i=0; i<BUFFERS; i++)
 			waveOutPrepareHeader(sound.handle, &(sound.header[i]), sizeof(WAVEHDR));
 		waveOutPause(sound.handle);
 		return 0;
 	}
-	fprintf(stderr, "res %i\n", res);
+//	fprintf(stderr, "res %i\n", res);
 	return -1;
 }
 

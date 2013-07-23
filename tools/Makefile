@@ -12,6 +12,8 @@ all:
 	+@make -C darnit-spriteview
 	@echo " [ CD ] tools/darnit-stringtable"
 	+@make -C darnit-stringtable
+	@echo " [ CD ] tools/darnit-tmxconv"
+	+@make -C darnit-tmxconv
 	@echo "Done."
 	@echo 
 
@@ -24,5 +26,7 @@ clean:
 	+@make -C darnit-spriteview clean
 	@echo " [ CD ] tools/darnit-stringtable"
 	+@make -C darnit-stringtable clean
+	@echo " [ CD ] tools/darnit-tmxconv"
+	+@make -C darnit-tmxconv clean
 	@echo "Done."
 	@echo 
