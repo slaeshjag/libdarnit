@@ -93,6 +93,45 @@ LDMZ_MAP *mapLoad(const char *fname) {
 }
 
 
+void mapLoadExtended(LDMZ_MAP *map, FILESYSTEM_FILE *f) {
+	LDMZ_FILE_EXT1 *ext;
+	void *tsdataz;
+	int *tsdata;
+	int i, j;
+
+	for (i = 0; i < map->layers; i++) {
+		map->layer[i].tilesheet_ref = NULL;
+		map->layer[i].tilesheet_refs = 0;
+	}
+
+	tsdata = tsdataz = NULL;
+	if (fsFileEOF(f))
+		return;
+	ext = malloc(sizeof(*ext) * map->layers);
+	fsFileRead(ext, sizeof(*ext) * map->layers, f);
+	utilBlockToHostEndian((unsigned int *) ext, map->layers * 2);
+
+	for (i = 0; i < (int) map->layers; i++) {
+		tsdataz = realloc(tsdataz, ext[i].ref_size_z);
+		tsdata = realloc(tsdata, ext[i].refs * sizeof(*tsdata));
+		fsFileRead(tsdataz, ext[i].ref_size_z, f);
+		stbi_zlib_decode_buffer((void *) tsdata, sizeof(*tsdata) * ext[i].refs, tsdataz, ext[i].ref_size_z);
+		utilBlockToHostEndian((void *) tsdata, ext[i].refs);
+		map->layer[i].tilesheet_ref = malloc(sizeof(LDMZ_REF) * ext[i].refs);
+		map->layer[i].tilesheet_refs = ext[i].refs;
+
+		for (j = 0; j < ext[i].refs; j++)
+			map->layer[i].tilesheet_ref[j] = map->stringrefs + tsdata[j];
+	}
+
+	free(tsdataz);
+	free(tsdata);
+	free(ext);
+
+	return;
+}
+
+
 LDMZ_MAP *mapLoadReal(const char *fname, int tile_w, int tile_h) {
 	LDMZ_MAP *map;
 	LDMZ_FILE_MAP map_h;
@@ -278,6 +317,9 @@ LDMZ_MAP *mapLoadReal(const char *fname, int tile_w, int tile_h) {
 	
 	free(map_l);
 	free(buff);
+
+	mapLoadExtended(map, file);
+
 	fsFileClose(file);
 	return map;
 

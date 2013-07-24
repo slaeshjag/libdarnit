@@ -45,6 +45,8 @@ typedef struct {
 	unsigned int		offset_y;
 	unsigned int		tile_w;
 	unsigned int		tile_h;
+	DARNIT_MAP_REF		**ts_ref;
+	unsigned int		ts_refs;
 } DARNIT_MAP_LAYER;
 
 

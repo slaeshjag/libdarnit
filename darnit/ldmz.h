@@ -73,6 +73,12 @@ typedef struct {
 
 
 typedef struct {
+	unsigned int		refs;
+	unsigned int		ref_size_z;
+} LDMZ_FILE_EXT1;
+
+
+typedef struct {
 	const char		*key;
 	const char		*value;
 } LDMZ_REF;
@@ -94,6 +100,8 @@ typedef struct {
 	unsigned int		offset_y;
 	unsigned int		tile_w;
 	unsigned int		tile_h;
+	LDMZ_REF		**tilesheet_ref;
+	unsigned int		tilesheet_refs;
 } LDMZ_LAYER;
 
 
