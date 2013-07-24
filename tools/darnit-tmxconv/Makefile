@@ -2,8 +2,8 @@
 #darnit-tmxconv is used to converted Tiled TMX maps into libDarnit LDMZ maps.
 include $(TOPDIR)/config.mk
 
-LDTOOLS		+=	-L$(TOPDIR)/bin -lxml2 
-CTOOLS		+=	-I$(TOPDIR)/include `xml2-config --cflags` -O0 -g
+LDTOOLS		+=	-L$(TOPDIR)/bin -lmxml -lz 
+CTOOLS		+=	-I$(TOPDIR)/include -O0 -g -Wall -Wextra
 
 BIN		=	darnit-tmxconv
 

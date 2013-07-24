@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <zlib.h>
 
-#include <libxml/xmlreader.h>
+#include <mxml.h>
 
+#define	TMXCONV_VERSION			"darnit-tmxcomv v.0.1a"
 #define	LDMZ_MAGIC			0xFF00E00E
 #define	LDMZ_VERSION_ORTHO		0x55555555
 #define	LDMZ_VERSION_ISOM		0x55555566

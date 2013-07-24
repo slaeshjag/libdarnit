@@ -167,11 +167,13 @@ static void inject_ref(const char *key, const char *val, int **ref, int *refs) {
 }
 
 
-static void add_refs(xmlDocPtr doc, xmlNodePtr cur, int **ref, int *refs) {
-	for (cur = cur->xmlChildrenNode; cur; cur = cur->next) {
-		if (!strcmp((const char *) cur->name, "property")) {
+static void add_refs(mxml_node_t *tree, int **ref, int *refs) {
+	for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
+		if (!mxmlGetElement(tree))
+			continue;
+		if (!strcmp(mxmlGetElement(tree), "property")) {
 			(*ref) = realloc((*ref), sizeof(**ref) * (++(*refs)));
-			(*ref)[(*refs) - 1] = ref_add((const char *) xmlGetProp(cur, (const xmlChar*) "name"), (const char *) xmlGetProp(cur, (const xmlChar*) "value"));
+			(*ref)[(*refs) - 1] = ref_add(mxmlElementGetAttr(tree, "name"), mxmlElementGetAttr(tree, "value"));
 		}
 	}
 
@@ -179,25 +181,27 @@ static void add_refs(xmlDocPtr doc, xmlNodePtr cur, int **ref, int *refs) {
 }
 
 
-void *parse_layer_data(xmlDocPtr doc, xmlNodePtr cur) {
-	void *data, *out;
-	int outsize;
+void *parse_layer_data(mxml_node_t *tree) {
+	void *out, *data;
+	int outsize, nn;
 
 	data = NULL;
+	nn = 0;
 
-	for (cur = cur->xmlChildrenNode; cur; cur = cur->next) {
-		if (!strcmp((const char *) cur->name, "data")) {
-			data = xmlNodeListGetString(doc, cur->xmlChildrenNode, 1);
-			if (!strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "encoding"), "base64"))
+	for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
+		if (!mxmlGetElement(tree))
+			continue;
+		if (!strcmp(mxmlGetElement(tree), "data")) {
+			data = (void *) mxmlGetText(tree, &nn);
+			if (!strcmp(mxmlElementGetAttr(tree, "encoding"), "base64"))
 				out = base64Decode(data, strlen(data), &outsize);
-			else if (!strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "encoding"), "csv")) {
+			else if (!strcmp(mxmlElementGetAttr(tree, "encoding"), "csv")) {
 				/* FIXME: Implement csv decode */
 			}
 
-			xmlFree(data);
-			if (!xmlGetProp(cur, (const xmlChar*) "compression")) {
+			if (!mxmlElementGetAttr(tree, "compression")) {
 				/* No compression */
-			} else if (!strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "compression"), "zlib"))
+			} else if (!strcmp(mxmlElementGetAttr(tree, "compression"), "zlib"))
 				data = inflate_data(out, &outsize);
 			else {
 				/* FIXME: Implement other compression methods */
@@ -216,7 +220,7 @@ unsigned int find_tileset(unsigned int t) {
 	int i;
 
 	for (i = 0; i < map_info.tilesets; i++) {
-		if (t < map_info.tileset[i].firstgid)
+		if ((int) t < map_info.tileset[i].firstgid)
 			return i - 1;
 	}
 
@@ -235,7 +239,7 @@ int gidmap(unsigned int *data, int w, int h) {
 			continue;
 		if (gid < 0)
 			gid = find_tileset(data[i]);
-		if (gid != find_tileset(data[i]))
+		if ((unsigned int) gid != find_tileset(data[i]))
 			ret = -1;
 		data[i] -= map_info.tileset[gid].firstgid;
 	}
@@ -244,16 +248,16 @@ int gidmap(unsigned int *data, int w, int h) {
 }
 
 
-void parse_layer(xmlDocPtr doc, xmlNodePtr cur) {
-	int l, ts, w, h;
+void parse_layer(mxml_node_t *tree) {
+	int l, ts, w, h, i;
 	unsigned int *data;
 
-	data = parse_layer_data(doc, cur);
-	w = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "width"));
-	h = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "height"));
+	data = parse_layer_data(tree);
+	w = atoi(mxmlElementGetAttr(tree, "width"));
+	h = atoi(mxmlElementGetAttr(tree, "height"));
 	ts = gidmap(data, w, h);
 
-	if (strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "name"), "collision")) {
+	if (strcmp(mxmlElementGetAttr(tree, "name"), "collision")) {
 		ldmz_main->layers++;
 		layer = realloc(layer, sizeof(*layer) * ldmz_main->layers);
 		l = ldmz_main->layers - 1;
@@ -263,41 +267,51 @@ void parse_layer(xmlDocPtr doc, xmlNodePtr cur) {
 		layer[l].ref = NULL;
 		layer[l].refs = 0;
 		layer[l].ts = ts;
-		inject_ref("NAME", (const char *) xmlGetProp(cur, (const xmlChar*) "name"), &layer[l].ref, &layer[l].refs);
-		for (cur = cur->xmlChildrenNode; cur; cur = cur->next)
-			if (!strcmp((const char *) cur->name, "properties"))
-				add_refs(doc, cur, &layer[l].ref, &layer[l].refs);
+		inject_ref("NAME", mxmlElementGetAttr(tree, "name"), &layer[l].ref, &layer[l].refs);
+		for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
+			if (!mxmlGetElement(tree))
+				continue;
+			if (!strcmp(mxmlGetElement(tree), "properties"))
+				add_refs(tree, &layer[l].ref, &layer[l].refs);
+		}
 		inject_ref(NULL, NULL, &layer[l].ref, &layer[l].refs);
 	} else {
 		l = ldmz_main->layers - 1;
+		for (i = 0; i < (int) (layer[l].width * layer[l].height); i++)
+			layer[l].tile[i] |= (data[i] << 16);
+		free(data);
 	}
 
 	return;
 }
 
 
-int parse_tileset(xmlDocPtr doc, xmlNodePtr cur) {
+int parse_tileset(mxml_node_t *tree) {
 	int t, id;
-	xmlNodePtr bah;
+	mxml_node_t *bah;
 
 	t = map_info.tilesets++;
 	map_info.tileset = realloc(map_info.tileset, sizeof(*map_info.tileset) * map_info.tilesets);
-	map_info.tileset[t].firstgid = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "firstgid"));
-	map_info.tileset[t].tile_w = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "tilewidth"));
-	map_info.tileset[t].tile_h = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "tileheight"));
+	map_info.tileset[t].firstgid = atoi(mxmlElementGetAttr(tree, "firstgid"));
+	map_info.tileset[t].tile_w = atoi(mxmlElementGetAttr(tree, "tilewidth"));
+	map_info.tileset[t].tile_h = atoi(mxmlElementGetAttr(tree, "tileheight"));
 	map_info.tileset[t].ref = NULL;
 	map_info.tileset[t].refs = 0;
 
-	for (cur = cur->xmlChildrenNode; cur; cur = cur->next) {
-		if (!strcmp((const char *) cur->name, "image")) {
+	for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
+		if (!mxmlGetElement(tree))
+			continue;
+		if (!strcmp(mxmlGetElement(tree), "image")) {
 			/* TODO: Do something with image */
-		} else if (!strcmp((const char *) cur->name, "tile")) {
-			id = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "id"));
-			fprintf(stderr, "ID: %i\n", id);
+		} else if (!strcmp(mxmlGetElement(tree), "tile")) {
+			id = atoi(mxmlElementGetAttr(tree, "id"));
 			/* TODO: Fix this */
-			for (bah = cur->xmlChildrenNode; bah; bah = bah->next)
-				if (!strcmp((const char *) bah->name, "properties"))
-					add_refs(doc, bah, &map_info.tileset[t].ref, &map_info.tileset[t].refs);
+			for (bah = mxmlGetFirstChild(tree); bah; bah = mxmlGetNextSibling(bah)) {
+				if (!mxmlGetElement(bah))
+					continue;
+				if (!strcmp(mxmlGetElement(bah), "properties"))
+					add_refs(bah, &map_info.tileset[t].ref, &map_info.tileset[t].refs);
+			}
 			inject_ref(NULL, NULL, &map_info.tileset[t].ref, &map_info.tileset[t].refs);
 		}
 	}
@@ -306,23 +320,26 @@ int parse_tileset(xmlDocPtr doc, xmlNodePtr cur) {
 }
 
 
-void parse_object(xmlDocPtr doc, xmlNodePtr cur) {
+void parse_object(mxml_node_t *tree_n) {
 	int o;
 
 	o = map_info.objects++;
 	map_info.object = realloc(map_info.object, sizeof(*map_info.object) * map_info.objects);
-	map_info.object[o].x = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "x")) / map_info.tile_w;
-	map_info.object[o].y = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "y")) / map_info.tile_h;
+	map_info.object[o].x = atoi(mxmlElementGetAttr(tree_n, "x")) / map_info.tile_w;
+	map_info.object[o].y = atoi(mxmlElementGetAttr(tree_n, "y")) / map_info.tile_h;
 	map_info.object[o].l = ldmz_main->layers - 1;
 	map_info.object[o].ref = NULL;
 	map_info.object[o].refs = 0;
 	
-	for (cur = cur->xmlChildrenNode; cur; cur = cur->next)
-		if (!strcmp((const char *) cur->name, "properties"))
-			add_refs(doc, cur, &map_info.object[o].ref, &map_info.object[o].refs);
-	inject_ref("NAME", (const char *) xmlGetProp(cur, (const xmlChar*) "name"), &map_info.object[o].ref, &map_info.object[o].refs);
-	if (xmlGetProp(cur, (const xmlChar*) "type"))
-		inject_ref("TYPE", (const char *) xmlGetProp(cur, (const xmlChar*) "type"), &map_info.object[o].ref, &map_info.object[o].refs);
+	for (tree_n = mxmlGetFirstChild(tree_n); tree_n; tree_n = mxmlGetNextSibling(tree_n)) {
+		if (!mxmlGetElement(tree_n))
+			continue;
+		if (!strcmp(mxmlGetElement(tree_n), "properties"))
+			add_refs(tree_n, &map_info.object[o].ref, &map_info.object[o].refs);
+	}
+	inject_ref("NAME", mxmlElementGetAttr(tree_n, "name"), &map_info.object[o].ref, &map_info.object[o].refs);
+	if (mxmlElementGetAttr(tree_n, "type"))
+		inject_ref("TYPE", mxmlElementGetAttr(tree_n, "type"), &map_info.object[o].ref, &map_info.object[o].refs);
 	inject_ref(NULL, NULL, &map_info.object[o].ref, &map_info.object[o].refs);
 
 	return;
@@ -330,41 +347,45 @@ void parse_object(xmlDocPtr doc, xmlNodePtr cur) {
 }
 
 
-void parse_objectgroup(xmlDocPtr doc, xmlNodePtr cur) {
-	for (cur = cur->xmlChildrenNode; cur; cur = cur->next) {
-		if (!strcmp((const char *) cur->name, "object"))
-			parse_object(doc, cur);
+void parse_objectgroup(mxml_node_t *tree) {
+	for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
+		if (!mxmlGetElement(tree))
+			continue;
+		if (!strcmp(mxmlGetElement(tree), "object"))
+			parse_object(tree);
 	}
 
 	return;
 }
 
 
-int parse_map(xmlDocPtr doc, xmlNodePtr cur) {
+int parse_map(mxml_node_t *tree) {
 	int nn;
 	
-	ldmz_main->version = (!strcmp((const char *) xmlGetProp(cur, (const xmlChar*) "orientation"), "orthogonal")) ? LDMZ_VERSION_ORTHO : LDMZ_VERSION_ISOM;
-	map_info.tile_w = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "tilewidth"));
-	map_info.tile_h = atoi((const char *) xmlGetProp(cur, (const xmlChar*) "tileheight"));
+	ldmz_main->version = (!strcmp(mxmlElementGetAttr(tree, "orientation"), "orthogonal")) ? LDMZ_VERSION_ORTHO : LDMZ_VERSION_ISOM;
+	map_info.tile_w = atoi(mxmlElementGetAttr(tree, "tilewidth"));
+	map_info.tile_h = atoi(mxmlElementGetAttr(tree, "tileheight"));
 
 	nn = 0;
-	for (cur = cur->xmlChildrenNode; cur; cur = cur->next) {
-		if (!strcmp("layer", (const char *) cur->name))
-			parse_layer(doc, cur);
-		if (!strcmp("tileset", (const char *) cur->name))
-			parse_tileset(doc, cur);
-		if (!strcmp("objectgroup", (const char *) cur->name))
-			parse_objectgroup(doc, cur);
-		if (!strcmp("properties", (const char *) cur->name)) {
-			add_refs(doc, cur, &map_info.map_ref, &map_info.map_refs);
-			inject_ref("generator", "darnit-tmxconv v.0.1", &map_info.map_ref, &map_info.map_refs);
+	for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
+		if (!mxmlGetElement(tree))
+			continue;
+		if (!strcmp("layer", mxmlGetElement(tree)))
+			parse_layer(tree);
+		if (!strcmp("tileset", mxmlGetElement(tree)))
+			parse_tileset(tree);
+		if (!strcmp("objectgroup", mxmlGetElement(tree)))
+			parse_objectgroup(tree);
+		if (!strcmp("properties", mxmlGetElement(tree))) {
+			add_refs(tree, &map_info.map_ref, &map_info.map_refs);
+			inject_ref("generator", TMXCONV_VERSION, &map_info.map_ref, &map_info.map_refs);
 			inject_ref(NULL, NULL, &map_info.map_ref, &map_info.map_refs);
 			nn = 1;
 		}
 	}
 	
 	if (!nn) {
-		inject_ref("ldmz-generator", "darnit-tmxconv v.0.1", &map_info.map_ref, &map_info.map_refs);
+		inject_ref("ldmz-generator", TMXCONV_VERSION, &map_info.map_ref, &map_info.map_refs);
 		inject_ref(NULL, NULL, &map_info.map_ref, &map_info.map_refs);
 	}
 
@@ -399,7 +420,7 @@ void map_write(const char *fname) {
 	}
 
 	layer_n = malloc(sizeof(*layer_n) * ldmz_main->layers);
-	for (i = 0; i < ldmz_main->layers; i++) {
+	for (i = 0; i < (int) ldmz_main->layers; i++) {
 		layer_n[i].tile_w = map_info.tile_w;
 		layer_n[i].tile_h = map_info.tile_h;
 		if (ldmz_main->version == LDMZ_VERSION_ORTHO)
@@ -437,7 +458,7 @@ void map_write(const char *fname) {
 	fwrite(objectz, ldmz_main->objects_compr, 1, fp);
 	fwrite(layerz, ldmz_main->layer_header_compr, 1, fp);
 
-	for (i = 0; i < ldmz_main->layers; i++)
+	for (i = 0; i < (int) ldmz_main->layers; i++)
 		fwrite(layer[i].tile_z, layer_n[i].layer_size_z, 1, fp);
 
 	
@@ -447,27 +468,31 @@ void map_write(const char *fname) {
 
 int main(int argc, char **argv) {
 	int i;
-	xmlDocPtr doc;
-	xmlNodePtr cur;
+	FILE *fp;
+	mxml_node_t *tree;
 
 	if (argc <3) {
 		fprintf(stderr, "Usage: %s <TMX file> <Output LDMZ>\n", argv[0]);
 		return -1;
 	}
 
-	if (!(doc = xmlParseFile(argv[1]))) {
-		fprintf(stderr, "Unable to parse %s\n", argv[1]);
+	if (!(fp = fopen(argv[1], "r"))) {
+		fprintf(stderr, "Unable to open %s\n", argv[1]);
 		return -1;
 	}
 
-	if (!(cur = xmlDocGetRootElement(doc))) {
+	if (!(tree = mxmlLoadFile(NULL, fp, MXML_NO_CALLBACK))) {
 		fprintf(stderr, "TMX %s is invalid (empty)\n", argv[1]);
 		return -1;
 	}
 
-	if (strcmp((const char *) cur->name, "map")) {
+//	fclose(fp);
+
+
+	tree = mxmlGetNextSibling(mxmlGetFirstChild(tree));
+	if (!tree) {
 		fprintf(stderr, "%s is not a TMX\n", argv[1]);
-		return 0;
+		return -1;
 	}
 
 	ldmz_main = calloc(1, sizeof(*ldmz_main));
@@ -480,7 +505,7 @@ int main(int argc, char **argv) {
 	map_info.ref_size = 0;
 	map_info.map_ref = NULL;
 	map_info.map_refs = 0;
-	parse_map(doc, cur);
+	parse_map(tree);
 	
 	fprintf(stderr, "%i refs\n", map_info.refs);
 	for (i = 0; i < map_info.refs; i++)
