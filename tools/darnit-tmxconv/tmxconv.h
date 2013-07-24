@@ -7,7 +7,7 @@
 
 #include <mxml.h>
 
-#define	TMXCONV_VERSION			"darnit-tmxcomv v.0.1a"
+#define	TMXCONV_VERSION			"darnit-tmxconv v.0.1b"
 #define	LDMZ_MAGIC			0xFF00E00E
 #define	LDMZ_VERSION_ORTHO		0x55555555
 #define	LDMZ_VERSION_ISOM		0x55555566
@@ -31,6 +31,7 @@ struct ldmz_main {
 struct layer_info {
 	unsigned int			*tile;
 	void				*tile_z;
+	void				*ts_data;
 	unsigned int			width;
 	unsigned int			height;
 	unsigned int			ts;

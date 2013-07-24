@@ -107,7 +107,7 @@ char *base64Decode(const char *data, unsigned int size, int *outsize) {
 		return NULL;
 	}
 
-	for (i = out = 0; i < sizein; i += 4, out += 3) {
+	for (i = out = 0; i < (int) sizein; i += 4, out += 3) {
 		if (!validate_data_in(&data_in[i])) {
 			i -= 3;
 			out -= 3;

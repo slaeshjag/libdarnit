@@ -21,6 +21,10 @@ you can't access induvidual elements inside.
 Compression is done with zlib. You need Zlib or compatible (stb_image for 
 example) to decompress the data.
 
+NOTE ABOUT EXPANSIONS:
+If you want to use an expansion described in this document, you need to
+	include valid data for all the expansions described before it.
+
 ==============================
 == Main header ===============
 ==============================
@@ -146,5 +150,39 @@ tile to render.
 The number of ints per layer is layer_w * layer_h.
 Each block of layer data is stored in the same order as they are in the layer
 headers.
+
+
+
+***### LDMZ expansion area #1 ###***
+
+
+
+==============================
+== Extended tileset data =====
+==============================
+
+NOTE: This area is only present in some LDMZ files. If there's data after the
+	compressed tile data, it'll be this header. If EOF follows tile data,
+	this header and everything after it is not present in that map file.
+
+This header is not compressed. The following structure is REPEATED
+	FOR EVERY LAYER.
+
+Tile references			Number of tile references
+Tile reference size		Size of tile references in bytes
+
+
+
+==============================
+== TIleset references ========
+==============================
+
+This is the compressed block described above. Inside this block, there's one
+integer pointing to a string reference per tile. There may or may not be
+a string reference pointer for every tile in a tileset, so your code should
+be able to pad it out. There is one zlib compressed block per layer.
+
+
+*** END OF DOCUMENT ***
 
 This should be enough information to write a loader for this format.

@@ -20,8 +20,12 @@ struct map_info {
 			int firstgid;
 			int tile_w;
 			int tile_h;
-			int *ref;
-			int refs;
+			int tiles;
+
+			struct {
+				int *ref;
+				int refs;
+			} *ref;
 	} *tileset;
 	int		tilesets;
 
@@ -43,6 +47,7 @@ struct map_info {
 
 	int		*map_ref;
 	int		map_refs;
+	int		dummy_ref;
 } map_info;
 
 
@@ -200,11 +205,13 @@ void *parse_layer_data(mxml_node_t *tree) {
 			}
 
 			if (!mxmlElementGetAttr(tree, "compression")) {
-				/* No compression */
+				data = out;
+				out = NULL;
 			} else if (!strcmp(mxmlElementGetAttr(tree, "compression"), "zlib"))
 				data = inflate_data(out, &outsize);
 			else {
-				/* FIXME: Implement other compression methods */
+				/* TODO: Implement other compression methods */
+				/* Which will probably never happen, but you shouldn't think like that, right? */
 			}
 
 			free(out);
@@ -287,7 +294,7 @@ void parse_layer(mxml_node_t *tree) {
 
 
 int parse_tileset(mxml_node_t *tree) {
-	int t, id;
+	int t, id, n;
 	mxml_node_t *bah;
 
 	t = map_info.tilesets++;
@@ -296,23 +303,30 @@ int parse_tileset(mxml_node_t *tree) {
 	map_info.tileset[t].tile_w = atoi(mxmlElementGetAttr(tree, "tilewidth"));
 	map_info.tileset[t].tile_h = atoi(mxmlElementGetAttr(tree, "tileheight"));
 	map_info.tileset[t].ref = NULL;
-	map_info.tileset[t].refs = 0;
 
 	for (tree = mxmlGetFirstChild(tree); tree; tree = mxmlGetNextSibling(tree)) {
 		if (!mxmlGetElement(tree))
 			continue;
 		if (!strcmp(mxmlGetElement(tree), "image")) {
-			/* TODO: Do something with image */
+			n = atoi(mxmlElementGetAttr(tree, "width"));
+			n *= atoi(mxmlElementGetAttr(tree, "height"));
+			n /= map_info.tileset[t].tile_w;
+			n /= map_info.tileset[t].tile_h;
+			map_info.tileset[t].tiles = n;
+			map_info.tileset[t].ref = malloc(sizeof(*map_info.tileset[t].ref) * n);
+			memset(map_info.tileset[t].ref, 0, n * sizeof(*map_info.tileset[t].ref));
 		} else if (!strcmp(mxmlGetElement(tree), "tile")) {
 			id = atoi(mxmlElementGetAttr(tree, "id"));
+			if (id >= n)
+				continue;
 			/* TODO: Fix this */
 			for (bah = mxmlGetFirstChild(tree); bah; bah = mxmlGetNextSibling(bah)) {
 				if (!mxmlGetElement(bah))
 					continue;
 				if (!strcmp(mxmlGetElement(bah), "properties"))
-					add_refs(bah, &map_info.tileset[t].ref, &map_info.tileset[t].refs);
+					add_refs(bah, &map_info.tileset[t].ref[id].ref, &map_info.tileset[t].ref[id].refs);
 			}
-			inject_ref(NULL, NULL, &map_info.tileset[t].ref, &map_info.tileset[t].refs);
+			inject_ref(NULL, NULL, &map_info.tileset[t].ref[id].ref, &map_info.tileset[t].ref[id].refs);
 		}
 	}
 
@@ -393,6 +407,46 @@ int parse_map(mxml_node_t *tree) {
 }
 
 
+void map_write_extended(FILE *fp) {
+	int i, t, *ref, def;
+	struct {
+		unsigned int	refs;
+		unsigned int	ref_size_z;
+	} *ref_info;
+
+	def = map_info.dummy_ref;
+	ref_info = malloc(sizeof(*ref_info) * ldmz_main->layers);
+
+	for (i = 0; i < (int) ldmz_main->layers; i++) {
+		ref = malloc(map_info.tileset[layer[i].ts].tiles * sizeof(int));
+		for (t = 0; t < map_info.tileset[layer[i].ts].tiles; t++) {
+			if (!map_info.tileset[layer[i].ts].ref[t].ref)
+				ref[t] = def;
+			else
+				ref[t] = map_info.tileset[layer[i].ts].ref[t].ref[0];
+		}
+
+		endian_convert(ref, ldmz_main->layers * t);
+		ref_info[i].refs = t;
+		layer[i].ts_data = deflate_data(ref, t * sizeof(int), &ref_info[i].ref_size_z);
+		free(ref);
+	}
+
+	endian_convert((void *) ref_info, ldmz_main->layers * 2);
+	fwrite(ref_info, sizeof(*ref_info), ldmz_main->layers, fp);
+	endian_convert((void *) ref_info, ldmz_main->layers * 2);
+	
+	for (i = 0; i < (int) ldmz_main->layers; i++) {
+		fwrite(layer[i].ts_data, ref_info[i].ref_size_z, 1, fp);
+		free(layer[i].ts_data);
+	}
+
+	free(ref_info);
+
+	return;
+}
+
+
 void map_write(const char *fname) {
 	FILE *fp;
 	void *strtablez, *refz, *layerz, *objectz;
@@ -461,13 +515,15 @@ void map_write(const char *fname) {
 	for (i = 0; i < (int) ldmz_main->layers; i++)
 		fwrite(layer[i].tile_z, layer_n[i].layer_size_z, 1, fp);
 
-	
+	map_write_extended(fp);
+	fclose(fp);
+
 	return;
 }
 
 
 int main(int argc, char **argv) {
-	int i;
+	int i, *n;
 	FILE *fp;
 	mxml_node_t *tree;
 
@@ -506,6 +562,12 @@ int main(int argc, char **argv) {
 	map_info.map_ref = NULL;
 	map_info.map_refs = 0;
 	parse_map(tree);
+	
+	i = 0;
+	n = NULL;
+	inject_ref(NULL, NULL, &n, &i);
+	map_info.dummy_ref = n[0];
+	free(n);
 	
 	fprintf(stderr, "%i refs\n", map_info.refs);
 	for (i = 0; i < map_info.refs; i++)
