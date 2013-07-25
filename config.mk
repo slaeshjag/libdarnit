@@ -36,7 +36,7 @@ ifeq ($(BUILDFOR), WIN32)
 	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lstdc++ -lgdi32 -lwinmm
 	LDTOOLS	+=	-lws2_32
 	CC	=	i586-mingw32msvc-gcc
-	CC	=	i586-mingw32msvc-strip
+	STRIP	=	i586-mingw32msvc-strip
 	AR	=	i586-mingw32msvc-ar
 	PLATFORM=	win32
 else
