@@ -36,11 +36,6 @@ freely, subject to the following restrictions:
 #define COLOURDEPTH_BLUE_SIZE 		5
 #define COLOURDEPTH_DEPTH_SIZE		16
 
-
-
-#include	<SDL/SDL.h>
-#include	<SDL/SDL_opengl.h>
-
 typedef struct {
 	FADE_STRUCT			fade;
 	float				swgran;
