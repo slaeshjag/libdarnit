@@ -1,6 +1,6 @@
 # Project: libDarnit
 #darnit-tmxconv is used to converted Tiled TMX maps into libDarnit LDMZ maps.
-#include $(TOPDIR)/config.mk
+include $(TOPDIR)/config.mk
 
 LDTOOLS		+=	-L$(TOPDIR)/bin -lmxml -lz 
 CTOOLS		+=	-I$(TOPDIR)/include -O0 -g -Wall -Wextra

@@ -1,6 +1,6 @@
 # Project: libDarnit
 #darnit-spriteview is used to view sprites
-#include $(TOPDIR)/config.mk
+include $(TOPDIR)/config.mk
 
 LDTOOLS		+=	-L$(TOPDIR)/bin -ldarnit 
 CTOOLS		+=	-I$(TOPDIR)/include
