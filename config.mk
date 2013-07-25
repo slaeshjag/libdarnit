@@ -4,6 +4,7 @@
 LIB		=	$(TOPDIR)/bin/libdarnit.so
 
 DBGFLAGS	=	-O0 -g -D__DEBUG__
+VERSION		=	v.0.2b2
 #DBGFLAGS	=	-O3 -g
 #Flags specific for tools
 LDTOOLS		:=	$(LDFLAGS)
@@ -37,6 +38,7 @@ ifeq ($(BUILDFOR), WIN32)
 	CC	=	i586-mingw32msvc-gcc
 	AR	=	i586-mingw32msvc-ar
 	PLATFORM=	win32
+	INSTARG	+=	windows-release
 else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo specifics

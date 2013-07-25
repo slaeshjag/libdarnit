@@ -48,6 +48,28 @@ clean:
 	@echo "Source tree cleaned."
 	@echo
 
+windows-release:
+	@echo "Preparing a windows release archive.."
+	@mkdir -p release
+	@mkdir -p release/bin
+	@mkdir -p release/lib
+	@mkdir -p release/lib/release
+	@mkdir -p release/lib/debug
+	@cp -a include/ release/
+	@cp -a bin/darnit-fsimage release/bin/darnit-fsimage.exe
+	@cp -a bin/darnit-mksprite release/bin/darnit-mksprite.exe
+	@cp -a bin/darnit-spriteview release/bin/darnit-spriteview.exe
+	@cp -a bin/darnit-stringtable release/bin/darnit-stringtable.exe
+	@cp -a bin/darnit-tmxconv release/bin/darnit-tmxconv.exe
+	@$(STRIP) release/bin/*
+	@cp -a bin/libdarnit* release/lib/debug
+	@cp -a bin/libdarnit.dll release/lib/release
+	@$(STRIP) release/lib/release/*
+	@mv release libdarnit-$(VERSION)-win32
+	@zip -r9 libdarnit-$(VERSION)-win32 bin/libdarnit-$(VERSION)-win32.zip
+	@rm -Rf libdarnit-$(VERSION)-win32
+	@echo " Created bin/libdarnit-$(VERSION)-win32.zip"
+
 strip:
 	@echo " [STRP] bin/"
 	@strip $(LIB)
