@@ -1,11 +1,12 @@
 # Project: libDarnit
 #darnit-fsimage is used to create LDI image files
-#include $(TOPDIR)/config.mk
+include $(TOPDIR)/config.mk
 
 BIN		=	darnit-fsimage
 
 SRCFILES	=	$(wildcard *.c)
 OBJFILES	=	$(SRCFILES:.c=.o)
+CFLAGS		=	
 .PHONY: all clean
 
 all: $(OBJFILES)
