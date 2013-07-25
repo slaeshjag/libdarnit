@@ -1,6 +1,6 @@
 # Project: libDarnit
 #darnit-stringtable is used to compile string tables
-include $(TOPDIR)/config.mk
+#include $(TOPDIR)/config.mk
 
 LDTOOLS		+=	-lz
 

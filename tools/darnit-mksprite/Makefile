@@ -1,6 +1,6 @@
 # Project: libDarnit
 #darnit-mksprite is used to create sprites
-include $(TOPDIR)/config.mk
+#include $(TOPDIR)/config.mk
 
 BIN		=	darnit-mksprite
 
