@@ -186,9 +186,29 @@ static void add_refs(mxml_node_t *tree, int **ref, int *refs) {
 }
 
 
-void *parse_layer_data(mxml_node_t *tree) {
+int parse_csv(const char *in, unsigned int *out, int elements, int c) {
+	char *bluh = strdup(in);
+	char *tok;
+	int i;
+
+	for (tok = bluh; *tok; tok++)
+		if (*tok == '\n' || *tok == '\r')
+			*tok = ' ';
+	tok = strtok(bluh, ",");
+	for (i = c; i < elements && tok; i++, tok = strtok(NULL, ",")) {
+		while ((*tok < 0x30 || *tok > 0x39) && *tok) tok++;
+		out[i] = atoi(tok);
+	}
+
+	free(bluh);
+	return i;
+}
+
+
+void *parse_layer_data(mxml_node_t *tree, int w, int h) {
 	void *out, *data;
-	int outsize, nn;
+	int outsize, nn, n;
+	mxml_node_t *next;
 
 	data = NULL;
 	nn = 0;
@@ -198,10 +218,15 @@ void *parse_layer_data(mxml_node_t *tree) {
 			continue;
 		if (!strcmp(mxmlGetElement(tree), "data")) {
 			data = (void *) mxmlGetText(tree, &nn);
-			if (!strcmp(mxmlElementGetAttr(tree, "encoding"), "base64"))
+			if (!mxmlElementGetAttr(tree, "encoding")) {
+				fprintf(stderr, "Fatal error: XML is not a supported tile encoding. Set layer format to »Base64 zlib compressed« in map properties and try again\n");
+				exit(-1);
+			} else if (!strcmp(mxmlElementGetAttr(tree, "encoding"), "base64"))
 				out = base64Decode(data, strlen(data), &outsize);
 			else if (!strcmp(mxmlElementGetAttr(tree, "encoding"), "csv")) {
-				/* FIXME: Implement csv decode */
+				out = malloc(w * h * sizeof(unsigned int));
+				for (n = 0, next = mxmlGetFirstChild(tree); next; next = mxmlGetNextSibling(next))
+					n = parse_csv(mxmlGetText(next, &nn), out, w * h, n);
 			}
 
 			if (!mxmlElementGetAttr(tree, "compression")) {
@@ -209,7 +234,12 @@ void *parse_layer_data(mxml_node_t *tree) {
 				out = NULL;
 			} else if (!strcmp(mxmlElementGetAttr(tree, "compression"), "zlib"))
 				data = inflate_data(out, &outsize);
-			else {
+			else if (!strcmp(mxmlElementGetAttr(tree, "compression"), "gzip")) {
+				fprintf(stderr, "gzip compression of layer data is not supported. Select zlib instead in map->map properties\n");
+				exit(-1);
+			} else {
+				fprintf(stderr, "Unsupported layer format! Use zlib compressed Base64\n");
+				exit(-1);
 				/* TODO: Implement other compression methods */
 				/* Which will probably never happen, but you shouldn't think like that, right? */
 			}
@@ -259,9 +289,9 @@ void parse_layer(mxml_node_t *tree) {
 	int l, ts, w, h, i;
 	unsigned int *data;
 
-	data = parse_layer_data(tree);
 	w = atoi(mxmlElementGetAttr(tree, "width"));
 	h = atoi(mxmlElementGetAttr(tree, "height"));
+	data = parse_layer_data(tree, w, h);
 	ts = gidmap(data, w, h);
 
 	if (strcmp(mxmlElementGetAttr(tree, "name"), "collision")) {
@@ -530,6 +560,7 @@ int main(int argc, char **argv) {
 
 	if (argc <3) {
 		if (argc < 2) {
+			fprintf(stderr, "%s by Steven Arnow <s@rdw.se>, 2013", TMXCONV_VERSION);
 			fprintf(stderr, "Usage: %s <TMX file> [Output LDMZ]\n", argv[0]);
 			return -1;
 		}
