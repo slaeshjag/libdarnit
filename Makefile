@@ -49,7 +49,6 @@ clean:
 	@echo
 
 windows-release:
-	@echo "Preparing a windows release archive.."
 	@mkdir -p release
 	@mkdir -p release/bin
 	@mkdir -p release/lib
@@ -66,7 +65,7 @@ windows-release:
 	@cp -a bin/libdarnit.dll release/lib/release
 	@$(STRIP) release/lib/release/*
 	@mv release libdarnit-$(VERSION)-win32
-	@zip -r9 libdarnit-$(VERSION)-win32 bin/libdarnit-$(VERSION)-win32.zip
+	@zip -r9 bin/libdarnit-$(VERSION)-win32 libdarnit-$(VERSION)-win32.zip >/dev/null
 	@rm -Rf libdarnit-$(VERSION)-win32
 	@echo " Created bin/libdarnit-$(VERSION)-win32.zip"
 

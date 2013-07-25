@@ -36,9 +36,9 @@ ifeq ($(BUILDFOR), WIN32)
 	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lstdc++ -lgdi32 -lwinmm
 	LDTOOLS	+=	-lws2_32
 	CC	=	i586-mingw32msvc-gcc
+	CC	=	i586-mingw32msvc-strip
 	AR	=	i586-mingw32msvc-ar
 	PLATFORM=	win32
-	INSTARG	+=	windows-release
 else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo specifics
