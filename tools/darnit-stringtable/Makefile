@@ -1,10 +1,11 @@
 # Project: libDarnit
 #darnit-stringtable is used to compile string tables
-#include $(TOPDIR)/config.mk
+include $(TOPDIR)/config.mk
 
 LDTOOLS		+=	-lz
 
 BIN		=	darnit-stringtable
+CFLAGS		=	
 
 SRCFILES	=	$(wildcard *.c)
 OBJFILES	=	$(SRCFILES:.c=.o)

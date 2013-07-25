@@ -1,8 +1,9 @@
 # Project: libDarnit
 #darnit-mksprite is used to create sprites
-#include $(TOPDIR)/config.mk
+include $(TOPDIR)/config.mk
 
 BIN		=	darnit-mksprite
+CFLAGS		=	
 
 SRCFILES	=	$(wildcard *.c)
 OBJFILES	=	$(SRCFILES:.c=.o)
