@@ -525,12 +525,22 @@ void map_write(const char *fname) {
 int main(int argc, char **argv) {
 	int i, *n;
 	FILE *fp;
+	char *target;
 	mxml_node_t *tree;
 
 	if (argc <3) {
-		fprintf(stderr, "Usage: %s <TMX file> <Output LDMZ>\n", argv[0]);
-		return -1;
-	}
+		if (argc < 2) {
+			fprintf(stderr, "Usage: %s <TMX file> [Output LDMZ]\n", argv[0]);
+			return -1;
+		}
+
+		target = malloc(strlen(argv[1]) + 6);
+		strcpy(target, argv[1]);
+		if (strstr(target, ".tmx"))
+			*strstr(target, ".tmx") = 0;
+		strcat(target, ".ldmz");
+	} else
+		target = argv[2];
 
 	if (!(fp = fopen(argv[1], "r"))) {
 		fprintf(stderr, "Unable to open %s\n", argv[1]);
@@ -574,7 +584,7 @@ int main(int argc, char **argv) {
 		if (map_info.ref_d[i].ref[0] < 0)
 			continue;
 
-	map_write(argv[2]);
+	map_write(target);
 
 	return 0;
 }
