@@ -65,7 +65,7 @@ windows-release:
 	@cp -a bin/libdarnit.dll release/lib/release
 	@$(STRIP) release/lib/release/*
 	@mv release libdarnit-$(VERSION)-win32
-	@zip -r9 bin/libdarnit-$(VERSION)-win32 libdarnit-$(VERSION)-win32.zip >/dev/null
+	@zip -r9 bin/libdarnit-$(VERSION)-win32.zip libdarnit-$(VERSION)-win32 >/dev/null
 	@rm -Rf libdarnit-$(VERSION)-win32
 	@echo " Created bin/libdarnit-$(VERSION)-win32.zip"
 
