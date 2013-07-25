@@ -456,7 +456,7 @@ void map_write_extended(FILE *fp) {
 				ref[t] = map_info.tileset[layer[i].ts].ref[t].ref[0];
 		}
 
-		endian_convert(ref, ldmz_main->layers * t);
+		endian_convert(ref, t);
 		ref_info[i].refs = t;
 		layer[i].ts_data = deflate_data(ref, t * sizeof(int), &ref_info[i].ref_size_z);
 		free(ref);
