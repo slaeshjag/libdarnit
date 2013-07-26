@@ -64,8 +64,11 @@ int main(int argc, char **argv) {
 		a1 = (i * 50) % 3600;
 		a2 = (200 + i * 50) % 3600;
 
-		if (d_keys_get().lmb)
+		if (d_keys_get().lmb) {
+			d_particle_emitter_move(p_pulsar, d_mouse_get().x, d_mouse_get().y);
 			d_particle_pulse(p_pulsar);
+		}
+
 		if (a2 < a1)
 			a2 += 3600;
 	
