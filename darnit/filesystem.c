@@ -816,7 +816,10 @@ int fsReadCompressed(FILESYSTEM_FILE *f, void *data, int len) {
 
 FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 	FILESYSTEM_FILE *file, *dest;
-	char *new_file, *real_file, buff[4096];
+	char *new_file, buff[4096];
+	#ifndef _WIN32
+	char *real_file;
+	#endif
 
 	if (!(file = fsFileOpen(path_src, "rb")))
 		return NULL;

@@ -196,6 +196,9 @@ void particleLoop(PARTICLE *p) {
 		case PARTICLE_MODE_AUTOPULSAR:
 			spawn = p->particles_max;
 			break;
+		default:
+			spawn = 0;
+			break;
 	}
 	
 	p->pulse = 0;

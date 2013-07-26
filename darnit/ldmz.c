@@ -79,6 +79,7 @@ LDMZ_MAP *mapDestroy(LDMZ_MAP *map) {
 	for (i = 0; i < map->layers; i++) {
 		tilemapFree(map->layer[i].tilemap);
 		renderTilesheetFree(map->layer[i].ts);
+		free(map->layer[i].tilesheet_ref);
 	}
 
 	free(map->layer);

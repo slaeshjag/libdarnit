@@ -25,6 +25,7 @@ freely, subject to the following restrictions:
 #include "main.h"
 
 TPW tpw;
+int tpw_init_platform();
 
 int tpw_init() {
 	if (!tpw_event_init(512))

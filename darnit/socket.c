@@ -25,6 +25,9 @@ freely, subject to the following restrictions:
 
 #include "darnit.h"
 
+#ifdef _WIN32
+int d_time_get();
+#endif
 
 void *socketConnect(const char *host, int port, void (*callback)(int, void *, void *), void *data) {
 	struct sockaddr_in sin;
@@ -197,7 +200,10 @@ void socketListAdd(SOCKET_STRUCT *sock, void (*callback)(int, void *, void *), v
 void socketConnectLoop() {
 	SOCKET_LIST *list, **parent, *tmp_p;
 	void *tmp_sock;
-	int t, tmp;
+	int t;
+	#ifndef _WIN32
+	int tmp;
+	#endif
 	
 	#ifdef _WIN32
 	fd_set fd_win_use, fd_win_error;

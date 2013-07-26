@@ -655,7 +655,8 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		y2 = surface->cur_yf;
 		y = y2 - hf;
 		surface->cur_yf -= d->video.shgran * surface->font->font_height;
-	}
+	} else
+		y2 = y = x2 = 0;
 
 
 	if (cp != ' ') {		/* "Temporary" work-around that makes OpenGL|ES happier... */
