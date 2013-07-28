@@ -12,6 +12,7 @@ int main(int argc, char **argv) {
 	FILE *in, *out;
 	unsigned int i, j;
 	char c, buf[512];
+	void *n;
 
 	if (argc < 3) {
 		len = fprintf(stderr, "Usage: %s <input> <output>\n", argv[0]);
@@ -52,7 +53,7 @@ int main(int argc, char **argv) {
 		c = fgetc(in);
 		switch (c) {
 			case 'D':
-				len = (long long int) fgets(buf, 512, in);
+				n = fgets(buf, 512, in);
 				j = 0;
 				break;
 			case 'T':
@@ -61,18 +62,19 @@ int main(int argc, char **argv) {
 				break;
 			case 'E':
 				se.spr[i].tiles = j;
-				len = (long long int) fgets(buf, 512, in);
+				n = fgets(buf, 512, in);
 				j = 0;
 				i++;
 				break;
 			case '\n':
 				break;
 			default:
-				len = (long long int) fgets(buf, 512, in);
+				n = fgets(buf, 512, in);
 				break;
 		}
 	}
 
+	n = NULL;
 	len = fwrite(&se, sizeof(SPRITE_ENTRY), 1, out);
 	len++;
 	return 0;

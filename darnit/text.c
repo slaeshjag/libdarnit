@@ -25,6 +25,9 @@ freely, subject to the following restrictions:
 
 #include "darnit.h"
 
+// Hack to fix compiler warning when compiling for openpandora
+long int lrintf(float x);
+
 #ifndef DARNIT_HEADLESS
 
 int textThisManyGlyphsWillFit(TEXT_SURFACE *surface, const char *str, unsigned int width) {
