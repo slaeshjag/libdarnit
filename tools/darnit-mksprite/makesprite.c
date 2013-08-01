@@ -74,6 +74,8 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	n = buf;
+	*((char *) n) = 0;
 	n = NULL;
 	len = fwrite(&se, sizeof(SPRITE_ENTRY), 1, out);
 	len++;
