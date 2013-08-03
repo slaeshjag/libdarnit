@@ -13,7 +13,7 @@ OBJFILES	=	$(SRCFILES:.c=.o)
 
 all: $(OBJFILES)
 	@echo " [ LD ] tools/$(BIN)/$(BIN)"
-	@$(CC) $(CTOOLS) $(OBJFILES) -o $(TOPDIR)/bin/$(BIN) $(LDTOOLS)
+	@$(CC) $(CTOOLS) $(OBJFILES) -o $(TOPDIR)/bin/$(BIN) $(LDTOOLS) $(PTHREAD_L)
 	@echo 
 
 clean:
