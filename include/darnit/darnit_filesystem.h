@@ -50,6 +50,7 @@ typedef struct DARNIT_DIR_LIST {
 
 
 typedef void DARNIT_FILE;
+typedef void DARNIT_LDI_WRITER;
 
 int d_fs_mount(const char *fname);
 void d_fs_unmount(const char *fname);
@@ -80,5 +81,9 @@ int d_file_eof(DARNIT_FILE *file);
 
 DARNIT_DIR_LIST *d_file_list(const char *path, DARNIT_FILESYSTEM_TYPE type, int *entries);
 DARNIT_DIR_LIST *d_file_list_free(DARNIT_DIR_LIST *list);
+
+DARNIT_LDI_WRITER *d_file_ldi_write(DARNIT_FILE *f, int files);
+int d_file_ldi_write_file(DARNIT_LDI_WRITER *h, const char *filename, void *data, unsigned int size);
+DARNIT_LDI_WRITER *d_file_ldi_write_end(DARNIT_LDI_WRITER *h);
 
 #endif

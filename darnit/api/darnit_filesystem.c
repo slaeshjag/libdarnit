@@ -149,4 +149,20 @@ int EXPORT_THIS d_file_write_compressed(FILESYSTEM_FILE *file, void *data, int l
 }
 
 
+void EXPORT_THIS *d_file_ldi_write(FILESYSTEM_FILE *f, int files) {
+	return fsWriteLDI(f, files);
+}
+
+
+int EXPORT_THIS d_file_ldi_write_file(void *h, const char *filename, void *data, unsigned int size) {
+	return fsWriteLDIFile(h, filename, data, size);
+}
+
+
+void EXPORT_THIS *d_file_ldi_write_end(void *h) {
+	return fsWriteLDIFree(h);
+}
+	
+
+
 #endif

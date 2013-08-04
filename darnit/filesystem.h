@@ -97,6 +97,15 @@ typedef struct FILESYSTEM_IMAGE {
 
 
 typedef struct {
+	FILESYSTEM_FILE			*f;
+	unsigned int			files;
+	unsigned int			file;
+	off_t				cur_offset;
+	off_t				start_offset;
+} FILESYSTEM_IMAGE_WRITER;
+
+
+typedef struct {
 	char				*data_dir;
 	char				*write_dir;
 	struct FILESYSTEM_IMAGE		*mount;
@@ -139,6 +148,10 @@ FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
 
 DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries);
 DIR_LIST *fsDirectoryListFree(DIR_LIST *list);
+
+FILESYSTEM_IMAGE_WRITER *fsWriteLDI(FILESYSTEM_FILE *f, int files);
+int fsWriteLDIFile(FILESYSTEM_IMAGE_WRITER *w, const char *filename, void *data, unsigned int data_size);
+void *fsWriteLDIFree(FILESYSTEM_IMAGE_WRITER *w);
 
 /* Internal stuff. Etc. */
 off_t fsContainerFILELength(FILE *fp, const char *name);

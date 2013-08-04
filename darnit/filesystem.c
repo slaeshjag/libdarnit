@@ -859,3 +859,59 @@ FILESYSTEM_FILE *fsGetRealFile(const char *path_src) {
 
 	return NULL;
 }
+
+
+FILESYSTEM_IMAGE_WRITER *fsWriteLDI(FILESYSTEM_FILE *f, int files) {
+	FILESYSTEM_IMAGE_WRITER *w;
+	FILESYSTEM_IMG_HEADER h;
+
+	w = malloc(sizeof(*w));
+	w->f = f;
+	w->file = 0;
+	w->files = files;
+	w->start_offset = fsFileTell(f);
+	
+	h.magic = DARNIT_FS_IMG_MAGIC;
+	h.version = DARNIT_FS_IMG_VERSION;
+	h.files = files;
+
+	fsFileWriteInts(&h, 3, f);
+	w->cur_offset = w->start_offset + w->files * sizeof(FILESYSTEM_IMAGE_FILE) + sizeof(FILESYSTEM_IMG_HEADER);
+
+	return w;
+}
+
+
+int fsWriteLDIFile(FILESYSTEM_IMAGE_WRITER *w, const char *filename, void *data, unsigned int data_size) {
+	FILESYSTEM_IMAGE_FILE fe;
+
+	if (!w)
+		return 0;
+	if (!filename)
+		return 0;
+	if (!data)
+		return 0;
+
+	strncpy(fe.name, filename, 127);
+	fe.name[127] = 0;
+	fe.pos = w->cur_offset - w->start_offset;
+	fe.length = data_size;
+	fe.comp = 0;
+
+	fsFileSeek(w->f, SEEK_SET, w->start_offset);
+	fsFileSeek(w->f, SEEK_CUR, w->file * sizeof(FILESYSTEM_IMAGE_FILE) + sizeof(FILESYSTEM_IMG_HEADER));
+	fsFileWrite(fe.name, 128, w->f);
+	fsFileWriteInts(&fe.pos, 3, w->f);
+	fsFileSeek(w->f, SEEK_SET, w->cur_offset);
+	fsFileWrite(data, data_size, w->f);
+	w->cur_offset = fsFileTell(w->f);
+	
+	return 1;
+}
+
+
+void *fsWriteLDIFree(FILESYSTEM_IMAGE_WRITER *w) {
+	free(w);
+	
+	return NULL;
+}
