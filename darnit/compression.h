@@ -1,6 +1,6 @@
 /*
-Copyright (c) 2011-2013 Steven Arnow
-'darnit_util.h' - This file is part of libdarnit
+Copyright (c) 2013 Steven Arnow
+'compression.h' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -23,26 +23,11 @@ freely, subject to the following restrictions:
 */
 
 
-#ifndef __DARNIT_UTIL_H__
-#define	__DARNIT_UTIL_H__
+#ifndef __COMPRESSION_H__
+#define	__COMPRESSION_H__
 
-typedef struct {
-	unsigned int		w;
-	unsigned int		h;
-	unsigned int		*data;
-} DARNIT_IMAGE_DATA;
-
-
-unsigned int d_util_htonl(unsigned int arg);
-unsigned int d_util_ntohl(unsigned int arg);
-char *d_util_path_translate(const char *path);
-int d_util_string_to_int_array(const char *str, const char *delimiter, int *dest, int max_tokens);
-void d_util_endian_convert(unsigned int *block, int elements);
-int d_util_sin(int angle);
-const char *d_str_null(const char *str);
-DARNIT_IMAGE_DATA d_img_load_raw(const char *fname);
-int d_util_compress(void *data_in, unsigned int data_len, void *data_out);
-int d_util_decompress(void *data_in, unsigned int data_len, void *data_out);
+int compressionCompress(void *buffer, unsigned int data_len, void **dest);
+int compressionDecompress(void *buffer, unsigned int data_len, void **outbuf);
 
 
 #endif

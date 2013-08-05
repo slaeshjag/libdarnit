@@ -112,6 +112,7 @@ typedef struct {
 #include "particle.h"
 #include "isometric.h"
 #include "collision.h"
+#include "compression.h"
 
 int darnitTimeLastFrameTook();
 

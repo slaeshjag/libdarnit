@@ -70,3 +70,13 @@ const char EXPORT_THIS *d_str_null(const char *str) {
 IMGLOAD_DATA EXPORT_THIS d_img_load_raw(const char *fname) {
 	return imgloadLoad(fname);
 }
+
+
+int EXPORT_THIS d_util_compress(void *buffer, unsigned int data_len, void **dest) {
+	return compressionCompress(buffer, data_len, dest);
+}
+
+
+int EXPORT_THIS d_util_decompress(void *buffer, unsigned int data_len, void **dest) {
+	return compressionDecompress(buffer, data_len, dest);
+}
