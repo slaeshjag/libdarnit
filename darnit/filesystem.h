@@ -144,6 +144,7 @@ int fsReadCompressed(FILESYSTEM_FILE *f, void *data, int len);
 off_t fsFileTell(FILESYSTEM_FILE *file);
 int fsFileEOF(FILESYSTEM_FILE *file);
 int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode);
+void fsFileSetSize(FILESYSTEM_FILE *f, off_t size);
 FILESYSTEM_FILE *fsFileClose(FILESYSTEM_FILE *file);
 
 DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries);

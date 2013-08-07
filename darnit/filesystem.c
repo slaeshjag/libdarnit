@@ -915,3 +915,20 @@ void *fsWriteLDIFree(FILESYSTEM_IMAGE_WRITER *w) {
 	
 	return NULL;
 }
+
+
+void fsFileSetSize(FILESYSTEM_FILE *f, off_t size) {
+	if (!f)
+		return;
+	if (!strstr(f->mode, "w"))
+		return;
+	fsFileSeek(f, size, SEEK_SET);
+	
+	#ifdef _WIN32
+	SetEndOfFile(f->fp);
+	#else
+	ftruncate(fileno(f->fp), size);
+	#endif
+
+	return;
+}

@@ -139,6 +139,11 @@ int EXPORT_THIS d_file_eof(FILESYSTEM_FILE *file) {
 }
 
 
+void EXPORT_THIS d_file_size_set(FILESYSTEM_FILE *file, off_t size) {
+	return fsFileSetSize(file, size);
+}
+
+
 int EXPORT_THIS d_file_read_compressed(FILESYSTEM_FILE *file, void *data, int len) {
 	return fsReadCompressed(file, data, len);
 }
