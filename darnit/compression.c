@@ -53,6 +53,7 @@ int compressionDecompress(void *buffer, unsigned int data_len, void **outbuf) {
 
 	dbuf = malloc(outsize);
 	BZ2_bzBuffToBuffDecompress(dbuf, &outsize, buffer, data_len, 0, 0);
+	*outbuf = dbuf;
 	return outsize;
 }
 
