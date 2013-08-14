@@ -52,7 +52,7 @@ int compressionDecompress(void *buffer, unsigned int data_len, void **outbuf) {
 	utilBlockToHostEndian(buffer, 1);
 
 	dbuf = malloc(outsize);
-	BZ2_bzBuffToBuffDecompress(dbuf, &outsize, buffer + 4, data_len - 4, 0, 0);
+	BZ2_bzBuffToBuffDecompress(dbuf, &outsize, ((char *) buffer) + 4, data_len - 4, 0, 0);
 	*outbuf = dbuf;
 	return outsize;
 }
