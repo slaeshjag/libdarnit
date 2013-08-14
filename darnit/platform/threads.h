@@ -32,5 +32,8 @@ TPW_MUTEX *tpw_mutex_create();
 void tpw_mutex_lock(TPW_MUTEX *mutex);
 void tpw_mutex_unlock(TPW_MUTEX *mutex);
 
+TPW_THREAD tpw_thread_new(void *func, void *func_arg);
+void tpw_thread_exit(int exit_code);
+
 
 #endif

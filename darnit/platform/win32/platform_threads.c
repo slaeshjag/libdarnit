@@ -41,3 +41,47 @@ void tpw_mutex_unlock(TPW_MUTEX *mutex) {
 
 	return;
 }
+
+
+TPW_THREAD tpw_thread_new(void *func, void *func_arg) {
+	return CreateThread(NULL, 0, func, func_arg, 0, NULL);
+}
+
+
+void tpw_thread_exit(int exit_code) {
+	return ExitThread(exit_code);
+}
+
+
+void tpw_thread_kill(TPW_THREAD t, int exit_code) {
+	return TerminateThread(t, exit_code);
+}
+
+
+void tpw_kill_self(int exit_code) {
+	return ExitProcess(exit_code);
+}
+
+
+TPW_SEMAPHORE tpw_semaphore_new(int initial_count, int max_count) {
+	return CreateSemaphore(NULL, initial_count, max_count, NULL);
+}
+
+
+void tpw_semaphore_wait(TPW_SEMAPHORE s) {
+	WaitForSingleObject(s, INFINITE);
+	return;
+}
+
+
+void tpw_semaphore_add(TPW_SEMAPHORE s, int add) {
+	ReleaseSemaphore(s, add, NULL);
+}
+
+
+void tpw_semaphore_delete(TPW_SEMAPHORE s) {
+	CloseHandle(s);
+
+	return;
+}
+	

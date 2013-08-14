@@ -28,5 +28,7 @@ freely, subject to the following restrictions:
 #include <windows.h>
 
 typedef void TPW_MUTEX;
+typedef HANDLE TPW_THREAD;
+
 
 #endif
