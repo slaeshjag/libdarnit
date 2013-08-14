@@ -877,6 +877,7 @@ FILESYSTEM_IMAGE_WRITER *fsWriteLDI(FILESYSTEM_FILE *f, int files) {
 
 	fsFileWriteInts(&h, 3, f);
 	w->cur_offset = w->start_offset + w->files * sizeof(FILESYSTEM_IMAGE_FILE) + sizeof(FILESYSTEM_IMG_HEADER);
+	w->start_offset = w->cur_offset;
 
 	return w;
 }
@@ -898,7 +899,7 @@ int fsWriteLDIFile(FILESYSTEM_IMAGE_WRITER *w, const char *filename, void *data,
 	fe.length = data_size;
 	fe.comp = 0;
 
-	fsFileSeek(w->f, w->start_offset, SEEK_SET);
+	fsFileSeek(w->f, w->cur_offset - w->start_offset, SEEK_SET);
 	fsFileSeek(w->f, w->file * sizeof(FILESYSTEM_IMAGE_FILE) + sizeof(FILESYSTEM_IMG_HEADER), SEEK_CUR);
 	fsFileWrite(fe.name, 128, w->f);
 	fsFileWriteInts(&fe.pos, 3, w->f);
