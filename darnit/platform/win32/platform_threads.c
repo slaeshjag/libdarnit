@@ -63,24 +63,24 @@ void tpw_kill_self(int exit_code) {
 }
 
 
-TPW_SEMAPHORE tpw_semaphore_new(int initial_count, int max_count) {
-	return CreateSemaphore(NULL, initial_count, max_count, NULL);
+TPW_SEMAPHORE *tpw_semaphore_new(int initial_count) {
+	return (TPW_SEMAPHORE *) CreateSemaphore(NULL, initial_count, 8192, NULL);
 }
 
 
-void tpw_semaphore_wait(TPW_SEMAPHORE s) {
-	WaitForSingleObject(s, INFINITE);
+void tpw_semaphore_wait(TPW_SEMAPHORE *s) {
+	WaitForSingleObject((TPW_SEMAPHORE) s, INFINITE);
 	return;
 }
 
 
-void tpw_semaphore_add(TPW_SEMAPHORE s, int add) {
-	ReleaseSemaphore(s, add, NULL);
+void tpw_semaphore_add(TPW_SEMAPHORE *s, int add) {
+	ReleaseSemaphore((TPW_SEMAPHORE *) s, add, NULL);
 }
 
 
-void tpw_semaphore_delete(TPW_SEMAPHORE s) {
-	CloseHandle(s);
+void tpw_semaphore_delete(TPW_SEMAPHORE *s) {
+	CloseHandle((TPW_SEMAPHORE *) s);
 
 	return;
 }

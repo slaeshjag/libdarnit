@@ -41,3 +41,47 @@ void tpw_mutex_unlock(TPW_MUTEX *mutex) {
 
 	return;
 }
+
+
+TPW_THREAD *tpw_thread_new(void *func, void *data) {
+	return SDL_CreateThread(func, data);
+}
+
+
+void tpw_thread_exit(int exit_code) {
+//	kill(
+	
+	return;
+}
+
+
+void tpw_thread_kill(TPW_THREAD *t) {
+	return SDL_KillThread(t);
+}
+
+
+void tpw_kill_self(int exit_code) {
+	exit(exit_code);
+}
+
+TPW_SEMAPHORE *tpw_semaphore_new(int initial_count) {
+	return SDL_CreateSemaphore(initial_count);
+}
+
+
+void tpw_semaphore_wait(TPW_SEMAPHORE *s) {
+	SDL_SemWait(s);
+	return;
+}
+
+
+void tpw_semaphore_add(TPW_SEMAPHORE *s, int add) {
+	for (; add; add--, SDL_SemPost(s));
+	return;
+}
+
+
+void tpw_semaphore_delete(TPW_SEMAPHORE *s) {
+	return SDL_DestroySemaphore(s);
+}
+

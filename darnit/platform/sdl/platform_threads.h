@@ -29,6 +29,8 @@ freely, subject to the following restrictions:
 #include <SDL/SDL_thread.h>
 
 typedef SDL_mutex TPW_MUTEX;
-#define TPW_THREAD SDL_Thread *
+typedef SDL_sem TPW_SEMAPHORE;
+typedef SDL_Thread TPW_THREAD;
+
 
 #endif

@@ -32,8 +32,15 @@ TPW_MUTEX *tpw_mutex_create();
 void tpw_mutex_lock(TPW_MUTEX *mutex);
 void tpw_mutex_unlock(TPW_MUTEX *mutex);
 
-TPW_THREAD tpw_thread_new(void *func, void *func_arg);
+TPW_THREAD *tpw_thread_new(void *func, void *func_arg);
 void tpw_thread_exit(int exit_code);
+void tpw_thread_kill(TPW_THREAD *t);
+void tpw_kill_self(int exit_code);
+TPW_SEMAPHORE *tpw_semaphore_new(int initial_count);
+void tpw_semaphore_wait(TPW_SEMAPHORE *s);
+void tpw_semaphore_add(TPW_SEMAPHORE *s, int add);
+void tpw_semaphore_delete(TPW_SEMAPHORE *s);
+
 
 
 #endif
