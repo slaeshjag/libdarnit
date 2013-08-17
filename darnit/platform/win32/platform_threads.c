@@ -43,8 +43,8 @@ void tpw_mutex_unlock(TPW_MUTEX *mutex) {
 }
 
 
-TPW_THREAD tpw_thread_new(void *func, void *func_arg) {
-	return CreateThread(NULL, 0, func, func_arg, 0, NULL);
+TPW_THREAD *tpw_thread_new(void *func, void *func_arg) {
+	return (TPW_THREAD *) CreateThread(NULL, 0, func, func_arg, 0, NULL);
 }
 
 
@@ -53,8 +53,9 @@ void tpw_thread_exit(int exit_code) {
 }
 
 
-void tpw_thread_kill(TPW_THREAD t, int exit_code) {
-	return TerminateThread(t, exit_code);
+void tpw_thread_kill(TPW_THREAD *t) {
+	TerminateThread((HANDLE) t, -127);
+	return;
 }
 
 
@@ -75,12 +76,12 @@ void tpw_semaphore_wait(TPW_SEMAPHORE *s) {
 
 
 void tpw_semaphore_add(TPW_SEMAPHORE *s, int add) {
-	ReleaseSemaphore((TPW_SEMAPHORE *) s, add, NULL);
+	ReleaseSemaphore((TPW_SEMAPHORE) s, add, NULL);
 }
 
 
 void tpw_semaphore_delete(TPW_SEMAPHORE *s) {
-	CloseHandle((TPW_SEMAPHORE *) s);
+	CloseHandle((TPW_SEMAPHORE) s);
 
 	return;
 }

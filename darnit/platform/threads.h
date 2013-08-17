@@ -27,7 +27,6 @@ freely, subject to the following restrictions:
 
 #include "platform_threads.h"
 
-
 TPW_MUTEX *tpw_mutex_create();
 void tpw_mutex_lock(TPW_MUTEX *mutex);
 void tpw_mutex_unlock(TPW_MUTEX *mutex);

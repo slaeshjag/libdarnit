@@ -29,6 +29,7 @@ freely, subject to the following restrictions:
 
 typedef void TPW_MUTEX;
 typedef HANDLE TPW_THREAD;
+typedef HANDLE TPW_SEMAPHORE;
 
 
 #endif
