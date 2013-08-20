@@ -899,13 +899,14 @@ int fsWriteLDIFile(FILESYSTEM_IMAGE_WRITER *w, const char *filename, void *data,
 	fe.length = data_size;
 	fe.comp = 0;
 
-	fsFileSeek(w->f, w->cur_offset - w->start_offset, SEEK_SET);
-	fsFileSeek(w->f, w->file * sizeof(FILESYSTEM_IMAGE_FILE) + sizeof(FILESYSTEM_IMG_HEADER), SEEK_CUR);
+	fsFileSeek(w->f, w->start_offset - w->files * sizeof(FILESYSTEM_IMAGE_FILE), SEEK_SET);
+	fsFileSeek(w->f, w->file * sizeof(FILESYSTEM_IMAGE_FILE), SEEK_CUR);
 	fsFileWrite(fe.name, 128, w->f);
 	fsFileWriteInts(&fe.pos, 3, w->f);
 	fsFileSeek(w->f, w->cur_offset, SEEK_SET);
 	fsFileWrite(data, data_size, w->f);
 	w->cur_offset = fsFileTell(w->f);
+	w->file++;
 	
 	return 1;
 }
