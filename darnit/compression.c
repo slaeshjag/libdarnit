@@ -31,6 +31,7 @@ int compressionCompress(void *buffer, unsigned int data_len, void **dest) {
 
 	dest_len = data_len + (data_len / 100) + 604;
 	dbuf = malloc(dest_len);
+	memset(dbuf, 0, dest_len);
 
 	if (BZ2_bzBuffToBuffCompress(dbuf + 4, &dest_len, buffer, data_len, 9, 0, 0) != BZ_OK)
 		return -1;
@@ -39,7 +40,7 @@ int compressionCompress(void *buffer, unsigned int data_len, void **dest) {
 	utilBlockToHostEndian(dbuf, 1);
 	*dest = dbuf;
 
-	return dest_len;
+	return dest_len + 4;
 }
 
 
@@ -52,7 +53,10 @@ int compressionDecompress(void *buffer, unsigned int data_len, void **outbuf) {
 	utilBlockToHostEndian(buffer, 1);
 
 	dbuf = malloc(outsize);
-	BZ2_bzBuffToBuffDecompress(dbuf, &outsize, ((char *) buffer) + 4, data_len - 4, 0, 0);
+	if (BZ2_bzBuffToBuffDecompress(dbuf, &outsize, ((char *) buffer) + 4, data_len - 4, 0, 0) != BZ_OK) {
+		fprintf(stderr, "Decompress failed\n");
+		return -1;
+	}
 	*outbuf = dbuf;
 	return outsize;
 }
