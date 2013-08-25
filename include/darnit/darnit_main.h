@@ -79,4 +79,8 @@ int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const 
 
 /* You need to call d_init_partial before calling this one */
 DARNIT_VIDEOMODE **d_videomode_get();
+
+
+/* Returns a platform string like linux-amd64 */
+const char *d_platform_string();
 #endif

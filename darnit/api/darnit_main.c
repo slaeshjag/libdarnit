@@ -208,3 +208,8 @@ void EXPORT_THIS **d_videomode_get() {
 		return NULL;
 	return nnn;
 }
+
+
+const char EXPORT_THIS *d_platform_string() {
+	return PLATFORM_STRING;
+}
