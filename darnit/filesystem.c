@@ -913,6 +913,12 @@ int fsWriteLDIFile(FILESYSTEM_IMAGE_WRITER *w, const char *filename, void *data,
 
 
 void *fsWriteLDIFree(FILESYSTEM_IMAGE_WRITER *w) {
+	int m;
+
+	fsFileSeek(w->f, w->cur_offset, SEEK_SET);
+	m = DARNIT_FS_IMG_MAGIC;
+	fsFileWriteInts(&w->cur_offset, 1, w->f);
+	fsFileWriteInts(&m, 1, w->f);
 	free(w);
 	
 	return NULL;
