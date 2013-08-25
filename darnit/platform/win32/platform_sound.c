@@ -84,7 +84,7 @@ int tpw_sound_open(TPW_SOUND_SETTINGS settings) {
 		sound.header[i].lpData=(LPSTR)malloc(buflen);
 	}
 	
-	if((res=waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD) callback, (DWORD) callback, CALLBACK_FUNCTION))==MMSYSERR_NOERROR) {
+	if((res=waveOutOpen(&sound.handle, WAVE_MAPPER, &sound.format, (DWORD_PTR) callback, (DWORD_PTR) callback, CALLBACK_FUNCTION))==MMSYSERR_NOERROR) {
 //		fprintf(stderr, "arne\n");
 		for(i=0; i<BUFFERS; i++)
 			waveOutPrepareHeader(sound.handle, &(sound.header[i]), sizeof(WAVEHDR));

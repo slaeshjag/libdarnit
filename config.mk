@@ -4,7 +4,7 @@
 LIB		=	$(TOPDIR)/bin/libdarnit.so
 
 DBGFLAGS	=	-O0 -g -D__DEBUG__
-VERSION		=	v.0.2b2
+VERSION		=	v.0.2b3
 #DBGFLAGS	=	-O3 -g
 #Flags specific for tools
 LDTOOLS		:=	$(LDFLAGS)
@@ -21,8 +21,16 @@ INSTARG		=
 RM		=	rm -Rf
 MKDIR		=	mkdir -p
 
+
+ifeq ($(strip $(SBOX_UNAME_MACHINE)), x86_64)
+	LINUX_PLATFORM = amd64
+else
+	LINUX_PLATFORM = i386
+endif
+
 ifeq ($(strip $(OS)), Windows_NT)
 	#Windows specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"win32-i386\"
 	LIB	=	$(TOPDIR)/bin/libdarnit.dll
 	PREFIX	=	/mingw
 	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lwinmm -lgdi32 -ldl
@@ -31,8 +39,9 @@ ifeq ($(strip $(OS)), Windows_NT)
 else 
 ifeq ($(BUILDFOR), WIN32)
 	#Windows specifics, for cross compiling to windows
+	CFLAGS	+=	-DPLATFORM_STRING=\"win32-i386\"
 	LIB	=	$(TOPDIR)/bin/libdarnit.dll
-	PREFIX	=	/mingw
+	PREFIX	=	/usr/i586-mingw32msvc
 	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lstdc++ -lgdi32 -lwinmm
 	LDTOOLS	+=	-lws2_32
 	CC	=	i586-mingw32msvc-gcc
@@ -40,8 +49,21 @@ ifeq ($(BUILDFOR), WIN32)
 	AR	=	i586-mingw32msvc-ar
 	PLATFORM=	win32
 else
+ifeq ($(BUILDFOR), WIN64)
+	#Windows64 specifics, for cross compiling to windows
+	CFLAGS	+=	-DPLATFORM_STRING=\"win32-amd64\"
+	LIB	=	$(TOPDIR)/bin/libdarnit.dll
+	PREFIX	=	/usr/x86_64-w64-mingw32
+	LDFLAGS	+=	-lopengl32 -lws2_32 -lshlwapi -lstdc++ -lgdi32 -lwinmm
+	LDTOOLS	+=	-lws2_32
+	CC	=	x86_64-w64-mingw32-gcc
+	STRIP	=	x86_64-w64-mingw32-strip
+	AR	=	x86_64-w64-mingw32-ar
+	PLATFORM=	win32
+else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7\"
 	DATA_PATH=	\"/opt/usr/games\"
 	CFLAGS	+=	-fvisibility=hidden -fPIC -DMAEMO -DHAVE_GLES `sdl-config --cflags`
 	LDFLAGS	+=	`sdl-config --libs` -lSDL_gles -lEGL -lGLES_CM -lX11 -ldl
@@ -51,6 +73,7 @@ ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 else
 ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	#Pandora specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7\"
 	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
@@ -60,6 +83,7 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"gcwzero-mips32\"
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -ldl
 	PTHREAD_L +=	-lpthread
@@ -67,11 +91,14 @@ ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	PLATFORM=	sdl
 else
 	#Linux defaults
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-$(LINUX_PLATFORM)\"
 	DATA_PATH=	\"/usr/share/games\"
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lSDL -lGL -ldl
 	PTHREAD_L +=	-lpthread
 	PLATFORM=	sdl
+	STRIP	=	strip
+endif
 endif
 endif
 endif

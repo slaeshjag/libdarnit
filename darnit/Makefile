@@ -23,7 +23,7 @@ all: $(OBJFILES) $(DEPENDS)
 	@echo " [ CD ] darnit/platform/"
 	+@make -C platform/
 	@echo " [ LD ] $(LIB)"
-	@$(CC) $(CFLAGS) $(OBJFILES) $(DEPFILES) $(APIFILES) -o $(LIB) $(LDFLAGS)
+	@$(CC) $(CFLAGS) $(OBJFILES) $(APIFILES) -o $(LIB) $(DEPFILES) $(LDFLAGS)
 	@echo " [ AR ] $(OUTLIB)"
 	@$(AR) -cr $(OUTLIB) ../deps/*.o platform/*.o platform/*$(PLATFORM)/*.o api/*.o *.o
 	@echo "Done."

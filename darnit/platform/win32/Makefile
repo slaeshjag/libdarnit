@@ -20,5 +20,5 @@ clean:
 
 %.o: %.c %.h
 	@echo " [ CC ] darnit/platform/$(PLATFORM)/$<"
-	@$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 	
