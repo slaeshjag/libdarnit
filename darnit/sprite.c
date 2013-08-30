@@ -142,12 +142,12 @@ void spriteSetFrameEntry(SPRITE_ENTRY *sprite, int dir, int frame, int tile, int
 	if (sprite == NULL)
 		return;
 
-	if (tile >= 8 || time < 0 || tile < 0 || dir < 0 || dir >= 32)
+	if (frame >= 8 || time < 0 || frame < 0 || dir < 0 || dir >= 32)
 		return;
 	if (tile >= sprite->spr[dir].tiles)
-		sprite->spr[dir].tiles = tile + 1;
-	sprite->spr[dir].tile[tile].tile = tile;
-	sprite->spr[dir].tile[tile].time = time;
+		sprite->spr[dir].tiles = frame + 1;
+	sprite->spr[dir].tile[frame].tile = tile;
+	sprite->spr[dir].tile[frame].time = time;
 
 	return;
 }
