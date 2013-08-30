@@ -28,9 +28,15 @@ freely, subject to the following restrictions:
 
 typedef void DARNIT_BBOX;
 
+typedef enum {
+	DARNIT_BBOX_SORT_X,
+	DARNIT_BBOX_SORT_Y,
+} DARNIT_BBOX_SORT;
+
 
 DARNIT_BBOX *d_bbox_new(unsigned int size);
 DARNIT_BBOX *d_bbox_free(DARNIT_BBOX *bbox);
+void d_bbox_sortmode(DARNIT_BBOX *bbox, DARNIT_BBOX_SORT mode);
 int d_bbox_test(DARNIT_BBOX *bbox, int x, int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen);
 int d_bbox_add(DARNIT_BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 void d_bbox_delete(DARNIT_BBOX *bbox, int key);

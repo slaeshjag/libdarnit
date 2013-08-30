@@ -26,6 +26,18 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 
+void EXPORT_THIS d_bbox_sortmode(BBOX *bbox, int sortmode) {
+	if (!bbox)
+		return;
+	if (sortmode == SORT_MODE_X)
+		bbox->sortmode = SORT_MODE_X;
+	else
+		bbox->sortmode = SORT_MODE_Y;
+	bbox->sort = 1;
+	return;
+}
+
+
 void EXPORT_THIS *d_bbox_new(unsigned int size) {
 	return bboxNew(size);
 }
