@@ -143,7 +143,7 @@ void bboxClear(BBOX *bbox) {
 }
 
 
-int bboxCollBoxTest(BBOX *bbox, int x, int y, unsigned int w, unsigned int h, unsigned int *list, unsigned int listlen) {
+int bboxCollBoxTest(BBOX *bbox, int x, int y, int w, int h, unsigned int *list, unsigned int listlen) {
 	if (bbox == NULL) return 0;
 	int i, test, no;
 
@@ -166,23 +166,23 @@ int bboxCollBoxTest(BBOX *bbox, int x, int y, unsigned int w, unsigned int h, un
 			test = 0;
 	} else {
 		for (; i > TARGET_FILTER; i>>=1) {
-			if (bbox->bbox[test+i].yb < y)
+			if (bbox->bbox[test+i].yb > y)
 				test += i;
-			else if (bbox->bbox[test].yb < y);
+			else if (bbox->bbox[test].yb > y);
 			else
 				test -= i;
 		}
 
-		if (bbox->bbox[test].yb > y)
+		if (bbox->bbox[test].yb > y || bbox->bbox[test].key == -1)
 			test = 0;
 	}
 	
 	no = 0;
 
 	for (i = test; i < bbox->bboxes; i++) {
-		if (bbox->sort == SORT_MODE_X && bbox->bbox[i].x > x+w)
+		if (bbox->sortmode == SORT_MODE_X && bbox->bbox[i].x > x+w)
 			break;
-		if (bbox->sort == SORT_MODE_Y && bbox->bbox[i].y > y+h)
+		if (bbox->sortmode == SORT_MODE_Y && bbox->bbox[i].y > y+h)
 			break;
 		if (bbox->bbox[i].xb <= x || bbox->bbox[i].x >= x+w)
 			continue;
