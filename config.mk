@@ -101,7 +101,11 @@ ifeq ($(BUILDFOR), RPI)
 	PLATFORM=	sdl
 else
 	#Linux defaults
-	CFLAGS	+=	-DPLATFORM_STRING=\"linux-$(LINUX_PLATFORM)\"
+	UNAME	=	`uname -m`
+ifneq (,$(findstring x86_64, $(UNAME)))
+	UNAME	=	i386
+endif
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-$(UNAME)\"
 	DATA_PATH=	\"/usr/share/games\"
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lSDL -lGL -ldl
