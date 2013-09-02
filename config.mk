@@ -90,6 +90,16 @@ ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	INSTARG	+=	$(STRIP)
 	PLATFORM=	sdl
 else
+ifeq ($(BUILDFOR), RPI)
+	#RaspberryPi specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv6\"
+	DATA_PATH=	\"/usr/local/games\"
+	PREFIX	=	/usr/local/
+	CFLAGS	+=	-fvisibility=hidden -fPIC -DHAVE_GLES -DRASPBERRYPI -I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux/
+	LDFLAGS	+=	-L/opt/vc/lib -lGLESv1_CM -lEGL -lX11 -lSDL -ldl
+	PTHREAD_L +=	-lpthread
+	PLATFORM=	sdl
+else
 	#Linux defaults
 	CFLAGS	+=	-DPLATFORM_STRING=\"linux-$(LINUX_PLATFORM)\"
 	DATA_PATH=	\"/usr/share/games\"
@@ -98,6 +108,7 @@ else
 	PTHREAD_L +=	-lpthread
 	PLATFORM=	sdl
 	STRIP	=	strip
+endif
 endif
 endif
 endif

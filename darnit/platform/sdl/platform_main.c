@@ -67,11 +67,18 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		fprintf(stderr, "tpw_window_create(): Unable to open the default display\n");
 		return 0;
 	}
-
+	#ifndef RASPBERRYPI
+	bcm_host_init();
 	if (!(tpw.eglDisplay = eglGetDisplay((EGLNativeDisplayType) tpw.XDisplay))) {
+		fprintf(stderr, "tpw_window_create(): Unable to get a display handle from EGL!!\n");
+		return 0;
+	}
+	#else
+	if (!(tpw.eglDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY))) { 
 		fprintf(stderr, "tpw_window_create(): Unable to get a display handle from EGL\n");
 		return 0;
 	}
+	#endif
 
 	if (!eglInitialize(tpw.eglDisplay, NULL, NULL)) {
 		fprintf(stderr, "tpw_window_create(): Unable to initialize EGL\n");
@@ -94,12 +101,46 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		return 0;
 	}
 
+	#ifndef RASPBERRYPI
 	if ((tpw.eglSurface = eglCreateWindowSurface(tpw.eglDisplay, tpw.eglConfig, (EGLNativeWindowType) sysinfo.info.x11.window, NULL)) == EGL_NO_SURFACE) {
 		fprintf(stderr, "tpw_window_create(): Unable to create an EGL surface\n");
 		return 0;
 	}
+	
+	#else
+	/* RaspberryPi's videosystem är helt jävla efterblivet. Den som designade det här och tyckte att det var en bra idé kan gå och knulla sig själv med en motorsåg... Det finns inte ord som kan beskriva hur mycket jag hatar härket. */
+	XWindowAttributes xwa;
+	VC_RECT_T dst_rect, src_rect;
+	DISPMANX_UPDATE_HANDLE_T dispman_update;
+	DISPMANX_DISPLAY_HANDLE_T dispman_display;
 
+	XGetWindowAttributes(tpw.XDisplay, sysinfo.info.x11.window, &xwa);
+	src_rect.x = 0;
+	src_rect.y = 0;
+	src_rect.width = window_w << 16;
+	src_rect.height = window_h << 16;
+	
+	dst_rect.x = 0;
+	dst_rect.y = 0;
+	dst_rect.width = window_w;
+	dst_rect.height = window_h;
+
+
+	dispman_display = vc_dispmanx_display_open(0);
+	dispman_update = vc_dispmanx_update_start(0);
+	tpw.nativewindow.element = vc_dispmanx_element_add(dispman_update, dispman_display, 0, &dst_rect, 0, &src_rect, DISPMANX_PROTECTION_NONE, 0, 0, 0);
+	tpw.nativewindow.width = window_w;
+	tpw.nativewindow.height = window_h;
+	vc_dispmanx_update_submit_sync(dispman_update);
+
+	if ((tpw.eglSurface = eglCreateWindowSurface(tpw.eglDisplay, tpw.eglConfig, (EGLNativeWindowType) &tpw.nativewindow, NULL)) == EGL_NO_SURFACE) {
+		fprintf(stderr, "tpw_window_create(): Unable to create an EGL surface %X\n", eglGetError());
+		return 0;
+	}
+	#endif
+	
 	eglBindAPI(EGL_OPENGL_ES_API);
+
 	if ((tpw.eglContext = eglCreateContext(tpw.eglDisplay, tpw.eglConfig, NULL, NULL)) == EGL_NO_CONTEXT) {
 		fprintf(stderr, "tpw_window_create(): Unable to create an EGL context\n");
 		return 0;

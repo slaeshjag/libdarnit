@@ -31,9 +31,12 @@ freely, subject to the following restrictions:
 #include <X11/Xutil.h>
 #ifndef RASPBERRYPI
 	#include <GLES/egl.h>
+#else
+	#include <bcm_host.h>
 #endif
+#include <GLES/gl.h>
 #include <EGL/egl.h>
-#include <GLES/glext.h>
+//#include <GLES/glext.h>
 #include <SDL/SDL_syswm.h>
 #else
 #include <SDL/SDL_opengl.h>
@@ -44,11 +47,16 @@ freely, subject to the following restrictions:
 #ifdef TPW_INTERNAL
 #ifdef HAVE_GLES
 static const EGLint egl_config_attrib[] = {
-	#ifndef MAEMO
+	#ifdef PANDORA
 	EGL_RED_SIZE,		5,
 	EGL_GREEN_SIZE,		6,
 	EGL_BLUE_SIZE,		5,
 	EGL_DEPTH_SIZE,		16,
+	#elif defined(RASPBERRYPI)
+	EGL_RED_SIZE, 		8,
+	EGL_GREEN_SIZE,		8,
+	EGL_BLUE_SIZE,		8,
+	EGL_ALPHA_SIZE,		8,
 	#endif
 	EGL_SURFACE_TYPE,	EGL_WINDOW_BIT,
 	EGL_RENDERABLE_TYPE,	EGL_OPENGL_ES_BIT,
@@ -68,6 +76,9 @@ typedef struct {
 	EGLContext		eglContext;
 	EGLSurface		eglSurface;
 	EGLDisplay		eglDisplay;
+	#ifdef RASPBERRYPI
+	EGL_DISPMANX_WINDOW_T	nativewindow;
+	#endif
 	#endif
 } TPW;
 
