@@ -22,12 +22,6 @@ RM		=	rm -Rf
 MKDIR		=	mkdir -p
 
 
-ifeq ($(strip $(SBOX_UNAME_MACHINE)), x86_64)
-	LINUX_PLATFORM = amd64
-else
-	LINUX_PLATFORM = i386
-endif
-
 ifeq ($(strip $(OS)), Windows_NT)
 	#Windows specifics
 	CFLAGS	+=	-DPLATFORM_STRING=\"win32-i386\"
