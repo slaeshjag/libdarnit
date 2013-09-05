@@ -1,4 +1,4 @@
-LDFLAGS += -L../bin -ldarnit
+LDFLAGS += -L../../bin -ldarnit
 CFLAGS += -g -Wall 
 
 default:

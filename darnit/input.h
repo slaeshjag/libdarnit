@@ -104,6 +104,38 @@ typedef struct {
 } INPUT_STRUCT;
 
 
+typedef struct {
+	unsigned int	left		: 1;
+	unsigned int	right		: 1;
+	unsigned int	up		: 1;
+	unsigned int	down		: 1;
+	unsigned int	x		: 1;
+	unsigned int	y		: 1;
+	unsigned int	a		: 1;
+	unsigned int	b		: 1;
+	unsigned int	start		: 1;
+	unsigned int	select		: 1;
+	unsigned int	l		: 1;
+	unsigned int	r		: 1;
+	unsigned int	lmb		: 1;
+	unsigned int	rmb		: 1;
+	unsigned int	padding		: 2;
+
+	/* Modifier keys (SHIFT, CTRL, ALT etc.. */
+	unsigned int	mod_lshift	: 1;
+	unsigned int	mod_rshift	: 1;
+	unsigned int	mod_lctrl	: 1;
+	unsigned int	mod_rctrl	: 1;
+	unsigned int	mod_lalt	: 1;
+	unsigned int	mod_ralt	: 1;
+	unsigned int	mod_lmeta	: 1;
+	unsigned int	mod_rmeta	: 1;
+	unsigned int	mod_num		: 1;
+	unsigned int	mod_caps	: 1;
+	unsigned int	mod_mode	: 1;
+} DARNIT_KEYS;
+
+
 void inputRawPush(int sym, int action, int unicode);
 INPUT_RAW_KEY inputRawPop();
 void inputPoll();

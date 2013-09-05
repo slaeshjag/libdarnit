@@ -26,8 +26,42 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 
-unsigned int EXPORT_THIS d_keys_get() {
-	return (d->input.key ^ d->input.keypending);
+DARNIT_KEYS convert_keys(unsigned int keys) {
+	DARNIT_KEYS dk;
+
+	dk.left = keys & KEY_LEFT;
+	dk.right = (keys >> 1) & 1;
+	dk.up = (keys >> 2) & 1;
+	dk.down = (keys >> 3) & 1;
+	dk.x = (keys >> 4) & 1;
+	dk.y = (keys >> 5) & 1;
+	dk.a = (keys >> 6) & 1;
+	dk.b = (keys >> 7) & 1;
+	dk.start = (keys >> 8) & 1;
+	dk.select = (keys >> 9) & 1;
+	dk.l = (keys >> 10) & 1;
+	dk.r = (keys >> 11) & 1;
+	dk.lmb = (keys >> 12) & 1;
+	dk.rmb = (keys >> 13) & 1;
+	dk.padding = 0;
+	dk.mod_lshift = (keys >> 16) & 1;
+	dk.mod_rshift = (keys >> 17) & 1;
+	dk.mod_lctrl = (keys >> 18) & 1;
+	dk.mod_rctrl = (keys >> 19) & 1;
+	dk.mod_lalt = (keys >> 20) & 1;
+	dk.mod_ralt = (keys >> 21) & 1;
+	dk.mod_lmeta = (keys >> 22) & 1;
+	dk.mod_rmeta = (keys >> 23) & 1;
+	dk.mod_num = (keys >> 24) & 1;
+	dk.mod_caps = (keys >> 25) & 1;
+	dk.mod_mode = (keys >> 26) & 1;
+	
+	return dk;
+}
+
+
+DARNIT_KEYS EXPORT_THIS d_keys_get() {
+	return convert_keys((d->input.key ^ d->input.keypending));
 }
 
 
