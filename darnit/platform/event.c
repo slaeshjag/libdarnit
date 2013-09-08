@@ -23,11 +23,13 @@ freely, subject to the following restrictions:
 */
 
 #include "main.h"
+#include "threads.h"
 
 int tpw_event_init(int queue_size) {
 	tpw.common.event.event_read = 0;
 	tpw.common.event.event_write = 0;
 	tpw.common.event.event_max = queue_size;
+	tpw.common.event.mutex = tpw_mutex_create();
 
 	if (!(tpw.common.event.event = malloc(sizeof(TPW_EVENT) * queue_size)))
 		return 0;
@@ -36,20 +38,24 @@ int tpw_event_init(int queue_size) {
 
 
 void tpw_event_push(TPW_EVENT event) {
+	tpw_mutex_lock(tpw.common.event.mutex);
 	if (TPW_FIFO_NEXT(tpw.common.event.event_write, tpw.common.event.event_max) == tpw.common.event.event_read)
 		return;
 	tpw.common.event.event[tpw.common.event.event_write] = event;
 	tpw.common.event.event_write = TPW_FIFO_NEXT(tpw.common.event.event_write, tpw.common.event.event_max);
+	tpw_mutex_unlock(tpw.common.event.mutex);
 
 	return;
 }
 
 
 int tpw_event_pop(TPW_EVENT *event) {
+	tpw_mutex_lock(tpw.common.event.mutex);
 	if (tpw.common.event.event_read == tpw.common.event.event_write)
 		return 0;
 	*event = tpw.common.event.event[tpw.common.event.event_read];
 	tpw.common.event.event_read = TPW_FIFO_NEXT(tpw.common.event.event_read, tpw.common.event.event_max);
+	tpw_mutex_unlock(tpw.common.event.mutex);
 
 	return 1;
 }

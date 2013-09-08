@@ -36,18 +36,21 @@ int tpw_init_platform() {
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp) {
 	unsigned int mode = 0;
 	mode = (fullscreen) ? GLFW_FULLSCREEN : GLFW_WINDOW;
-	
-	if (glfwOpenWindow(window_w, window_h, 8, 8, 8, 0, 8, 8, mode) != GL_TRUE)
+	glfwOpenWindowHint(GLFW_WINDOW__NO_RESIZABLE, GL_TRUE);
+	if (glfwOpenWindow(window_w, window_h, 0, 0, 0, 0, 8, 8, mode) != GL_TRUE)
 		return 0;
-
 	glfwSetWindowTitle(title);
-
+	
+	glfwSwapInterval(1);
+	
 	return 1;
 }
 
 
 void tpw_sleep(unsigned int msec) {
-	SDL_Delay(msec);
+	#ifdef _WIN32
+	Sleep(msec);
+	#endif
 
 	return;
 }
@@ -59,14 +62,7 @@ unsigned int tpw_ticks() {
 
 
 void tpw_input_grab(TPW_INPUT_GRAB grab) {
-	switch (grab) {
-		case TPW_INPUT_GRAB_GRAB:
-			SDL_WM_GrabInput(SDL_GRAB_ON);
-			break;
-		case TPW_INPUT_GRAB_RELEASE:
-			SDL_WM_GrabInput(SDL_GRAB_OFF);
-			break;
-	}
+	#warning tpw_input_grab not implemted
 
 	return;
 }
@@ -80,36 +76,31 @@ void tpw_render_buffer_swap() {
 
 
 const char *tpw_key_name_get(int sym) {
-	return SDL_GetKeyName(sym);
+	#warning tpw_key_name_get not implemented
+	return "NOT IMPLEMENTED";
 }
 
 
 TPW_RECT **tpw_videomodes_list() {
-	return (TPW_RECT **) SDL_ListModes(NULL, SDL_HWSURFACE | SDL_FULLSCREEN);
+	#warning tpw_videomodes_list not implemented
+	return NULL;
 }
 
 
 void tpw_input_unicode(int enable) {
-	SDL_EnableUNICODE(enable);
-	
 	return;
 }
 
 
 void tpw_cursor_show(unsigned int show) {
-	SDL_ShowCursor(0);
+	glfwSetInputMode(tpw.screen, GLFW_CURSOR, show ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 
 	return;
 }
 
 
 int tpw_icon_set(void *pixdata_rgba32, int w, int h) {
-	SDL_Surface *surface;
-
-	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32, 0xFF, 0xFF00, 0xFF0000, 0xFF000000);
-	memcpy(surface->pixels, pixdata_rgba32, w * h * 4);
-
-	SDL_WM_SetIcon(surface, NULL);
+	#warning tpw_icon_set not implemented
 
 	return 1;
 }

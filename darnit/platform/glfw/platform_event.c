@@ -24,36 +24,73 @@ freely, subject to the following restrictions:
 
 #include "../main.h"
 
-void tpw_event_loop() {
-	SDL_Event event_sdl;
+
+
+void tpw_event_callback_mousebtn(int button, int event) {
 	TPW_EVENT event;
+
+	memset(&event, 0, sizeof(event));
+	
+	event.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_MOUSEBTN_DOWN : TPW_EVENT_TYPE_MOUSEBTN_UP;
+	event.mouse.button = button;
+
+	tpw_event_push(event);
+	return;
+}
+
+
+void tpw_event_callback_mousepos(int x, int y) {
+	TPW_EVENT event;
+
+	memset(&event, 0, sizeof(event));
+
+	event.type = TOW_EVENT_MOUSE_MOVE;
+	event.type.x = x;
+	event.type.y = y;
+	
+	tpw_event_push(event);
+	return;
+}
+
+
+
+void tpw_event_callback_unicode(int unicode, int event) {
+	TPW_EVENT event;
+
+	memset(&event, 0, sizeof(event));
+
+	event.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_KEYDOWN : TPW_EVENT_KEYDOWN;
+	event.unicode = unicode;
+	event.keysym = 0;
+
+	tpw_event_push(event);
+	return;
+}
+
+
+void tpw_event_callback(int keysym, int event) {
+	TPW_EVENT event;
+
+	memset(&event, 0, sizeof(event));
+	
+	event.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_KEYDOWN : TPW_EVENT_KEYDOWN;
+	event.unicode = 0;
+	event.keysym = tpw_event_keysym_convert(keysym);
+
+	tpw_event_push(event);
+	return;
+}
+
+
+void tpw_event_loop() {
+	TPW_EVENT event;
+
+	memset(&event, 0, sizeof(event));
+	#if 0
 
 	event.key.unicode = event_sdl.key.keysym.unicode = 0;
 	while (SDL_PollEvent(&event_sdl)) {
 		switch (event_sdl.type) {
-			case SDL_KEYDOWN:
-				event.type = TPW_EVENT_TYPE_KEYDOWN;
-				event.key.keysym = event_sdl.key.keysym.sym;
-				event.key.unicode = event_sdl.key.keysym.unicode;
-				break;
-			case SDL_KEYUP:
-				event.type = TPW_EVENT_TYPE_KEYUP;
-				event.key.keysym = event_sdl.key.keysym.sym;
-				event.key.unicode = event_sdl.key.keysym.unicode;
-				break;
-			case SDL_MOUSEMOTION:
-				event.type = TPW_EVENT_TYPE_MOUSEMOVE;
-				event.mouse.x = event_sdl.motion.x;
-				event.mouse.y = event_sdl.motion.y;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				event.type = TPW_EVENT_TYPE_MOUSEBTN_DOWN;
-				event.mouse.button = event_sdl.button.button;
-				break;
-			case SDL_MOUSEBUTTONUP:
-				event.type = TPW_EVENT_TYPE_MOUSEBTN_UP;
-				event.mouse.button = event_sdl.button.button;
-				break;
 			case SDL_JOYAXISMOTION:
 				event.type = TPW_EVENT_TYPE_JOYSTICK_MOVE;
 				event.joystick.value = event_sdl.jaxis.value;
@@ -76,32 +113,38 @@ void tpw_event_loop() {
 		event.key.unicode = event_sdl.key.keysym.unicode = 0;
 	}
 
+	#endif
+
 	return;
 }
 
 
 TPW_JOYSTICK *tpw_joystick_open(int js_id) {
-	return SDL_JoystickOpen(js_id);
+//	return SDL_JoystickOpen(js_id);
+	return NULL;
 }
 
 
 const char *tpw_joystick_name(int js_id) {
-	return SDL_JoystickName(js_id);
+//	return SDL_JoystickName(js_id);
+	return NULL;
 }
 
 
 int tpw_joystick_num() {
-	return SDL_NumJoysticks();
+	return 0;
+//	return SDL_NumJoysticks();
 }
 
 
 void tpw_joystick_enable(TPW_ENBOOL enable) {
-	SDL_JoystickEventState((enable == TPW_ENBOOL_ENABLE) ? SDL_ENABLE : SDL_DISABLE);
+	return;
+//	SDL_JoystickEventState((enable == TPW_ENBOOL_ENABLE) ? SDL_ENABLE : SDL_DISABLE);
 	
 	return;
 }
 
 
 unsigned int tpw_keys_modifiers() {
-	return (unsigned int) SDL_GetModState();
+//	return (unsigned int) SDL_GetModState();
 }

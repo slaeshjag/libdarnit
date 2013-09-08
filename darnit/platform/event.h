@@ -27,6 +27,7 @@ freely, subject to the following restrictions:
 #define	__PLATFORM_INPUT_H__
 
 #include "platform_event.h"
+#include "threads.h"
 
 /* Modifier keys */
 #define	TPW_KEY_MOD_LSHIFT		0x0001
@@ -105,6 +106,7 @@ typedef struct {
 
 
 typedef struct {
+	TPW_MUTEX			*mutex;
 	TPW_EVENT			*event;
 	int				event_max;
 	int				event_read;

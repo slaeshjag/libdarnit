@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013 Steven Arnow
-'main_glfw.h' - This file is part of libdarnit_tpw
+'threads_sdl.h' - This file is part of libdarnit_tpw
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
@@ -22,20 +22,14 @@ freely, subject to the following restrictions:
 	distribution.
 */
 
-#ifndef __PLATFORM_GLFWL_MAIN_H__
-#define	__PLATFORM_GLFW_MAIN_H__
+#ifndef __TPW_WIN32_THREADS_H__
+#define	__TPW_WIN32_THREADS_H__
 
-#include <GL/glfw.h>
+#include <windows.h>
 
-#ifdef TPW_INTERNAL
-#endif
+typedef void TPW_MUTEX;
+typedef HANDLE TPW_THREAD;
+typedef HANDLE TPW_SEMAPHORE;
 
-
-typedef struct {
-	TPW_SOUND_SETTINGS	sound;
-	TPW_COMMON		common;
-} TPW;
-
-int tpw_init_platform();
 
 #endif

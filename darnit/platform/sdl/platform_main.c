@@ -212,7 +212,7 @@ void tpw_input_unicode(int enable) {
 
 
 void tpw_cursor_show(unsigned int show) {
-	SDL_ShowCursor(0);
+	SDL_ShowCursor(show);
 
 	return;
 }

@@ -42,6 +42,7 @@ ifeq ($(BUILDFOR), WIN32)
 	STRIP	=	i586-mingw32msvc-strip
 	AR	=	i586-mingw32msvc-ar
 	PLATFORM=	win32
+	#PLATFORM=	glfw
 else
 ifeq ($(BUILDFOR), WIN64)
 	#Windows64 specifics, for cross compiling to windows
