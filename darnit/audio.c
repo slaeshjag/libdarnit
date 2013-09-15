@@ -221,15 +221,16 @@ int audioInit() {
 	for (i = 0; i < AUDIO_PLAYBACK_CHANNELS; i++)
 		d->audio.playback_chan[i].key = -1;
 
-	if (tpw_sound_open(fmt) < 0) {
-		fprintf(stderr, "libDarnit: Unable to open audio\n");
-		return -1;
-	}
-
 	d->audio.cnt = 0;
 	d->audio.compression = 1;
 	d->audio.compression_enabled = 1;
 	d->audio.master_volume = 128;
+	
+	if (tpw_sound_open(fmt) < 0) {
+		fprintf(stderr, "libDarnit: Unable to open audio\n");
+		return 0;
+	}
+
 
 	tpw_sound_control(TPW_SOUND_COMMAND_PLAY);
 

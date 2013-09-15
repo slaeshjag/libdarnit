@@ -226,7 +226,7 @@ struct TEXT_FONT_GLYPH *textRenderGlyph(struct TEXT_FONT_CACHE *index, unsigned 
 struct TEXT_FONT_GLYPH *textRenderGlyphToCache(TEXT_FONT *font, unsigned int glyph) {
 	int glyph_index, x1, y1, x2, y2;
 	struct TEXT_FONT_CACHE *next;
-	
+
 	next = font->cache;
 	glyph_index = stbtt_FindGlyphIndex(&font->face, glyph);
 	
@@ -241,20 +241,22 @@ struct TEXT_FONT_GLYPH *textRenderGlyphToCache(TEXT_FONT *font, unsigned int gly
 	x2 = font->scale * x2;
 	y2 = font->scale * y2;
 #endif
-	
-	while (next != NULL) {
-		if (textWillGlyphFit(next, x2 - x1, y2 - y1) == 0)
-			break;
-		next = next->next;
+
+	if (x2 - x1 && y2 - y1) {
+		while (next != NULL) {
+			if (textWillGlyphFit(next, x2 - x1, y2 - y1) == 0)
+				break;
+			next = next->next;
+		}
 	}
-	
+		
 	if (next == NULL)
 		if ((next = textAppendCache(font, font->cache, font->tex_w, font->tex_h)) == NULL)
 			return NULL;
 	
 	if (font->cache == NULL)
 		font->cache = next;
-	
+	 
 	return textRenderGlyph(next, glyph, glyph_index, font);
 }
 

@@ -439,7 +439,7 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 	ts->tiles_h = tiles_h;
 	ts->format = format;
 
-	#ifndef _WIN32
+//	#ifndef _WIN32
 	if (format == PFORMAT_RGBA8)
 		ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
 	else if (format == PFORMAT_RGBA4)
@@ -448,7 +448,8 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 		ts->texhandle = videoAddTextureRGB5A1(NULL, ts->w, ts->h);
 	else if (format == PFORMAT_A8)
 		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
-	#else
+//	#else
+	#if 0
 	if (format == PFORMAT_A8)
 		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
 	else
@@ -492,6 +493,8 @@ void renderTilesheetGeometrics(TILESHEET *ts, int *w, int *h, int *wsq, int *hsq
 void renderUpdateTilesheet(TILESHEET *ts, int pos_x, int pos_y, void *data, int w, int h) {
 	unsigned int format;
 
+	if (!w || !h)
+		return;
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
 	format = (ts->format == PFORMAT_A8) ? GL_ALPHA : GL_RGBA;
 

@@ -59,6 +59,37 @@ DARNIT_KEYS convert_keys(unsigned int keys) {
 	return dk;
 }
 
+unsigned int convert_keys_back(DARNIT_KEYS dk) {
+	unsigned int keys;
+
+	keys = dk.left;
+	keys |= (dk.right << 1);
+	keys |= (dk.up << 2);
+	keys |= (dk.down << 3);
+	keys |= (dk.x << 4);
+	keys |= (dk.y << 5);
+	keys |= (dk.a << 6);
+	keys |= (dk.b << 7);
+	keys |= (dk.start << 8);
+	keys |= (dk.select << 9);
+	keys |= (dk.l << 10);
+	keys |= (dk.r << 11);
+	keys |= (dk.lmb << 12);
+	keys |= (dk.rmb << 13);
+	keys |= (dk.mod_lshift << 16);
+	keys |= (dk.mod_rshift << 17);
+	keys |= (dk.mod_lctrl << 18);
+	keys |= (dk.mod_rctrl << 19);
+	keys |= (dk.mod_lalt << 20);
+	keys |= (dk.mod_ralt << 21);
+	keys |= (dk.mod_lmeta << 22);
+	keys |= (dk.mod_rmeta << 23);
+	keys |= (dk.mod_num << 24);
+	keys |= (dk.mod_caps << 25);
+	keys |= (dk.mod_mode << 26);
+	
+	return keys;
+}
 
 DARNIT_KEYS EXPORT_THIS d_keys_get() {
 	return convert_keys((d->input.key ^ d->input.keypending));
@@ -70,8 +101,8 @@ unsigned int EXPORT_THIS d_keys_zero() {
 }
 
 
-void EXPORT_THIS d_keys_set(unsigned int button) {
-	d->input.keypending |= button;
+void EXPORT_THIS d_keys_set(DARNIT_KEYS dk) {
+	d->input.keypending |= convert_keys_back(dk);
 
 	return;
 }

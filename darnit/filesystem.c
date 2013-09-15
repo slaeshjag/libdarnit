@@ -60,6 +60,8 @@ int fsInit(const char *dir_name) {
 		#endif
 	} else if (d->platform.platform & DARNIT_PLATFORM_WIN32) { 
 		data_dir = getenv("APPDATA");
+		if (!data_dir) 		// Windows 9x..
+			data_dir = ".";
 
 		if ((d->fs.write_dir = malloc(strlen(data_dir) + 2 + strlen(dir_name))) == NULL)
 			return -1;
@@ -928,10 +930,10 @@ void *fsWriteLDIFree(FILESYSTEM_IMAGE_WRITER *w) {
 void fsFileSetSize(FILESYSTEM_FILE *f, off_t size) {
 	if (!f)
 		return;
-	if (!strstr(f->mode, "w"))
+	if (!strstr(f->mode, "w") || !strstr(f->mode, "+"))
 		return;
 	fsFileSeek(f, size, SEEK_SET);
-	
+
 	#ifdef _WIN32
 	SetEndOfFile(f->fp);
 	#else
