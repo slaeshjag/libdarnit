@@ -427,11 +427,15 @@ int fsFileSeek(FILESYSTEM_FILE *file, off_t offset, int mode) {
 			return 0;
 		}
 	} else if (mode == SEEK_END) {
-		if ((file->size + offset > file->size && file->size > 0) || file->size + offset < 0)
+		if ((file->size + offset > file->size && file->size > 0) || (file->size + offset < 0 && file->size >= 0))
 			return -1;
 		else {
-			file->pos = file->size + offset;
-			fseek(file->fp, file->pos + file->offset, SEEK_SET);
+			if (!file->parent)
+				fseek(file->fp, offset, SEEK_END);
+			else {
+				file->pos = file->size + offset;
+				fseek(file->fp, file->pos + file->offset, SEEK_SET);
+			}
 			return 0;
 		}
 	}
