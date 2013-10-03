@@ -48,6 +48,11 @@ int compressionDecompress(void *buffer, unsigned int data_len, void **outbuf) {
 	unsigned int outsize;
 	void *dbuf;
 
+	if (!buffer)
+		return -1;
+	if (data_len < 4)
+		return -1;
+
 	utilBlockToHostEndian(buffer, 1);
 	outsize = *((unsigned int *) buffer);
 	utilBlockToHostEndian(buffer, 1);
