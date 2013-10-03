@@ -41,8 +41,8 @@ void d_util_endian_convert(unsigned int *block, int elements);
 int d_util_sin(int angle);
 const char *d_str_null(const char *str);
 DARNIT_IMAGE_DATA d_img_load_raw(const char *fname);
-int d_util_compress(void *data_in, unsigned int data_len, void *data_out);
-int d_util_decompress(void *data_in, unsigned int data_len, void *data_out);
+int d_util_compress(void *data_in, unsigned int data_len, void **data_out);
+int d_util_decompress(void *data_in, unsigned int data_len, void **data_out);
 
 
 #endif
