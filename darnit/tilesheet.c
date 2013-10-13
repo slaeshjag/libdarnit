@@ -420,7 +420,7 @@ void *renderTilesheetFree(TILESHEET *ts) {
 
 
 TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, unsigned int format) {
-	unsigned int tilesheet_w, tilesheet_h, texture;
+	unsigned int tilesheet_w, tilesheet_h, texture, override_bpp;
 	TILESHEET *ts;
 	
 	tilesheet_w = bitwiseRoundUpToPow2(tiles_w * tile_w);
@@ -439,23 +439,31 @@ TILESHEET *renderNewTilesheet(int tiles_w, int tiles_h, int tile_w, int tile_h, 
 	ts->tiles_h = tiles_h;
 	ts->format = format;
 
-//	#ifndef _WIN32
-	if (format == PFORMAT_RGBA8)
-		ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
-	else if (format == PFORMAT_RGBA4)
-		ts->texhandle = videoAddTextureRGBA4(NULL, ts->w, ts->h);
-	else if (format == PFORMAT_RGB5A1)
-		ts->texhandle = videoAddTextureRGB5A1(NULL, ts->w, ts->h);
-	else if (format == PFORMAT_A8)
-		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
-//	#else
-	#if 0
-	if (format == PFORMAT_A8)
-		ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
-	else
-		ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
-	ts->format = (format == PFORMAT_A8) ? PFORMAT_A8 : PFORMAT_RGBA8;
+	#ifndef _WIN32
+		override_bpp = 0;
+	#else
+		override_bpp = 1;
 	#endif
+	
+	if (getenv("FORCE_32BPP"))
+		override_bpp = 1;
+	
+	if (!override_bpp) {
+		if (format == PFORMAT_RGBA8)
+			ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
+		else if (format == PFORMAT_RGBA4)
+			ts->texhandle = videoAddTextureRGBA4(NULL, ts->w, ts->h);
+		else if (format == PFORMAT_RGB5A1)
+			ts->texhandle = videoAddTextureRGB5A1(NULL, ts->w, ts->h);
+		else if (format == PFORMAT_A8)
+			ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
+	} else {
+		if (format == PFORMAT_A8)
+			ts->texhandle = videoAddTextureA8(NULL, ts->w, ts->h);
+		else
+			ts->texhandle = videoAddTexture(NULL, ts->w, ts->h);
+		ts->format = (format == PFORMAT_A8) ? PFORMAT_A8 : PFORMAT_RGBA8;
+	}
 	
 	if ((ts->tile = malloc(sizeof(TILESHEET_TILE) * tiles_w * tiles_h)) == NULL) {
 		glDeleteTextures(1, &texture);
