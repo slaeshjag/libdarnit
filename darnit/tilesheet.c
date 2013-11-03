@@ -298,7 +298,7 @@ TILESHEET *renderTilesheetLoad(const char *fname, unsigned int wsq, unsigned int
 	ts = renderNewTilesheet(data.w / wsq, data.h / hsq, wsq, hsq, convert_to);
 
 	renderUpdateTilesheet(ts, 0, 0, data_t, data.w, data.h);
-	renderPopulateIsometricTilesheet(ts, data.w / wsq, data.h / hsq, data_t);
+	renderPopulateTilesheet(ts, data.w / wsq, data.h / hsq);
 	
 	free(data_t);
 	ts->ref = renderAddTSRef(fname, ts);
