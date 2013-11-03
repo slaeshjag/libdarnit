@@ -133,6 +133,13 @@ void EXPORT_THIS d_text_surface_offset_next_set(void *surface, int x_pos) {
 }
 
 
+void EXPORT_THIS d_text_surface_offset_y(TEXT_SURFACE *surface, int y_off) {
+	surface->y_offset = d->video.shgran * y_off;
+
+	return;
+}
+
+
 void EXPORT_THIS d_text_surface_orientation(void *surface, FONT_ORIENTATION prim, FONT_ORIENTATION sec) {
 	textSurfaceSetOrientation(surface, prim, sec);
 	

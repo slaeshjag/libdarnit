@@ -451,6 +451,7 @@ void textResetSurface(TEXT_SURFACE *srf) {
 	srf->last = 0;
 	srf->cur_xf = srf->orig_xf;
 	srf->cur_yf = srf->orig_yf;
+	srf->y_offset = 0;
 	srf->color[0] = srf->color[1] = srf->color[2] = srf->color[3] = 255;
 
 
@@ -508,6 +509,7 @@ void *textMakeRenderSurface(int chars, TEXT_FONT *font, unsigned int linelen, in
 	surface->last = 0;
 	surface->prim = TEXT_O_LEFT_TO_RIGHT;
 	surface->sec = TEXT_O_TOP_TO_BOTTOM;
+	surface->y_offset = 0;
 
 	surface->g_cache = surface->l_cache = NULL;
 
@@ -645,19 +647,19 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		surface->cur_xf += glyph_e->advf;
 		x += glyph_e->skipf;
 		x2 = x + d->video.swgran * glyph_e->cw;
-		y2 = surface->cur_yf + glyph_e->rise;
+		y2 = surface->cur_yf + glyph_e->rise + surface->y_offset;
 		y = y2 - d->video.shgran * glyph_e->ch;
 	} else if (surface->prim == TEXT_O_RIGHT_TO_LEFT) {
 		surface->cur_xf -= glyph_e->advf;
 		x2 = x;
 		x2 -= glyph_e->skipf;
 		x = x2 - d->video.swgran * glyph_e->cw;
-		y2 = surface->cur_yf + glyph_e->rise;
+		y2 = surface->cur_yf + glyph_e->rise + surface->y_offset;
 		y = y2 - d->video.shgran * glyph_e->ch;
 	} else if (surface->prim == TEXT_O_TOP_TO_BOTTOM) {
 		x2 = x;
 		x -= d->video.swgran * glyph_e->cw;
-		y2 = surface->cur_yf;
+		y2 = surface->cur_yf + surface->y_offset;
 		y = y2 - hf;
 		surface->cur_yf -= d->video.shgran * surface->font->font_height;
 	} else

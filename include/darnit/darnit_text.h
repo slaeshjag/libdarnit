@@ -56,6 +56,7 @@ void d_text_surface_color_next(DARNIT_TEXT_SURFACE *surface, unsigned char r, un
 void d_text_surface_draw(DARNIT_TEXT_SURFACE *surface);
 void d_text_surface_offset_next_add(DARNIT_TEXT_SURFACE *surface, int pixels);
 void d_text_surface_offset_next_set(DARNIT_TEXT_SURFACE *surface, int x_pos);
+void d_text_surface_offset_y(DARNIT_TEXT_SURFACE *surface, int y_off);
 unsigned int d_text_surface_pos(DARNIT_TEXT_SURFACE *text);
 
 #endif

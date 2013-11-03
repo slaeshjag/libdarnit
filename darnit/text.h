@@ -140,6 +140,7 @@ typedef struct {
 	float			yf_skip;
 	float			orig_xf;
 	float			orig_yf;
+	float			y_offset;
 	FONT_ORIENTATION	prim;
 	FONT_ORIENTATION	sec;
 } TEXT_SURFACE;
