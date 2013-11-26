@@ -116,6 +116,9 @@ PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type) {
 		case PARTICLE_TYPE_POINT:
 			p->point = malloc(sizeof(POINT_COLOR_CACHE) * max_particles);
 			break;
+		case PARTICLE_TYPE_TEXTURED:
+			p->tex = malloc(sizeof(*p->tex) * max_particles);
+			break;
 		default:
 			p->tex = NULL;
 			fprintf(stderr, "Unimplemented mode %i\n", type);
@@ -211,6 +214,9 @@ void particleLoop(PARTICLE *p) {
 	switch (p->type) {
 		case PARTICLE_TYPE_POINT:
 			renderColorPointCache(p->point, p->particles_max, p->point_size);
+			break;
+		case PARTICLE_TYPE_TEXTURED:
+			renderColCache(p->tex, p->ts, p->particles_max);
 			break;
 		default:
 			break;
