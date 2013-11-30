@@ -89,3 +89,12 @@ void EXPORT_THIS d_mtsprite_draw(void *mtsprite) {
 void EXPORT_THIS *d_mtsprite_free(void *mtsprite) {
 	return mtSpriteDelete(mtsprite);
 }
+
+
+int EXPORT_THIS d_mtsprite_timeleft(void *mtsprite) {
+	MTSPRITE_ENTRY *se = mtsprite;
+	if (!mtsprite)
+		return 0;
+	return se->time_left;
+}
+

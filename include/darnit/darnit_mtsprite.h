@@ -38,5 +38,6 @@ void d_mtsprite_animate_repeat(DARNIT_MTSPRITE *mtsprite, int repeat);
 void d_mtsprite_tile_add(DARNIT_MTSPRITE *mtsprite, int x, int y, int w, int h, int rx, int ry);
 void d_mtsprite_frame_set(DARNIT_MTSPRITE *mtsprite, int time);
 void d_mtsprite_draw(DARNIT_MTSPRITE *mtsprite);
+int d_mtsprite_time_left(DARNIT_MTSPRITE *mtsprite);
 
 #endif

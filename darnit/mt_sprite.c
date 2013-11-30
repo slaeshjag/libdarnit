@@ -203,7 +203,12 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 		spr->cur_frame++;
 		if (spr->cur_frame >= spr->frames)
 			spr->cur_frame = (spr->repeat) ? 0 : spr->cur_frame - 1;
-		spr->time_left += spr->frame[spr->cur_frame].time;
+		if (spr->repeat || spr->cur_frame < spr->frames)
+			spr->time_left += spr->frame[spr->cur_frame].time;
+		else {
+			spr->time_left = 0;
+			break;
+		}
 	}
 
 	spr->time_last = tpw_ticks();
