@@ -91,7 +91,7 @@ void EXPORT_THIS *d_mtsprite_free(void *mtsprite) {
 }
 
 
-int EXPORT_THIS d_mtsprite_timeleft(void *mtsprite) {
+int EXPORT_THIS d_mtsprite_time_left(void *mtsprite) {
 	MTSPRITE_ENTRY *se = mtsprite;
 	if (!mtsprite)
 		return 0;
