@@ -179,7 +179,10 @@ void renderColorPointCache(POINT_COLOR_CACHE *cache, int points, int point_w);
 void renderLineGet(LINE_CACHE *cache, int *x, int *y, int *x2, int *y2);
 
 void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2);
+void renderSetColorTileCoordinates(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2);
+void renderSetColorTileTexCoordinates(TILE_COLOR_TEX_CACHE *cache, float u, float v, float u2, float v2);
 void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color);
+void renderSetTileColor(TILE_COLOR_TEX_CACHE *cache, unsigned char *color);
 void renderFadeLoop();
 void renderFadeFade(unsigned int time, float r, float g, float b);
 void renderFadeUnfade(unsigned int time);

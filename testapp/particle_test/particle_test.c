@@ -25,15 +25,17 @@ int main(int argc, char **argv) {
 	d_sound_play(sound, 0, 4, 4, 0);
 
 	p_shower = d_particle_new(1000, DARNIT_PARTICLE_TYPE_POINT);
-	p_pulsar = d_particle_new(1000, DARNIT_PARTICLE_TYPE_POINT);
+	p_pulsar = d_particle_new(1000, DARNIT_PARTICLE_TYPE_TEXTURED);
 	p_autopulsar = d_particle_new(1000, DARNIT_PARTICLE_TYPE_POINT);
+
+	d_particle_tilesheet(p_pulsar, "particle.png", 8, 8, 0);
 
 	d_particle_color_start(p_shower, 0, 0, 255, 255);
 	d_particle_color_start(p_pulsar, 255, 255, 0, 255);
 	d_particle_color_start(p_autopulsar, 255, 0, 0, 255);
 
 	d_particle_color_target(p_shower, 0, 0, 0, 255);
-	d_particle_color_target(p_pulsar, 0, 0, 0, 255);
+	d_particle_color_target(p_pulsar, 127, 0, 0, 0);
 	d_particle_color_target(p_autopulsar, 0, 0, 0, 255);
 
 	d_particle_emitter_move(p_shower, 400, 240);
@@ -75,7 +77,9 @@ int main(int argc, char **argv) {
 		d_particle_emitter_angle(p_shower, a1, a2);
 		d_render_begin();
 		d_particle_draw(p_shower);
+		d_render_blend_enable();
 		d_particle_draw(p_pulsar);
+		d_render_blend_disable();
 		d_particle_draw(p_autopulsar);
 		d_render_end();
 		d_loop();

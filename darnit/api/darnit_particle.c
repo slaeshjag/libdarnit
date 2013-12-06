@@ -152,6 +152,11 @@ void EXPORT_THIS d_particle_point_size(PARTICLE *p, int size) {
 }
 
 
+void EXPORT_THIS d_particle_tilesheet(PARTICLE *p, const char *fname, int tile_w, int tile_h, int tile) {
+	return particleSetTexture(p, fname, tile_w, tile_h, tile);
+}
+
+
 PARTICLE EXPORT_THIS *d_particle_free(PARTICLE *p) {
 	return particleFree(p);
 }

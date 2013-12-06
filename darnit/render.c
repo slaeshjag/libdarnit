@@ -336,20 +336,22 @@ void renderSetTileCoordinates(TILE_CACHE *cache, float x, float y, float x2, flo
 }
 
 
-void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color) {
-	cache->vertex[0].tex.u = u;
-	cache->vertex[0].tex.v = v;
-	cache->vertex[1].tex.u = u2;
-	cache->vertex[1].tex.v = v;
-	cache->vertex[2].tex.u = u2;
-	cache->vertex[2].tex.v = v2;
-	cache->vertex[3].tex.u = u2;
-	cache->vertex[3].tex.v = v2;
-	cache->vertex[4].tex.u = u;
-	cache->vertex[4].tex.v = v2;
-	cache->vertex[5].tex.u = u;
-	cache->vertex[5].tex.v = v;
+void renderSetTileColor(TILE_COLOR_TEX_CACHE *cache, unsigned char *color) {
+	(cache->vertex[0].col.rgba)[0] = (color)[0];
+	(cache->vertex[0].col.rgba)[1] = (color)[1];
+	(cache->vertex[0].col.rgba)[2] = (color)[2];
+	(cache->vertex[0].col.rgba)[3] = (color)[3];
+	cache->vertex[1].col = cache->vertex[0].col;
+	cache->vertex[2].col = cache->vertex[0].col;
+	cache->vertex[3].col = cache->vertex[0].col;
+	cache->vertex[4].col = cache->vertex[0].col;
+	cache->vertex[5].col = cache->vertex[0].col;
 
+	return;
+}
+
+
+void renderSetColorTileCoordinates(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2) {
 	cache->vertex[0].coord.x = x;
 	cache->vertex[0].coord.y = y2;
 	cache->vertex[1].coord.x = x2;
@@ -363,16 +365,31 @@ void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y
 	cache->vertex[5].coord.x = x;
 	cache->vertex[5].coord.y = y2;
 
-	(cache->vertex[0].col.rgba)[0] = (color)[0];
-	(cache->vertex[0].col.rgba)[1] = (color)[1];
-	(cache->vertex[0].col.rgba)[2] = (color)[2];
-	(cache->vertex[0].col.rgba)[3] = (color)[3];
-	cache->vertex[1].col = cache->vertex[0].col;
-	cache->vertex[2].col = cache->vertex[0].col;
-	cache->vertex[3].col = cache->vertex[0].col;
-	cache->vertex[4].col = cache->vertex[0].col;
-	cache->vertex[5].col = cache->vertex[0].col;
+	return;
+}
 
+void renderSetColorTileTexCoordinates(TILE_COLOR_TEX_CACHE *cache, float u, float v, float u2, float v2) {
+	cache->vertex[0].tex.u = u;
+	cache->vertex[0].tex.v = v;
+	cache->vertex[1].tex.u = u2;
+	cache->vertex[1].tex.v = v;
+	cache->vertex[2].tex.u = u2;
+	cache->vertex[2].tex.v = v2;
+	cache->vertex[3].tex.u = u2;
+	cache->vertex[3].tex.v = v2;
+	cache->vertex[4].tex.u = u;
+	cache->vertex[4].tex.v = v2;
+	cache->vertex[5].tex.u = u;
+	cache->vertex[5].tex.v = v;
+
+	return;
+}
+
+void renderSetTileCoordinatesColor(TILE_COLOR_TEX_CACHE *cache, float x, float y, float x2, float y2, float u, float v, float u2, float v2, unsigned char *color) {
+	renderSetColorTileTexCoordinates(cache, u, v, u2, v2);
+	renderSetColorTileCoordinates(cache, x, y, x2, y2);
+	renderSetTileColor(cache, color);
+	
 	return;
 }
 
@@ -392,6 +409,7 @@ void renderCache(TILE_CACHE *cache, TILESHEET *ts, int tiles) {
 
 void renderColCache(TILE_COLOR_TEX_CACHE *cache, TILESHEET *ts, int tiles) {
 	if (!cache) return;
+	if (!ts) return;
 
 	glBindTexture(GL_TEXTURE_2D, ts->texhandle);
 	glEnableClientState(GL_COLOR_ARRAY);

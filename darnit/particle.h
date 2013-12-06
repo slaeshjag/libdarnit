@@ -105,6 +105,8 @@ typedef struct {
 
 	/* Only used by PARTICLE_TYPE_TEXTURED */
 	TILESHEET			*ts;
+	float				tile_w;
+	float				tile_h;
 } PARTICLE;
 
 
@@ -112,6 +114,7 @@ typedef struct {
 PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type);
 void particleLoop(PARTICLE *p);
 void particleColorDelta(PARTICLE *p);
+void particleSetTexture(PARTICLE *p, const char *ts_fname, int tile_w, int tile_h, int tile);
 PARTICLE *particleFree(PARTICLE *p);
 
 

@@ -40,12 +40,22 @@ PARTICLE *particleFree(PARTICLE *p) {
 
 
 void particleMove(PARTICLE *p, int index, int x, int y) {
+	float  xf, yf;
 	p->particle[index].x_pos = x;
 	p->particle[index].y_pos = y;
 
 	switch (p->type) {
 		case PARTICLE_TYPE_POINT:
 			renderColorPointCalc(&p->point[index], p->particle[index].x_pos / 1000, p->particle[index].y_pos / 1000);
+			break;
+		case PARTICLE_TYPE_TEXTURED:
+			xf = x / 1000;
+			xf *= d->video.swgran;
+			xf -= 1.0f;
+			yf = y / 1000;
+			yf *= d->video.shgran;
+			yf = 1.0f - yf;
+			renderSetColorTileCoordinates(&p->tex[index], xf, yf, xf + p->tile_w, yf - p->tile_h);
 			break;
 		default:
 			break;
@@ -56,9 +66,17 @@ void particleMove(PARTICLE *p, int index, int x, int y) {
 
 
 void particleColor(PARTICLE *p, int index) {
+	unsigned char col[4];
 	switch (p->type) {
 		case PARTICLE_TYPE_POINT:
 			renderPointColor(&p->point[index], p->particle[index].color.r / 1000000, p->particle[index].color.g / 1000000, p->particle[index].color.b / 1000000, p->particle[index].color.a / 1000000);
+			break;
+		case PARTICLE_TYPE_TEXTURED:
+			col[0] = p->particle[index].color.r / 1000000;
+			col[1] = p->particle[index].color.g / 1000000;
+			col[2] = p->particle[index].color.b / 1000000;
+			col[3] = p->particle[index].color.a / 1000000;
+			renderSetTileColor(&p->tex[index], col);
 			break;
 		default:
 			break;
@@ -236,6 +254,28 @@ void particleColorDelta(PARTICLE *p) {
 	return;
 }
 	
+
+void particleSetTexture(PARTICLE *p, const char *ts_fname, int tile_w, int tile_h, int tile) {
+	int i;
+	TILESHEET *ts;
+
+	if (ts_fname)
+		ts = renderTilesheetLoad(ts_fname, tile_w, tile_h, PFORMAT_RGB5A1);
+	else
+		ts = NULL;
+	p->ts = ts;
+
+	if (!ts)
+		return;
+	if (tile >= ts->tiles)
+		return;
+	for (i = 0; i < p->particles_max; i++) {
+		renderSetColorTileTexCoordinates(&p->tex[i], ts->tile[tile].r, ts->tile[tile].v, ts->tile[tile].u, ts->tile[tile].s);
+	}
+
+	p->tile_w = ts->swgran * ts->wsq, p->tile_h = ts->shgran * ts->hsq;
+}
+
 
 // DARNIT_HEADLESS
 #endif

@@ -29,7 +29,8 @@ freely, subject to the following restrictions:
 typedef void			DARNIT_PARTICLE;
 
 typedef enum {
-	DARNIT_PARTICLE_TYPE_POINT
+	DARNIT_PARTICLE_TYPE_POINT,
+	DARNIT_PARTICLE_TYPE_TEXTURED,
 } DARNIT_PARTICLE_TYPE;
 
 typedef enum {
@@ -52,6 +53,7 @@ void d_particle_life(DARNIT_PARTICLE *p, int msec);
 void d_particle_mode(DARNIT_PARTICLE *p, DARNIT_PARTICLE_MODE mode);
 void d_particle_spawnrate(DARNIT_PARTICLE *p, int spawnrate);
 void d_particle_point_size(DARNIT_PARTICLE *p, int point_size);
+void d_particle_tilesheet(DARNIT_PARTICLE *p, const char *fname, int tile_w, int tile_h, int tile);
 void d_particle_pulse(DARNIT_PARTICLE *p);
 DARNIT_PARTICLE *d_particle_free(DARNIT_PARTICLE *p);
 
