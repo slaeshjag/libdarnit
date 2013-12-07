@@ -33,6 +33,8 @@ PARTICLE *particleFree(PARTICLE *p) {
 		return p;
 	free(p->tex);
 	free(p->particle);
+	if (p->ts)
+		renderTilesheetFree(p->ts);
 	free(p);
 
 	return NULL;
@@ -258,6 +260,9 @@ void particleColorDelta(PARTICLE *p) {
 void particleSetTexture(PARTICLE *p, const char *ts_fname, int tile_w, int tile_h, int tile) {
 	int i;
 	TILESHEET *ts;
+
+	if (p->ts)
+		renderTilesheetFree(p->ts);
 
 	if (ts_fname)
 		ts = renderTilesheetLoad(ts_fname, tile_w, tile_h, PFORMAT_RGB5A1);

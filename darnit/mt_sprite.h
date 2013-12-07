@@ -28,9 +28,19 @@ freely, subject to the following restrictions:
 
 
 typedef struct {
+	PARTICLE		**particle_b;
+	int			particles_b;
+	PARTICLE		**particle_t;
+	int			particles_t;
+} MTSPRITE_PARTICLE;
+
+
+typedef struct {
 	TILE_CACHE		*cache;
 	int			tiles;
 	int			time;
+	PARTICLE		**pulse;
+	int			pulses;
 } MTSPRITE_FRAME;
 
 
@@ -46,6 +56,7 @@ typedef struct {
 	int			time_last;
 	int			animate;
 	unsigned int		repeat;
+	MTSPRITE_PARTICLE	p;
 } MTSPRITE_ENTRY;
 
 
@@ -56,6 +67,7 @@ void mtSpriteEnableAnimation(MTSPRITE_ENTRY *spr);
 void mtSpritePauseAnimation(MTSPRITE_ENTRY *spr);
 void mtSpriteSetAsFrame(MTSPRITE_ENTRY *spr, int time);
 void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, int ry);
+PARTICLE *mtSpriteLoadParticle(MTSPRITE_ENTRY *spr, int type, int max_particles, int top);
 void mtSpriteDisableAnimation(MTSPRITE_ENTRY *spr);
 void mtSpriteSetRepeat(MTSPRITE_ENTRY *spr, int repeat);
 void *mtSpriteDelete(MTSPRITE_ENTRY *spr);

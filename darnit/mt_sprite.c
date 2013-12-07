@@ -55,6 +55,8 @@ void mtSpriteSetAsFrame(MTSPRITE_ENTRY *spr, int time) {
 
 void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, int ry) {
 	TILE_CACHE *tmp;
+	int i, j;
+
 	if (spr == NULL)
 		return;
 	
@@ -64,13 +66,49 @@ void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, in
 	mtSpriteCalcCacheTile(spr->ts, &spr->cache[spr->tiles], x, y, w, h, rx, ry);
 
 	spr->tiles++;
+	for (i = j = 0; i < spr->frames; j += spr->frame[i].tiles, i++)
+		spr->frame[i].cache = &spr->cache[j];
 	
 	return;
 }
 
 
+void mtSpriteSetParticlePulseEvent(MTSPRITE_ENTRY *spr, int frame, PARTICLE *p) {
+	if (frame == -1)
+		frame = spr->frames - 1;
+	if (frame >= spr->frames)
+		return;
+	if (frame < 0)
+		return;
+	
+	spr->frame[frame].pulse = realloc(spr->frame[frame].pulse, sizeof(*spr->frame[frame].pulse) * (spr->frame[frame].pulses + 1));
+	spr->frame[frame].pulse[spr->frame[frame].pulses] = p;
+	spr->frame[frame].pulses++;
+
+	return;
+}
+
+
+PARTICLE *mtSpriteLoadParticle(MTSPRITE_ENTRY *spr, int type, int max_particles, int top) {
+	PARTICLE **p;
+
+	if (top) {
+		spr->p.particle_t = realloc(spr->p.particle_t, sizeof(*spr->p.particle_t) * (spr->p.particles_t + 1));
+		p = &spr->p.particle_t[spr->p.particles_t++];
+	} else {
+		spr->p.particle_b = realloc(spr->p.particle_b, sizeof(*spr->p.particle_b) * (spr->p.particles_b + 1));
+		p = &spr->p.particle_b[spr->p.particles_b++];
+	}
+
+	*p = particleNew(max_particles, type);
+	
+	return *p;
+}
+
+
 void *mtSpriteNew(int tiles, int frames, void *ts) {
 	MTSPRITE_ENTRY *spr;
+	int i;
 
 	if ((spr = malloc(sizeof(MTSPRITE_ENTRY))) == NULL)
 		return NULL;
@@ -92,6 +130,16 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 	spr->time_last = 0;
 	spr->animate = 0;
 	spr->ts = ts;
+	spr->p.particle_b = spr->p.particle_t = NULL;
+	spr->p.particles_b = spr->p.particles_t = 0;
+
+	for (i = 0; i < spr->frames; i++) {
+		spr->frame[i].cache = NULL;
+		spr->frame[i].tiles = 0;
+		spr->frame[i].pulses = 0;
+		spr->frame[i].pulse = NULL;
+		spr->frame[i].time = 1;
+	}
 
 	return spr;
 }
@@ -267,12 +315,20 @@ void mtSpriteSetRepeat(MTSPRITE_ENTRY *spr, int repeat) {
 
 
 void *mtSpriteDelete(MTSPRITE_ENTRY *spr) {
+	int i;
 	if (spr == NULL) return NULL;
 	
 	spr->ts = renderTilesheetFree(spr->ts);
 	free(spr->cache);
 	free(spr->frame);
 	free(spr);
+
+	for (i = 0; i < spr->p.particles_b; i++)
+		particleFree(spr->p.particle_b[i]);
+	free(spr->p.particle_b);
+	for (i = 0; i < spr->p.particles_t; i++)
+		particleFree(spr->p.particle_t[i]);
+	free(spr->p.particle_t);
 
 	return NULL;
 }
