@@ -8,3 +8,4 @@ isotest
 *.res
 *.orig
 *.ldi
+*.elf
