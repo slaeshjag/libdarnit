@@ -26,6 +26,7 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 #ifndef DARNIT_HEADLESS
+#define	abs(x)		((x) < 0 ? (x * -1) : (x))
 
 
 void renderTilemapISOCoordinates(RENDER_TILEMAP *tm, int x, int y, int *r_x, int *r_y) {
@@ -281,15 +282,19 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	int x, y, w, h, map_w, map_h;
 	int off_x, off_y;
 
-	off_x = (cam_x < 0) ? tm->ts->wsq - (cam_x % tm->ts->wsq) : (cam_x % tm->ts->wsq);
-	off_y = (cam_y < 0) ? tm->ts->hsq - (cam_y % tm->r_h) : (cam_y % tm->r_h);
-	
+	off_x = (cam_x < 0) ? tm->ts->wsq - (abs(cam_x) % tm->ts->wsq) : (cam_x % tm->ts->wsq);
+	off_y = (cam_y < 0) ? tm->ts->hsq - (abs(cam_y) % tm->r_h) : (cam_y % tm->r_h);
+
 	tm->cam_x = d->video.swgran * off_x * -1;
 	tm->cam_y = d->video.shgran * off_y;
 
 	tm->cam_xi_c = cam_x;
 	tm->cam_yi_c = cam_y;
 
+	/*if (cam_x < 0)
+		cam_x -= tm->ts->wsq;
+	if (cam_y < 0)
+		cam_y -= tm->ts->hsq;*/
 	x = floorf((float) cam_x / tm->ts->wsq);
 	y = floorf((float) cam_y / tm->r_h);
 
