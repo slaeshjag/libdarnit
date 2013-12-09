@@ -291,10 +291,11 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	tm->cam_xi_c = cam_x;
 	tm->cam_yi_c = cam_y;
 
-	/*if (cam_x < 0 && off_x)
+
+	if (cam_x < 0 && off_x == tm->ts->wsq)
 		cam_x -= tm->ts->wsq;
-	if (cam_y < 0 && off_y)
-		cam_y -= tm->ts->hsq;*/
+	if (cam_y < 0 && off_y == tm->ts->hsq)
+		cam_y -= tm->ts->hsq;
 	x = floorf((float) cam_x / tm->ts->wsq);
 	y = floorf((float) cam_y / tm->r_h);
 
