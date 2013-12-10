@@ -225,11 +225,15 @@ void particleLoop(PARTICLE *p) {
 	}
 	
 	p->pulse = 0;
+	p->used = 0;
 
 	for (i = 0; i < p->particles_max; i++)
-		if (!particleHandle(p, i, d_t))
+		if (!particleHandle(p, i, d_t)) {
 			if (spawn-- > 0)
 				particleSpawn(p, i);
+		} else
+			p->used++;
+
 
 	switch (p->type) {
 		case PARTICLE_TYPE_POINT:

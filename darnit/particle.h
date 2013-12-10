@@ -90,6 +90,7 @@ typedef struct {
 
 	unsigned int			last_frame_time;
 	int				pulse;
+	int				used;
 
 	PARTICLE_COMMON			*particle;
 

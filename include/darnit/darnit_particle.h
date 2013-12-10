@@ -54,6 +54,7 @@ void d_particle_mode(DARNIT_PARTICLE *p, DARNIT_PARTICLE_MODE mode);
 void d_particle_spawnrate(DARNIT_PARTICLE *p, int spawnrate);
 void d_particle_point_size(DARNIT_PARTICLE *p, int point_size);
 void d_particle_tilesheet(DARNIT_PARTICLE *p, const char *fname, int tile_w, int tile_h, int tile);
+int d_particle_used(DARNIT_PARTICLE *p);
 void d_particle_pulse(DARNIT_PARTICLE *p);
 DARNIT_PARTICLE *d_particle_free(DARNIT_PARTICLE *p);
 
