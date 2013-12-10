@@ -230,7 +230,7 @@ void particleLoop(PARTICLE *p) {
 	for (i = 0; i < p->particles_max; i++)
 		if (!particleHandle(p, i, d_t)) {
 			if (spawn-- > 0)
-				particleSpawn(p, i);
+				particleSpawn(p, i), p->used++;
 		} else
 			p->used++;
 
