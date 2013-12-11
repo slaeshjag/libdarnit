@@ -67,7 +67,7 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 		fprintf(stderr, "tpw_window_create(): Unable to open the default display\n");
 		return 0;
 	}
-	#ifndef RASPBERRYPI
+	#ifdef RASPBERRYPI
 	bcm_host_init();
 	if (!(tpw.eglDisplay = eglGetDisplay((EGLNativeDisplayType) tpw.XDisplay))) {
 		fprintf(stderr, "tpw_window_create(): Unable to get a display handle from EGL!!\n");
