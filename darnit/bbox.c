@@ -34,8 +34,10 @@ int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned
 		if (bbox->bbox[i].key == -1) {
 			bbox->bbox[i].x = x, bbox->bbox[i].y = y, bbox->bbox[i].w = w;
 			bbox->bbox[i].h = h, bbox->bbox[i].xb = x+w, bbox->bbox[i].yb = y+h;
-			bbox->bbox[i].key = bbox->cnt;
-			bbox->cnt++;
+			if (bbox->keymode)
+				bbox->bbox[i].key = bbox->bbox[i].a_key;
+			else
+				bbox->bbox[i].key = bbox->cnt++;
 			bbox->bboxes++;
 			bbox->sort = 1;
 			return bbox->bbox[i].key;
@@ -217,12 +219,14 @@ void *bboxNew(unsigned int size) {
 		bbox->bbox[i].xb = -1;
 		bbox->bbox[i].yb = -1;
 		bbox->bbox[i].key = -1;
+		bbox->bbox[i].a_key = i;
 	}
 
 	bboxSort(bbox);
 	bbox->sortmode = SORT_MODE_X;
 	bbox->bboxes = 0;
-	bbox->cnt = 0;
+	bbox->cnt = i;
+	bbox->keymode = 0;
 
 	return bbox;
 }

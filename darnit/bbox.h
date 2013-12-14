@@ -27,7 +27,6 @@ freely, subject to the following restrictions:
 #define	__BBOX_H__
 
 
-#define			BBOX_MAX		8192
 #define			TARGET_FILTER		8
 #define			SORT_MODE_X		0
 #define			SORT_MODE_Y		1
@@ -41,6 +40,7 @@ typedef struct {
 	int				xb;
 	int				yb;
 	int				key;
+	int				a_key;
 } DARNIT_BBOX_ENTRY;
 
 
@@ -51,6 +51,7 @@ typedef struct {
 	unsigned int			cnt;
 	unsigned int			sortmode;
 	unsigned int			max;
+	unsigned int			keymode;
 } BBOX;
 
 

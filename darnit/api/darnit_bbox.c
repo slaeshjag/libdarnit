@@ -43,6 +43,11 @@ void EXPORT_THIS *d_bbox_new(unsigned int size) {
 }
 
 
+void EXPORT_THIS d_bbox_set_indexkey(BBOX *bbox) {
+	bbox->keymode = 1;
+}
+
+
 void EXPORT_THIS *d_bbox_free(BBOX *bbox) {
 	bboxFree(bbox);
 
