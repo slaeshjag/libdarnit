@@ -203,8 +203,9 @@ void particleLoop(PARTICLE *p) {
 
 	if (!p)
 		return;
-	d_t = tpw_ticks() - p->last_frame_time;
-	p->last_frame_time = tpw_ticks();
+	d_t = d->fps.time_at_flip - d->fps.time_at_last_frame;
+//	d_t = tpw_ticks() - p->last_frame_time;
+//	p->last_frame_time = tpw_ticks();
 
 	switch (p->mode) {
 		case PARTICLE_MODE_OFF:
@@ -283,6 +284,16 @@ void particleSetTexture(PARTICLE *p, const char *ts_fname, int tile_w, int tile_
 	}
 
 	p->tile_w = ts->swgran * ts->wsq, p->tile_h = ts->shgran * ts->hsq;
+}
+
+
+
+void particleClearAll(PARTICLE *p) {
+	int i;
+
+	for (i = 0; i < p->particles_max; i++)
+		particleClear(p, i);
+	return;
 }
 
 

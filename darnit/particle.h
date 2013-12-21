@@ -116,6 +116,7 @@ PARTICLE *particleNew(int max_particles, PARTICLE_TYPE type);
 void particleLoop(PARTICLE *p);
 void particleColorDelta(PARTICLE *p);
 void particleSetTexture(PARTICLE *p, const char *ts_fname, int tile_w, int tile_h, int tile);
+void particleClearAll(PARTICLE *p);
 PARTICLE *particleFree(PARTICLE *p);
 
 

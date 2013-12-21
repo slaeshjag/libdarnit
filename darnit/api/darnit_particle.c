@@ -164,6 +164,11 @@ void EXPORT_THIS d_particle_tilesheet(PARTICLE *p, const char *fname, int tile_w
 }
 
 
+void EXPORT_THIS d_particle_clear_all(PARTICLE *p) {
+	return particleClearAll(p);
+}
+
+
 PARTICLE EXPORT_THIS *d_particle_free(PARTICLE *p) {
 	return particleFree(p);
 }
