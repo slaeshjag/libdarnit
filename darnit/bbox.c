@@ -138,7 +138,7 @@ void bboxClear(BBOX *bbox) {
 		bbox->bbox[i].key = -1;
 	
 	bbox->bboxes = 0;
-	bbox->cnt = 0;
+	bbox->cnt = bbox->max;
 	bbox->sort = 0;
 
 	return;

@@ -201,7 +201,7 @@ void inputPoll() {
 				d_quit();
 			#elif defined(MAEMO)
 			else if (event.key.keysym == TPW_KEY_BACKSPACE && (tpw_keys_modifiers() & TPW_KEY_MOD_CTRL))
-				tpw_input_grab(TPW_INPUT_GRAB_GRAB);
+				tpw_input_grab(TPW_INPUT_GRAB_RELEASE);
 			#endif
 			if (event.key.keysym == TPW_KEY_LSHIFT)
 				d->input.upper |= 2;
