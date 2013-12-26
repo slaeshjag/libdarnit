@@ -722,8 +722,9 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 	img = d->fs.mount;
 	for (img = d->fs.mount; img != NULL; img = img->next)
 		for (i = 0; i < img->dir_ents; i++)
-			if (img->dir[i].name[strlen(path)] == '/') {	/* Yes, this is the directory we're looking for */
+			if (strstr(img->dir[i].name, path) == img->dir[i].name) {	/* This is what we're looking for */
 				name = &img->dir[i].name[strlen(path)];
+				for (; *name == '/'; name++);
 				
 				end = malloc(sizeof(DIR_LIST));
 				end->fname = malloc(strlen(name) + 1);
