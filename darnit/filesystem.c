@@ -712,12 +712,13 @@ int fsScanRealDir(const char *path, DIR_LIST **list, int rw) {
 DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *entries) {
 	FILESYSTEM_IMAGE *img;
 	DIR_LIST *dir, *end;
-	int i=0;
+	int i=0, j;
 	const char *name;
 	char full_path[256];
 
 	/* First; look in filesystem images... */
 	
+	j = 0;
 	dir = NULL;
 	img = d->fs.mount;
 	for (img = d->fs.mount; img != NULL; img = img->next)
@@ -743,9 +744,10 @@ DIR_LIST *fsDirectoryList(const char *path, unsigned int type, unsigned int *ent
 				
 				end->next = dir;
 				dir = end;
+				j++;
 			}
 	
-	
+	i = j;
 	/* Now, to look at data and write dirs... */
 	if (type & DARNIT_FS_READABLE) {
 		sprintf(full_path, "%s/%s", d->fs.data_dir, path);
