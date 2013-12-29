@@ -190,14 +190,17 @@ unsigned int tpw_keysym_translate(unsigned int vk) {
 
 unsigned int tpw_modifier(unsigned int vk) {
 	switch (vk) {
+		case 0x10:
 		case 0xA0:
 			return TPW_KEY_MOD_LSHIFT;
 		case 0xA1:
 			return TPW_KEY_MOD_RSHIFT;
+		case 0x11:
 		case 0xA2:
 			return TPW_KEY_MOD_LCTRL;
 		case 0xA3:
 			return TPW_KEY_MOD_RCTRL;
+		case 0x12:
 		case 0xA4:
 			return TPW_KEY_MOD_LALT;
 		case 0xA5:
@@ -220,6 +223,9 @@ void tpw_event_platform_init() {
 	vk_translate[0x0C] = 12;
 	vk_translate[0x0D] = 13;
 	vk_translate[0x0E] = 19;
+	vk_translate[0x10] = 304;
+	vk_translate[0x11] = 306;
+	vk_translate[0x12] = 308;
 	vk_translate[0x14] = 301;
 	vk_translate[0x1B] = 27;
 	vk_translate[0x20] = 32;
