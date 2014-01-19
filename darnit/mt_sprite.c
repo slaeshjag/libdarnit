@@ -148,9 +148,11 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 void *mtSpriteLoad(const char *fname) {
 	MTSPRITE_ENTRY *spr;
 	FILESYSTEM_FILE *fp;
-	int frames, loctiles, tiles, x, y, w, h, t, rx, ry;
-	char c, buff[512];
+	int frames, loctiles, particles, tiles, x, y, w, h, t, rx, ry, ps, cr, cg, cb, ca;
+	unsigned int sc, tc;
+	char c, buff[512], buf2[128];
 	void *ts;
+	PARTICLE **p;
 
 	if ((fp = fsFileOpen(fname, "rb")) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname);
@@ -176,7 +178,9 @@ void *mtSpriteLoad(const char *fname) {
 				if (buff[strlen(buff) - 1] == '\n')
 					buff[strlen(buff) - 1] = 0;
 				ts = renderTilesheetLoad(buff, 32, 32, PFORMAT_RGB5A1);
-				break; 
+				break;
+			case 'P':
+				particles++;
 			case '\n':
 				break;
 			default:
@@ -184,6 +188,9 @@ void *mtSpriteLoad(const char *fname) {
 				break;
 		}
 	}
+	
+	p = calloc(sizeof(*p) * particles, 1);
+	ps = 0;
 
 	if ((spr = mtSpriteNew(tiles, frames, ts)) == NULL) {
 		fsFileClose(fp);
@@ -199,6 +206,31 @@ void *mtSpriteLoad(const char *fname) {
 	while (!fsFileEOF(fp)) {
 		fsFileRead(&c, 1, fp);
 		switch (c) {
+			case 'P':
+				fsFileGets(buff, 512, fp);
+				/* fname, max_particles, if top or bottom, tile_w, tile_h, tile_id, source color, target color */
+				sscanf(buff, "%s %i %i %i %i %i %X %X\n", buf2, &x, &y, &w, &h, &rx, &sc, &tc);
+				t = (strcmp(buf2, "NULL")) ? PARTICLE_TYPE_POINT : PARTICLE_TYPE_TEXTURED;
+				p[ps] = mtSpriteLoadParticle(spr, t, x, y);
+				if (t == PARTICLE_TYPE_TEXTURED)
+					particleSetTexture(p[ps], buf2, w, h, rx);
+				else
+					p[ps]->point_size = w;
+				
+				cr = (sc >> 24) & 0xFF;
+				cg = (sc >> 16) & 0xFF;
+				cb = (sc >> 8)  & 0xFF;
+				ca = sc & 0xFF;
+				p[ps]->source.r = cr * 1000000, p[ps]->source.g = cg * 1000000;
+				p[ps]->source.b = cb * 1000000, p[ps]->source.a = ca * 1000000;
+				cr = (tc >> 24) & 0xFF;
+				cg = (tc >> 16) & 0xFF;
+				cb = (tc >> 8)  & 0xFF;
+				ca = tc & 0xFF;
+				p[ps]->target.r = cr * 1000000, p[ps]->target.g = cg * 1000000;
+				p[ps]->target.b = cb * 1000000, p[ps]->target.a = ca * 1000000;
+				particleColorDelta(p[ps]);
+				break;
 			case 'F':
 				fsFileGets(buff, 512, fp);
 				t = atoi(buff);
@@ -229,6 +261,7 @@ void *mtSpriteLoad(const char *fname) {
 	spr->repeat = 1;
 
 	fsFileClose(fp);
+	free(p);
 
 	return spr;
 }
