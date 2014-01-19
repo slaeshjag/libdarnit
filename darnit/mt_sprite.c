@@ -148,7 +148,7 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 void *mtSpriteLoad(const char *fname) {
 	MTSPRITE_ENTRY *spr;
 	FILESYSTEM_FILE *fp;
-	int frames, loctiles, particles, tiles, x, y, w, h, t, rx, ry, ps;
+	int frames, loctiles, particles, tiles, x, y, w, h, t, rx, ry, ps, cr, cg, cb, ca;
 	unsigned int sc, tc;
 	char c, buff[512], buf2[128];
 	void *ts;
@@ -207,17 +207,29 @@ void *mtSpriteLoad(const char *fname) {
 		fsFileRead(&c, 1, fp);
 		switch (c) {
 			case 'P':
-				#if 0
 				fsFileGets(buff, 512, fp);
 				/* fname, max_particles, if top or bottom, tile_w, tile_h, tile_id, source color, target color */
-				sscanf(buff, "%s %i %i %i %i %i %i %i\n", buf2, &x, &y, &w, &h, &rx, &sc, &tc);
-				t = (strcmp(buf2, "NULL") ? PARTICLE_TYPE_POINT : PARTICLE_TYPE_TEXTURED;
+				sscanf(buff, "%s %i %i %i %i %i %X %X\n", buf2, &x, &y, &w, &h, &rx, &sc, &tc);
+				t = (strcmp(buf2, "NULL")) ? PARTICLE_TYPE_POINT : PARTICLE_TYPE_TEXTURED;
 				p[ps] = mtSpriteLoadParticle(spr, t, x, y);
-				if (t != PARTICLE_TYPE_TEXTURED)
-					particleSetTexture(p[ps], w, h, rx);
+				if (t == PARTICLE_TYPE_TEXTURED)
+					particleSetTexture(p[ps], buf2, w, h, rx);
 				else
 					p[ps]->point_size = w;
-				#endif
+				
+				cr = (sc >> 24) & 0xFF;
+				cg = (sc >> 16) & 0xFF;
+				cb = (sc >> 8)  & 0xFF;
+				ca = sc & 0xFF;
+				p[ps]->source.r = cr * 1000000, p[ps]->source.g = cg * 1000000;
+				p[ps]->source.b = cb * 1000000, p[ps]->source.a = ca * 1000000;
+				cr = (tc >> 24) & 0xFF;
+				cg = (tc >> 16) & 0xFF;
+				cb = (tc >> 8)  & 0xFF;
+				ca = tc & 0xFF;
+				p[ps]->target.r = cr * 1000000, p[ps]->target.g = cg * 1000000;
+				p[ps]->target.b = cb * 1000000, p[ps]->target.a = ca * 1000000;
+				particleColorDelta(p[ps]);
 				break;
 			case 'F':
 				fsFileGets(buff, 512, fp);
