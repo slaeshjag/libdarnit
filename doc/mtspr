@@ -1,0 +1,22 @@
+Define particle emitter:
+P texture_file_name max_particles top_or_bottom tile_w tile_h tile_id source_color target_color
+	texture_tile_name 	- NULL if not textured
+	max_particles 		- Maximum number of particles
+	top_or_bottom		- If 0, particles are rendered under tile, if 1, above
+	tile_w			- Tile width for textured particles, ignored for untextured
+	tile_h			- Tile height for textured particles, ignored for untextured
+	tile_id			- Tile ID for textured particles, ignored for untextured
+	source_color		- FFCCAA55 - Hex representation of RRGGBBAA start color
+	target_color		- FFCCAA55 - Hex representation of RRGGBBAA target color
+
+Trigger a particle pulsar:
+E particle_id top_or_bottom
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+
+Set emitter angle
+A particle_id top_or_bottom min_angle max_angle
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	min_angle		- Minimum emit angle (in degrees * 10)
+	max_angle		- Maximum emit angle (in degrees * 10) (if range need this to be lower, set angle > 3600)

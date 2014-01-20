@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011-2013 Steven Arnow
+Copyright (c) 2011-2014 Steven Arnow
 'mt_sprite.c' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
@@ -230,6 +230,25 @@ void *mtSpriteLoad(const char *fname) {
 				p[ps]->target.r = cr * 1000000, p[ps]->target.g = cg * 1000000;
 				p[ps]->target.b = cb * 1000000, p[ps]->target.a = ca * 1000000;
 				particleColorDelta(p[ps]);
+				break;
+			case 'E':
+				fsFileGets(buff, 512, fp);
+				sscanf(buff, "%i %i\n", &x, &y);
+				if (!y)
+					spr->p.particle_b[x]->pulse = 1;
+				else
+					spr->p.particle_t[x]->pulse = 1;
+				break;
+			case 'A':
+				fsFileGets(buff, 512, fp);
+				sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h);
+				if (!y) {
+					spr->p.particle_b[x]->min_angle = w;
+					spr->p.particle_b[x]->max_angle = h;
+				} else {
+					spr->p.particle_b[x]->min_angle = w;
+					spr->p.particle_b[x]->max_angle = h;
+				}
 				break;
 			case 'F':
 				fsFileGets(buff, 512, fp);
