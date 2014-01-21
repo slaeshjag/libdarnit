@@ -152,7 +152,7 @@ void *mtSpriteLoad(const char *fname) {
 	unsigned int sc, tc;
 	char c, buff[512], buf2[128];
 	void *ts;
-	PARTICLE **p;
+	PARTICLE **p, *pp;
 
 	if ((fp = fsFileOpen(fname, "rb")) == NULL) {
 		fprintf(stderr, "libDarnit: Unable to open mt-sprite %s\n", fname);
@@ -235,10 +235,27 @@ void *mtSpriteLoad(const char *fname) {
 				fsFileGets(buff, 512, fp);
 				sscanf(buff, "%i %i\n", &x, &y);
 				if (!y)
-					spr->p.particle_b[x]->pulse = 1;
+					pp = spr->p.particle_b[x];
 				else
-					spr->p.particle_t[x]->pulse = 1;
+					pp = spr->p.particle_t[x];
+				mtSpriteSetParticlePulseEvent(spr, frames, pp);
 				break;
+			case 'M':
+				fsFileGets(buff, 512, fp);
+				sscanf(buff, "%i %i %i\n", &x, &y, &w);
+				if (!y)
+					pp = spr->p.particle_b[x];
+				else
+					pp = spr->p.particle_t[x];
+				if (!w)
+					pp->mode = PARTICLE_MODE_OFF;
+				else if (w == 1)
+					pp->mode = PARTICLE_MODE_SHOWER;
+				else if (w == 2)
+					pp->mode = PARTICLE_MODE_PULSAR;
+				else if (w == 3)
+					pp->mode = PARTICLE_MODE_AUTOPULSAR;
+					
 			case 'A':
 				fsFileGets(buff, 512, fp);
 				sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h);

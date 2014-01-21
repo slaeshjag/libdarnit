@@ -36,11 +36,22 @@ typedef struct {
 
 
 typedef struct {
+	PARTICLE		*p;
+	enum  {
+		MTSPRITE_PARTICLE_EVENT_PULSE,
+	} particle_prop;
+	int			arg[8];
+} MTSPRITE_PARTICLE_EVENT;
+
+
+typedef struct {
 	TILE_CACHE		*cache;
 	int			tiles;
 	int			time;
 	PARTICLE		**pulse;
 	int			pulses;
+	MTSPRITE_PARTICLE_EVENT	*event;
+	int			events;
 } MTSPRITE_FRAME;
 
 
