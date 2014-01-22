@@ -89,6 +89,13 @@ void mtSpriteSetParticlePulseEvent(MTSPRITE_ENTRY *spr, int frame, PARTICLE *p) 
 }
 
 
+int mtSpriteEventAdd(MTSPRITE_ENTRY *spr, PARTICLE *p, int frame) {
+	spr->frame[frame].event = realloc(spr->frame[frame].event, sizeof(*spr->frame[frame].event) * (spr->frame[frame].events + 1));
+	spr->frame[frame].event[spr->frame[frame].events].p = p;
+	return spr->frame[frame].events++;
+}
+
+
 PARTICLE *mtSpriteLoadParticle(MTSPRITE_ENTRY *spr, int type, int max_particles, int top) {
 	PARTICLE **p;
 
@@ -243,29 +250,38 @@ void *mtSpriteLoad(const char *fname) {
 			case 'M':
 				fsFileGets(buff, 512, fp);
 				sscanf(buff, "%i %i %i\n", &x, &y, &w);
+				rx = mtSpriteEventAdd(spr, pp, frames);
 				if (!y)
 					pp = spr->p.particle_b[x];
 				else
 					pp = spr->p.particle_t[x];
+				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_PULSE;
 				if (!w)
-					pp->mode = PARTICLE_MODE_OFF;
+					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_OFF;
 				else if (w == 1)
-					pp->mode = PARTICLE_MODE_SHOWER;
+					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_SHOWER;
 				else if (w == 2)
-					pp->mode = PARTICLE_MODE_PULSAR;
+					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_PULSAR;
 				else if (w == 3)
-					pp->mode = PARTICLE_MODE_AUTOPULSAR;
-					
+					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_AUTOPULSAR;
+				break;	
 			case 'A':
 				fsFileGets(buff, 512, fp);
 				sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h);
 				if (!y) {
-					spr->p.particle_b[x]->min_angle = w;
-					spr->p.particle_b[x]->max_angle = h;
+					pp = spr->p.particle_b[x];
+				//	spr->p.particle_b[x]->min_angle = w;
+				//	spr->p.particle_b[x]->max_angle = h;
 				} else {
-					spr->p.particle_b[x]->min_angle = w;
-					spr->p.particle_b[x]->max_angle = h;
+					pp = spr->p.particle_t[x];
+				//	spr->p.particle_b[x]->min_angle = w;
+				//	spr->p.particle_b[x]->max_angle = h;
 				}
+				
+				rx = mtSpriteEventAdd(spr, pp, frames);
+				spr->frame[frames].event[rx].arg[0] = w;
+				spr->frame[frames].event[rx].arg[1] = h;
+				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_ANGLE;
 				break;
 			case 'F':
 				fsFileGets(buff, 512, fp);
