@@ -73,26 +73,34 @@ void mtSpriteAddTile(MTSPRITE_ENTRY *spr, int x, int y, int w, int h, int rx, in
 }
 
 
-void mtSpriteSetParticlePulseEvent(MTSPRITE_ENTRY *spr, int frame, PARTICLE *p) {
-	if (frame == -1)
-		frame = spr->frames - 1;
-	if (frame >= spr->frames)
-		return;
-	if (frame < 0)
-		return;
-	
-	spr->frame[frame].pulse = realloc(spr->frame[frame].pulse, sizeof(*spr->frame[frame].pulse) * (spr->frame[frame].pulses + 1));
-	spr->frame[frame].pulse[spr->frame[frame].pulses] = p;
-	spr->frame[frame].pulses++;
-
-	return;
-}
-
-
 int mtSpriteEventAdd(MTSPRITE_ENTRY *spr, PARTICLE *p, int frame) {
 	spr->frame[frame].event = realloc(spr->frame[frame].event, sizeof(*spr->frame[frame].event) * (spr->frame[frame].events + 1));
 	spr->frame[frame].event[spr->frame[frame].events].p = p;
 	return spr->frame[frame].events++;
+}
+
+
+void mtSpriteEventRun(MTSPRITE_ENTRY *spr) {
+	int i;
+	MTSPRITE_PARTICLE_EVENT *ev;
+
+	for (i = 0; i < spr->frame[spr->cur_frame].events; i++) {
+		ev = &spr->frame[spr->cur_frame].event[i];
+		switch (ev->particle_prop) {
+			case MTSPRITE_PARTICLE_EVENT_PULSE:
+				ev->p->pulse = 1;
+				break;
+			case MTSPRITE_PARTICLE_EVENT_MODE:
+				ev->p->mode = ev->arg[0];
+				break;
+			case MTSPRITE_PARTICLE_EVENT_ANGLE:
+				ev->p->min_angle = ev->arg[0];
+				ev->p->max_angle = ev->arg[1];
+				break;
+		}
+	}
+
+	return;
 }
 
 
@@ -143,8 +151,8 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 	for (i = 0; i < spr->frames; i++) {
 		spr->frame[i].cache = NULL;
 		spr->frame[i].tiles = 0;
-		spr->frame[i].pulses = 0;
-		spr->frame[i].pulse = NULL;
+		spr->frame[i].events = 0;
+		spr->frame[i].event = NULL;
 		spr->frame[i].time = 1;
 	}
 
@@ -245,7 +253,8 @@ void *mtSpriteLoad(const char *fname) {
 					pp = spr->p.particle_b[x];
 				else
 					pp = spr->p.particle_t[x];
-				mtSpriteSetParticlePulseEvent(spr, frames, pp);
+				rx = mtSpriteEventAdd(spr, pp, frames);
+				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_PULSE;
 				break;
 			case 'M':
 				fsFileGets(buff, 512, fp);
@@ -255,7 +264,7 @@ void *mtSpriteLoad(const char *fname) {
 					pp = spr->p.particle_b[x];
 				else
 					pp = spr->p.particle_t[x];
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_PULSE;
+				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_MODE;
 				if (!w)
 					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_OFF;
 				else if (w == 1)
@@ -342,6 +351,7 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 			spr->time_left = 0;
 			break;
 		}
+		mtSpriteEventRun(spr);
 	}
 
 	spr->time_last = tpw_ticks();
@@ -404,6 +414,10 @@ void *mtSpriteDelete(MTSPRITE_ENTRY *spr) {
 	if (spr == NULL) return NULL;
 	
 	spr->ts = renderTilesheetFree(spr->ts);
+
+	for (i = 0; i < spr->frames; i++)
+		free(spr->frame[i].event);
+
 	free(spr->cache);
 	free(spr->frame);
 	free(spr);

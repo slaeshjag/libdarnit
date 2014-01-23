@@ -50,8 +50,6 @@ typedef struct {
 	TILE_CACHE		*cache;
 	int			tiles;
 	int			time;
-	PARTICLE		**pulse;
-	int			pulses;
 	MTSPRITE_PARTICLE_EVENT	*event;
 	int			events;
 } MTSPRITE_FRAME;
