@@ -20,3 +20,32 @@ A particle_id top_or_bottom min_angle max_angle
 	top_or_bottom		- If it's rendered above of below tiles. See P.
 	min_angle		- Minimum emit angle (in degrees * 10)
 	max_angle		- Maximum emit angle (in degrees * 10) (if range need this to be lower, set angle > 3600)
+
+
+Set particle life
+L particle_id top_or_bottom life
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	life			- Number of milliseconds before the particle dies
+
+
+Set particle spawn rate
+L particle_id top_or_bottom spawnrate
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	spawnrate		- number of spawned particles per second
+
+Set Coordinates (move emitter) relative to the mtsprite coordinates
+C particle_id top_or_bottom x y
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.i
+	x			- The new X coordinate in pixels
+	y			- The new Y coordinate in pixels
+
+
+Set particle velocity
+L particle_id top_or_bottom min max
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	min			- Minimum velocity for an emitted particle, pixels/second
+	max			- Maximum velocity for an emitted particle, pixels/second

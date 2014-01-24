@@ -26,6 +26,14 @@ freely, subject to the following restrictions:
 #ifndef __MT_SPRITE_H__
 #define	__MT_SPRITE_H__
 
+#define	MTSPRITE_PARSE_START(f)	fsFileGets(buff, 512, fp); \
+				(f); \
+				if (!y) \
+					pp = spr->p.particle_b[x]; \
+				else \
+					pp = spr->p.particle_t[x]; \
+				rx = mtSpriteEventAdd(spr, pp, frames);
+
 
 typedef struct {
 	PARTICLE		**particle_b;
@@ -41,6 +49,10 @@ typedef struct {
 		MTSPRITE_PARTICLE_EVENT_PULSE,
 		MTSPRITE_PARTICLE_EVENT_MODE,
 		MTSPRITE_PARTICLE_EVENT_ANGLE,
+		MTSPRITE_PARTICLE_EVENT_LIFE,
+		MTSPRITE_PARTICLE_EVENT_SRATE,
+		MTSPRITE_PARTICLE_EVENT_MOVE,
+		MTSPRITE_PARTICLE_EVENT_VELOCITY,
 	} particle_prop;
 	int			arg[8];
 } MTSPRITE_PARTICLE_EVENT;
