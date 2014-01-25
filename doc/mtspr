@@ -9,6 +9,15 @@ P texture_file_name max_particles top_or_bottom tile_w tile_h tile_id source_col
 	source_color		- FFCCAA55 - Hex representation of RRGGBBAA start color
 	target_color		- FFCCAA55 - Hex representation of RRGGBBAA target color
 
+
+Set emitter mode:
+M particle_id top_or_bottom
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	mode			- 0 = off, 1 = shower, 2 = pulsar, 3 = autopulsar
+
+
+
 Trigger a particle pulsar:
 E particle_id top_or_bottom
 	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
@@ -30,7 +39,7 @@ L particle_id top_or_bottom life
 
 
 Set particle spawn rate
-L particle_id top_or_bottom spawnrate
+S particle_id top_or_bottom spawnrate
 	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
 	top_or_bottom		- If it's rendered above of below tiles. See P.
 	spawnrate		- number of spawned particles per second
@@ -44,8 +53,16 @@ C particle_id top_or_bottom x y
 
 
 Set particle velocity
-L particle_id top_or_bottom min max
+V particle_id top_or_bottom min max
 	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
 	top_or_bottom		- If it's rendered above of below tiles. See P.
 	min			- Minimum velocity for an emitted particle, pixels/second
 	max			- Maximum velocity for an emitted particle, pixels/second
+
+
+Set particle gravity
+G particle_id top_or_bottom xgrav ygrav
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	xgrav			- Gravity acceleration on X-axis in pixels/s^2
+	ygrav			- Gravity acceleration on Y-axis in pixels/s^2

@@ -32,7 +32,7 @@ freely, subject to the following restrictions:
 					pp = spr->p.particle_b[x]; \
 				else \
 					pp = spr->p.particle_t[x]; \
-				rx = mtSpriteEventAdd(spr, pp, frames);
+				rx = mtSpriteEventAdd(spr, pp, frames - 1);
 
 
 typedef struct {
@@ -53,6 +53,7 @@ typedef struct {
 		MTSPRITE_PARTICLE_EVENT_SRATE,
 		MTSPRITE_PARTICLE_EVENT_MOVE,
 		MTSPRITE_PARTICLE_EVENT_VELOCITY,
+		MTSPRITE_PARTICLE_EVENT_GRAVITY,
 	} particle_prop;
 	int			arg[8];
 } MTSPRITE_PARTICLE_EVENT;

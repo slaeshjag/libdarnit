@@ -111,6 +111,10 @@ void mtSpriteEventRun(MTSPRITE_ENTRY *spr) {
 				ev->p->min_velocity = ev->arg[0];
 				ev->p->max_velocity = ev->arg[1];
 				break;
+			case MTSPRITE_PARTICLE_EVENT_GRAVITY:
+				ev->p->gravity_x = ev->arg[0];
+				ev->p->gravity_y = ev->arg[1];
+				break;
 		}
 	}
 
@@ -177,8 +181,8 @@ void *mtSpriteNew(int tiles, int frames, void *ts) {
 void *mtSpriteLoad(const char *fname) {
 	MTSPRITE_ENTRY *spr;
 	FILESYSTEM_FILE *fp;
-	int frames, loctiles, particles, tiles, x, y, w, h, t, rx, ry, ps, cr, cg, cb, ca;
-	unsigned int sc, tc;
+	int frames, loctiles, particles, tiles, x, y, w, h, t, rx, ry, ps;
+	unsigned int sc, tc, cr, cg, cb, ca;
 	char c, buff[512], buf2[128];
 	void *ts;
 	PARTICLE **p, *pp;
@@ -262,49 +266,54 @@ void *mtSpriteLoad(const char *fname) {
 				break;
 			case 'E':
 				MTSPRITE_PARSE_START(sscanf(buff, "%i %i\n", &x, &y))
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_PULSE;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_PULSE;
 				break;
 			case 'M':
 				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i\n", &x, &y, &w))
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_MODE;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_MODE;
 				if (!w)
-					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_OFF;
+					spr->frame[frames-1].event[rx].arg[0] = PARTICLE_MODE_OFF;
 				else if (w == 1)
-					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_SHOWER;
+					spr->frame[frames-1].event[rx].arg[0] = PARTICLE_MODE_SHOWER;
 				else if (w == 2)
-					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_PULSAR;
+					spr->frame[frames-1].event[rx].arg[0] = PARTICLE_MODE_PULSAR;
 				else if (w == 3)
-					spr->frame[frames].event[rx].arg[0] = PARTICLE_MODE_AUTOPULSAR;
+					spr->frame[frames-1].event[rx].arg[0] = PARTICLE_MODE_AUTOPULSAR;
 				break;	
 			case 'A':
-				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &y))
-				spr->frame[frames].event[rx].arg[0] = w;
-				spr->frame[frames].event[rx].arg[1] = h;
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_ANGLE;
+				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h))
+				spr->frame[frames-1].event[rx].arg[0] = w;
+				spr->frame[frames-1].event[rx].arg[1] = h;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_ANGLE;
 				break;
 			case 'L':
 				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i\n", &x, &y, &w))
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_LIFE;
-				spr->frame[frames].event[rx].arg[0] = w;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_LIFE;
+				spr->frame[frames-1].event[rx].arg[0] = w;
 				break;
 			case 'S':
 				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i\n", &x, &y, &w))
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_SRATE;
-				spr->frame[frames].event[rx].arg[0] = w;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_SRATE;
+				spr->frame[frames-1].event[rx].arg[0] = w;
 				break;
 			case 'C':
-				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &y))
-				spr->frame[frames].event[rx].arg[0] = w;
-				spr->frame[frames].event[rx].arg[1] = h;
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_MOVE;
+				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h))
+				spr->frame[frames-1].event[rx].arg[0] = w;
+				spr->frame[frames-1].event[rx].arg[1] = h;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_MOVE;
 				break;
 			case 'V':
-				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &y))
-				spr->frame[frames].event[rx].arg[0] = w;
-				spr->frame[frames].event[rx].arg[1] = h;
-				spr->frame[frames].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_VELOCITY;
+				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h))
+				spr->frame[frames-1].event[rx].arg[0] = w;
+				spr->frame[frames-1].event[rx].arg[1] = h;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_VELOCITY;
 				break;
-				
+			case 'G':
+				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i %i\n", &x, &y, &w, &h))
+				spr->frame[frames-1].event[rx].arg[0] = w;
+				spr->frame[frames-1].event[rx].arg[1] = h;
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_GRAVITY;
+				break;
 			case 'F':
 				fsFileGets(buff, 512, fp);
 				t = atoi(buff);
@@ -333,6 +342,7 @@ void *mtSpriteLoad(const char *fname) {
 	spr->frame[frames-1].tiles = loctiles;
 	spr->time_left = spr->frame->time;
 	spr->repeat = 1;
+	mtSpriteEventRun(spr);
 
 	fsFileClose(fp);
 	free(p);
@@ -374,10 +384,15 @@ void mtSpriteAnimate(MTSPRITE_ENTRY *spr) {
 
 
 void mtSpriteDraw(MTSPRITE_ENTRY *spr) {
+	int i;
 	if (spr == NULL) return;
 
 	mtSpriteAnimate(spr);
+	for (i = 0; i < spr->p.particles_b; i++)
+		particleLoop(spr->p.particle_b[i]);
 	renderCache(spr->frame[spr->cur_frame].cache, spr->ts, spr->frame[spr->cur_frame].tiles);
+	for (i = 0; i < spr->p.particles_t; i++)
+		particleLoop(spr->p.particle_t[i]);
 
 	return;
 }
