@@ -44,6 +44,14 @@ S particle_id top_or_bottom spawnrate
 	top_or_bottom		- If it's rendered above of below tiles. See P.
 	spawnrate		- number of spawned particles per second
 
+
+Set particle point size (does not apply to textured particles)
+S particle_id top_or_bottom point_size
+	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0
+	top_or_bottom		- If it's rendered above of below tiles. See P.
+	point_size		- Point size in pixels
+
+
 Set Coordinates (move emitter) relative to the mtsprite coordinates
 C particle_id top_or_bottom x y
 	paticle_id		- The top or bottom particle emitter ID in the order it was defined, first is 0

@@ -99,9 +99,13 @@ void mtSpriteEventRun(MTSPRITE_ENTRY *spr) {
 				break;
 			case MTSPRITE_PARTICLE_EVENT_LIFE:
 				ev->p->particle_life = ev->arg[0];
+				particleColorDelta(ev->p);
 				break;
 			case MTSPRITE_PARTICLE_EVENT_SRATE:
 				ev->p->spawnrate_max = ev->arg[0];
+				break;
+			case MTSPRITE_PARTICLE_EVENT_PSIZE:
+				ev->p->point_size = ev->arg[0];
 				break;
 			case MTSPRITE_PARTICLE_EVENT_MOVE:
 				ev->p->emit_x = ev->arg[0] * 1000;
@@ -243,7 +247,7 @@ void *mtSpriteLoad(const char *fname) {
 				fsFileGets(buff, 512, fp);
 				/* fname, max_particles, if top or bottom, tile_w, tile_h, tile_id, source color, target color */
 				sscanf(buff, "%s %i %i %i %i %i %X %X\n", buf2, &x, &y, &w, &h, &rx, &sc, &tc);
-				t = (strcmp(buf2, "NULL")) ? PARTICLE_TYPE_POINT : PARTICLE_TYPE_TEXTURED;
+				t = (!strcmp(buf2, "NULL")) ? PARTICLE_TYPE_POINT : PARTICLE_TYPE_TEXTURED;
 				p[ps] = mtSpriteLoadParticle(spr, t, x, y);
 				if (t == PARTICLE_TYPE_TEXTURED)
 					particleSetTexture(p[ps], buf2, w, h, rx);
@@ -256,6 +260,7 @@ void *mtSpriteLoad(const char *fname) {
 				ca = sc & 0xFF;
 				p[ps]->source.r = cr * 1000000, p[ps]->source.g = cg * 1000000;
 				p[ps]->source.b = cb * 1000000, p[ps]->source.a = ca * 1000000;
+				particleColorDelta(p[ps]);
 				cr = (tc >> 24) & 0xFF;
 				cg = (tc >> 16) & 0xFF;
 				cb = (tc >> 8)  & 0xFF;
@@ -263,6 +268,7 @@ void *mtSpriteLoad(const char *fname) {
 				p[ps]->target.r = cr * 1000000, p[ps]->target.g = cg * 1000000;
 				p[ps]->target.b = cb * 1000000, p[ps]->target.a = ca * 1000000;
 				particleColorDelta(p[ps]);
+				ps++;
 				break;
 			case 'E':
 				MTSPRITE_PARSE_START(sscanf(buff, "%i %i\n", &x, &y))
@@ -294,6 +300,11 @@ void *mtSpriteLoad(const char *fname) {
 			case 'S':
 				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i\n", &x, &y, &w))
 				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_SRATE;
+				spr->frame[frames-1].event[rx].arg[0] = w;
+				break;
+			case 'Z':
+				MTSPRITE_PARSE_START(sscanf(buff, "%i %i %i\n", &x, &y, &w))
+				spr->frame[frames-1].event[rx].particle_prop = MTSPRITE_PARTICLE_EVENT_PSIZE;
 				spr->frame[frames-1].event[rx].arg[0] = w;
 				break;
 			case 'C':
