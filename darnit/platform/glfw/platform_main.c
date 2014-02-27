@@ -36,7 +36,7 @@ int tpw_init_platform() {
 int tpw_window_create(const char *title, unsigned int window_w, unsigned int window_h, unsigned int fullscreen, const unsigned int bpp) {
 	unsigned int mode = 0;
 	mode = (fullscreen) ? GLFW_FULLSCREEN : GLFW_WINDOW;
-	glfwOpenWindowHint(GLFW_WINDOW__NO_RESIZABLE, GL_TRUE);
+	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
 	if (glfwOpenWindow(window_w, window_h, 0, 0, 0, 0, 8, 8, mode) != GL_TRUE)
 		return 0;
 	glfwSetWindowTitle(title);
@@ -93,7 +93,7 @@ void tpw_input_unicode(int enable) {
 
 
 void tpw_cursor_show(unsigned int show) {
-	glfwSetInputMode(tpw.screen, GLFW_CURSOR, show ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+	glfwDisable(GLFW_MOUSE_CURSOR);
 
 	return;
 }
