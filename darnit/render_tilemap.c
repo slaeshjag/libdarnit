@@ -311,6 +311,8 @@ void renderTilemapCameraMove(RENDER_TILEMAP *tm, int cam_x, int cam_y) {
 	if (tm->isometric) {
 		tm->cam_xp = cam_x / tm->ts->wsq * tm->ts->wsq;
 		tm->cam_yp = cam_y / tm->r_h * tm->r_h;
+		if (cam_y < 0 && cam_y % tm->r_h)
+			tm->cam_yp -= tm->r_h;
 		tm->cache_used = renderTilemapRecalcISO(tm);
 	} else
 		tm->cache_used = renderTilemapRecalc(tm->cache, tm->ts, x, y, w, h, map_w, map_h, tm->map, tm->inv_div, tm->mask);

@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 	t = d_time_get();
 	for (i = 0;; i++) {
 		fprintf(stderr, "Moving camera %i\n", -i / 30);
-		d_tilemap_camera_move(tm, -i / 30, 0);
+		d_tilemap_camera_move(tm, 0, -i / 30);
 		d_render_begin();
 		d_tilemap_draw(tm);
 		d_render_end();
