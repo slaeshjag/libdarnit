@@ -154,6 +154,7 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	if (!fullscreen)
 		SetWindowPos(tpw.hWnd, 0, (GetSystemMetrics(SM_CXSCREEN) - window_w) >> 1, (GetSystemMetrics(SM_CYSCREEN) - window_h) >> 1, window_w, window_h, SWP_NOZORDER | SWP_NOSIZE);
 	ShowWindow(tpw.hWnd, SW_SHOW);
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
 	SetForegroundWindow(tpw.hWnd);
 	SetFocus(tpw.hWnd);
 
@@ -217,7 +218,6 @@ void tpw_input_unicode(int enable) {
 
 void tpw_cursor_show(unsigned int show) {
 	tpw.hide_cursor = !show;
-	ShowCursor((show) ? TRUE : FALSE);
 	return;
 }
 

@@ -27,14 +27,14 @@ freely, subject to the following restrictions:
 
 
 void tpw_event_callback_mousebtn(int button, int event) {
-	TPW_EVENT event;
+	TPW_EVENT event_s;
 
-	memset(&event, 0, sizeof(event));
+	memset(&event_s, 0, sizeof(event_s));
 	
-	event.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_MOUSEBTN_DOWN : TPW_EVENT_TYPE_MOUSEBTN_UP;
-	event.mouse.button = button;
+	event_s.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_MOUSEBTN_DOWN : TPW_EVENT_TYPE_MOUSEBTN_UP;
+	event_s.mouse.button = button;
 
-	tpw_event_push(event);
+	tpw_event_push(event_s);
 	return;
 }
 
@@ -44,9 +44,9 @@ void tpw_event_callback_mousepos(int x, int y) {
 
 	memset(&event, 0, sizeof(event));
 
-	event.type = TOW_EVENT_MOUSE_MOVE;
-	event.type.x = x;
-	event.type.y = y;
+	event.type = TPW_EVENT_TYPE_MOUSEMOVE;
+	event.mouse.x = x;
+	event.mouse.y = y;
 	
 	tpw_event_push(event);
 	return;
@@ -55,29 +55,29 @@ void tpw_event_callback_mousepos(int x, int y) {
 
 
 void tpw_event_callback_unicode(int unicode, int event) {
-	TPW_EVENT event;
+	TPW_EVENT event_s;
 
-	memset(&event, 0, sizeof(event));
+	memset(&event_s, 0, sizeof(event_s));
 
-	event.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_KEYDOWN : TPW_EVENT_KEYDOWN;
-	event.unicode = unicode;
-	event.keysym = 0;
+	event_s.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_KEYDOWN : TPW_EVENT_TYPE_KEYUP;
+	event_s.key.unicode = unicode;
+	event_s.key.keysym = 0;
 
-	tpw_event_push(event);
+	tpw_event_push(event_s);
 	return;
 }
 
 
 void tpw_event_callback(int keysym, int event) {
-	TPW_EVENT event;
+	TPW_EVENT event_s;
 
-	memset(&event, 0, sizeof(event));
+	memset(&event_s, 0, sizeof(event_s));
 	
-	event.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_KEYDOWN : TPW_EVENT_KEYDOWN;
-	event.unicode = 0;
-	event.keysym = tpw_event_keysym_convert(keysym);
+	event_s.type = (event == GLFW_PRESS) ? TPW_EVENT_TYPE_KEYDOWN : TPW_EVENT_TYPE_KEYUP;
+	event_s.key.unicode = 0;
+	event_s.key.keysym = tpw_event_keysym_convert(keysym);
 
-	tpw_event_push(event);
+	tpw_event_push(event_s);
 	return;
 }
 
@@ -147,4 +147,9 @@ void tpw_joystick_enable(TPW_ENBOOL enable) {
 
 unsigned int tpw_keys_modifiers() {
 //	return (unsigned int) SDL_GetModState();
+}
+
+
+int tpw_event_keysym_convert(int glfw_sym) {
+
 }
