@@ -148,3 +148,8 @@ void tpw_joystick_enable(TPW_ENBOOL enable) {
 unsigned int tpw_keys_modifiers() {
 //	return (unsigned int) SDL_GetModState();
 }
+
+
+int tpw_event_keysym_convert(int glfw_sym) {
+
+}
