@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2013 Steven Arnow <s@rdw.se>
+Copyright (c) 2013, 2014 Steven Arnow <s@rdw.se>
 'tbbox.c' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
@@ -31,7 +31,6 @@ TBBOX *tbboxNew(int size, enum TBBOX_SORTMODE mode) {
 
 	if (!(tb = malloc(sizeof(*tb))))
 		return tb;
-	tb->cnt = size;
 	tb->used = 0;
 	tb->entries = size;
 	tb->entry = malloc(sizeof(*tb->entry) * size);
@@ -74,13 +73,13 @@ int tbboxAddCircle(TBBOX *tb, int x, int y, int radius) {
 		return -1;
 	tb->used++;
 	tb->entry[key].mode = TBBOX_MODE_CIRCLE;
-	tb->entry[key].pos_low.x = x - radius;
-	tb->entry[key].pos_low.y = y - radius;
-	tb->entry[key].pos_high.x = x + radius;
-	tb->entry[key].pos_high.y = y + radius;
+	tb->entry[key].pos_low_x = x - radius;
+	tb->entry[key].pos_low_y = y - radius;
+	tb->entry[key].pos_high_x = x + radius;
+	tb->entry[key].pos_high_y = y + radius;
 
-	tb->entry[key].circ.point.x = x;
-	tb->entry[key].circ.point.y = y;
+	tb->entry[key].circ.point_x = x;
+	tb->entry[key].circ.point_y = y;
 	tb->entry[key].circ.radius = radius;
 
 	tb->lookup[tb->entry[key].id] = key;
@@ -97,7 +96,12 @@ int tbboxAddTriangleBox(TBBOX *tb, int x, int y, int w, int h, int angle) {
 		return -1;
 	tb->used++;
 	tb->entry[key].mode = TBBOX_MODE_RECTANGLE;
-	tb->entry[key].pos_low.x = x;
-	tb->entry[key].pos_low.y = y;
-	tb->entry[key].pos_high.x = x + w;
-	tb->entry[key].pos_high.y = y + h;
+	tb->entry[key].pos_low_x = x;
+	tb->entry[key].pos_low_y = y;
+	tb->entry[key].pos_high_x = x + w;
+	tb->entry[key].pos_high_y = y + h;
+
+	tb->lookup[tb->entry[key].id] = key;
+
+	return tb->entry[key].id;
+}
