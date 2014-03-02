@@ -9,3 +9,5 @@ isotest
 *.orig
 *.ldi
 *.elf
+*.dll
+*.exe
