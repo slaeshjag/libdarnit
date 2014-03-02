@@ -33,7 +33,7 @@ enum TBBOX_SORTMODE {
 enum tbbox_mode {
 	TBBOX_MODE_NOT_USED,
 	TBBOX_MODE_CIRCLE,
-	TBBOX_MODE_RECTANGLE,
+	TBBOX_MODE_TRIANGLE,
 };
 
 
@@ -41,7 +41,7 @@ typedef struct {
 	int			point_x;
 	int			point_y;
 	int			radius;
-} TBBOX_ENTRY_CIRCLE;
+} TBBOX_ENTRY_CENTER;
 
 
 typedef struct {
@@ -51,7 +51,7 @@ typedef struct {
 	int			pos_low_y;
 	int			pos_high_x;
 	int			pos_high_y;
-	TBBOX_ENTRY_CIRCLE	circ;
+	TBBOX_ENTRY_CENTER	cent;
 } TBBOX_ENTRY;
 
 
