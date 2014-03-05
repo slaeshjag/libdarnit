@@ -28,9 +28,11 @@ freely, subject to the following restrictions:
 #define	MAX(x, y)		((x) > (y) ? (x) : (y))
 #define	MIN3(x, y, z)		(MIN(MIN(x, y), z))
 #define	MAX3(x, y, z)		(MAX(MAX(x, y), z))
+#define	X(i)			(tb->entry[i].pos_low_x)
+#define	Y(i)			(tb->entry[i].pos_low_y)
 
 
-TBBOX *tbboxNew(int size, enum TBBOX_SORTMODE mode) {
+TBBOX *tbboxNew(int size, enum tbbox_sortmode mode) {
 	TBBOX *tb;
 	int i;
 
@@ -40,6 +42,7 @@ TBBOX *tbboxNew(int size, enum TBBOX_SORTMODE mode) {
 	tb->entries = size;
 	tb->entry = malloc(sizeof(*tb->entry) * size);
 	tb->lookup = malloc(sizeof(*tb->lookup) * size);
+	tb->mode = mode;
 
 	for (i = 0; i < size; i++)
 		tb->entry[i].mode = TBBOX_MODE_NOT_USED, tb->entry[i].id = i, tb->lookup[i] = -1;
@@ -70,6 +73,49 @@ int tbboxFindFreeSlot(TBBOX *tb) {
 }
 
 
+static void tbboxSortSwitch(TBBOX *tb, int i) {
+	TBBOX_ENTRY tmpe;
+	int tmpi;
+
+	tmpi = tb->lookup[i];
+	tb->lookup[i] = tb->lookup[i-1];
+	tb->lookup[i-1] = tmpi;
+	tmpe = tb->entry[i];
+	tb->entry[i] = tb->entry[i-1];
+	tb->entry[i-1] = tmpe;
+	return;
+}
+
+
+void tbboxSort(TBBOX *tb) {
+	int i, j, sort;
+	
+	if (!tb)
+		return;
+	/* Just re-using the same insertion-sort from bbox */
+	for (sort = 0, i = 1; i < tb->entries; i++, sort = 0) {
+		for (j = i; j > 0; j--, sort = 0) {
+			if (tb->lookup[i - 1] < 0)
+				sort = 1;
+			if (tb->mode == SORT_MODE_X) {
+				if (X(j) < X(j-1) || (X(j) == X(j-1) && Y(j) < Y(j-1)))
+					sort = 1;
+			} else {
+				if (Y(j) < Y(j-1) || (Y(j) == Y(j-1) && X(j) < X(j-1)))
+					sort = 1;
+			}
+		
+			if (!sort)
+				break;
+			tbboxSortSwitch(tb, i);
+		}
+	}
+
+	tb->sort = 0;
+	return;
+}
+
+
 int tbboxAddCircle(TBBOX *tb, int x, int y, int radius) {
 	int key;
 
@@ -88,6 +134,7 @@ int tbboxAddCircle(TBBOX *tb, int x, int y, int radius) {
 	tb->entry[key].cent.radius = radius;
 
 	tb->lookup[tb->entry[key].id] = key;
+	tb->sort = 1;
 
 	return tb->entry[key].id;
 }
@@ -114,7 +161,9 @@ int tbboxAddTriangleBox(TBBOX *tb, int x, int y, int x1, int y1, int x2, int y2,
 	tb->entry[key].cent.point_y = y;
 
 	tb->lookup[tb->entry[key].id] = key;
+	tb->sort = 1;
 
 	return tb->entry[key].id;
 }
+
 

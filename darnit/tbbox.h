@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 #ifndef __TBBOX_H__
 #define	__TBBOX_H__
 
-enum TBBOX_SORTMODE {
+enum tbbox_sortmode {
 	TBBOX_SORTMODE_X,
 	TBBOX_SORTMODE_Y,
 };
@@ -56,11 +56,14 @@ typedef struct {
 
 
 typedef struct {
+	enum tbbox_sortmode	mode;
 	int			size;
 	int			used;
 	TBBOX_ENTRY		*entry;
 	int			entries;
 	int			*lookup;
+	/* Set if we need to re-sort the entries */
+	int			sort;
 } TBBOX;
 
 
