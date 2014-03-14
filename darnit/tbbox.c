@@ -95,7 +95,7 @@ void tbboxSort(TBBOX *tb) {
 	/* Just re-using the same insertion-sort from bbox */
 	for (sort = 0, i = 1; i < tb->entries; i++, sort = 0) {
 		for (j = i; j > 0; j--, sort = 0) {
-			if (tb->lookup[i - 1] < 0)
+			if (tb->lookup[j - 1] < 0)
 				sort = 1;
 			if (tb->mode == SORT_MODE_X) {
 				if (X(j) < X(j-1) || (X(j) == X(j-1) && Y(j) < Y(j-1)))
@@ -107,7 +107,7 @@ void tbboxSort(TBBOX *tb) {
 		
 			if (!sort)
 				break;
-			tbboxSortSwitch(tb, i);
+			tbboxSortSwitch(tb, j);
 		}
 	}
 
@@ -167,3 +167,12 @@ int tbboxAddTriangleBox(TBBOX *tb, int x, int y, int x1, int y1, int x2, int y2,
 }
 
 
+static int tbboxTestCircleCircle(TBBOX *tb, int entry, int x, int y, int radius) {
+	int dx, dy, r, fred;
+
+	dx = tb->entry[entry].cent.point_x - x;
+	dy = tb->entry[entry].cent.point_y - y;
+	r = dx * dx + dy * dy;
+	fred = tb->entry[entry].cent.radius + radius;
+	return fred * fred >= r;
+}

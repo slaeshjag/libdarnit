@@ -37,8 +37,13 @@ void darnitSetPlatform(int partial) {
 		d->platform.screen_h = d->video.h;
 	} else {
 		#if defined(PANDORA) || defined(MAEMO)
+			#ifndef DB_PYRA
 			d->platform.screen_w = 800;
 			d->platform.screen_h = 480;
+			#else
+			d->platform.screen_w = 960;
+			d->platform.screen_h = 540;
+			#endif
 			d->platform.fullscreen = 1;
 		#elif defined GCW_ZERO
 			d->platform.screen_w = 320;
@@ -52,7 +57,11 @@ void darnitSetPlatform(int partial) {
 	}
 
 	#if defined PANDORA
+		#ifndef DB_PYRA
 		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_PANDORA;
+		#else
+		d->platform.platform = DARNIT_PLATFORM_HANDHELD | DARNIT_PLATFORM_DBPYRA;
+		#endif
 	#elif defined _WIN32
 		d->platform.platform = DARNIT_PLATFORM_DESKTOP | DARNIT_PLATFORM_WIN32;
 	#elif defined MAEMO

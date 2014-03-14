@@ -76,6 +76,16 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	INSTARG	+=	$(STRIP)
 	PLATFORM=	sdl
 else
+ifneq (,$(findstring -DDB_PYRA, $(CFLAGS)))
+	#Pandora specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7hf\" -DPANDORA
+	PREFIX	=	/usr/local/angstrom/arm/arm-angstrom-linux-gnueabi/usr
+	CFLAGS	+=	-fvisibility=hidden -fPIC
+	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
+	PTHREAD_L +=	-lpthread
+	INSTARG	+=	$(STRIP)
+	PLATFORM=	sdl
+else
 ifneq (,$(findstring -DGCW_ZERO, $(CFLAGS)))
 	#GCWZero specifics
 	CFLAGS	+=	-DPLATFORM_STRING=\"gcwzero-mips32\"
@@ -107,6 +117,7 @@ endif
 	PTHREAD_L +=	-lpthread
 	PLATFORM=	sdl
 	STRIP	=	strip
+endif
 endif
 endif
 endif
