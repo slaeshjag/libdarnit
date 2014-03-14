@@ -113,6 +113,7 @@ typedef struct {
 #include "isometric.h"
 #include "collision.h"
 #include "compression.h"
+#include "tbbox.h"
 
 int darnitTimeLastFrameTook();
 
