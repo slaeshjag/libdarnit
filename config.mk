@@ -76,6 +76,16 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 	INSTARG	+=	$(STRIP)
 	PLATFORM=	sdl
 else
+ifeq ($(BUILDFOR), PANDORA)
+	#Pandora specifics
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7\" -DPANDORA -DHAVE_GLES -O3
+	PREFIX	=	/usr/local
+	CFLAGS	+=	-fvisibility=hidden -fPIC
+	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
+	PTHREAD_L +=	-lpthread
+	INSTARG	+=	$(STRIP)
+	PLATFORM=	sdl
+else
 ifneq (,$(findstring -DDB_PYRA, $(CFLAGS)))
 	#Pandora specifics
 	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7hf\" -DPANDORA
@@ -117,6 +127,7 @@ endif
 	PTHREAD_L +=	-lpthread
 	PLATFORM=	sdl
 	STRIP	=	strip
+endif
 endif
 endif
 endif
