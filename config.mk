@@ -78,7 +78,7 @@ ifneq (,$(findstring -DPANDORA, $(CFLAGS)))
 else
 ifeq ($(BUILDFOR), PANDORA)
 	#Pandora specifics
-	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7\" -DPANDORA -DHAVE_GLES -O3
+	CFLAGS	+=	-DPLATFORM_STRING=\"linux-armv7\" -DPANDORA -DHAVE_GLES -O3 -DNOREDEF
 	PREFIX	=	/usr/local
 	CFLAGS	+=	-fvisibility=hidden -fPIC
 	LDFLAGS	+=	-lGLES_CM -lEGL -lX11 -lSDL -ldl
