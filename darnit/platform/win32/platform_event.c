@@ -54,11 +54,13 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			event.type = TPW_EVENT_TYPE_QUIT;
 			break;
 		case WM_KEYDOWN:
+			event.key.keysym = tpw_keysym_translate(wParam);
+			if (!event.key.keysym)
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
 			if (tpw.keys[wParam])
 				return 0;
 			event.type = TPW_EVENT_TYPE_KEYDOWN;
 			tpw.modifiers |= tpw_modifier(wParam);
-			event.key.keysym = tpw_keysym_translate(wParam);
 			tpw.keys[wParam] = 0xFF;
 			if (event.key.keysym)
 				tpw.common.sdl_keys[event.key.keysym] = 1;
@@ -72,8 +74,11 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				event.key.keysym = 512 + wParam;
 			break;
 		case WM_KEYUP:
-			event.type = TPW_EVENT_TYPE_KEYUP;
 			event.key.keysym = tpw_keysym_translate(wParam);
+			if (!event.key.keysym)
+				return DefWindowProc(hWnd, uMsg, wParam, lParam);
+				
+			event.type = TPW_EVENT_TYPE_KEYUP;
 			if (event.key.keysym)
 				tpw.common.sdl_keys[event.key.keysym] = 0;
 			if (!event.key.keysym) {
