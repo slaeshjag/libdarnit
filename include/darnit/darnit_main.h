@@ -37,6 +37,7 @@ freely, subject to the following restrictions:
 #define		DARNIT_PLATFORM_MACOSX		0x20
 #define		DARNIT_PLATFORM_FREEBSD		0x40
 #define		DARNIT_PLATFORM_MAEMO		0x80
+#define		DARNIT_PLATFORM_DBPYRA		0x100
 #define		DARNIT_PLATFORM_BIGENDIAN	0x80000000
 
 typedef	int			DARNIT_PLATFORMS;

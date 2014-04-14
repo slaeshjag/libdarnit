@@ -109,6 +109,7 @@ void d_render_tilesheet_animate(DARNIT_TILESHEET *tilesheet);
 void d_render_logic_op(DARNIT_RENDER_LOGIC_OP logicop);
 void d_render_tilesheet_scale_algorithm(DARNIT_TILESHEET *tilesheet, DARNIT_RENDER_SCALE scaling);
 
+int d_render_texture_get(DARNIT_TILESHEET *ts, int *w, int *h);
 
 
 

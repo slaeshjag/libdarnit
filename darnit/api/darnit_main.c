@@ -133,6 +133,8 @@ void EXPORT_THIS *d_init_partial(const char *data_dir) {
 
 	d->platform.platform = 0;
 	darnitSetPlatform(1);
+	glColor4f(255, 255, 255, 255);
+	d->video.tint_r = d->video.tint_g = d->video.tint_b = d->video.tint_a = 255;
 	utilInit();
 
 	if (inputInit() < 0);

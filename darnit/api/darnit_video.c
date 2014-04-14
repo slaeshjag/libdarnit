@@ -536,3 +536,14 @@ void EXPORT_THIS d_render_tilesheet_scale_algorithm(void *tilesheet, unsigned in
 
 	return;
 }
+
+
+int EXPORT_THIS d_render_texture_get(TILESHEET *ts, int *w, int *h) {
+	if (w) *w = 0;
+	if (h) *h = 0;
+	if (!ts)
+		return 0;
+	if (w) *w = ts->w;
+	if (h) *h = ts->h;
+	return ts->texhandle;
+}
