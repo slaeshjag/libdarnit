@@ -73,3 +73,30 @@ void tpw_sound_control(TPW_SOUND_COMMAND command) {
 	
 	return;
 }
+
+
+#ifdef __ALSA_CAPTURE__
+
+#include <alsa/asoundlib.h>
+
+int tpw_sound_capture_register() {
+}
+
+
+void tpw_sound_capture_unregister() {
+}
+
+
+#else
+
+int tpw_sound_capture_register() {
+	/* Not implemented, fail */
+	return 0;
+}
+
+void tpw_sound_capture_unregister() {
+	/* Not supported, nothing to unregister */
+	return;
+}
+
+#endif
