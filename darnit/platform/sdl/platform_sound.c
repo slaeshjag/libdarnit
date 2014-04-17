@@ -79,7 +79,18 @@ void tpw_sound_control(TPW_SOUND_COMMAND command) {
 
 #include <alsa/asoundlib.h>
 
-int tpw_sound_capture_register() {
+struct {
+	void			(*callback)(void *sample, int samples, void *user_data);
+	void			*user_data;
+} tpw_mic_capture;
+
+int tpw_sound_capture_register(void (*callback)(void *, int, void *), void *user_data) {
+	if (!callback) {
+		tpw_mic_capture.callback = NULL;
+		tpw_mic_capture.user_data = NULL;
+	}
+
+	return 0;
 }
 
 

@@ -122,7 +122,7 @@ ifneq (,$(findstring x86_64, $(UNAME)))
 endif
 	CFLAGS	+=	-DPLATFORM_STRING=\"linux-$(UNAME)\"
 	DATA_PATH=	\"/usr/share/games\"
-	CFLAGS	+=	-fvisibility=hidden -fPIC
+	CFLAGS	+=	-fvisibility=hidden -fPIC -D__ALSA_CAPTURE__
 	LDFLAGS	+=	-lSDL -lGL -ldl
 	PTHREAD_L +=	-lpthread
 	PLATFORM=	sdl
