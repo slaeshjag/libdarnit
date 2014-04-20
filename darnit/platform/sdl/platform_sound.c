@@ -82,13 +82,35 @@ void tpw_sound_control(TPW_SOUND_COMMAND command) {
 struct {
 	void			(*callback)(void *sample, int samples, void *user_data);
 	void			*user_data;
+	snd_pcm_t		*alsa_handle;
 } tpw_mic_capture;
 
+
+void tpw_sound_capture_handler() {
+	return;
+}
+
+
+void twp_sound_capture_init() {
+	tpw_mic_capture.alsa_handle = NULL;
+	tpw_mic_capture.user_data = NULL;
+	tpw_mic_capture.callback = NULL;
+
+	return;
+}
+
+
 int tpw_sound_capture_register(void (*callback)(void *, int, void *), void *user_data) {
-	if (!callback) {
-		tpw_mic_capture.callback = NULL;
-		tpw_mic_capture.user_data = NULL;
-	}
+	snd_pcm_hw_params_t *hw_params;
+	int err;
+
+	tpw_mic_capture.callback = callback;
+	tpw_mic_capture.user_data = user_data;
+
+	if (tpw_mic_capture.alsa_handle)
+		return 1;
+	
+//	if ((err = snd_pcm_open(&tpw_mic_capture.alsa_handle, "default:0,0", SND_STREAM_CAPTURE, SND_
 
 	return 0;
 }
@@ -107,6 +129,12 @@ int tpw_sound_capture_register() {
 
 void tpw_sound_capture_unregister() {
 	/* Not supported, nothing to unregister */
+	return;
+}
+
+
+void twp_sound_capture_init() {
+	/* Not implemented */
 	return;
 }
 
