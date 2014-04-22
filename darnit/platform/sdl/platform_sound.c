@@ -87,9 +87,22 @@ struct {
 } tpw_mic_capture;
 
 
-void tpw_sound_capture_handler(void *sample, int samples) {
-	if (tpw_mic_capture.callback)
-		tpw_mic_capture.callback(tpw_mic_capture.channels, sample, samples, tpw_mic_capture.user_data);
+void tpw_sound_capture_handler(snd_async_handler_t *pcm_callback) {
+	char buff[1024];
+	snd_pcm_t *pcm_handle = snd_async_handler_get_pcm(pcm_callback);
+	snd_pcm_sframes_t avail;
+	int this;
+
+	avail = snd_pcm_avail_update(pcm_handle);
+	for (; avail; ) {
+		snd_pcm_readi(pcm_handle, buff, 256);
+		this = (avail < 1024) ? avail : 1024;
+		this /= tpw_mic_capture.channels;
+		this /= 2;
+
+		if (tpw_mic_capture.callback)
+			tpw_mic_capture.callback(tpw_mic_capture.channels, buff, this, tpw_mic_capture.user_data);
+	}
 	return;
 }
 
