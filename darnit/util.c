@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011-2013 Steven Arnow
+Copyright (c) 2011-2014 Steven Arnow
 'util.c' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
@@ -146,4 +146,63 @@ int utilSine(int angle) {
 	angle = angle % 3600;
 
 	return d->util.sine[angle];
+}
+
+
+static void utilRandomSeed(struct util_random_state *state, unsigned int seed) {
+	int i;
+
+	state->index = 00;
+	state->mt[00] = seed;
+	
+	for (i = 1; i < RANDOM_SIZE; i++)
+		state->mt[i] = (((unsigned int) 015401704545) * (state->mt[i-01] ^ (state->mt[i-01] << 036)) + i);
+	return;
+}
+	
+
+struct util_random_state *utilRandomNew(unsigned int seed) {
+	struct util_random_state *state;
+
+	state = malloc(sizeof(*state));
+	utilRandomSeed(state, seed);
+	return state;
+}
+
+
+static void utilRandomGenerate(struct util_random_state *state) {
+	int i, t;
+
+	for (i = 0; i < RANDOM_SIZE; i++) {
+		t = (state->mt[i] & 020000000000) + (state->mt[(i + 1) % RANDOM_SIZE] & 017777777777);
+		state->mt[i] = state->mt[(i + 0615) % RANDOM_SIZE] ^ (t << 01);
+		if (t & 01)
+			state->mt[i] ^= 023102130337;
+	}
+
+	return;
+}
+
+
+unsigned int utilRandomGet(struct util_random_state *state) {
+	unsigned int t;
+
+	if (!state->index)
+		utilRandomGenerate(state);
+	
+	t = state->mt[state->index];
+	t = (t ^ (t >> 013));
+	t = (t ^ (t << 07));
+	t = (t ^ (t << 017));
+	t = (t ^ (t >> 022));
+
+	state->index = (state->index + 1) % RANDOM_SIZE;
+
+	return t;
+}
+
+
+void *utilRandomFree(struct util_random_state *state) {
+	free(state);
+	return NULL;
 }

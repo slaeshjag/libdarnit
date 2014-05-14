@@ -32,6 +32,8 @@ typedef struct {
 	unsigned int		*data;
 } DARNIT_IMAGE_DATA;
 
+typedef void DARNIT_RANDOM;
+
 
 unsigned int d_util_htonl(unsigned int arg);
 unsigned int d_util_ntohl(unsigned int arg);
@@ -43,6 +45,10 @@ const char *d_str_null(const char *str);
 DARNIT_IMAGE_DATA d_img_load_raw(const char *fname);
 int d_util_compress(void *data_in, unsigned int data_len, void **data_out);
 int d_util_decompress(void *data_in, unsigned int data_len, void **data_out);
+
+DARNIT_RANDOM *d_util_random_new(unsigned int seed);
+unsigned int d_util_random_get(DARNIT_RANDOM *random);
+DARNIT_RANDOM *d_util_random_free(DARNIT_RANDOM *random);
 
 
 #endif

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011-2013 Steven Arnow
+Copyright (c) 2011-2014 Steven Arnow
 'darnit_util.c' - This file is part of libdarnit
 
 This software is provided 'as-is', without any express or implied
@@ -79,4 +79,19 @@ int EXPORT_THIS d_util_compress(void *buffer, unsigned int data_len, void **dest
 
 int EXPORT_THIS d_util_decompress(void *buffer, unsigned int data_len, void **dest) {
 	return compressionDecompress(buffer, data_len, dest);
+}
+
+
+void EXPORT_THIS *d_util_random_new(unsigned int seed) {
+	return utilRandomNew(seed);
+}
+
+
+unsigned int EXPORT_THIS d_util_random_get(void *state) {
+	return utilRandomGet(state);
+}
+
+
+void EXPORT_THIS *d_util_random_free(void *state) {
+	return utilRandomFree(state);
 }

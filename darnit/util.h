@@ -34,6 +34,7 @@ freely, subject to the following restrictions:
 	#include <arpa/inet.h>
 #endif
 
+#define	RANDOM_SIZE		01160
 
 void utilCoordinatesRotate(float *x, float *y, int angle);
 unsigned int utilHtonl(unsigned int val);
@@ -44,12 +45,22 @@ void utilBlockToHostEndian(unsigned int *block, int elements);
 unsigned int utilStringSum(const char *str);
 
 
+struct util_random_state {
+	/* TODO: Add mutex */
+	unsigned int		mt[RANDOM_SIZE];
+	unsigned int		index;
+};
+
+
 typedef struct {
 	int			sine[3600];
 } UTIL;
 
 void utilInit();
 int utilSine(int angle);
+struct util_random_state *utilRandomNew(unsigned int seed);
+unsigned int utilRandomGet(struct util_random_state *state);
+void *utilRandomFree(struct util_random_state *state);
 #define utilCos(x) utilSine(900+(x))
 #define UTIL_PI 31
 
