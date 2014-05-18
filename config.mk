@@ -123,7 +123,7 @@ endif
 	CFLAGS	+=	-DPLATFORM_STRING=\"linux-$(UNAME)\"
 	DATA_PATH=	\"/usr/share/games\"
 	CFLAGS	+=	-fvisibility=hidden -fPIC -D__ALSA_CAPTURE__
-	LDFLAGS	+=	-lSDL -lGL -ldl
+	LDFLAGS	+=	-lSDL -lGL -ldl -lasound
 	PTHREAD_L +=	-lpthread
 	PLATFORM=	sdl
 	STRIP	=	strip

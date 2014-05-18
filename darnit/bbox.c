@@ -31,19 +31,23 @@ int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned
 	int i;
 
 	for (i = 0; i < bbox->max; i++)
-		if (bbox->bbox[i].key == -1) {
-			bbox->bbox[i].x = x, bbox->bbox[i].y = y, bbox->bbox[i].w = w;
-			bbox->bbox[i].h = h, bbox->bbox[i].xb = x+w, bbox->bbox[i].yb = y+h;
-			if (bbox->keymode)
-				bbox->bbox[i].key = bbox->bbox[i].a_key;
-			else
-				bbox->bbox[i].key = bbox->cnt++;
-			bbox->bboxes++;
-			bbox->sort = 1;
-			return bbox->bbox[i].key;
-		}
+		if (bbox->bbox[i].key == -1)
+			break;
+	if (i == bbox->max) {
+		bbox->bbox = realloc(bbox->bbox, sizeof(*bbox->bbox) * bbox->max);
+		bbox->bbox[bbox->max].a_key = bbox->max;
+		bbox->max++;
+	}
 	
-	return -1;
+	bbox->bbox[i].x = x, bbox->bbox[i].y = y, bbox->bbox[i].w = w;
+	bbox->bbox[i].h = h, bbox->bbox[i].xb = x+w, bbox->bbox[i].yb = y+h;
+	if (bbox->keymode)
+		bbox->bbox[i].key = bbox->bbox[i].a_key;
+	else
+		bbox->bbox[i].key = bbox->cnt++;
+	bbox->bboxes++;
+	bbox->sort = 1;
+	return bbox->bbox[i].key;
 }
 
 

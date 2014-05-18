@@ -30,7 +30,6 @@ freely, subject to the following restrictions:
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "platform/tpw.h"
 #include <errno.h>
 
 
@@ -45,6 +44,8 @@ freely, subject to the following restrictions:
 	#include <sys/types.h>
 	#include <fcntl.h>
 #endif
+
+#include "platform/tpw.h"
 
 #define		DARNIT_UNUSED(x) (void)x
 
