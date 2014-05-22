@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 #include "darnit.h"
 
 
-int bboxAdd(BBOX *bbox, unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+int bboxAdd(BBOX *bbox, int x, int y, unsigned int w, unsigned int h) {
 	if (bbox == NULL) return -1;
 	int i;
 
@@ -67,7 +67,7 @@ void bboxDelete(BBOX *bbox, int key) {
 }
 
 
-void bboxMove(BBOX *bbox, int key, unsigned int x, unsigned int y) {
+void bboxMove(BBOX *bbox, int key, int x, int y) {
 	if (bbox == NULL) return; 
 	int i;
 
