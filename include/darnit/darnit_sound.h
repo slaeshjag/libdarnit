@@ -27,22 +27,35 @@ freely, subject to the following restrictions:
 #define	__DARNIT_AUDIO_H__
 
 typedef enum {
-	DARNIT_AUDIO_MONO = 1,
-	DARNIT_AUDIO_STEREO = 2,
-} DARNIT_AUDIO_CHANNELS;
+	DARNIT_SOUND_MONO = 1,
+	DARNIT_SOUND_STEREO = 2,
+} DARNIT_SOUND_CHANNELS;
 
 typedef enum {
-	DARNIT_AUDIO_PRELOAD = 0,
-	DARNIT_AUDIO_STREAM = 1,
-} DARNIT_AUDIO_MODE;
+	DARNIT_SOUND_PRELOAD = 0,
+	DARNIT_SOUND_STREAM = 1,
+} DARNIT_SOUND_MODE;
 
-#define			DARNIT_AUDIO_NOREPEAT		-1
+typedef enum {
+	DARNIT_SOUND_NOREPEAT = -1,
+	DARNIT_SOUND_REPEAT_START = 0,
+} DARNIT_SOUND_REPEAT;
+
+#define	DARNIT_AUDIO_MONO	DARNIT_SOUND_MONO
+#define	DARNIT_AUDIO_STEREO	DARNIT_SOUND_STEREO
+#define	DARNIT_AUDIO_CHANNELS	DARNIT_SOUND_CHANNELS
+
+#define	DARNIT_AUDIO_PRELOAD	DARNIT_SOUND_PRELOAD
+#define	DARNIT_AUDIO_STREAM	DARNIT_SOUND_STREAM
+#define	DARNIT_AUDIO_MODE	DARNIT_SOUND_MODE
+
+#define	DARNIT_AUDIO_NOREPEAT	DARNIT_SOUND_NOREPEAT
 
 typedef void DARNIT_SOUND;
 
-DARNIT_SOUND *d_sound_tracked_load(const char *fname, DARNIT_AUDIO_MODE mode, DARNIT_AUDIO_CHANNELS channels);
-DARNIT_SOUND *d_sound_streamed_load(const char *fname, DARNIT_AUDIO_MODE mode, DARNIT_AUDIO_CHANNELS channels);
-DARNIT_SOUND *d_sound_callback_load(int (*callback)(signed short *buff, int buff_len, int pos, void *data), void *data, DARNIT_AUDIO_CHANNELS channels);
+DARNIT_SOUND *d_sound_tracked_load(const char *fname, DARNIT_SOUND_MODE mode, DARNIT_SOUND_CHANNELS channels);
+DARNIT_SOUND *d_sound_streamed_load(const char *fname, DARNIT_SOUND_MODE mode, DARNIT_SOUND_CHANNELS channels);
+DARNIT_SOUND *d_sound_callback_load(int (*callback)(signed short *buff, int buff_len, int pos, void *data), void *data, DARNIT_SOUND_CHANNELS channels);
 DARNIT_SOUND *d_sound_unload(DARNIT_SOUND *sound_resource);
 void d_sound_stop_all();
 void d_sound_stop(int playback_key);
