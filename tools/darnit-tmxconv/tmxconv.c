@@ -610,7 +610,7 @@ int main(int argc, char **argv) {
 	map_info.dummy_ref = n[0];
 	free(n);
 	
-	fprintf(stderr, "%i refs\n", map_info.refs);
+	//fprintf(stderr, "%i refs\n", map_info.refs);
 	for (i = 0; i < map_info.refs; i++)
 		if (map_info.ref_d[i].ref[0] < 0)
 			continue;
