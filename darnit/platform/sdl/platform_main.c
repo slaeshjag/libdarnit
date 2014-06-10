@@ -26,6 +26,13 @@ freely, subject to the following restrictions:
 #include "../main.h"
 
 
+// Hack for Vsync on linux
+#ifndef NO_GLX
+#ifndef HAVE_GLES
+void glXSwapIntervalEXT(int mode);
+#endif
+#endif
+
 int tpw_init_platform() {
 	#ifdef _WIN32
 	void *libtmp;
@@ -152,6 +159,12 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	}
 	#endif
 
+
+	#ifndef NO_GLX
+	#ifndef HAVE_GLES
+//	glXSwapIntervalEXT(1);
+	#endif
+	#endif
 
 	return 1;
 }

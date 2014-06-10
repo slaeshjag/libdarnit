@@ -24,6 +24,7 @@ freely, subject to the following restrictions:
 
 
 #include "darnit.h"
+DARNIT *darnit_main_struct_that_nothing_should_use;
 
 void *d_init_partial(const char *data_dir);
 int d_init_rest(const char *wtitle, int win_w, int win_h, int fullscreen, const char *icon);
@@ -223,4 +224,8 @@ void EXPORT_THIS **d_videomode_get() {
 
 const char EXPORT_THIS *d_platform_string() {
 	return PLATFORM_STRING;
+}
+
+void EXPORT_THIS *d_get_debug_handle() {
+	return d;
 }

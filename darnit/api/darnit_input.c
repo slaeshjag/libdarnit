@@ -92,7 +92,12 @@ unsigned int convert_keys_back(DARNIT_KEYS dk) {
 }
 
 DARNIT_KEYS EXPORT_THIS d_keys_get() {
-	return convert_keys((d->input.key & (~d->input.keypending)));
+	unsigned int keys;
+
+	keys = d->input.keypending;
+	keys = ~keys;
+	keys &= d->input.key;
+	return convert_keys(keys);
 }
 
 

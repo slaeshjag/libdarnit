@@ -609,9 +609,29 @@ int textSurfaceAppendCodepoint(TEXT_SURFACE *surface, unsigned int cp) {
 		surface->pos = 0;
 		return 1;
 	}
-	
+
 	if ((glyph_e = textGetGlyphEntry(surface->font, glyph)) == NULL)
 		return 1;
+	
+	if (cp == '\t') {
+		w = textGetGlyphWidth(surface->font, ' ');
+		w *= 8;
+		h = surface->pos % w;
+		w -= h;
+		surface->pos += w;
+		switch (surface->prim) {
+			case TEXT_O_LEFT_TO_RIGHT:
+				surface->cur_xf = surface->orig_xf + d->video.swgran * surface->pos;
+				break;
+			case TEXT_O_RIGHT_TO_LEFT:
+				surface->cur_xf = surface->orig_xf - d->video.swgran * surface->pos;
+				break;
+			default:
+				break;
+		}
+
+		return 1;
+	}
 
 //	wf = textGetGlyphWidthf(surface->font, glyph);
 	hf = textGetGlyphHeightf(surface->font, glyph);

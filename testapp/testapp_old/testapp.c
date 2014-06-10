@@ -103,8 +103,8 @@ int main(int argc, char **argv) {
 	/* Text rendering */
 	test_text = malloc(64);
 	font = d_font_load("dejavu_sans.ttf", 28, 64, 64);
-	text = d_text_surface_new(font, 80, 800, 0, 460);
-	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 420);
+	text = d_text_surface_new(font, 80, 800, 0, 400);
+	fancy_text = d_text_surface_color_new(font, 16, 800, 0, 360);
 	colorTest(fancy_text);
 	fps_text = d_text_surface_new(font, 16, 200, 0, 40);
 
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
 		d_text_surface_reset(text); d_text_surface_reset(fps_text);
 		mouse = d_mouse_get();
 		d_joystick_get(&js0_x, &js0_y, &js1_x, &js1_y);
-		sprintf(test, "X: %i, Y: %i, W: %i;; TX: %i, TY: %i;; nub0 (%i,%i) ;; nub1(%i,%i)", mouse.x, mouse.y, mouse.wheel, i*4, j*4, js0_x, js0_y, js1_x, js1_y);
+		sprintf(test, "X: %i, Y: %i, W: %i;;\t TX: %i, TY: %i;; nub0 (%i,%i) ;; nub1(%i,%i)\nTest\tArne\nAsD\tArne2", mouse.x, mouse.y, mouse.wheel, i*4, j*4, js0_x, js0_y, js1_x, js1_y);
 		sprintf(fps, "%i", d_last_frame_time());
 		d_text_surface_string_append(text, test);
 		d_text_surface_string_append(fps_text, "ASDFÅÄÖ,,");

@@ -179,7 +179,8 @@ typedef struct {
 
 
 /* It has finally happened. I made that annoying handle global. I know <.< */
-DARNIT *d;
+extern DARNIT *darnit_main_struct_that_nothing_should_use;
+#define	d	darnit_main_struct_that_nothing_should_use
 
 
 #endif
