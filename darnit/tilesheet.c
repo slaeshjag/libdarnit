@@ -255,7 +255,7 @@ int renderTilesheetAnimationApply(TILESHEET *ts, const char *fname) {
 			case 'F':
 				fsFileGets(buf, 512, fp);
 				sscanf(buf, "%i %i %i\n", &ts->animation.tile[i].frame[j].tile_src, &ts->animation.tile[i].frame[j].tile_dst, &ts->animation.tile[i].frame[j].time);
-				j++;
+				j++, frames++;
 				break;
 			case 'E':
 				fsFileGets(buf, 512, fp);
