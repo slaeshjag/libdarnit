@@ -3,9 +3,9 @@
 
 LIB		=	$(TOPDIR)/bin/libdarnit.so
 
-DBGFLAGS	=	-O0 -g -D__DEBUG__
+#DBGFLAGS	=	-O0 -g -D__DEBUG__
 VERSION		=	v.0.2b5r2
-#DBGFLAGS	=	-O3 -g
+DBGFLAGS	=	-O3 -g
 #Flags specific for tools
 LDTOOLS		:=	$(LDFLAGS)
 CTOOLS		:=	$(CFLAGS) -Wall -O3

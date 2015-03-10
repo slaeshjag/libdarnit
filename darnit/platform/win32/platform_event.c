@@ -70,7 +70,7 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 				if (attempt_unicode)
 					event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 				else
-					event.key.unicode = event.key.keysym;
+					event.key.unicode = (ToAscii(wParam, lParam, (BYTE *) tpw.keys, (LPWORD) keys, 0) > 0) ? (keys[0] & 0xFF) : 0;
 			} else
 				event.key.unicode = 0;
 			if (!event.key.keysym && !event.key.unicode)
@@ -91,7 +91,8 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 					if (attempt_unicode)
 						event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
 					else
-						event.key.unicode = event.key.keysym;
+						event.key.unicode = (ToAscii(wParam, lParam, (BYTE *) tpw.keys, (LPWORD) keys, 0) > 0) ? (keys[0] & 0xFF) : 0;
+						//event.key.unicode = event.key.keysym;
 				} else
 					event.key.unicode = 0;
 				if (event.key.unicode)
