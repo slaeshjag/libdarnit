@@ -23,7 +23,9 @@ freely, subject to the following restrictions:
 */
 
 #include "../main.h"
+#include <stdbool.h>
 
+bool attempt_unicode = true;
 unsigned short vk_translate[256];
 
 unsigned int tpw_modifier(unsigned int vk);
@@ -64,9 +66,12 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			tpw.keys[wParam] = 0xFF;
 			if (event.key.keysym)
 				tpw.common.sdl_keys[event.key.keysym] = 1;
-			if (tpw.unicode_key)
-				event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
-			else
+			if (tpw.unicode_key) {
+				if (attempt_unicode)
+					event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
+				else
+					event.key.unicode = event.key.keysym;
+			} else
 				event.key.unicode = 0;
 			if (!event.key.keysym && !event.key.unicode)
 				return 0;
@@ -82,9 +87,12 @@ LRESULT CALLBACK tpw_message_process(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 			if (event.key.keysym)
 				tpw.common.sdl_keys[event.key.keysym] = 0;
 			if (!event.key.keysym) {
-				if (tpw.unicode_key)
-					event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
-				else
+				if (tpw.unicode_key) {
+					if (attempt_unicode)
+						event.key.unicode = (ToUnicode(wParam, lParam, (BYTE *) tpw.keys, (LPWSTR) keys, 1, 0) > 0) ? keys[0] : 0;
+					else
+						event.key.unicode = event.key.keysym;
+				} else
 					event.key.unicode = 0;
 				if (event.key.unicode)
 					event.key.keysym = 512 + wParam;
@@ -222,6 +230,17 @@ unsigned int tpw_modifier(unsigned int vk) {
 }
 
 void tpw_event_platform_init() {
+	/* ToUnicode doesn't seem to work properly on Windows 98, turn	**
+	** off ToUnicode() if windows version < 5.0			*/
+	{
+		OSVERSIONINFO osvi;
+		ZeroMemory(&osvi, sizeof(osvi));
+		osvi.dwOSVersionInfoSize = sizeof(osvi);
+		GetVersionEx(&osvi);
+		if (osvi.dwMajorVersion < 5)
+			attempt_unicode = false;
+	}
+
 	/* Ugly hack to make MSVS happy... <.< */
 	vk_translate[0x08] = 8;
 	vk_translate[0x09] = 9;
