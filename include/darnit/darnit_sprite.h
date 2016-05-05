@@ -50,6 +50,7 @@ void d_sprite_animate_repeat(DARNIT_SPRITE *sprite, DARNIT_SPRITE_ANIMATION repe
 void d_sprite_draw(DARNIT_SPRITE *sprite);
 void d_sprite_frame_entry_set(DARNIT_SPRITE *sprite, int dir, int frame, int tile, int time);
 void d_sprite_hitbox_set(DARNIT_SPRITE *sprite, int dir, int frame, int x, int y, int w, int h);
+int d_sprite_direction_get(DARNIT_SPRITE *sprite);
 
 int d_sprite_width(DARNIT_SPRITE *sprite);
 int d_sprite_height(DARNIT_SPRITE *sprite);

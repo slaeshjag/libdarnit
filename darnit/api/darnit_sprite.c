@@ -114,6 +114,11 @@ void EXPORT_THIS d_sprite_rotate(SPRITE_ENTRY *sprite, int angle) {
 }
 
 
+int EXPORT_THIS d_sprite_direction_get(SPRITE_ENTRY *sprite) {
+	return sprite->dir;
+}
+
+
 void EXPORT_THIS d_sprite_hitbox_set(SPRITE_ENTRY *sprite, int dir, int frame, int x, int y, int w, int h) {
 	if (!sprite)
 		return;
