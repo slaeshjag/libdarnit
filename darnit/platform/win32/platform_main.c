@@ -124,31 +124,31 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	if (!(tpw.hDC = GetDC(tpw.hWnd))) {
 		tpw_quit();
 		fprintf(stderr, "Unable to get a OpenGL device context\n");
-		return 0;
+		goto opengl_error;
 	}
 
 	if (!(PixelFormat = ChoosePixelFormat(tpw.hDC, &pfd))) {
 		tpw_quit();
 		fprintf(stderr, "The requested pixel format is not available\n");
-		return 0;
+		goto opengl_error;
 	}
 
 	if (!SetPixelFormat(tpw.hDC, PixelFormat, &pfd)) {
 		tpw_quit();
 		fprintf(stderr, "Unable to set the requested pixel format\n");
-		return 0;
+		goto opengl_error;
 	}
 
 	if (!(tpw.hRC = wglCreateContext(tpw.hDC))) {
 		tpw_quit();
 		fprintf(stderr, "Unable to create an OpenGL context\n");
-		return 0;
+		goto opengl_error;
 	}
 
 	if (!wglMakeCurrent(tpw.hDC, tpw.hRC)) {
 		tpw_quit();
 		fprintf(stderr, "Unable to activate the OpenGL context\n");
-		return 0;
+		goto opengl_error;
 	}
 
 	if (!fullscreen)
@@ -159,6 +159,10 @@ int tpw_window_create(const char *title, unsigned int window_w, unsigned int win
 	SetFocus(tpw.hWnd);
 
 	return 1;
+
+	opengl_error:
+	tpw_platform_error_dialog(NULL, "A problem occured while setting up an OpenGL context. Make sure your graphics accelerator drivers are installed properly.");
+	return 0;
 }
 
 
@@ -248,4 +252,9 @@ void tpw_quit() {
 	UnregisterClass(WINDOW_CLASS_NAME, tpw.hInstance);
 
 	return;
+}
+
+
+void tpw_platform_error_dialog(const char *title, const char *msg) {
+	MessageBox(NULL, msg, title, MB_OK | MB_ICONERROR);
 }

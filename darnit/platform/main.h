@@ -67,6 +67,7 @@ void tpw_input_unicode(int enable);
 void tpw_cursor_show(unsigned int show);
 int tpw_icon_set(void *pixdata_rgba32, int w, int h);
 void tpw_quit();
+void tpw_platform_error_dialog(const char *title, const char *msg);
 
 char *tpw_keystate();
 

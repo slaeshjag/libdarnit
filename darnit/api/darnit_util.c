@@ -95,3 +95,58 @@ unsigned int EXPORT_THIS d_util_random_get(void *state) {
 void EXPORT_THIS *d_util_random_free(void *state) {
 	return utilRandomFree(state);
 }
+
+
+void EXPORT_THIS *d_util_mutex_create() {
+	return tpw_mutex_create();
+}
+
+
+void EXPORT_THIS d_util_mutex_lock(void *mutex) {
+	return tpw_mutex_lock(mutex);
+}
+
+
+void EXPORT_THIS d_util_mutex_unlock(void *mutex) {
+	return tpw_mutex_unlock(mutex);
+}
+
+
+void EXPORT_THIS *d_util_thread_new(void *func, void *func_arg) {
+	return tpw_thread_new(func, func_arg);
+}
+
+
+void EXPORT_THIS d_util_thread_exit(int exit_code) {
+	return tpw_thread_exit(exit_code);
+}
+
+
+void EXPORT_THIS d_util_thread_kill(void *thread) {
+	return tpw_thread_kill(thread);
+}
+
+
+void EXPORT_THIS d_util_thread_kill_self(int exit_code) {
+	return tpw_kill_self(exit_code);
+}
+
+
+void EXPORT_THIS *d_util_semaphore_new(int initial_count) {
+	return tpw_semaphore_new(initial_count);
+}
+
+
+void EXPORT_THIS d_util_semaphore_wait(void *sem) {
+	return tpw_semaphore_wait(sem);
+}
+
+
+void EXPORT_THIS d_util_semaphore_add(void *sem, int add) {
+	return tpw_semaphore_add(sem, add);
+}
+
+
+void EXPORT_THIS d_util_semahpore_delete(void *sem) {
+	return tpw_semaphore_delete(sem);
+}

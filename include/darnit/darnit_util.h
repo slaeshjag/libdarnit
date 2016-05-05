@@ -33,6 +33,9 @@ typedef struct {
 } DARNIT_IMAGE_DATA;
 
 typedef void DARNIT_RANDOM;
+typedef void DARNIT_MUTEX;
+typedef void DARNIT_SEMAPHORE;
+typedef void DARNIT_THREAD;
 
 
 unsigned int d_util_htonl(unsigned int arg);
@@ -49,6 +52,19 @@ int d_util_decompress(void *data_in, unsigned int data_len, void **data_out);
 DARNIT_RANDOM *d_util_random_new(unsigned int seed);
 unsigned int d_util_random_get(DARNIT_RANDOM *random);
 DARNIT_RANDOM *d_util_random_free(DARNIT_RANDOM *random);
+
+
+DARNIT_MUTEX *d_util_mutex_create();
+void d_util_mutex_lock(DARNIT_MUTEX *mutex);
+void d_util_mutex_unlock(DARNIT_MUTEX *mutex);
+DARNIT_THREAD *d_util_thread_new(void *func, void *func_arg);
+void d_util_thread_exit(int exit_code);
+void d_util_thread_kill(DARNIT_THREAD *thread);
+void d_util_thread_kill_self(DARNIT_THREAD *thread);
+DARNIT_SEMAPHORE *d_util_semaphore_new(int initial_count);
+void d_util_semaphore_wait(DARNIT_SEMAPHORE *sem);
+void d_util_semaphore_add(DARNIT_SEMAPHORE *sem, int add);
+void d_util_semahpore_delete(DARNIT_SEMAPHORE *sem);
 
 
 #endif

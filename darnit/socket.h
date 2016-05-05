@@ -47,6 +47,9 @@ typedef struct SOCKET_LIST {
 
 #ifdef _WIN32
 	#define		RETARDED_WAIT_TIMEOUT	3000
+	#ifdef		EWOULDBLOCK
+		#undef	EWOULDBLOCK
+	#endif
 	#define		EWOULDBLOCK 	WSAEWOULDBLOCK
 	#define		MSG_NOSIGNAL	0
 #elif defined __APPLE__
