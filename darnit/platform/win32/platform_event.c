@@ -340,6 +340,10 @@ void tpw_event_platform_init() {
 	vk_translate[0xA4] = 308;
 	vk_translate[0xA5] = 307;
 	vk_translate[0xBA] = 59;
+	vk_translate[0xBB] = 43;
+	vk_translate[0xBC] = 44;
+	vk_translate[0xBD] = 45;
+	vk_translate[0xBE] = 46;
 	vk_translate[0xBF] = 47;
 	vk_translate[0xC0] = 96;
 	vk_translate[0xDB] = 91;
