@@ -281,11 +281,11 @@ LDMZ_MAP *mapLoadReal(const char *fname, int tile_w, int tile_h) {
 				renderTilesheetAnimationApply(map->layer[i].ts, mapPropGet(map, "animation"));
 		} else {
 			if (iso) {
-				if ((map->layer[i].ts = renderTilesheetLoadIsometric(mapPropGet(map, "tileset"),
+				if ((map->layer[i].ts = renderTilesheetLoadIsometric(mapLayerPropGet(map, i, "tileset"),
 				    map->layer[i].tile_w, map->layer[i].tile_h, PFORMAT_RGB5A1)) == NULL)
 					goto error;		/* Down at the bottom of the function */
 			} else {
-				if ((map->layer[i].ts = renderTilesheetLoad(mapPropGet(map, "tileset"),
+				if ((map->layer[i].ts = renderTilesheetLoad(mapLayerPropGet(map, i, "tileset"),
 				    map->layer[i].tile_w, map->layer[i].tile_h, PFORMAT_RGB5A1)) == NULL)
 					goto error;		/* Down at the bottom of the function */
 			}
