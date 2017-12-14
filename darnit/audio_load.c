@@ -231,8 +231,9 @@ int audioDecodeStreamed(AUDIO_HANDLE *pb, void *buff, int buff_len, int pos) {
 			if (b == 0) {
 				break;
 			}
-
-			s_buff[i] = audioSampleMix(t_buff[0], t_buff[1]);
+			
+			s_buff[i] = (t_buff[0] + t_buff[1]) / 2;
+			//s_buff[i] = audioSampleMix(t_buff[0], t_buff[1]);
 		}
 		b = i << 1;
 	}
