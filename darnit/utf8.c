@@ -70,7 +70,7 @@ unsigned int utf8GetChar(const char *str_s) {
 
 	if ((len = utf8GetCharLength(str)) == 0)
 		return UTF8_REPLACEMENT_CHAR;
-	if (!utf8Validate(str) == -1)
+	if (utf8Validate(str) == -1)
 		return UTF8_REPLACEMENT_CHAR;
 
 	shift = 1;
