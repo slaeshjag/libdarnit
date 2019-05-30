@@ -41,6 +41,11 @@ void EXPORT_THIS *d_sprite_free(void *sprite) {
 }
 
 
+void EXPORT_THIS *d_sprite_copy(void *sprite) {
+	return spriteCopy(sprite);
+}
+
+
 void EXPORT_THIS d_sprite_direction_set(void *sprite, int dir) {
 	spriteChangeDirection(sprite, dir);
 

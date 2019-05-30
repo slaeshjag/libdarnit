@@ -84,6 +84,7 @@ void spriteDraw(SPRITE_ENTRY *sprite);
 void spriteChangeDirection(SPRITE_ENTRY *sprite, unsigned int dir);
 void *spriteDelete(SPRITE_ENTRY *sprite);
 void spriteSetFrameEntry(SPRITE_ENTRY *sprite, int dir, int frame, int tile, int time);
+SPRITE_ENTRY *spriteCopy(SPRITE_ENTRY *src);
 
 
 #endif

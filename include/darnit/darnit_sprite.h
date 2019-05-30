@@ -38,6 +38,7 @@ typedef void DARNIT_SPRITE;
 DARNIT_SPRITE *d_sprite_new(DARNIT_TILESHEET *tilesheet);
 DARNIT_SPRITE *d_sprite_load(const char *fname, int dir, DARNIT_PFORMAT target_format);
 DARNIT_SPRITE *d_sprite_free(DARNIT_SPRITE *sprite);
+DARNIT_SPRITE *d_sprite_copy(DARNIT_SPRITE *sprite);
 void d_sprite_direction_set(DARNIT_SPRITE *sprite, int dir);
 void d_sprite_activate(DARNIT_SPRITE *sprite, int dir);
 void d_sprite_frame_set(DARNIT_SPRITE *sprite, int frame);

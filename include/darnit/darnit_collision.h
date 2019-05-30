@@ -25,6 +25,6 @@ freely, subject to the following restrictions:
 #ifndef __DARNIT_COLLISION_H__
 #define	__DARNIT_COLLISION_H__
 
-int d_coll_circle(int x1, int y1, int x2, int y2, int rad1, int rad2);
+int d_coll_circle(int x1, int y1, int x2, int y2, int rad_1, int rad_2);
 
 #endif

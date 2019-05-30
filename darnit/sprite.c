@@ -68,6 +68,35 @@ SPRITE_ENTRY *spriteNew(TILESHEET *ts) {
 }
 
 
+SPRITE_ENTRY *spriteCopy(SPRITE_ENTRY *src) {
+	SPRITE_ENTRY *new;
+	TILESHEET *ts;
+
+
+	if ((ts = renderTilesheetLoad(src->tilesheet, src->wsq, src->hsq, PFORMAT_RGBA8)) == NULL) {
+		return NULL;
+	}
+
+	new = spriteNew(ts);
+
+	new->dir = src->dir;
+	new->frame = src->frame;
+	new->tleft = src->tleft;
+	new->time = src->time;
+	new->animate = src->animate;
+	new->used = src->used;
+	strcpy(new->tilesheet, src->tilesheet);
+	new->wsq = src->wsq;
+	new->hsq = src->hsq;
+	new->x = src->x;
+	new->y = src->y;
+	new->repeat = src->repeat;
+	new->angle = src->angle;
+	memcpy(&new->spr, &src->spr, sizeof(new->spr));
+	
+	return new;
+}
+
 
 void spriteLoadText(FILESYSTEM_FILE *fp, SPRITE_ENTRY *se) {
 	unsigned int i, j;
