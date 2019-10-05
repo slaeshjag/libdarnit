@@ -294,6 +294,10 @@ void parse_layer(mxml_node_t *tree) {
 	data = parse_layer_data(tree, w, h);
 	ts = gidmap(data, w, h);
 
+	if (ts < 0) {
+		return;
+	}
+	
 	if (strcmp(mxmlElementGetAttr(tree, "name"), "collision")) {
 		ldmz_main->layers++;
 		layer = realloc(layer, sizeof(*layer) * ldmz_main->layers);
